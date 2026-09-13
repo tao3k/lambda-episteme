@@ -158,3 +158,10 @@ test: build-wendao test-python-align
       audit --load "$SELF_ROOT/episteme.toml" docs >/dev/null
 
     echo "wendao-episteme command checks passed" >&2
+
+# Source-module lanes: consume installed POO Flow, never build a superproject.
+build-scheme:
+    gerbil build
+
+test-scheme:
+    gerbil env ./unit-tests.ss

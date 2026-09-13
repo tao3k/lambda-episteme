@@ -1,0 +1,6 @@
+.gerbil/
+.qualification/
+__pycache__/
+*.pyc
+manifest.ss
+version.ss

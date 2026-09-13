@@ -1,0 +1,53 @@
+#+title: Contributing a Lambda Episteme module
+
+* Contributor responsibilities
+
+A module contributes domain meaning through native POO values. Start with the
+[[file:MODULES.org][module contract]] and the files in =templates/module/=, use a module-scoped identity, name its
+semantic owner and revision, and expose a stable =interface.ss=.
+
+Use prototype composition to derive profiles. Named pure functions may support
+domain behavior. Do not install hooks, start services, register global module
+names, read source files, or execute queries during module import.
+
+A module can contribute ontology, policy, workflow, knowledge or another facet.
+GQL is optional, and source assets may use other appropriate languages. Do not
+add a Rust or Python runtime dependency simply because an application may use
+one to consume the module.
+
+* Source ownership
+
+Declare ontology and policy as POO objects and identify authoritative external
+assets explicitly. Preserve RDF/OWL and Org where they own the domain facts or
+rationale. If replacing a legacy SQL policy, design the graph semantics first:
+entity identity, relation ownership, snapshot scope and completeness matter more
+than translating SQL text into MATCH clauses.
+
+* Module checklist
+
+1. Create =modules/<name>/= with =types.ss=, =objects.ss=, =funs.ss=,
+   =config.ss= and the public =interface.ss=.
+2. Run =gerbil build= through the package's sole ASP PackageSpec declaration.
+   Do not add per-file entries or another build script.
+3. Include a runnable =user-interface/= scenario selecting or deriving the profile through the
+   existing POO Flow composition API.
+4. Add native tests for contract validation, derivation and conflicting exports.
+5. If supplying GQL, add it to the source test set; require successful native
+   parsing, valid artifacts, unchanged roundtrip and a malformed-source case.
+6. Describe graph schema requirements and expected witnesses for the consuming
+   application's integration suite. Mark query execution untested until that
+   suite supplies attributable results.
+
+Core contract tests stay in POO Flow. Domain and authoring tests stay here.
+Application execution tests are a third lane and do not gate either unit suite.
+
+* Test ownership
+Place executable tests at =t/<module_name>/<lane>/*-test.ss=. Define and export
+an ordinary =:std/test= suite whose name equals its file basename. The current
+POO Flow contract does not provide a test declaration macro; =:clan/testing=
+owns discovery and execution via =:asp-gerbil-scheme/testing-api=.
+Lanes are =unit=, =source=, =user-interface= and =integration=. Optional source
+checks use =*-check.ss= and are invoked explicitly with their installed parser.
+Run the single =just test-scheme= entrypoint.
+Historical qualification receipts retain their original paths and commands;
+current test paths are the module-owned directories above.

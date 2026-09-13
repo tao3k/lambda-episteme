@@ -2,6 +2,16 @@
 #+startup: overview
 #+property: header-args :eval never-export
 
+* Current boundary, 2026-09-12
+
+The current source-module implementation and qualification are documented in
+[[file:../../README.org][the contributor guide]]. POO Flow itself is the core; a separate
+=poo-flow-core= package is not required. The child contributes native POO
+declarations and optional source assets. Its module tests do not require a
+query engine; optional GQL source tests consume gerbil-parser. Application
+execution and runtime evidence remain separate. The historical approval and
+implementation status below do not describe this new source-only module lane.
+
 * Status and decision discipline
 
 :PROPERTIES:

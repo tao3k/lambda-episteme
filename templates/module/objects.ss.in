@@ -1,0 +1,7 @@
+;;; Copy all five role files; replace example and ExampleProfile.
+(import :poo-flow/src/module-system/contribution/interface
+        :lambda-episteme/governance/objects)
+(export ExampleProfile)
+(def ExampleProfile
+  (.o (:: @ GovernanceProfile.) identity: "lambda-episteme/example"
+      module-family: 'example owner: "replace-with-owner"))

@@ -1,0 +1,73 @@
+#+title: Independent contribution user scenarios
+
+This directory is the contribution repository's user-facing example surface.
+It contains executable scenarios, not a second root init configuration.
+=sdlc-cases.ss= demonstrates the existing module selection syntax, NASA plus a
+local standard, native POO derivation, explicit facts and pure review preparation.
+It imports installed POO Flow interfaces and this package only; it never imports
+the parent project's user-interface configuration.
+
+Run =just build-scheme= followed by =just test-scheme=. The sole package build
+includes these source-owned scenarios.
+
+* Team release policy
+The fictional =team/release-v1= profile adds a =RELEASE-REVIEW= obligation for
+demonstrating multiple standards. It is a local example, not a NASA requirement.
+
+* Scenarios
+The twelve scenarios cover complete/incomplete scopes, baseline changes,
+current and contradictory evidence, wrong subjects/scopes, unknown applicability,
+claimed exemptions, unapproved tailoring, unmapped clauses and another standard.
+All evidence and project identities are synthetic. No certification is implied.
+
+* Review semantics and limits
+=modules/sdlc/objects.ss= provides checked constructors;
+=modules/sdlc/review.ss= provides =sdlc-review= (and reexports the constructors). It validates
+explicit POO facts, matches project/revision/scope/standard/clause and prepares a
+review packet. Missing evidence in an incomplete scope stays unknown. Reported
+failures take precedence over passes. Applicability and tailoring still require
+review; a declared exemption or an extra approval slot cannot approve itself.
+
+=evidence-present= means matching evidence was supplied, not that it was
+authenticated, independently verified or sufficient to discharge a requirement.
+The caller's completeness claim and producer names are not authenticated here.
+Compliance remains =not-evaluated= and authority =not-verified= in every packet.
+This is Scheme control-plane preparation, with no parser or graph executor.
+
+The next SDLC capabilities remain explicit work:
+lifecycle gate obligations, remaining conditional requirement interpretations,
+authenticated approvals and evidence freshness, and application-side execution. These cases establish a reusable starting point for that work.
+
+* Qualification
+2026-09-12: native module and separate scenario builds passed. The independent
+scenario suite passed 39 checks across twelve scenarios and malformed inputs;
+the existing SDLC and init configuration suites passed 17 and 7 checks.
+These 63 checks exercise explicit source facts, not live authority or runtime
+integration. Tests used isolated child output and POO Flow library dependencies.
+
+* NASA release review case
+=nasa-release.ss= assembles all 130 applicability records and class-specific
+trace reviews. =t/sdlc/user-interface/nasa-release-test.ss= exercises an end-to-end Class F inventory
+with all required trace families present. Unresolved context and approval remain
+visible and release authorization stays false. Failed evidence takes precedence
+over a tailoring request, and duplicate evidence or requirement identities are
+rejected. The package build delegates directory discovery to upstream, so new
+user scenarios do not require adding filenames to a build list.
+
+* Change review
+=change-review.ss= supplies a scoped requirement → design → code → verification
+inventory and exports =change-review=. Tests in
+=t/sdlc/user-interface/change-review-test.ss= exercise concrete witness paths,
+unrelated verification exclusion, cyclic relations, deterministic input order,
+partial scopes, dangling endpoints, stale links and invalid seeds/identities.
+Run =just test-scheme=; the new file is discovered through clan/testing's
+existing directory build API without a build-list change.
+
+* Verified lifecycle exercise
+
+=nasa-lifecycle.ss= returns native verification requests and an =evaluate=
+function for a two-stage planning example. The caller supplies a configured
+verification adapter, issued receipts and the current time. Its independent
+=t/sdlc/user-interface/nasa-lifecycle-test.ss= checks pending, admitted and expired
+states with a clearly identified test double. The example contains no built-in
+approval operation and does not authorize release.

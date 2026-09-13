@@ -1,0 +1,9 @@
+;;; Copy all five role files; replace example and ExampleProfile.
+(import :lambda-episteme/modules/example/types)
+(export (import: :lambda-episteme/modules/example/types))
+(import :lambda-episteme/modules/example/objects)
+(export (import: :lambda-episteme/modules/example/objects))
+(import :lambda-episteme/modules/example/funs)
+(export (import: :lambda-episteme/modules/example/funs))
+(import :lambda-episteme/modules/example/config)
+(export (import: :lambda-episteme/modules/example/config))

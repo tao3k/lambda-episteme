@@ -1,0 +1,8 @@
+(import :lambda-episteme/modules/diataxis/types)
+(export (import: :lambda-episteme/modules/diataxis/types))
+(import :lambda-episteme/modules/diataxis/objects)
+(export (import: :lambda-episteme/modules/diataxis/objects))
+(import :lambda-episteme/modules/diataxis/funs)
+(export (import: :lambda-episteme/modules/diataxis/funs))
+(import :lambda-episteme/modules/diataxis/config)
+(export (import: :lambda-episteme/modules/diataxis/config))

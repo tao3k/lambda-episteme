@@ -1,0 +1,445 @@
+<html>
+<head>
+
+	
+<style type="text/css"> <!--
+
+body { color: black; background-color: ##ffffff; font-family: Arial, Helvetica, NewFont, Geneva, Swiss, SunSans-Regular, san-serif; font-size: 0.9em; width: 6in;
+margin-left: 1em;
+margin-top: 0.2em; }
+
+h1 { font-size: 1.5em; }
+h2 { font-size: 1.3em;}
+h3 { font-size: 1.1em; }
+h4 { font-size: 1em; }
+h5 { font-size: .9em; }
+h6 { font-size: .8em; }
+
+li { text-align: left; padding-top: .25em; padding-bottom: .25em; }
+p.list { padding-top: 0em; }
+
+p.toc { margin-left: 12em; font-size: 0.9em; }
+
+a:link { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:active { text-decoration: none; }
+
+.container { position: absolute; margin-top: 0in; left: 0.25in; width: 6in; }
+.title { margin-left: 0.1in; font-size: 1.8em; font-weight: bold; }
+.number { font-size: 1.5em; font-weight: bold; }
+.effectiveDate { font-size: 0.9em; }
+.pretext {  font-size: 1.1em; font-family: Arial, Helvetica, NewFont, Geneva, Swiss, SunSans-Regular, san-serif;  }
+
+
+.tocIndent { margin-left: 1em; font-size: 0.9em; } -->
+
+</style>	
+
+
+
+
+		<TITLE>NPR 7150.2D - Chapter5</TITLE>
+
+		<META name="Center" content="N">
+		<META name="Type" content="PR">
+		<META name="ClassificationNumber" content="7150">
+		<META name="Responsible_Office_Code" content="KA">
+		<META name="Responsible_Office_Title" content="Office of the Chief Engineer">
+		<META name="Subject" content="NASA Software Engineering Requirements">
+		<META name="Directive_Number" content="NPR 7150.2D">
+		<META name="Description" content="NASA Software Engineering Requirements">
+	
+		<script src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NASA&subagency=GSFC" id="_fed_an_ua_tag"></script>
+	
+
+	<script>
+var X = (screen.width/2)-250;
+var Y = (screen.height/2)-200;
+var pos = "left="+X+",top="+Y;
+var WAIT_IN_MSECS=500;
+var timer=null;
+function openWindow(funcName){
+	var mywin = window.open("npg_img/N_PR_7123_0001_/Notes/"+ funcName +".htm", funcName,"scrollbars=yes,resizable=yes,width=550,height=300");
+	mywin.focus();
+}
+function doIt(_v, funcName)
+{
+  if(_v)
+  {
+//    timer=setTimeout('window.open(\"Notes/'+ funcName +'.htm\",\"'+ funcName +'\",\"scrollbars=yes,resizable=yes,width=550,height=300,\"+pos)',WAIT_IN_MSECS);
+  }
+  else
+  {
+    if(timer)
+	{
+//	  clearTimeout(timer);
+//	  timer=null;
+	}
+  }
+}
+</script>
+
+</head>
+
+
+
+	
+			<body>
+			<div align="center"><font size="-1"></font>
+					 | <a href ="main_lib.html">NODIS Library</a> | <a href ="lib_docs.cfm?range=7">Program Formulation(7000s)</a> | <a href ="adv_search.cfm">Search</a> | 
+			</div><br>
+
+			<table width="100%" cellpadding="0" cellspacing="0">
+					<tr>
+						<td width="10%">
+								<img src="../images/nasa-logo.gif" alt="NASA Ball" >
+						</td>
+						<td>
+								<font size="+2"><strong>NASA<br>Procedural<br>Requirements</strong></font>
+						</td>
+						<td align="right">
+
+										<font point-size="20.5" ><strong>NPR 7150.2D</strong></font><br>
+
+										<font size="-1">Effective Date: March 08, 2022<BR>
+										Expiration Date: March 08, 2027</font>
+
+						</td>
+					</tr>
+			</table>
+
+			<center>
+					<font color="#0000EE" point-size="13"><strong>COMPLIANCE IS MANDATORY FOR NASA EMPLOYEES</strong></font>
+			</center>
+			<div align="right"><a href="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter5&format=PDF" title="Print format (PDF)">Printable Format (PDF)</a></div>
+			<hr align="left" noshade size="1">
+			<H2>Subject: NASA Software Engineering Requirements</H2>
+
+			<h3 align="left">Responsible Office: Office of the Chief Engineer</h3>
+
+				<br>
+
+				<table>
+					<tr>
+						<td colspan="2" align="center"> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=main">TOC</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Preface">Preface</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter1">Chapter1</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter2">Chapter2</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter3">Chapter3</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter4">Chapter4</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter5">Chapter5</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter6">Chapter6</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixA">AppendixA</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixB">AppendixB</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixC">AppendixC</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixD">AppendixD</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixE">AppendixE</a> | <a href ="displayAll.cfm?Internal_ID=N_PR_7150_002D_&page_name=ALL">ALL</a> | </td>
+					</tr>
+				</table>
+
+
+			<!--  End Stan_dard Hea_der. -->
+
+			
+<h1>Chapter 5: Supporting Software Life Cycle Requirements</h1>
+
+<h2>5.1 Software Configuration Management (SCM)</h2>
+
+<p>
+5.1.1 Software Configuration Management (SCM) is the process of applying configuration management throughout the software life cycle to ensure the completeness and correctness of software configuration items. SCM applies technical and administrative direction and surveillance to identify and record the functional and physical characteristics of software configuration items, control changes to those characteristics, record and report change processing and implementation status, and verify compliance with specified requirements. SCM establishes and maintains the integrity of the products of a software project throughout the software life cycle. Use of standard Center or organizational SCM processes and procedures is encouraged where applicable.
+</p>
+
+<p>
+5.1.2 The project manager shall develop a software configuration management plan that describes the functions, responsibilities, and authority for the implementation of software configuration management for the project. [SWE-079]
+</p>
+
+<p>
+5.1.3 The project manager shall track and evaluate changes to software products. [SWE-080]
+</p>
+
+<p>
+5.1.4 The project manager shall identify the software configuration items (e.g., software records, code, data, tools, models, scripts) and their versions to be controlled for the project. [SWE-081]
+</p>
+
+<p style="margin: 0.25in; font-style: italic">
+Note: The items to be controlled include tools, items, or settings used to develop the software, which could impact the software. Examples of such items include compiler/assembler versions, makefiles, batch files, and specific environment settings.
+</p>
+
+
+
+<p>
+5.1.5 The project manager shall establish and implement procedures to: [SWE-082]
+</p>
+
+<p>
+a. Designate the levels of control through which each identified software configuration item is required to pass.
+</p>
+
+<p>
+b. Identify the persons or groups with authority to authorize changes.
+</p>
+
+<p>
+c. Identify the persons or groups to make changes at each level.
+</p>
+
+<p style="margin: 0.25in; font-style: italic">
+Note: IEEE 828-2012, IEEE Standard for Configuration Management in Systems and Software Engineering describes configuration management processes to be established, how they are to be accomplished, who is responsible for doing specific activities, when they are to happen, and what specific resources are required. It addresses configuration management activities over a product&rsquo;s life cycle. Configuration management in systems and software engineering is a specialty discipline within the larger discipline of configuration management. Configuration management is essential to systems engineering and software engineering. 
+</p>
+
+<p>
+5.1.6 The project manager shall prepare and maintain records of the configuration status of software configuration items. [SWE-083]
+</p>
+
+<p>
+5.1.7 The project manager shall perform software configuration audits to determine the correct version of the software configuration items and verify that they conform to the records that define them. [SWE-084]
+</p>
+
+<p>
+5.1.8 The project manager shall establish and implement procedures for the storage, handling, delivery, release, and maintenance of deliverable software products. [SWE-085]
+</p>
+
+<p>
+5.1.9 The project manager shall participate in any joint NASA/developer audits. [SWE-045]
+</p>
+
+
+<h2>5.2 Software Risk Management</h2>
+
+<p>
+The project manager shall record, analyze, plan, track, control, and communicate all of the software risks and mitigation plans. [SWE-086]
+</p>
+
+<p style="margin: 0.25in; font-style: italic">
+Note: Project managers should be aware of any risks that remain after mitigations have been completed or after a risk has been accepted.
+</p>
+ 
+
+<h2>5.3 Software Peer Reviews and Inspections</h2>
+
+<p>
+5.3.1 Software peer reviews and inspections are the in-process technical examination of work products by peers to find and eliminate defects early in the life cycle. Software peer reviews and inspections are performed following defined procedures covering the preparation for the review, the review itself is conducted, results are recorded, results are reported, and completion criteria is certified. When planning the composition of a software peer review or inspection team, consider including software testing, system testing, software assurance, software safety, software cybersecurity, and software IV&amp;V personnel.
+</p>
+
+<p>
+5.3.2 The project manager shall perform and report the results of software peer reviews or software inspections for: [SWE-087] 
+</p>
+
+<p>
+a. Software requirements. 
+</p>
+
+<p>
+b. Software plans, including cybersecurity.
+</p>
+
+<p>
+c. Any design items that the project identified for software peer review or software inspections according to the software development plans.
+</p>
+
+<p>
+d. Software code as defined in the software and or project plans.
+</p>
+
+<p>
+e. Software test procedures.
+</p>
+
+<p style="margin: 0.25in; font-style: italic">
+Note: Software peer reviews or software inspections are recommended best practices for all safety and mission-success related software components. Recommended best practices and guidelines for software formal inspections are contained in NASA-STD-8739.9, Software Formal Inspection Standard.
+</p>
+
+
+
+<p>
+5.3.3 The project manager shall, for each planned software peer review or software inspection: [SWE-088] 
+</p>
+
+<p>
+a. Use a checklist or formal reading technique (e.g., perspective-based reading) to evaluate the work products. 
+</p>
+
+<p>
+b. Use established readiness and completion criteria. 
+</p>
+
+<p>
+c. Track actions identified in the reviews until they are resolved.
+</p>
+
+<p>
+d. Identify the required participants.
+</p>
+
+<p>
+5.3.4 The project manager shall, for each planned software peer review or software inspection, record necessary measurements. [SWE-089]
+</p>
+
+
+<h2>5.4 Software Measurements</h2>
+
+<p>
+5.4.1 Software measurement is a primary tool for managing software processes and evaluating the quality of software products. Analysis of measures provides insight into the capability of the software organization and identifies opportunities for software process and product improvements. Software measurement programs at multiple levels are established to meet measurement objectives. The requirements below are designed to reinforce the use of measurement at the project, Center software organization, and NASA Chief Engineer levels to assist in managing projects, assuring quality, and improving software engineering practices. Measurement programs are designed to meet the following goals: 
+</p>
+
+
+
+<p>
+a. Improve future software planning and software cost estimation. 
+</p>
+
+<p>
+b. Describe and record information about a software product during its life cycle.
+</p>
+
+<p>
+c. Assist usability and maintainability of a software product.
+</p>
+
+<p>
+d. Monitor and control software life cycle processes.
+</p>
+
+<p>
+e. Communicate information about the system, software product, or service.
+</p>
+
+<p>
+f. Provide a history, including lessons learned, during the development and maintenance to support management and process improvement.
+</p>
+
+<p>
+g. Provide evidence that the processes were followed.
+</p>
+
+<p>
+h. Provide indicators of software quality.
+</p>
+
+<p>
+i. Track the status of software engineering improvement and assurance programs.
+</p>
+
+<p>
+j. Report the status of software engineering improvements and assurance programs to Center software organizations and Center SMA.
+</p>
+
+<p>
+5.4.2 The project manager shall establish, record, maintain, report, and utilize software management and technical measurements. [SWE-090] 
+</p>
+
+
+
+<p style="margin: 0.25in; font-style: italic">
+Note: The NASA-HDBK-2203 contains a set of candidate management indicators that may be used on a software development project. The NASA Chief Engineer may identify and document additional Center measurement objectives, software measurements, collection procedures and guidelines, and analysis procedures for selected software projects and software development organizations. The software measurement process includes collecting software technical measurement data from the project&rsquo;s software developer(s).
+</p>
+
+<p>
+5.4.3 The project manager shall analyze software measurement data collected using documented project-specified and Center/organizational analysis procedures. [SWE-093]
+</p>
+
+<p>
+5.4.4 The project manager shall provide access to the software measurement data, measurement analyses, and software development status as requested to the sponsoring Mission Directorate, the NASA Chief Engineer, the Center Technical Authorities, HQ SMA, and other organizations as appropriate. [SWE-094]
+</p>
+
+<p>
+5.4.5 The project manager shall monitor measures to ensure the software will meet or exceed performance and functionality requirements, including satisfying constraints. [SWE-199] 
+</p>
+
+
+
+<p style="margin: 0.25in; font-style: italic">
+Note: The metrics could include planned and actual use of computer hardware resources (such as processor capacity, memory capacity, input/output device capacity, auxiliary storage device capacity, and communications/network equipment capacity, bus traffic, partition allocation) over time. As part of the verification of the software detailed design, the developer will update the estimation of the technical resource metrics. As part of the verification of the coding, testing, and validation, the technical resource metrics will be updated with the measured values and will be compared to the margins.
+</p>
+
+<p>
+5.4.6 The project manager shall collect, track, and report software requirements volatility metrics. [SWE-200]
+</p>
+
+
+<h2>5.5 Software Non-conformance or Defect Management</h2>
+
+
+
+<p>
+5.5.1 The project manager shall track and maintain software non-conformances (including defects in tools and appropriate ground software). [SWE-201]
+</p>
+
+
+
+<p>
+5.5.2 The project manager shall define and implement clear software severity levels for all software non-conformances (including tools, COTS, GOTS, MOTS, OSS, reused software components, and applicable ground systems). [SWE-202]
+</p>
+
+
+
+<p style="margin: 0.25in; font-style: italic">
+Note: At a minimum, classes should include loss of life or loss of vehicle, mission success, visible to the user with operational workarounds, and an &lsquo;other&rsquo; class that does not meet previous criteria. 
+</p>
+
+
+
+<p>
+5.5.3 The project manager shall implement mandatory assessments of reported non-conformances for all COTS, GOTS, MOTS, OSS, and/or reused software components. [SWE-203]
+</p>
+
+
+
+<p style="margin: 0.25in; font-style: italic">
+Note: This includes operating systems, run-time systems, device drivers, code generators, compilers, math libraries, and build and Configuration Management (CM) tools. It should be performed pre-flight, with mandatory code audits for critical defects. 
+</p>
+
+
+
+<p>
+5.5.4 The project manager shall implement process assessments for all high-severity software non-conformances (closed loop process). [SWE-204]
+</p>
+
+
+
+
+<!--  Begin Stan_dard Footer. -->
+
+<br>
+	<table width="90%" align="center" border="0">
+	<tr>
+		<td align="center"><br>
+		 | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=main">TOC</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Preface">Preface</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter1">Chapter1</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter2">Chapter2</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter3">Chapter3</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter4">Chapter4</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter5">Chapter5</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter6">Chapter6</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixA">AppendixA</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixB">AppendixB</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixC">AppendixC</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixD">AppendixD</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixE">AppendixE</a> | <a href ="displayAll.cfm?Internal_ID=N_PR_7150_002D_&page_name=ALL">ALL</a> | </td>
+	</tr>
+	<tr>
+		<td align="center">&nbsp;</td>
+	</tr>
+	<tr>
+		<td align="center"> | <a href ="main_lib.html">NODIS Library</a> | <a href ="lib_docs.cfm?range=7">Program Formulation(7000s)</a> | <a href ="adv_search.cfm">Search</a> | </td>
+	</tr>
+	</table>
+
+
+<br>
+<h3>
+<U>DISTRIBUTION</U>:<br>
+NODIS
+
+</h3>
+<hr>
+
+<style>
+	.disclaimer {
+		font-weight: bold;
+		text-align: center;
+	|
+</style>
+<p class="disclaimer">
+	This document does not bind the public, except as authorized by law or as
+	incorporated into a contract. This document is uncontrolled when printed.
+	Check the NASA Online Directives Information System (NODIS) Library to
+	verify that this is the correct version before use:
+	<a href="https://nodis3.gsfc.nasa.gov/">https://nodis3.gsfc.nasa.gov</a>.
+</p>
+
+<HR><BR>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

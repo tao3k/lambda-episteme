@@ -1,0 +1,313 @@
+<html>
+<head>
+
+	
+<style type="text/css"> <!--
+
+body { color: black; background-color: ##ffffff; font-family: Arial, Helvetica, NewFont, Geneva, Swiss, SunSans-Regular, san-serif; font-size: 0.9em; width: 6in;
+margin-left: 1em;
+margin-top: 0.2em; }
+
+h1 { font-size: 1.5em; }
+h2 { font-size: 1.3em;}
+h3 { font-size: 1.1em; }
+h4 { font-size: 1em; }
+h5 { font-size: .9em; }
+h6 { font-size: .8em; }
+
+li { text-align: left; padding-top: .25em; padding-bottom: .25em; }
+p.list { padding-top: 0em; }
+
+p.toc { margin-left: 12em; font-size: 0.9em; }
+
+a:link { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:active { text-decoration: none; }
+
+.container { position: absolute; margin-top: 0in; left: 0.25in; width: 6in; }
+.title { margin-left: 0.1in; font-size: 1.8em; font-weight: bold; }
+.number { font-size: 1.5em; font-weight: bold; }
+.effectiveDate { font-size: 0.9em; }
+.pretext {  font-size: 1.1em; font-family: Arial, Helvetica, NewFont, Geneva, Swiss, SunSans-Regular, san-serif;  }
+
+
+.tocIndent { margin-left: 1em; font-size: 0.9em; } -->
+
+</style>	
+
+
+
+
+		<TITLE>NPR 7150.2D - Chapter6</TITLE>
+
+		<META name="Center" content="N">
+		<META name="Type" content="PR">
+		<META name="ClassificationNumber" content="7150">
+		<META name="Responsible_Office_Code" content="KA">
+		<META name="Responsible_Office_Title" content="Office of the Chief Engineer">
+		<META name="Subject" content="NASA Software Engineering Requirements">
+		<META name="Directive_Number" content="NPR 7150.2D">
+		<META name="Description" content="NASA Software Engineering Requirements">
+	
+		<script src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NASA&subagency=GSFC" id="_fed_an_ua_tag"></script>
+	
+
+	<script>
+var X = (screen.width/2)-250;
+var Y = (screen.height/2)-200;
+var pos = "left="+X+",top="+Y;
+var WAIT_IN_MSECS=500;
+var timer=null;
+function openWindow(funcName){
+	var mywin = window.open("npg_img/N_PR_7123_0001_/Notes/"+ funcName +".htm", funcName,"scrollbars=yes,resizable=yes,width=550,height=300");
+	mywin.focus();
+}
+function doIt(_v, funcName)
+{
+  if(_v)
+  {
+//    timer=setTimeout('window.open(\"Notes/'+ funcName +'.htm\",\"'+ funcName +'\",\"scrollbars=yes,resizable=yes,width=550,height=300,\"+pos)',WAIT_IN_MSECS);
+  }
+  else
+  {
+    if(timer)
+	{
+//	  clearTimeout(timer);
+//	  timer=null;
+	}
+  }
+}
+</script>
+
+</head>
+
+
+
+	
+			<body>
+			<div align="center"><font size="-1"></font>
+					 | <a href ="main_lib.html">NODIS Library</a> | <a href ="lib_docs.cfm?range=7">Program Formulation(7000s)</a> | <a href ="adv_search.cfm">Search</a> | 
+			</div><br>
+
+			<table width="100%" cellpadding="0" cellspacing="0">
+					<tr>
+						<td width="10%">
+								<img src="../images/nasa-logo.gif" alt="NASA Ball" >
+						</td>
+						<td>
+								<font size="+2"><strong>NASA<br>Procedural<br>Requirements</strong></font>
+						</td>
+						<td align="right">
+
+										<font point-size="20.5" ><strong>NPR 7150.2D</strong></font><br>
+
+										<font size="-1">Effective Date: March 08, 2022<BR>
+										Expiration Date: March 08, 2027</font>
+
+						</td>
+					</tr>
+			</table>
+
+			<center>
+					<font color="#0000EE" point-size="13"><strong>COMPLIANCE IS MANDATORY FOR NASA EMPLOYEES</strong></font>
+			</center>
+			<div align="right"><a href="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter6&format=PDF" title="Print format (PDF)">Printable Format (PDF)</a></div>
+			<hr align="left" noshade size="1">
+			<H2>Subject: NASA Software Engineering Requirements</H2>
+
+			<h3 align="left">Responsible Office: Office of the Chief Engineer</h3>
+
+				<br>
+
+				<table>
+					<tr>
+						<td colspan="2" align="center"> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=main">TOC</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Preface">Preface</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter1">Chapter1</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter2">Chapter2</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter3">Chapter3</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter4">Chapter4</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter5">Chapter5</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter6">Chapter6</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixA">AppendixA</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixB">AppendixB</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixC">AppendixC</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixD">AppendixD</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixE">AppendixE</a> | <a href ="displayAll.cfm?Internal_ID=N_PR_7150_002D_&page_name=ALL">ALL</a> | </td>
+					</tr>
+				</table>
+
+
+			<!--  End Stan_dard Hea_der. -->
+
+			
+<h1>Chapter 6: Recommended Software Records Content</h1>
+
+<h2>6.1 Software Engineering Products</h2>
+
+
+
+<p>
+It is possible to prepare a plan, associated procedures, and reports, as well as numerous records, requests, descriptions, and specifications for each software development life cycle process. When deciding how to prepare any of these items, consider the users of the information first. Reviewing and understanding the requirements, needs, and background of users and stakeholders are essential to applying the recommendations for the content of software records defined in NASA-HDBK-2203. Specific content within these records may not apply to every project. Use of NASA Center and contractor formats in document deliverables is acceptable if the required content (as defined by the project) is addressed. Product records should be reviewed and updated as necessary. Typical software engineering products or electronic data include:
+</p>
+
+
+
+<p>
+a. Software Development Plan/Software Management Plan.
+</p>
+
+<p>
+b. Software Schedule.
+</p>
+
+<p>
+c. Software Cost Estimate.
+</p>
+
+<p>
+d. Software Configuration Management Plan.
+</p>
+
+<p>
+e. Software Change Reports.
+</p>
+
+<p>
+f. Software Test Plans.
+</p>
+
+<p>
+g. Software Test Procedures.
+</p>
+
+<p>
+h. Software Test Reports.
+</p>
+
+<p>
+i. Software Version Description Reports.
+</p>
+
+<p>
+j. Software Maintenance Plan.
+</p>
+
+<p>
+k. Software Assurance Plan(s).
+</p>
+
+<p>
+l. Software Safety Plan.
+</p>
+
+<p>
+m. Software Requirements Specification.
+</p>
+
+<p>
+n. Software Data Dictionary.
+</p>
+
+<p>
+o. Software and Interface Design Description (Architectural Design).
+</p>
+
+<p>
+p. Software Design Description.
+</p>
+
+<p>
+q. Software User&rsquo;s Manual.
+</p>
+
+<p>
+r. Records of Continuous Risk Management for Software.
+</p>
+
+<p>
+s. Software Measurement Analysis Results.
+</p>
+
+<p>
+t. Record of Software Engineering Trade-off Criteria &amp; Assessments (make/buy decision).
+</p>
+
+<p>
+u. Software Acceptance Criteria and Conditions.
+</p>
+
+<p>
+v. Software Status Reports.
+</p>
+
+<p>
+w. Programmer&rsquo;s/Developer&rsquo;s Manual.
+</p>
+
+<p>
+x. Software Reuse Report.
+</p>
+
+<p>
+y. Software Model and Simulation Data and Documentation, including the Verification, Validation, and Credibility Plan for Software Model and Simulation.
+</p>
+
+
+<h2>6.2 Software Engineering Product Content</h2>
+
+
+
+<p>
+The recommendations for the content of software records are defined in NASA-HDBK-2203. The Software Engineering handbook also provides guidance regarding when these records should be drafted, baselined, and updated. Examples and templates for these records and datasets are on the Software Process Across NASA (SPAN) Web site, accessible at 
+
+<a href="https://nen.nasa.gov/web/software/wiki">https://nen.nasa.gov/web/software/wiki</a> . 
+</p>
+
+
+
+<!--  Begin Stan_dard Footer. -->
+
+<br>
+	<table width="90%" align="center" border="0">
+	<tr>
+		<td align="center"><br>
+		 | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=main">TOC</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Preface">Preface</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter1">Chapter1</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter2">Chapter2</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter3">Chapter3</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter4">Chapter4</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter5">Chapter5</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter6">Chapter6</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixA">AppendixA</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixB">AppendixB</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixC">AppendixC</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixD">AppendixD</a> | <a href ="displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixE">AppendixE</a> | <a href ="displayAll.cfm?Internal_ID=N_PR_7150_002D_&page_name=ALL">ALL</a> | </td>
+	</tr>
+	<tr>
+		<td align="center">&nbsp;</td>
+	</tr>
+	<tr>
+		<td align="center"> | <a href ="main_lib.html">NODIS Library</a> | <a href ="lib_docs.cfm?range=7">Program Formulation(7000s)</a> | <a href ="adv_search.cfm">Search</a> | </td>
+	</tr>
+	</table>
+
+
+<br>
+<h3>
+<U>DISTRIBUTION</U>:<br>
+NODIS
+
+</h3>
+<hr>
+
+<style>
+	.disclaimer {
+		font-weight: bold;
+		text-align: center;
+	|
+</style>
+<p class="disclaimer">
+	This document does not bind the public, except as authorized by law or as
+	incorporated into a contract. This document is uncontrolled when printed.
+	Check the NASA Online Directives Information System (NODIS) Library to
+	verify that this is the correct version before use:
+	<a href="https://nodis3.gsfc.nasa.gov/">https://nodis3.gsfc.nasa.gov</a>.
+</p>
+
+<HR><BR>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

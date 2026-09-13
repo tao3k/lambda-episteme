@@ -5,6 +5,17 @@
 #+PROPERTY: SDD_KIND rfc
 #+PROPERTY: STATUS draft-for-discussion
 
+* Current boundary, 2026-09-12
+
+The user superseded the separate physical =poo-flow-core= package requirement:
+POO Flow itself is the core. See [[file:../../README.org][the current source-contribution guide]].
+This repository contributes native POO domain declarations, profiles and
+optional source assets. It does not require gql-rust or own query execution.
+Optional GQL authoring checks use gerbil-parser; application runtime adapters
+and their evidence are independently qualified. Older physical-package and
+runtime-coupling requirements below are historical where they conflict with
+this boundary.
+
 * Status and decision discipline
 
 This RFC is a greenfield architecture proposal.

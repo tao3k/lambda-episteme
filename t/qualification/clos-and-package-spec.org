@@ -1,0 +1,78 @@
+#+title: CLOS models and upstream contribution PackageSpec qualification
+#+date: 2026-09-13
+
+* Source and architecture
+
+The linked =asp-gerbil-scheme= source is based on commit
+=efb8955e31cf45afa9573cbed685ce6cb31782fd=. The child =build.ss= inherits the
+upstream library PackageSpec and declares only =interface.ss= and
+=user-interface/interface.ss= as public entries. The native Gerbil import
+closure selected 39 reachable source modules. There is no closure receipt,
+=modules= override,
+=all-gerbil-modules= call, =build-cases.ss= entrypoint, or implementation-file
+enumeration.
+
+ASP PackageSpec and native =std/make= remain the only source closure, freshness,
+compiler, and scheduling owners. Module structure is expressed through each
+module's =types.ss=, =objects.ss=, =funs.ss=, =config.ss= and =interface.ss=;
+the package build does not repeat that structure.
+
+* Behavioral evidence
+
+The unified child lane passed 567 checks, including the complete 130-rule NASA
+project/institution traversal, structured trace/safety inventories, verified
+lifecycle admission, contribution governance, and independent UI cases. The
+three optional GQL parser source checks were not evaluated in this isolated
+environment because =:gerbil-parser/languages/gql/iso-39075-2024/parser= was
+not present on its load path. No SDLC result grants release authority.
+
+* Warm build observation
+
+The same isolated child output was built repeatedly without source changes.
+The build emitted no compile jobs and a before/after comparison preserved all
+124 observed =.ssi=, =.ssxi=, =.scm= and object artifacts.
+
+| Entry | Exit | Observed seconds | Compile log entries | Changed artifacts | Observed artifacts |
+|-------+------+------------------+---------------------+-------------------+--------------------|
+| build.ss | 0 | 8.17--18.99 | 0 | 0 | 124 |
+
+The old 35.53/24.83-second dual-entry design is gone, and the current build
+performs zero recompilation. The remaining wall-time variance occurs while the
+native public import closure and public modules load, so stable warm latency is
+still open. Native =std/make= owns freshness and scheduling; no local cache or
+scheduler is inferred from these results.
+
+* Rejected native closure cache experiment
+
+An isolated experiment compared forced native projection with a content-bound
+receipt in alternating independent processes. Every sample preserved the exact
+ordered 39-module closure.
+
+| Path | Samples in seconds | p50 seconds |
+|------+--------------------+-------------|
+| native refresh | 12.197, 9.271, 9.601 | 9.601 |
+| content-bound hit | 1.501, 0.534, 0.454 | 0.534 |
+
+The isolated projection reduced p50 by 94.4 percent, but it measured only the
+PackageSpec projection. Complete POO Flow warm-build comparison later measured
+a 38.24-second native-projection p50 and a 39.80-second receipt-hit p50. A hit
+returned only paths and forced =std/make= to reconstruct contexts that a fresh
+projection had already loaded. The receipt therefore moved work across the
+=spec-projected= boundary and made the complete path about 4.1 percent slower.
+
+The child opt-in and isolated receipt scenario were removed. The child retains
+the standard =:std/build-script#defbuild-script= and native =std/make= path.
+
+During the rejected experiment, reversing the qualification load path exposed
+stale copied =poo-flow= artifacts inside the ASP build directory and failed
+before timing; that result was not counted as a performance sample.
+
+* Limits
+
+The verification uses isolated output plus linked dependency libraries, not a
+clean release installation or the whole POO Flow suite. NASA source and local
+structured gates are implemented; authenticated institutional approval,
+external parser execution, runtime execution, and automatic content identity
+for an in-place dirty linked dependency remain separate authority boundaries.
+Warm =std/make= latency and native planning progress also remain open upstream
+concerns; this contributor repository does not implement replacements for them.

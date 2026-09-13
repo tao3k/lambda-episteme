@@ -1,0 +1,8 @@
+;;; Place at t/example/unit/profile-test.ss; replace example and binding.
+(import :std/test
+        :poo-flow/src/module-system/contribution/testing
+        :lambda-episteme/modules/example/interface)
+(define-module-test profile-test example unit
+  "example module contract"
+  (test-case "default profile satisfies its contract"
+    (check-equal? (example-profile? ExampleProfile) #t)))

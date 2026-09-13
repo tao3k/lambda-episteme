@@ -1,0 +1,2 @@
+MATCH (document:Document)
+RETURN document.id, document.kind

@@ -1,4 +1,9 @@
-# wendao-episteme
+# lambda-episteme
+
+The current POO Flow contribution architecture, Scheme module build and isolated
+test lanes are documented in [README.org](README.org) and
+[CONTRIBUTING.org](CONTRIBUTING.org). The material below describes the legacy
+Wendao integration and its source assets.
 
 `wendao-episteme` is the epistemological foundation for Wendao. It defines the
 theory-driven contracts that govern how knowledge objects are named, classified,

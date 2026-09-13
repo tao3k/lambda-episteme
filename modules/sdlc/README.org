@@ -1,0 +1,265 @@
+#+title: SDLC contribution module
+
+* Ownership and composition
+
+SDLC owns reusable lifecycle vocabulary and source policy declarations. Standards
+are optional POO objects selected by =sdlc-with-standards=. The selection is pure,
+rejects duplicate standard identities and does not modify the base profile.
+Projects may select multiple standards. No standard is automatically activated.
+The activity vocabulary does not impose a waterfall sequence; projects own the
+ordering, iteration and release process.
+
+#+begin_export mermaid
+flowchart LR
+  Core[Existing POO Flow] --> SDLC[SDLC contribution]
+  SDLC --> Project[Project profile]
+  NASA[NASA standard profile] --> Project
+  Other[Other standard profiles] --> Project
+  Project --> Consumer[Application assessment and execution]
+#+end_export
+
+The user-owned POO Flow =user-interface/init.ss= selects SDLC using the existing
+custom module syntax (paths are relative to that user directory):
+
+#+begin_src scheme
+(poo-flow!
+ :custom
+ (sdlc "../lambda-episteme/modules/sdlc" +nasa-7150-2d))
+#+end_src
+
+Omit =+nasa-7150-2d= to select SDLC without NASA. =config.ss= owns the pure
+=sdlc-config= projection from a native module selection to a contribution.
+Unknown and duplicate flags fail explicitly. POO Flow's user-owned
+=user-interface/sdlc.ss= consumes the root init selections and exports
+=poo-flow-user-sdlc-contributions=. Consumers import that projection when needed;
+importing root init alone still only declares module selections. There is no
+automatic runtime activation. No example project is part of the SDLC build.
+
+Standard
+objects have identity, edition, source URL, coverage and requirement declarations.
+The same SWE number in different editions must remain bound to its standard
+identity. Adding another standard needs no changes to the SDLC interface.
+
+* NASA source baseline
+
+The user-provided [[https://nodis3.gsfc.nasa.gov/displayAll.cfm?Internal_ID=N_PR_7150_002C_][NPR 7150.2C]] is marked obsolete by NODIS, cancelled
+2020-08-20. The implemented profile uses [[https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter3][NPR 7150.2D]], checked 2026-09-12,
+effective 2022-03-08 with listed expiration 2027-03-08. Recheck the official source
+when updating a baseline. Do not silently substitute editions.
+
+The profile now indexes all 30 Chapter 2 requirement identifiers and 100
+Appendix C matrix requirements. Each entry includes a source excerpt, edition
+and section. Matrix rows retain per-class invocation and authority columns.
+=nasa-requirement-by-id= retrieves a clause; =nasa-matrix-invocation= projects
+only its matrix value, never final applicability or an exemption.
+See [[file:../../MODULES.org][catalog scope and reproducible source import]]. The
+executable rule implementation is complete for all 130 requirements: catalog,
+applicability, paragraph-bound evidence, lifecycle admission, tailoring routing,
+and negative authority boundaries all have explicit implementations. This
+completion describes the module surface; it is not a finding that any project
+satisfies every clause.
+
+Applicability must be assessed against the project's software classification,
+[[https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixC][Appendix C]], relevant requirement text and approved tailoring. This module
+does not assume all NASA requirements apply to every software project.
+[[https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter2][Chapter 2]] governs tailoring and authority; a local profile override is not
+approval. No automatic NASA compliance or certification claim is produced.
+
+* Evidence and authority boundary
+
+=review.ss= now supplies pure review preparation over caller-provided project,
+obligation, evidence and tailoring facts. It checks field shape and exact
+subject/revision/scope/standard/clause matching, with explicit unresolved states.
+See [[file:../../user-interface/README.org][the independent user scenarios]] for supported behavior and limitations.
+It does not implement graph queries, authenticate evidence or approve tailoring.
+
+The model declares subject/revision/producer/scope binding, bidirectional
+traceability, review on changed baselines, and explicit tailoring authority.
+These are source contracts for the consumer, not implemented graph checks.
+Incomplete source scope stays unknown. Tailoring requests, approvals and
+assessment evidence remain distinct from standard definitions.
+
+The generic contribution admission checks source envelopes only. The SDLC
+selection helper checks standard envelopes and duplicate identities; it does
+not validate clause semantics, authenticate approvals, resolve conflicts across
+standards or determine whether a project satisfies an obligation. A source
+standard cannot carry a passed assessment through this helper.
+
+* Isolated qualification
+
+=t/sdlc/unit/sdlc-test.ss= tests standard-free use, multiple standard composition, immutable
+selection, duplicate/malformed selection rejection and source-only admission.
+=t/sdlc/unit/sdlc-config-test.ss= checks the existing init syntax, config entrypoint path,
+optional NASA flag and rejected selections. The parent application keeps its
+actual init-to-contribution integration test separately under
+=t/contribution/integration/sdlc-ui-test.ss=; child tests do not import it.
+Run =just test-scheme= after building against installed POO Flow.
+No GQL, gerbil-parser, Rust or Python is needed by this module or its tests.
+The application owns separate tests for evidence freshness, missing traceability
+under complete/incomplete scopes, unauthorized tailoring and standard conflicts.
+
+2026-09-12 working-source qualification after the init integration: native child
+build passed with the POO Flow contribution and module declaration libraries.
+=gxtest t/sdlc/unit/sdlc-test.ss t/sdlc/unit/sdlc-config-test.ss= passed 17 SDLC and 7 config checks.
+The earlier 18 governance checks are recorded in =t/qualification/authoring.org=.
+The child lane uses isolated output plus POO Flow library paths and does not
+import the parent user configuration. The separate application lane passed
+4 checks using the actual parent init and user projection sources. Its compiled
+init attempt exposed source-form .ssi artifacts under the local parent library;
+this is source integration evidence, not a clean installed-package release test.
+No runtime execution or complete NASA compliance assessment was evaluated.
+
+* Conditional applicability and traceability
+=nasa-project-obligations= projects all 130 catalog entries for a software class.
+=nasa-applicability= preserves matrix invocation separately from effective
+conditions. All indexed project clauses now have a source-level applicability branch:
+unconditional duties follow the matrix, while explicit acquisition, IV&V,
+safety, architecture, generation, communications, tool, data and audit conditions
+use three-valued context. Missing context stays unresolved. SWE-131 uses
+=ivv-required?=; SWE-178/179 use =ivv-performed?=. Project category, payload risk
+class, NASA payload class and software class remain distinct facts.
+Institutional duties retain their separate role-owned review status.
+A false trigger is not an approved waiver; caller context is not authenticated.
+
+=nasa-trace-rules= implements [[https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter3][section 3.12.1 Table 1]]: A/B/C use six relation
+families, D uses three, E has none in that table, and F uses three. These are
+separate from the Appendix C invocation matrix. =sdlc-trace-review= checks
+explicit, typed, revision/scope-bound source inventories in both directions.
+A single edge supplies a witness in either direction; inverse duplicate storage
+is not required. Empty inventories require review. Incomplete inventories yield
+unknown/unresolved endpoints rather than missing-edge violations. Duplicate
+identities and malformed derived facts fail at the boundary.
+
+The diagnostics expose forward/backward gaps, witness IDs, unresolved/invalid
+edges and counts of excluded facts. These are checks on caller-supplied data;
+they do not authenticate that the inventory is complete or the links correct.
+The graph runtime, general query evaluation and release authorization remain
+outside this contribution module.
+
+* Change impact
+=impact.ss= owns =sdlc-change-impact=: a pure, finite projection over explicitly
+supplied trace nodes/edges. Callers select changed node identities and relation
+names. Edges are traversed source-to-target only; this relation direction is a
+project modeling choice, not an automatic interpretation of every NASA relation.
+The algorithm returns deterministic shortest witness paths, affected identities
+and verification identities needing reassessment. It terminates on cycles.
+
+All accepted nodes/edges bind the project's subject, revision and scope. Invalid
+current endpoints prevent a complete result, incomplete inventories retain a
+partial result, and unknown changed identities or duplicate input IDs fail.
+=scoped-impact-complete= refers only to the selected relations in the supplied
+snapshot. Excluded relations and stale/foreign edges do not establish global
+absence of impact. Callers remain responsible for inventory completeness.
+
+=evidence-action: reassessment-required= is a proposed review action. The function
+does not revoke evidence, run a verifier, approve a release or query a backend.
+The user-owned =change-review.ss= demonstrates a requirement/design/code/test
+chain and keeps an unrelated verification outside the impact set.
+
+* CLOS model ownership
+=types.ss= declares native =poo-clos= classes. Evidence and trace objects reuse
+subject/revision/scope, clause references and identity through class inheritance.
+The POO Flow =contribution/model= interface checks native prototype ancestry
+and all effective-slot predicates. =objects.ss= constructs immutable-by-convention
+POO snapshots; callers derive new values with =.o= rather than mutate them.
+=review.ss= and the trace/impact functions recheck contracts at their boundaries,
+so changing a slot through prototype derivation cannot bypass validation.
+Kind tags are descriptive, not evidence of class membership or approval.
+
+These values do not use mutable CLOS lifecycle storage. The independently
+owned =t/sdlc/unit/sdlc-model-test.ss= covers inherited constraints, impersonation,
+invalid overrides and preservation of the previous snapshot.
+
+* Complete source review surface
+=:lambda-episteme/modules/sdlc/standards/nasa-review= exports:
+
+- =nasa-requirement-criteria=: authoritative paragraph and subparagraph criteria,
+  bound to a source URL and SHA-256 snapshot. Notes are preserved separately.
+- =nasa-criterion-evidence=: native CLOS-governed evidence bound to project,
+  revision, scope, standard, requirement, criterion and source digest.
+- =nasa-assess-project=: one review row for each of the 130 requirements, with
+  management, institutional, lifecycle or support activity, missing criteria,
+  stale/foreign exclusions and failure precedence. Every required paragraph
+  needs evidence; a pass on the introductory sentence cannot cover its bullets.
+- =nasa-assess-institution=: a separate 30-requirement review scope for Center
+  and Agency duties, including class-specific measurement obligations. Project
+  evidence does not silently discharge these institutional duties.
+- =nasa-safety-review=: 100% MC/DC and complexity <=15 checks for supplied
+  safety-critical components. Missing measurements remain unknown; exceedances
+  require waiver review and are never cleared by an added approval flag.
+- =nasa-tailoring-requirements=: Appendix C authority routing, cybersecurity
+  SAISO/designated-CISO involvement and health/medical CHMO involvement.
+- =nasa-tailoring-review=: binds claimed authority records to the exact request,
+  project, revision, scope and clause. Missing, stale, unrelated or rejecting
+  records stay visible. Even complete claimed records require independent
+  authority verification; the function never grants an approval.
+
+=user-interface/nasa-audit.ss= is the independent complex example. Its synthetic
+planning evidence, safety gaps and claimed tailoring signature yield a review
+packet, not a NASA compliance or release decision. All module contracts remain
+pure Scheme and use existing POO Flow/CLOS primitives. Full natural-language
+proof, external NASA standards and signature authentication are not claimed by
+paragraph-level evidence coverage.
+
+* Verified lifecycle decisions
+
+The =standards/nasa-lifecycle= factor adds stage policies, verification requests,
+current receipt admission, sequential transitions, and revision rebasing.
+=nasa-baseline-policy= explicitly selects all 100 project requirements or the
+separate 30 institutional requirements with =scope: 'institution=. A custom
+=nasa-stage-policy= selects a declared subset; a subset admission is not an
+entire-baseline result. Project and institutional policies cannot be mixed in
+one lifecycle. The policy sequence belongs to the consuming application.
+
+=nasa-verifiable-evidence= binds a criterion record to a SHA-256 artifact digest.
+The host supplies =nasa-verification-adapter= with an operation taking
+=(request now expires-at)=. Only an exact =#t= issues a receipt. That operation
+must verify the source-bound content against the actual artifact bytes, the
+classification/context, or the complete tailoring decision and authority, as
+appropriate to the request purpose. Supplying a digest or an approved flag does
+not perform this verification. Trust configuration and the clock belong to the
+host, outside submitted project facts.
+
+The generic issuance/revocation mechanism belongs to POO Flow's
+=contribution/verification=; NASA request projection belongs here. Receipts are
+session-local capabilities: clones, stale snapshots, altered fields, expired
+intervals and revoked receipts are rejected. They are not persistent signatures
+or cross-process credentials. The operation must authorize the full validity
+interval. The current boundary assumes serialized access, not concurrent
+issuance/revocation. Verifiers may rely only on fields bound by the named request
+snapshot; extension fields require a corresponding request contract extension.
+
+Transitions re-evaluate every requirement in the prefix of the configured
+sequence. Missing earlier evidence, a changed revision, or a current failure
+blocks advancement. A rebase restarts the sequence. No transition grants release
+authorization. A signed and verified tailoring decision cannot erase a current
+failure record. Existing trace and safety measurement review functions remain
+available; their results must be included in content verification where required.
+The stage gate does not independently inspect artifact bytes. For SWE-052,
+SWE-219 and SWE-220 it now requires a typed inventory projection, a receipt binding
+that entire projection, and successful local structural/measurement checks.
+It never reconstructs an inventory from a digest alone.
+
+See [[file:../../user-interface/nasa-lifecycle.ss][the independent lifecycle UI exercise]],
+[[file:../../t/qualification/nasa-implementation-matrix.org][the generated per-requirement ledger]] and
+[[file:../../t/qualification/nasa-verified-lifecycle.org][the qualification and remaining boundaries]].
+
+* Structured inventory admission
+
+=standards/nasa-structured= supplies native CLOS-constrained trace and safety
+inventory objects. =nasa-inventory-request= binds all inventory records, their
+classification and source baselines to the configured verifier. Pass the
+inventories through =inventories:= to =nasa-stage-gate= or =nasa-transition=.
+
+SWE-052 evaluates every class-selected trace relation in both directions.
+SWE-219 and SWE-220 separately check coverage and complexity for every supplied
+safety-critical component. Incomplete, stale, empty or ambiguous inventories
+cannot pass. A signed inventory with failing numerical/trace data still blocks;
+a changed measurement invalidates its old receipt even if the new value meets
+the threshold. Cumulative transitions carry the same mandatory checks.
+
+These checks do not establish the truth or completeness of external artifacts;
+the trusted verifier must bind the supplied projection to actual source bytes.
+Threshold deviation waivers still require explicit review: this implementation
+does not automatically turn a numerical deviation into a compliant measurement.
+See [[file:../../user-interface/nasa-safety-gate.ss][the independent safety gate workflow]].

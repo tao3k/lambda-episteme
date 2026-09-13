@@ -1,0 +1,56 @@
+#+title: Lambda Episteme — POO Flow contribution modules
+
+* Architecture
+
+POO Flow is the existing core. This repository contributes POO-native domain
+profiles, ontology/policy declarations, source assets and examples. It does not
+implement a graph engine or require Rust, Python, SQL execution or gql-rust.
+GQL source is optional. gerbil-parser checks that source in a separate test lane.
+
+The current modules are =diataxis=, =adr=, =decision-kind= and =sdlc= under =modules/=.
+=sdlc= accepts multiple optional standards; NASA NPR 7150.2D is the first standard profile, with a complete requirement
+review surface for all 130 SWE identifiers, 255 source paragraphs, conditional
+applicability, institutional duties, safety measurements and tailoring records.
+It now consumes receipts from explicitly configured host verification adapters
+for cumulative lifecycle decisions; it supplies no production authenticator and
+does not certify compliance. See [[file:modules/sdlc/README.org][SDLC ownership, sources and qualification]].
+=examples/project.ss= demonstrates ordinary native prototype derivation and
+existing =use-composition= syntax. Adding a new module does not require editing
+POO Flow's core or introducing another contribution DSL.
+
+See [[file:MODULES.org][the module layout and build contract]] for the required POO role files.
+
+* Development
+
+Standalone complex user scenarios live in [[file:user-interface/README.org][user-interface/]]. They share the
+package's single build and =unit-tests.ss= entrypoint.
+The SDLC review API prepares review packets from explicit evidence and project
+facts; it does not produce compliance decisions.
+
+Install/build a POO Flow revision exporting
+=:poo-flow/src/module-system/contribution/interface=, then run:
+
+#+begin_src sh
+just build-scheme
+just test-scheme
+#+end_src
+
+The new interface is currently a coordinated working change, not a published
+release. =gerbil.pkg= records the upstream repository dependency; a release
+must pin a real published/reviewed revision containing that interface.
+An installed gerbil-parser is currently needed by the GQL source tests.
+
+Tests operate on this repository and explicitly installed libraries. They do
+not inspect a superproject, rebuild POO Flow, install a runtime, or query a graph.
+See [[file:CONTRIBUTING.org][contribution guidance]] for ownership and qualification.
+
+* Legacy assets
+
+The older =README.md=, =policies/=, SQL artifacts, =tests/= Python alignment
+suite and Wendao command recipes describe the preceding Wendao integration.
+They remain available as source/reference assets. The new Scheme source-module
+lane is independently built and tested; it does not automatically execute them.
+
+POO declarations and GQL syntax qualification are not evidence of graph-query
+execution or runtime policy enforcement. The consuming application owns those
+separately tested boundaries.
