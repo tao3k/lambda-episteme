@@ -519,15 +519,15 @@ final architecture.  Treating every discovered module interface as a native
 build target makes package planning proportional to the available catalog and
 does not support a Doom-like contribution ecosystem.
 
-The parent POO Flow PackageSpec now reads the module bundles declared by its
-top-level =user-interface/init.ss= and resolves them through the ordinary POO
-module load path.  Its final projection contains ten stable framework targets
-and four selected POO Flow-owned module interfaces.  The fifth selection is a
-private user module and remains at the user loader boundary.  Adding 100 or
-1,000 available-but-unselected module source refs produces zero selected build
-targets in the executable scale scenario.  The scenario emits its p95 timing
-as Observability evidence without embedding a machine-specific timing constant
-in the semantic test.
+The parent POO Flow PackageSpec is now a clean-image bootstrap containing ten
+stable framework targets and zero catalog targets. It imports only ASP's Build
+API: importing a =:poo-flow= loader before the package exists failed in the
+hermetic Bazel image and exposed the stale local =.ssi= dependency. Module
+selection begins after this bootstrap through the ordinary POO module load
+path. Adding 100 or 1,000 available-but-unselected module source refs therefore
+produces zero build targets in the executable scale scenario. The scenario
+emits its p95 timing as Observability evidence without embedding a
+machine-specific timing constant in the semantic test.
 
 Testing observation cadence is now carried by an extensible native POO
 Observability Profile.  The focused module loader, testing observation and
