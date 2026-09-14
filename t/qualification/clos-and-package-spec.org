@@ -429,9 +429,10 @@ the contribution identity, governance, five discovered module =interface.ss=
 files, and the User Interface =init.ss=/=config.ss= pair. An immediate warm run
 reported nine receipts, no compile row, 318ms inside the ASP Build API and
 1.54 seconds wall time. =poo-flow-load-modules= accepts only the source
-collection and always projects =modules/<module-name>/interface.ss=; internal
-=config.ss= selection uses a separately named loader function that is excluded
-from the public loader facades.
+collection and always projects =modules/<module-name>/interface.ss=.  Role-level
+projection remains an internal function excluded from the public loader facade;
+normal selection, loading and build declarations cannot substitute =config.ss=
+or =objects.ss= for the module interface.
 
 The same validation exposed a terminal-only lifecycle defect. GNU =timeout=
 created a background process group, so a completed =gxi= process could be
@@ -439,3 +440,98 @@ stopped by the terminal with state =T= after its final receipt. All Just build,
 test and observation boundaries now use =timeout --foreground=. The Scheme
 build adapter contains no TTY handling, and both production warm build and
 atomic tests now exit normally from an attached terminal.
+
+* Repository-wide public interface closure (2026-09-14)
+
+The root =build.ss= now invokes =poo-flow-load-modules= over
+=poo-flow-maintained-module-source= and uses the resulting source-ref values as
+the complete ASP PackageSpec public-root set.  It does not list the 17 maintained
+module names a second time and does not add a compiler, scheduler, cache or
+=all-gerbil-modules= scan.  The first build compiled all 17
+=src/modules/<module-name>/interface.ss= roots and their role dependencies.
+Every maintained module now supplies =types.ss=, =objects.ss=, =funs.ss=,
+=config.ss= and =interface.ss=; implementation that previously lived directly
+in the custom-task, docker and text interfaces moved unchanged into =funs.ss=.
+
+The registry and module-tree projections now emit one =interface.ss= source per
+module.  The focused lazy-loader suite passed 62 checks, including a 500-module
+linear projection case and all 17 maintained module interfaces.  Lambda's
+atomic source-collection suite passed 29 checks over the same public macro and
+five contributor interfaces.  The NASA certification boundary passed 20 checks,
+and the GitHub GitOps lifecycle composition passed 19 checks.  These are
+implementation and review-boundary qualifications; they are not an official
+NASA certification.
+
+The immediate contribution replay emitted nine receipts, zero compile rows,
+296ms inside the ASP Build API and approximately 1.5 seconds wall time.  The
+root build passed after removing the redundant public-root list, but concurrent
+changes in the shared checkout continued to make native module dependencies
+current during the two immediate replays, so no final zero-compile root timing
+is claimed for this revision.  The earlier 17.9-second zero-compile result
+predates that final simplification and remains historical evidence only.  The
+broad =module-system-test.ss= execution was
+also stopped after 20 seconds with no output; it is not counted as a passing
+gate.  Explicit precompilation completed in 5.3 seconds, while the attributable
+lazy-loader and contribution atomic gates above remained observable and green.
+
+* Native root projection and silent-suite repair (2026-09-15)
+
+The broad =module-system-test.ss= silence was traced to suite preparation, not
+test execution.  =gxtest= re-expanded the source while evaluating its exported
+suite and reached an unbound =make-task-family-descriptor=: the test consumed
+Module System descriptor and resolver operations without importing the public
+=src/module-system/api.ss= facade.  After declaring that dependency, the suite
+completed all 42 checks in 6.3 seconds on the final replay and printed its test
+cases normally.
+
+The root PackageSpec no longer passes =all-gerbil-modules= as its =modules=
+slot.  Maintained module roots are derived once through
+=poo-flow-load-modules= and each value is the conventional
+=src/modules/<module-name>/interface.ss=.  The resulting 27-root BuildSpec is
+handed directly to ASP Build API and upstream =std/make=; user-owned
+=user-interface/custom= sources and contribution test scripts do not enter the
+core production projection.
+
+An intermediate public-import-closure projection exposed duplicate native
+targets and caused upstream =std/make= to report =Completion has already been
+posted= before deadlocking.  Direct root projection removed both the duplicate
+targets and the deadlock.  Projection now reports
+=phase=spec-projected target-count=27 executor=asp-build-api/std-make= before
+the executor begins.  Projection-only time was 1.7 seconds, versus 17.5 seconds
+for the expanded import closure in the same checkout.  A final zero-compile
+root build passed in 17.6 seconds; a native single-root warm control took 1.8
+seconds and the 17 maintained interfaces took 9.2 seconds.  The remaining
+multi-root currentness cost is therefore visible and is not claimed as fully
+optimized.
+
+Both top-level contribution build scripts now import =this-source-file= from
+Gerbil =std/source= and carry executable script mode, preventing native source
+discovery from treating them as library modules.  Their =meta= contracts pass
+under the same =gerbil env= entry used by Just.  The NASA certification atomic
+gate also passed all 20 checks with source scan, import, fixture and test phases
+visible; this remains an executable project qualification rather than an
+official NASA certification.
+
+* Selected module closure correction (2026-09-15)
+
+The 27-root PackageSpec above is retained as intermediate evidence, not the
+final architecture.  Treating every discovered module interface as a native
+build target makes package planning proportional to the available catalog and
+does not support a Doom-like contribution ecosystem.
+
+The parent POO Flow PackageSpec now reads the module bundles declared by its
+top-level =user-interface/init.ss= and resolves them through the ordinary POO
+module load path.  Its final projection contains ten stable framework targets
+and four selected POO Flow-owned module interfaces.  The fifth selection is a
+private user module and remains at the user loader boundary.  Adding 100 or
+1,000 available-but-unselected module source refs produces zero selected build
+targets in the executable scale scenario.  The scenario emits its p95 timing
+as Observability evidence without embedding a machine-specific timing constant
+in the semantic test.
+
+Testing observation cadence is now carried by an extensible native POO
+Observability Profile.  The focused module loader, testing observation and
+module-system suites passed together.  The Lambda NASA certification atomic
+path built one exact test source in 213ms inside the ASP Build API, completed
+its observed import in 729ms, and passed all 20 assertions.  This remains
+project qualification evidence rather than official NASA certification.

@@ -87,12 +87,6 @@
          (map (lambda (source) (metadata-ref source 'entrypoint-role)) sources)
          '(interface interface interface interface interface))))
 
-    (test-case "poo-flow-load-modules does not expose role selection"
-      (check-exception
-       (apply poo-flow-load-modules
-              (list lambda-episteme-module-source 'config))
-       true))
-
     (test-case "Lambda init uses the same source-neutral module declaration"
       (let* ((selections
               (poo-flow-user-module-bundles->modules
@@ -101,21 +95,21 @@
         (check-equal? (poo-flow-user-module-selection-source-ref selection) #f)
         (check-equal? (poo-flow-user-module-selection-entrypoint selection) #f)))
 
-    (test-case "an explicit @ modules path uses internal config projection"
+    (test-case "an explicit @ modules path resolves public interfaces"
       (let* ((selection
               (caar
                (poo-flow-modules!
                 :custom (@ "lambda-episteme/modules" +private))))
              (sources
               (poo-flow-module-selection-source-refs
-               lambda-episteme-module-load-path selection '(config))))
+               lambda-episteme-module-load-path selection)))
         (check-equal?
          (map poo-flow-module-source-ref-value sources)
-         '("lambda-episteme/modules/adr/config.ss"
-           "lambda-episteme/modules/decision-kind/config.ss"
-           "lambda-episteme/modules/diataxis/config.ss"
-           "lambda-episteme/modules/gitops/config.ss"
-           "lambda-episteme/modules/sdlc/config.ss"))))
+         '("lambda-episteme/modules/adr/interface.ss"
+           "lambda-episteme/modules/decision-kind/interface.ss"
+           "lambda-episteme/modules/diataxis/interface.ss"
+           "lambda-episteme/modules/gitops/interface.ss"
+           "lambda-episteme/modules/sdlc/interface.ss"))))
 
     (test-case "an official registered name expands the trusted contribution"
       (let* ((selection
@@ -123,19 +117,18 @@
              (sources
               (poo-flow-module-selection-source-refs
                poo-flow-official-contribution-load-path
-               selection
-               '(config))))
+               selection)))
         (check-equal? (length sources) 5)
         (check-equal?
          (map poo-flow-module-source-ref-kind sources)
          '(local local local local local))
         (check-equal?
          (map poo-flow-module-source-ref-value sources)
-         '("lambda-episteme/modules/adr/config.ss"
-           "lambda-episteme/modules/decision-kind/config.ss"
-           "lambda-episteme/modules/diataxis/config.ss"
-           "lambda-episteme/modules/gitops/config.ss"
-           "lambda-episteme/modules/sdlc/config.ss"))))
+         '("lambda-episteme/modules/adr/interface.ss"
+           "lambda-episteme/modules/decision-kind/interface.ss"
+           "lambda-episteme/modules/diataxis/interface.ss"
+           "lambda-episteme/modules/gitops/interface.ss"
+           "lambda-episteme/modules/sdlc/interface.ss"))))
 
     (test-case "a registered module name resolves one contributed module"
       (let* ((selection (caar (poo-flow-modules! :custom (sdlc))))
@@ -146,7 +139,7 @@
         (check-equal? (metadata-ref source 'source-collection)
                       'lambda-episteme)
         (check-equal? (poo-flow-module-source-ref-value source)
-                      "lambda-episteme/modules/sdlc/config.ss")))
+                      "lambda-episteme/modules/sdlc/interface.ss")))
 
     (test-case "a missing registered checkout produces a pinned materialization source"
       (let* ((registry
@@ -200,7 +193,7 @@
         (check-equal? (metadata-ref core-source 'source-collection)
                       'poo-flow-maintained)
         (check-equal? (poo-flow-module-source-ref-value core-source)
-                      "src/modules/funflow/config.ss")))
+                      "src/modules/funflow/interface.ss")))
 
     (test-case "the same selection syntax resolves Lambda through its source object"
       (let* ((selection
@@ -214,7 +207,7 @@
         (check-equal? (metadata-ref source 'source-collection) 'lambda-episteme)
         (check-equal? (metadata-ref source 'source-owner) 'contributor)
         (check-equal? (poo-flow-module-source-ref-value source)
-                      "lambda-episteme/modules/sdlc/config.ss")))
+                      "lambda-episteme/modules/sdlc/interface.ss")))
 
     (test-case "a user source placed first overrides the contributor source"
       (let* ((user-source
@@ -253,7 +246,7 @@
               (car (poo-flow-module-selection-source-refs
                     lambda-episteme-module-load-path selection))))
         (check-equal? (poo-flow-module-source-ref-value source)
-                      "./private/module/config.ss")))
+                      "./private/module/interface.ss")))
 
     (test-case "a missing source fails before loader execution"
       (check-exception

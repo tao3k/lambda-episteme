@@ -105,7 +105,7 @@ standard cannot carry a passed assessment through this helper.
 
 =t/sdlc/unit/sdlc-test.ss= tests standard-free use, multiple standard composition, immutable
 selection, duplicate/malformed selection rejection and source-only admission.
-=t/sdlc/unit/sdlc-config-test.ss= checks the existing init syntax, config entrypoint path,
+=t/sdlc/unit/sdlc-config-test.ss= checks the existing init syntax, public interface entrypoint path,
 optional NASA flag and rejected selections. The parent application keeps its
 actual init-to-contribution integration test separately under
 =t/contribution/integration/sdlc-ui-test.ss=; child tests do not import it.
