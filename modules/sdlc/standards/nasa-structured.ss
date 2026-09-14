@@ -1,10 +1,10 @@
 ;;; Deterministic local checks over authenticated inventory projections.
-(import :poo-flow/src/module-system/contribution/interface
+(import (only-in :clan/poo/object .o .ref)
         :poo-flow/src/module-system/contribution/model
-        :lambda-episteme/modules/sdlc/types
-        :lambda-episteme/modules/sdlc/funs
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d
-        :lambda-episteme/modules/sdlc/standards/nasa-review
+        :poo-flow/lambda-episteme/modules/sdlc/types
+        :poo-flow/lambda-episteme/modules/sdlc/funs
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-review
         (only-in :std/srfi/1 every filter))
 (export nasa-safety-inventory nasa-trace-inventory nasa-structured-requirement?
         nasa-inventory-for? nasa-inventory-snapshot nasa-structured-review)

@@ -1,7 +1,7 @@
 (import :poo-flow/src/module-system/contribution/testing)
 (import :std/test :std/error
         :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d
         (only-in :std/srfi/1 delete-duplicates filter))
 (export nasa-catalog-test)
 (def nasa-catalog-test

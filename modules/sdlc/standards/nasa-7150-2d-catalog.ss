@@ -1,5 +1,5 @@
 ;;; Generated from official NODIS HTML; do not hand edit.
-(import :poo-flow/src/module-system/contribution/interface)
+(import (only-in :clan/poo/object .o))
 (export nasa-requirement-catalog nasa-catalog-source-digests)
 (def nasa-catalog-source-digests
   (.o

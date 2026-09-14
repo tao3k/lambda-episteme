@@ -1,5 +1,5 @@
 (import :poo-flow/src/module-system/declaration/interface
-        :lambda-episteme/modules/adr/funs)
+        :poo-flow/lambda-episteme/modules/adr/funs)
 (export adr-config)
 (def (adr-config selection)
   (unless (and (poo-flow-user-module-selection? selection)

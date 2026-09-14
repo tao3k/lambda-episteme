@@ -1,9 +1,9 @@
 ;;; Synthetic complete inventories shared by module-owned tests only.
-(import :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/modules/sdlc/interface
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d
-        :lambda-episteme/modules/sdlc/standards/nasa-review
-        :lambda-episteme/modules/sdlc/standards/nasa-structured
+(import (only-in :clan/poo/object .ref)
+        :poo-flow/lambda-episteme/modules/sdlc/objects
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-review
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-structured
         (only-in :std/srfi/1 delete-duplicates append-map))
 (def (test-inventories project class-value digest-value)
   (let* ((rules (nasa-trace-rules class-value))

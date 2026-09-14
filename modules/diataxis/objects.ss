@@ -1,5 +1,5 @@
 (import :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/governance/objects)
+        :poo-flow/lambda-episteme/governance/objects)
 (export DiataxisProfile)
 (def diataxis-ontology
   (.o document-label: 'Document kind-property: 'kind identity-property: 'id))

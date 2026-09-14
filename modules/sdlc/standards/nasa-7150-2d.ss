@@ -1,30 +1,21 @@
-(import :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/modules/sdlc/types
-        :lambda-episteme/modules/sdlc/objects
-        :lambda-episteme/modules/sdlc/funs
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d-catalog
-        (only-in :std/srfi/1 find))
-(export Nasa7150_2D nasa-requirement-by-id nasa-matrix-invocation)
+(import (only-in :clan/poo/object .o .ref .slot? object?)
+        :poo-flow/lambda-episteme/modules/sdlc/types
+        :poo-flow/lambda-episteme/modules/sdlc/objects
+        :poo-flow/lambda-episteme/modules/sdlc/funs
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d-profile
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d-catalog
+        (only-in :gerbil/runtime/hash list->hash-table-string))
+(export (import: :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d-profile)
+        nasa-requirement-by-id nasa-matrix-invocation)
 
 ;;; Complete requirement index and matrix; execution and approvals remain separate.
-(def chapter3-url
-  "https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter3")
-(def Nasa7150_2D
-  (.o (:: @ StandardProfile.) identity: "nasa/npr-7150.2d" edition: "D"
-      source-url: chapter3-url verified-on: "2026-09-12"
-      effective-date: "2022-03-08" expiration-date: "2027-03-08"
-      applicability-source:
-      "https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixC"
-      tailoring-source:
-      "https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=Chapter2"
-      requirements: nasa-requirement-catalog
-      catalog-coverage: 'chapters2-through5-and-appendix-c-complete
-      source-digests: nasa-catalog-source-digests
-      executable-coverage: 'source-review-and-conditional-applicability
-      traceability-table-status: 'class-conditional-source-checks))
-
+(def nasa-requirement-index
+  (list->hash-table-string
+   (map (lambda (requirement)
+          (cons (.ref requirement 'identity) requirement))
+        nasa-requirement-catalog)))
 (def (nasa-requirement-by-id identity-value)
-  (or (find (lambda (r) (equal? (.ref r 'identity) identity-value)) nasa-requirement-catalog)
+  (or (hash-get nasa-requirement-index identity-value)
       (error "unknown NASA requirement" identity-value)))
 ;;; Matrix invocation is not final applicability: clause conditions and approved
 ;;; tailoring still apply. Institutional obligations use their own source text.
@@ -76,11 +67,19 @@
   '("SWE-013" "SWE-015" "SWE-016" "SWE-017" "SWE-018" "SWE-020" "SWE-022" "SWE-024" "SWE-033" "SWE-034" "SWE-036" "SWE-037" "SWE-039" "SWE-040" "SWE-042" "SWE-046" "SWE-050" "SWE-051" "SWE-052" "SWE-053" "SWE-054" "SWE-055" "SWE-057" "SWE-058" "SWE-060" "SWE-061" "SWE-062" "SWE-063" "SWE-065" "SWE-066" "SWE-068" "SWE-071" "SWE-073" "SWE-075" "SWE-077" "SWE-079" "SWE-080" "SWE-081" "SWE-082" "SWE-083" "SWE-084" "SWE-085" "SWE-086" "SWE-087" "SWE-088" "SWE-089" "SWE-090" "SWE-093" "SWE-094" "SWE-125" "SWE-135" "SWE-136" "SWE-139" "SWE-147" "SWE-148" "SWE-151" "SWE-154" "SWE-156" "SWE-159" "SWE-174" "SWE-176" "SWE-184" "SWE-185" "SWE-186" "SWE-187" "SWE-189" "SWE-190" "SWE-191" "SWE-192" "SWE-194" "SWE-195" "SWE-196" "SWE-199" "SWE-200" "SWE-201" "SWE-202" "SWE-203" "SWE-204" "SWE-205" "SWE-207" "SWE-210"))
 (def nasa-institutional-requirements
   '("SWE-002" "SWE-004" "SWE-152" "SWE-129" "SWE-100" "SWE-098" "SWE-208" "SWE-209" "SWE-212" "SWE-221" "SWE-222" "SWE-223" "SWE-003" "SWE-005" "SWE-140" "SWE-095" "SWE-006" "SWE-091" "SWE-092" "SWE-142" "SWE-144" "SWE-153" "SWE-215" "SWE-216" "SWE-217" "SWE-214" "SWE-218" "SWE-126" "SWE-150" "SWE-021"))
+(def nasa-rule-mode-index
+  (list->hash-table-string
+   (append (map (lambda (id) (cons id 'conditional))
+                nasa-conditional-requirements)
+           (map (lambda (id) (cons id 'unconditional))
+                nasa-unconditional-requirements)
+           (map (lambda (id) (cons id 'institutional))
+                nasa-institutional-requirements))))
 (def (nasa-rule-mode id)
-  (cond ((member id nasa-conditional-requirements) 'conditional)
-        ((member id nasa-unconditional-requirements) 'unconditional)
-        ((member id nasa-institutional-requirements) 'institutional)
-        (else (error "NASA requirement has no reviewed applicability rule" id))))
+  (let (entry (hash-get nasa-rule-mode-index id))
+    (if entry
+      entry
+      (error "NASA requirement has no reviewed applicability rule" id))))
 
 (def (nasa-condition id class-value context)
   (cond

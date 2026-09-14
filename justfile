@@ -161,7 +161,17 @@ test: build-wendao test-python-align
 
 # Source-module lanes: consume installed POO Flow, never build a superproject.
 build-scheme:
-    gerbil build
+    cd '{{ self_root }}/..' && just build-contribute lambda-episteme
 
-test-scheme:
-    gerbil env ./unit-tests.ss
+test-scheme module="sdlc":
+    echo "[lambda-episteme-test] phase=module-selected module={{ module }}"
+    cd '{{ self_root }}/..' && just test-contribute lambda-episteme "{{ module }}"
+
+test-scheme-atomic module="sdlc" test_file="unit/nasa-certification-test.ss":
+    echo "[lambda-episteme-test] phase=file-selected module={{ module }} test={{ test_file }}"
+    cd '{{ self_root }}/..' && just test-contribute-atomic lambda-episteme "{{ module }}" "{{ test_file }}"
+
+test-scheme-all:
+    echo "[lambda-episteme-test] phase=module-selected module=all"
+    cd '{{ self_root }}/..' && just build-contribute-tests lambda-episteme all
+    cd '{{ self_root }}/..' && GERBIL_PATH="$PWD/.gerbil/contributions/lambda-episteme/test" GERBIL_LOADPATH="$PWD/.gerbil/contributions/lambda-episteme/test/lib:$PWD/.gerbil/lib" gxi ./lambda-episteme/unit-tests.ss

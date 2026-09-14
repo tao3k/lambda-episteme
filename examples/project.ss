@@ -1,8 +1,8 @@
 (import :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/governance/interface
-        :lambda-episteme/modules/diataxis/interface
-        :lambda-episteme/modules/adr/interface
-        :lambda-episteme/modules/decision-kind/interface)
+        :poo-flow/lambda-episteme/governance/interface
+        :poo-flow/lambda-episteme/modules/diataxis/interface
+        :poo-flow/lambda-episteme/modules/adr/interface
+        :poo-flow/lambda-episteme/modules/decision-kind/interface)
 (export project-composition ProjectDiataxisProfile)
 (def ProjectDiataxisProfile
   (.o (:: @ DiataxisProfile)

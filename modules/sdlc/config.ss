@@ -1,13 +1,17 @@
 ;;; User selection projection. Importing this module enables no standard.
-(import :poo-flow/src/module-system/contribution/interface
-        :poo-flow/src/module-system/declaration/interface
-        :lambda-episteme/governance/objects
-        :lambda-episteme/modules/sdlc/types
-        :lambda-episteme/modules/sdlc/objects
-        :lambda-episteme/modules/sdlc/funs
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d
+(import :poo-flow/src/module-system/declaration/interface
+        :poo-flow/lambda-episteme/governance/objects
+        :poo-flow/lambda-episteme/modules/sdlc/types
+        :poo-flow/lambda-episteme/modules/sdlc/objects
+        :poo-flow/lambda-episteme/modules/sdlc/funs
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d-profile
         (only-in :std/srfi/1 every))
-(export sdlc-config)
+(export sdlc-config sdlc-nasa-7150-profile)
+
+;;; Module-owned base Profile for scenarios that explicitly select NASA
+;;; NPR 7150.2D. User compositions derive scenario Profiles from this value.
+(def sdlc-nasa-7150-profile
+  (sdlc-with-standards SdlcProfile (list Nasa7150_2D)))
 
 (def (sdlc-config selection)
   (unless (and (poo-flow-user-module-selection? selection)
@@ -19,5 +23,4 @@
     (unless (<= (length flags) 1)
       (error "duplicate SDLC feature" flags))
     (governance-module
-      (sdlc-with-standards SdlcProfile
-        (if (null? flags) '() (list Nasa7150_2D))))))
+     (if (null? flags) SdlcProfile sdlc-nasa-7150-profile))))

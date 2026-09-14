@@ -9,6 +9,11 @@ Projects may select multiple standards. No standard is automatically activated.
 The activity vocabulary does not impose a waterfall sequence; projects own the
 ordering, iteration and release process.
 
+SDLC does not own CI providers or deployment environments. It contributes the
+standard, project, obligation, evidence, traceability, tailoring and lifecycle
+models. Applications combine this module with POO Flow-owned workflow modules
+through =use-composition=.
+
 #+begin_export mermaid
 flowchart LR
   Core[Existing POO Flow] --> SDLC[SDLC contribution]
@@ -16,6 +21,8 @@ flowchart LR
   NASA[NASA standard profile] --> Project
   Other[Other standard profiles] --> Project
   Project --> Consumer[Application assessment and execution]
+  Workflow[POO Flow workflow module] --> Consumer
+  Consumer -->|"host-owned execution"| Runtime[GitHub Actions or another CI host]
 #+end_export
 
 The user-owned POO Flow =user-interface/init.ss= selects SDLC using the existing
@@ -24,8 +31,11 @@ custom module syntax (paths are relative to that user directory):
 #+begin_src scheme
 (poo-flow!
  :custom
- (sdlc "../lambda-episteme/modules/sdlc" +nasa-7150-2d))
+ (sdlc +nasa-7150-2d))
 #+end_src
+
+Here =sdlc= resolves through POO Flow's trusted contribution registry. A user
+can instead load a complete private collection with =(@ "./modules")=.
 
 Omit =+nasa-7150-2d= to select SDLC without NASA. =config.ss= owns the pure
 =sdlc-config= projection from a native module selection to a contribution.
@@ -34,6 +44,12 @@ Unknown and duplicate flags fail explicitly. POO Flow's user-owned
 =poo-flow-user-sdlc-contributions=. Consumers import that projection when needed;
 importing root init alone still only declares module selections. There is no
 automatic runtime activation. No example project is part of the SDLC build.
+
+=standards/nasa-7150-2d-profile.ss= owns the standard descriptor used by
+=config.ss= and scenario Profiles. It contains the immutable source/catalog
+value only. Applicability, matrix lookup, review and certification algorithms
+remain in their standard modules, so loading a Scenario Profile does not import
+the full NASA execution surface merely to inherit one standard value.
 
 Standard
 objects have identity, edition, source URL, coverage and requirement declarations.
@@ -171,7 +187,7 @@ owned =t/sdlc/unit/sdlc-model-test.ss= covers inherited constraints, impersonati
 invalid overrides and preservation of the previous snapshot.
 
 * Complete source review surface
-=:lambda-episteme/modules/sdlc/standards/nasa-review= exports:
+=:poo-flow/lambda-episteme/modules/sdlc/standards/nasa-review= exports:
 
 - =nasa-requirement-criteria=: authoritative paragraph and subparagraph criteria,
   bound to a source URL and SHA-256 snapshot. Notes are preserved separately.
@@ -194,7 +210,7 @@ invalid overrides and preservation of the previous snapshot.
   records stay visible. Even complete claimed records require independent
   authority verification; the function never grants an approval.
 
-=user-interface/nasa-audit.ss= is the independent complex example. Its synthetic
+=user-interface/scenarios/nasa-audit.ss= is the independent complex example. Its synthetic
 planning evidence, safety gaps and claimed tailoring signature yield a review
 packet, not a NASA compliance or release decision. All module contracts remain
 pure Scheme and use existing POO Flow/CLOS primitives. Full natural-language
@@ -240,7 +256,7 @@ SWE-219 and SWE-220 it now requires a typed inventory projection, a receipt bind
 that entire projection, and successful local structural/measurement checks.
 It never reconstructs an inventory from a digest alone.
 
-See [[file:../../user-interface/nasa-lifecycle.ss][the independent lifecycle UI exercise]],
+See [[file:../../user-interface/scenarios/nasa-lifecycle.ss][the independent lifecycle UI exercise]],
 [[file:../../t/qualification/nasa-implementation-matrix.org][the generated per-requirement ledger]] and
 [[file:../../t/qualification/nasa-verified-lifecycle.org][the qualification and remaining boundaries]].
 
@@ -262,4 +278,4 @@ These checks do not establish the truth or completeness of external artifacts;
 the trusted verifier must bind the supplied projection to actual source bytes.
 Threshold deviation waivers still require explicit review: this implementation
 does not automatically turn a numerical deviation into a compliant measurement.
-See [[file:../../user-interface/nasa-safety-gate.ss][the independent safety gate workflow]].
+See [[file:../../user-interface/scenarios/nasa-safety-gate.ss][the independent safety gate workflow]].

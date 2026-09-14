@@ -34,6 +34,6 @@ acceptance is claimed.
 | modules/sdlc/funs.ss | 57641b407e9e9945581263da5ec23e3ec876d90c892dca401fecb7b7780a018a |
 | modules/sdlc/review.ss | 3b3ced87ab71ee54350b88bb089047b7c9562c9824c576a4329ccd654a616b7f |
 | modules/sdlc/standards/nasa-7150-2d.ss | 54c9f5e5e8baa5e4fad385abc34d69ab9ff08f76add1436b9b8a097e2b413517 |
-| user-interface/nasa-release.ss | 56e6d2aae2c21c071a42c3d92e132a76d5c052c9d5c11d5635b68f57c3cc4a87 |
+| user-interface/scenarios/nasa-release.ss | 56e6d2aae2c21c071a42c3d92e132a76d5c052c9d5c11d5635b68f57c3cc4a87 |
 | t/sdlc-trace-test.ss | 552661eae8a73460c3499835cde618f71d2cf285315bf08b3d8fc1092dc57d8b |
 | t/nasa-release-test.ss | 64818e4de6aba11a4acf4521b79dacf27fdd7a1bff8ae7fdef1ea2725e1cafa1 |

@@ -1,5 +1,5 @@
 (import :poo-flow/src/module-system/declaration/interface
-        :lambda-episteme/modules/diataxis/funs)
+        :poo-flow/lambda-episteme/modules/diataxis/funs)
 (export diataxis-config)
 (def (diataxis-config selection)
   (unless (and (poo-flow-user-module-selection? selection)

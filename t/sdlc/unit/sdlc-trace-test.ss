@@ -1,8 +1,8 @@
 (import :poo-flow/src/module-system/contribution/testing)
 (import :std/test :std/error
         :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/modules/sdlc/interface
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d)
+        :poo-flow/lambda-episteme/modules/sdlc/interface
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d)
 (def project (sdlc-project "flight" "r2" "software" #t))
 (def rule (sdlc-trace-rule "SWE-052/verification" 'requirement 'verification))
 (def req (sdlc-trace-node "req" 'requirement project))

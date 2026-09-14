@@ -53,15 +53,12 @@ commands. Final totals and warm measurements follow below. The complete 100- and
 named synthetic verifiers and all source-paragraph records; missing evidence
 and revoked receipts independently block those baselines.
 
-Reproduction with the qualified POO Flow dependency installed:
+Current reproduction from the containing POO Flow checkout:
 
 #+begin_src sh
-gxi build.ss
-gxi build-cases.ss
-gxi test.ss unit
-gxi test.ss user-interface
-gxi test.ss source
-gxi tools/nasa-implementation-report.ss
+just build-contribute lambda-episteme
+just build-contribute-tests lambda-episteme
+gerbil env ./lambda-episteme/unit-tests.ss
 #+end_src
 
 * Limits that remain explicit
@@ -91,6 +88,15 @@ These checks do not establish a clean installed release, the entire parent POO
 Flow suite, external runtime enforcement, or authorization to deploy/release.
 
 * Final receipts
+
+The current 2026-09-14 isolated child lane passed 573 checks.  Its NASA
+lifecycle unit suite now contributes 49 checks after adding the 130-row
+implementation-status, implementation-surface, external-dependency and
+compliance/certification separation assertions.
+
+The following cross-repository table is the earlier 2026-09-12 qualification
+receipt and is retained with its original scope and totals rather than being
+silently recomputed from the newer child-only run.
 
 | Lane | Native checks | Result |
 |---+---+---|

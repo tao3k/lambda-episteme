@@ -1,7 +1,8 @@
-(import :poo-flow/src/module-system/contribution/interface
+(import (only-in :clan/poo/object .ref .slot? object?)
         :poo-flow/src/module-system/contribution/model
-        :lambda-episteme/governance/objects
-        (only-in :std/srfi/1 every delete-duplicates))
+        :poo-flow/lambda-episteme/governance/objects
+        (only-in :std/srfi/1 every)
+        (only-in :std/misc/list delete-duplicates/hash))
 (export standard-profile? sdlc-profile? sdlc-text?
         SdlcStandard SdlcBoundFact SdlcProject SdlcObligation SdlcEvidence
         SdlcTailoringRequest SdlcTraceNode SdlcTraceEdge SdlcTraceRule
@@ -19,7 +20,7 @@
        (every (lambda (r) (and (object? r) (.slot? r 'identity)
                                (sdlc-text? (.ref r 'identity)))) values)
        (let (ids (map (lambda (r) (.ref r 'identity)) values))
-         (= (length ids) (length (delete-duplicates ids equal?))))))
+         (= (length ids) (length (delete-duplicates/hash ids))))))
 
 ;;; CLOS owns inheritance and effective-slot conjunction; declarations are
 ;;; ordinary native class and slot metaobjects, with no contribution DSL.
@@ -66,7 +67,7 @@
        (list? (.ref value 'standards))
        (every standard-profile? (.ref value 'standards))
        (let ((ids (map (lambda (s) (.ref s 'identity)) (.ref value 'standards))))
-         (= (length ids) (length (delete-duplicates ids equal?))))))
+         (= (length ids) (length (delete-duplicates/hash ids))))))
 (def (standard-profile? value) (poo-flow-model? SdlcStandard value))
 (def (sdlc-bound-fact? value) (poo-flow-model? SdlcBoundFact value))
 (def (sdlc-project? value) (poo-flow-model? SdlcProject value))
@@ -114,7 +115,7 @@
         SdlcVerificationRequest sdlc-verification-request?)
 (def (nonempty-text-list? values)
   (and (list? values) (pair? values) (every sdlc-text? values)
-       (= (length values) (length (delete-duplicates values equal?)))))
+       (= (length values) (length (delete-duplicates/hash values)))))
 (def SdlcStagePolicy
   (poo-clos-class 'sdlc/stage-policy direct-superclasses: (list SdlcIdentified)
     direct-slots: (list (enum-slot 'assessment-scope '(project institution))
@@ -124,7 +125,7 @@
     direct-slots: (text-slots '(stage))))
 (def SdlcVerificationRequest
   (poo-clos-class 'sdlc/verification-request direct-superclasses: (list SdlcBoundFact)
-    direct-slots: (list (enum-slot 'purpose '(criterion-content classification-and-context tailoring-decision structured-inventory))
+    direct-slots: (list (enum-slot 'purpose '(criterion-content classification-and-context tailoring-decision structured-inventory certification-decision))
                        (poo-clos-direct-slot-definition 'facts type-predicate: object?))))
 (def (sdlc-stage-policy? value) (poo-flow-model? SdlcStagePolicy value))
 (def (sdlc-lifecycle-state? value) (poo-flow-model? SdlcLifecycleState value))

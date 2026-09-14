@@ -1,2 +1,0 @@
-(package: lambda-episteme
- depend: ("github.com/tao3k/poo-flow"))

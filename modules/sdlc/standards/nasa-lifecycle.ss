@@ -1,12 +1,14 @@
 ;;; Pure lifecycle decisions consume receipts from an explicit trusted boundary.
-(import :poo-flow/src/module-system/contribution/interface
+(import (only-in :clan/poo/object .o .ref .slot? object?)
         :poo-flow/src/module-system/contribution/model
         :poo-flow/src/module-system/contribution/verification
-        :lambda-episteme/modules/sdlc/types
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d-catalog
-        :lambda-episteme/modules/sdlc/standards/nasa-review
-        :lambda-episteme/modules/sdlc/standards/nasa-structured
+        :poo-flow/lambda-episteme/modules/sdlc/types
+        (only-in :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-policy
+                 nasa-stage-policy
+                 nasa-baseline-policy)
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d-catalog
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-review
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-structured
         (only-in :std/srfi/1 every any filter find delete-duplicates append-map take))
 (export nasa-stage-policy nasa-baseline-policy nasa-context-request nasa-evidence-request
         nasa-verifiable-evidence nasa-verification-adapter nasa-stage-gate nasa-inventory-request
@@ -28,22 +30,6 @@
   (unless (and (sdlc-criterion-evidence? evidence) (sha256? digest-value))
     (error "verifiable NASA evidence requires a SHA-256 artifact digest"))
   (.o (:: @ evidence) artifact-digest: digest-value))
-(def (nasa-stage-policy id requirements-value scope: (scope-value 'project))
-  (let (result (poo-flow-check-model SdlcStagePolicy
-                (.o (:: @ (poo-flow-model-prototype SdlcStagePolicy))
-                    identity: id assessment-scope: scope-value requirements: requirements-value)))
-    (when (equal? id "unstarted") (error "reserved lifecycle stage"))
-    (for-each (lambda (id)
-                (nasa-requirement-by-id id)
-                (unless (eq? (eq? (nasa-rule-mode id) 'institutional) (eq? scope-value 'institution))
-                  (error "NASA stage mixes project and institutional duties" id))) requirements-value)
-    result))
-(def (nasa-baseline-policy id scope: (scope-value 'project))
-  (nasa-stage-policy id
-    (map (lambda (row) (.ref row 'identity))
-         (filter (lambda (row) (eq? (eq? (nasa-rule-mode (.ref row 'identity)) 'institutional)
-                                    (eq? scope-value 'institution))) nasa-requirement-catalog))
-    scope: scope-value))
 (def (request project purpose-value facts-value)
   (poo-flow-check-model SdlcVerificationRequest
     (.o (:: @ (poo-flow-model-prototype SdlcVerificationRequest))

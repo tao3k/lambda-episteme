@@ -1,6 +1,6 @@
 (import :std/test :std/error
         :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/modules/sdlc/interface)
+        :poo-flow/lambda-episteme/modules/sdlc/interface)
 (def project (sdlc-project "flight" "r2" "software" #t))
 (def evidence (sdlc-evidence "ev" "flight" "r2" "software" "nasa" "SWE-052" "test" 'pass))
 (export sdlc-model-test)

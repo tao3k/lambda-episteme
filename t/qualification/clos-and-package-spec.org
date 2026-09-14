@@ -3,23 +3,37 @@
 
 * Source and architecture
 
-The linked =asp-gerbil-scheme= source is based on commit
-=efb8955e31cf45afa9573cbed685ce6cb31782fd=. The child =build.ss= inherits the
-upstream library PackageSpec and declares only =interface.ss= and
-=user-interface/interface.ss= as public entries. The native Gerbil import
-closure selected 39 reachable source modules. There is no closure receipt,
-=modules= override,
-=all-gerbil-modules= call, =build-cases.ss= entrypoint, or implementation-file
-enumeration.
+The contribution has no =gerbil.pkg= and owns no executable build script.
+POO Flow's default =build.ss= contains only its seven maintained public roots:
+core, module metadata, declaration syntax, loader facade, feature interface,
+the hygienic init declaration entry, and configuration discovery syntax.
+The POO Flow-owned =build-contribute.ss= adapter constructs the contribution
+source internally, consumes Lambda's source-neutral module bundle, and submits each selected module
+tree to the ASP Build API as an independent source stage. The source files are
+derived by POO Flow's shared deterministic tree walk. Shared governance
+and the User Interface scenario are explicit non-module stages. There is no
+=modules= override, =all-gerbil-modules= call, implementation-file enumeration,
+second compiler, scheduler, or artifact cache.
 
-ASP PackageSpec and native =std/make= remain the only source closure, freshness,
-compiler, and scheduling owners. Module structure is expressed through each
+The separately invoked atomic-test build is narrower by definition: its user
+selected =t/<module-name>/<test-file>= path becomes one ASP
+=package-source-stage=. This does not change the production stages or enumerate
+a module directory.
+
+A module-scoped test build uses the shared deterministic core tree walk to
+derive every =*-test.ss= below =t/<module-name>/= and submits those files plus
+=build-root.ss= as one ASP stage. This prevents =gxtest= from falling back to
+stale test artifacts in a production image while keeping the BuildSpec free of
+hand-maintained per-file declarations.
+
+ASP Build API and native =std/make= remain the only source projection,
+freshness, compiler, and scheduling owners. Module structure is expressed through each
 module's =types.ss=, =objects.ss=, =funs.ss=, =config.ss= and =interface.ss=;
 the package build does not repeat that structure.
 
 * Behavioral evidence
 
-The unified child lane passed 567 checks, including the complete 130-rule NASA
+The separated contribution test lane passed 580 checks, including the complete 130-rule NASA
 project/institution traversal, structured trace/safety inventories, verified
 lifecycle admission, contribution governance, and independent UI cases. The
 three optional GQL parser source checks were not evaluated in this isolated
@@ -27,6 +41,31 @@ environment because =:gerbil-parser/languages/gql/iso-39075-2024/parser= was
 not present on its load path. No SDLC result grants release authority.
 
 * Warm build observation
+
+** Superseded eager contribution closure (2026-09-14)
+
+After adding the contribution roots to POO Flow's PackageSpec, six unchanged
+invocations completed in 101.89, 103.49, 90.77, 67.03, 84.89 and 100.46
+seconds. Every invocation still emitted native compile jobs. A subsequent
+production build after the focused core =gxtest= run rebuilt the broad closure
+and completed in 314.44 seconds. The waves moved
+from dependencies to consumers across invocations, matching the already
+documented deferred native-job timestamp inversion at the Gerbil =std/make=
+boundary. This was a red warm-build result and was traced to an ownership error:
+the default core PackageSpec eagerly imported Lambda's aggregate interface and
+the full =src/module-system/api.ss= facade.
+
+The linked ASP source is exactly the =gerbil.pkg= revision
+=2a69a080976a0c0b80a78f5b6d05204fc7b4c653= and contains the linear import
+closure projection. The failure therefore is not caused by a child-owned API,
+an old ASP checkout, or a second PackageSpec. POO Flow does not patch the
+upstream executor. The successful source build and 580 test checks establish
+structural and behavioral evidence only; they do not establish build-performance
+closure.
+
+The table below is a historical observation of the superseded child-package
+layout. It must not be cited as evidence for the current POO Flow-owned
+=build.ss= path.
 
 The same isolated child output was built repeatedly without source changes.
 The build emitted no compile jobs and a before/after comparison preserved all
@@ -36,11 +75,11 @@ The build emitted no compile jobs and a before/after comparison preserved all
 |-------+------+------------------+---------------------+-------------------+--------------------|
 | build.ss | 0 | 8.17--18.99 | 0 | 0 | 124 |
 
-The old 35.53/24.83-second dual-entry design is gone, and the current build
-performs zero recompilation. The remaining wall-time variance occurs while the
-native public import closure and public modules load, so stable warm latency is
-still open. Native =std/make= owns freshness and scheduling; no local cache or
-scheduler is inferred from these results.
+The old 35.53/24.83-second dual-entry design is gone. Its isolated child build
+eventually performed zero recompilation, but that historical result does not
+describe the superseded eager PackageSpec build above. Native =std/make= owns
+freshness and scheduling; no local cache or scheduler is inferred from either
+result.
 
 * Rejected native closure cache experiment
 
@@ -60,8 +99,83 @@ returned only paths and forced =std/make= to reconstruct contexts that a fresh
 projection had already loaded. The receipt therefore moved work across the
 =spec-projected= boundary and made the complete path about 4.1 percent slower.
 
-The child opt-in and isolated receipt scenario were removed. The child retains
-the standard =:std/build-script#defbuild-script= and native =std/make= path.
+The child opt-in and isolated receipt scenario were removed.
+
+** Closed separated production path (2026-09-14)
+
+The default core roots now name the narrow =src/module-system/interface.ss=,
+=src/module-system/load.ss=, and
+=src/module-system/loader/module-source-interface.ss=
+surfaces rather than the full aggregate API, and no longer import a
+contribution. This publishes the unified module syntax and loader without
+pulling diagnostics, observability, profile composition, and every other
+module-system subsystem into the default closure. After the normal dependency
+recompile waves from the new shared tree function settled, the stable warm
+=gerbil build= emitted no compile row and completed in 2.29 seconds.
+
+Lambda's top-level interface now exports only its contribution identity. POO
+Flow's core loader constructs contributor and user source objects from
+repository-root inputs; =poo-flow-load-modules= discovers the five direct module
+directories without a contributor =modules/init.ss=. Lambda contains no =modules/source.ss= and no
+=user-interface/modules/interface.ss=. The root-owned contribution adapter
+derives five public =interface.ss= entrypoints from the source collection and adds fixed stages for
+registration, governance, =init.ss=, User Interface modules,
+Profiles, Scenarios, and final =config.ss=. Each module and User Interface role receives
+every recursively discovered Scheme file in its own directory tree. This fixed
+a concrete false-current case where changing
+=standards/nasa-lifecycle.ss= did not rebuild a package-qualified dependency
+when only =interface.ss= was submitted.
+
+Before the User Interface role split, the warm seven-stage build emitted no
+compile rows, reported 4,103ms inside ASP/std-make, and completed as a fresh
+process in 5.65 seconds. After the split, the first ten-stage build compiled the
+new paths in 18,553ms inside ASP and 19.83 seconds for the process. Its immediate
+zero-compile warm build reported 3,872ms inside ASP and 5.15 seconds for the
+process. The SDLC module accounted for 3,091ms; modules, Profiles, Scenarios,
+and init were separately visible at 6ms, 217ms, 281ms and 2ms.
+
+Every stage emits its source, full package prefix, executor, elapsed time, and
+receipt count before advancing. The core and contributor build gates are now
+separate, while both install under the existing =poo-flow= package namespace.
+
+The User Interface layout gate accepts only top-level =init.ss= and =config.ss=
+before ASP/std-make begins. A temporary =unclassified.ss= negative
+fixture failed in 1.19 seconds with =POO-FLOW-UI-E002= and named the offending
+file. The corrected top-level =init.ss= owns only =poo-flow!= module selection.
+The core-owned configuration =use-composition= discovers =profiles/= and
+=scenarios/= once per expansion context, imports them into =config.ss=, and
+establishes each named composition directly. A temporary incomplete
+=modules/incomplete/config.ss= fixture failed in 1.21 seconds with
+=POO-FLOW-UI-E005= and named the four missing roles. Local module directories
+are ignored by Git until explicitly promoted to the contribution's top-level
+=modules/= tree.
+
+The GitHub Workflow atomic gate passes 19 checks, including discovery of
+Profile and Scenario bindings and object
+identity checks proving that the Scenario reused the six case-named objects
+exported below =profiles/github/= and =profiles/sdlc/=, and that
+=profiles/tao3k/promotion.ss= is a named direct refinement of the common
+promotion Profile. The earlier module-source atomic gate passed 17 checks. The
+current gate also covers direct directory discovery, explicit =@ modules-path=
+expansion, official contribution-name expansion, registered single-module
+resolution and pinned missing-checkout materialization metadata.
+
+After contribution-directory discovery and the User Interface split settled,
+the current eleven-stage build emitted zero compile rows and reported 5,689ms
+inside ASP/std-make. SDLC accounted for 4,236ms; local modules, Profiles,
+Scenarios, init and config were visible independently.
+
+The complete post-migration SDLC module gate rebuilt the ten affected test
+entries with visible per-file progress in 15.27 seconds, then passed all 16
+SDLC/NASA test files. Build plus execution completed in 23.97 seconds inside
+the existing phase budgets.
+
+The corrected module-test stage automatically projected =build-root.ss= and 16
+SDLC =*-test.ss= files into a fresh =module-test= image. Its first compilation
+reported 26.19 seconds with each target visible; its zero-compile warm build
+reported 1.08 seconds inside ASP and 2.71 seconds for the process. The complete
+16-file SDLC/NASA module gate then passed in 17.57 seconds without the prior
+undefined-symbol warning or process crash.
 
 During the rejected experiment, reversing the qualification load path exposed
 stale copied =poo-flow= artifacts inside the ASP build directory and failed
@@ -74,5 +188,254 @@ clean release installation or the whole POO Flow suite. NASA source and local
 structured gates are implemented; authenticated institutional approval,
 external parser execution, runtime execution, and automatic content identity
 for an in-place dirty linked dependency remain separate authority boundaries.
-Warm =std/make= latency and native planning progress also remain open upstream
-concerns; this contributor repository does not implement replacements for them.
+The measurements do not establish a fully clean release installation or the
+whole POO Flow suite. The prior 13--19 second floor and the later minute-scale
+warm rebuilds do not apply to the corrected separated path; no upstream code
+was modified and no replacement scheduler or cache was introduced.
+
+* Unified module-source and atomic phase receipts (2026-09-14)
+
+Lambda has no =modules/init.ss=. Its =user-interface/init.ss= contains module
+identities and flags. POO Flow constructs contribution and User Interface source objects through
+=make-poo-flow-contribution-module-*= and
+=make-poo-flow-user-interface-module-*=. Core and contributor lookup use the
+same =poo-flow-module-selection-source-refs= function; an explicit private
+=@ modules-path= uses the loader's internal config-role projection, while
+=poo-flow-load-modules= remains fixed to public =interface.ss=. The core-owned official
+registry maps both =lambda-episteme= and its module names to the immutable
+submodule revision; an absent checkout produces a registry materialization
+source instead of performing network I/O during =init.ss= expansion.
+
+The contributor-owned =t/modules/unit/source-collection-test.ss= proves that
+the default order is =(poo-flow-maintained lambda-episteme)=, that core and
+Lambda selections resolve through their respective source objects, that source
+metadata retains collection ownership, and that a missing module raises the
+typed =missing-module-source= control-plane failure. Its immediate warm exact
+build emitted zero compile rows and reported 45ms inside the ASP Build API;
+the observed import completed in 70ms and all 27 checks passed. The complete
+warm build/preflight/test command completed in 3.6 seconds.
+
+The first registered-source implementation accidentally used identical POO
+slot and lexical names such as =(name name)= and =(entries entries)=. The atomic
+preflight stopped at its eight-second budget, and the native memory observer
+rejected the import at 179,551,496 live bytes with
+=live-growth-limit-exceeded=. Renaming inputs to =name-value= and
+=entries-value= removed the lazy self-reference; isolated registry import then
+completed in about 1.1 seconds; the final warm observed test import took 70ms.
+
+The exact-test preflight now flushes source and dynamic-import phases before
+=gxtest=. NASA certification scanned 389 authoring observations with zero
+diagnostics, imported in 592ms, and passed all 20 assertions. Its immediate
+warm build stage reported 159ms with zero compile rows. The complete test-only
+path, including preflight, completed in about 2.6 seconds in the preceding
+receipt. These are focused implementation receipts, not NASA institutional
+certification.
+
+* Atomic observability and import-closure qualification (2026-09-14)
+
+The POO Flow-owned =test-contribute-atomic= target now performs a reader-only
+POO authoring preflight before loading the exact =t/<module-name>/...= test.
+For the certification file it scanned 17 files and 389 slot observations; for
+the lifecycle file it scanned 17 files and 411 observations. Both reported zero
+diagnostics. A rejected observation prints the bounded source, status, slot,
+initializer and detail fields and exits before domain evaluation.
+
+The preflight was added after a concrete =gerbil-poo= failure: an initializer
+spelled =project-gate: project-gate= is a self-aware computed slot, so the local
+identifier resolves through =(.ref self 'project-gate)= and recursively reads
+itself. Renaming constructor parameters to =*-value= removed that recursion.
+The generic model validator now returns its first bounded ancestry, missing-slot
+or type-predicate diagnostic, so the same class of failure no longer appears as
+an opaque =invalid POO model= error.
+
+The exact contribution load path now places the isolated contribution test
+library before POO Flow's production library. This prevents stale production
+copies of contribution modules from shadowing the test closure. Static CLOS
+indexes use Gerbil's =list->hash-table-eq/string= constructors; the NASA rule
+mode lookup returns the constructor's stored value directly instead of applying
+an invalid second =cdr=.
+
+| Exact path | Before | Current | Result |
+|------------+--------+---------+--------|
+| NASA certification, preflight plus 20 checks | 23.59s | 9.62s latest | pass |
+| NASA lifecycle, preflight plus 52 checks | 16.34s | 8.00s latest | pass |
+| generic CLOS model validation, 13 checks | n/a | 7.54s | pass |
+| CLOS algorithm functions, 13 checks | n/a | 2.09s | pass |
+| POO runtime Debug/Trace and memory containment | n/a | 18.90s | pass |
+| reader-native module-system observability | n/a | 12.75s | pass |
+
+The certification improvement came from replacing its aggregate
+=modules/sdlc/interface= import with the precise =modules/sdlc/objects= owner,
+then moving baseline construction from the broad lifecycle module into the
+reused =standards/nasa-policy.ss= owner. The assertions, exported lifecycle
+API and authority boundary did not change.
+
+The following paragraphs retain the historical failure sequence that led to
+the corrected source-root stage design. At that point the build path remained
+red for warm performance. Three post-change module test
+closure builds completed in 89.95, 64.56 and 84.37 seconds and continued to
+emit alternating compile waves. The first phase marker appeared immediately;
+the long interval followed =closure-start= inside projection/loading and native
+freshness work. An ASP testing-framework A/B probe took 58.59 seconds cold and
+failed its 60-second warm bound; its own selected test body receipt was 254ms.
+The upstream downstream-framework scenario passed the relevant incremental
+selection assertions but required 33.31 seconds as a complete gxtest process.
+Its fixture's 1ms policy/collection measurement therefore does not establish
+startup wall-clock performance. POO Flow does not add a cache, scheduler or
+replacement build API to hide this remaining failure.
+
+The atomic build path now passes its exact test file to the same ASP PackageSpec
+projector. For certification this reduced the projected closure from 56 module
+targets to 36. One affected/warm pair completed in 33.29 and 25.44 seconds, with
+the latter emitting zero compile jobs. After the internal import cleanup, another
+affected/warm pair completed in 48.98 and 38.49 seconds; the latter still emitted
+two unrelated stale compile jobs. Projection receipts ranged from 17.86 to 23.62
+seconds, so projection/loading still dominates and zero recompilation is not yet
+stable.
+
+That 36-target form was then replaced by PackageSpec's existing declared
+=modules= slot for exact-file builds. The selected file is already the atomic
+compilation unit, so importing its whole context during PackageSpec projection
+and asking =std/make= to reconstruct it again was redundant. Certification now
+projects exactly one target in 0ms. Its isolated cold build completed in 21.17
+seconds; the immediate zero-compile warm build completed in 13.38 seconds. The
+atomic image contains only selected test artifacts and consumes the production
+POO Flow library after it, preventing test-built production copies from
+shadowing the production image.
+
+A same-target, same-image warm A/B invoked native Gerbil =defbuild-script=
+directly and completed in 15.21 seconds. The ASP declared-module path completed
+in 13.38 seconds. That observation showed that PackageSpec projection was not
+the dominant cost, but the later source-root-controlled qualification below
+refuted the provisional attribution of the common time to an unavoidable
+=std/make= floor.
+
+The lifecycle test support inventory stopped importing the aggregate SDLC
+interface. Its exact closure fell from 49 targets with a 35.42-second projection
+to 39 targets with a 21.37-second projection. The affected build completed in
+31.53 seconds and the fully rebuilt atomic test passed in 13.20 seconds.
+A single-core native comparison projected the module closure in 28.66 seconds
+and then exceeded the 90-second build bound; =GERBIL_BUILD_CORES=1= is therefore
+measurement evidence, not a configured workaround.
+
+The final declared-module form supersedes that 39-target lifecycle test closure.
+It projected one target in 0ms, completed an isolated cold build in 27.95
+seconds, and completed an immediate zero-compile warm build in 18.96 seconds.
+Its reader preflight plus all 52 lifecycle checks then passed in 8.00 seconds.
+
+* Scenario Profile import-boundary qualification (2026-09-14)
+
+=target-count=1= describes the list handed to =std/make=; it is not a statement
+that the target has a constant-size import or native compilation cost. The
+former exact =user-interface/scenarios/github-workflow.ss= probe projected one target but
+did not finish within 45 seconds. Isolated front-end probes showed no Profile
+count explosion: imports-only, three-Funflow, three-SDLC and six-Profile sources
+completed in 10.53, 6.03, 3.99 and 6.66 seconds. The generated six-Profile
+source was 4.9 KiB and the complete Scenario source was 8.0 KiB.
+
+The remaining avoidable edge was architectural. =modules/sdlc/config.ss=
+imported the complete =standards/nasa-7150-2d.ss= implementation merely to
+inherit =Nasa7150_2D=. The immutable standard/catalog object now lives in
+=standards/nasa-7150-2d-profile.ss=. Configuration and Scenario Profile
+composition import that lightweight owner; the complete applicability, matrix,
+review and certification module imports and reexports the same object.
+
+After that split, the identical ASP PackageSpec/std-make probe projected one
+target, completed a cold native build in 25.48 seconds, and completed the
+immediate zero-compile warm build in 17.51 seconds. The direct complete Scenario
+compile fell from 14.02 to 11.11 seconds in the corresponding isolated images.
+The config and Scenario suites then passed all 17 checks in 4.97 seconds.
+These receipts demonstrate removal of the contribution-owned over-import. They
+did not yet isolate the build script source root, which the later controlled
+qualification identified as the remaining dominant error.
+
+The Lambda entry then exposed a second, independent over-import:
+=user-interface/init.ss= imported the complete UI syntax facade, including
+doctor, presentation, sandbox, durable-memory and loop policy owners, although
+its only operation was =poo-flow!= declaration lowering. The canonical macro
+now lives in =src/user-interface/init-declaration-syntax.ss= and the complete
+facade reexports it. Lambda and root init files import that owner directly.
+Lambda init compilation changed from exceeding a 25-second bound to 7.50
+seconds; the root init compiled in 5.96 seconds. Exact load probes returned the
+expected two Lambda and five root module bundles in 6.06 and 1.31 seconds.
+
+* Native currentness cost decomposition (2026-09-14)
+
+The ASP Scheme =package-spec-native-ab= Scenario now compares one identical
+macro-heavy source through a literal native =defbuild-script= and through a
+=PackageSpec= declared =modules= projection. Both lanes use =std/make=, separate
+empty output images, the same load path and three interleaved warm samples. The
+projected specs were byte-for-byte equal. The final pure Scheme runner measured
+a native warm p50 of 0.527 seconds and an ASP warm p50 of 0.642 seconds; both
+lanes emitted zero warm compile entries. The measured PackageSpec overhead was
+0.115 seconds. This rejects PackageSpec
+projection or handoff as the source of a 13--19 second fixed cost for an equal
+one-target spec.
+
+The first exact Lambda decomposition was incomplete. In the same atomic image
+and load path, the declared-module PackageSpec projection took 0ms and the
+complete zero-compile ASP build took 4.50 seconds. A fresh process executing
+Gerbil =import-module= for that source took 4.16 seconds, and a root-scoped
+native =std/make= warm run took 3.87 seconds. Those probes shared the same
+repository-root source visibility and therefore did not isolate ordinary
+compiled-library dependency loading from recursive source-context expansion.
+
+| Fresh-process source import | Seconds |
+|-----------------------------+---------|
+| NASA 7150.2D quoted catalog |    0.25 |
+| NASA certification model   |    3.14 |
+| GitHub Workflow Scenario    |    5.02 |
+| GitHub Workflow test        |    4.96 |
+| NASA certification test     |    4.16 |
+
+Gerbil 0.18.2 =defbuild-script= derives =srcdir= from the directory containing
+the script. Because =build-contribute-tests.ss= is POO Flow-owned at the
+repository root, its old invocation added the complete checkout to the source
+load path. The selected test was one BuildSpec target, but its imports could be
+resolved from POO Flow and Lambda sources instead of the already-built
+=.gerbil/lib= image. This violated the intended contribution-test boundary and
+made the one-target currentness check reconstruct a large source context.
+
+A controlled copy of the complete GitHub Workflow composition expanded in
+about 0.33 seconds when only its own source directory was visible and production
+dependencies resolved from compiled libraries. The same root-visible source
+probe took about 5.02 seconds. The difference is the source-root boundary, not
+the =use-composition= macro body and not a fixed native initialization charge.
+
+The POO Flow entry now declares one ASP =package-source-stage= per standardized
+=t/<module-name>/build-root.ss=, or per exact selected test. Each stage passes
+the target's containing directory as =srcdir= and its full package identity as
+=prefix=; ASP continues to delegate currentness, dependency scheduling and
+compilation to upstream =std/make=. The =all= form discovers module roots with
+Gerbil =directory-files=, sorts them through =std/sort=, and builds the aggregate
+=t/support/build-root.ss= last. It does not enumerate individual tests.
+
+| Corrected build path | First affected run | Immediate warm run | Warm compile entries |
+|----------------------+--------------------+--------------------+----------------------|
+| NASA certification exact file | 1.73s | 1.59s | 0 |
+| GitHub Workflow exact file | 4.47s | 1.54s | 0 |
+| SDLC module root | 1.79s | 1.53s | 0 |
+| All three standardized roots | 5.13s | 1.55s | 0 |
+
+The ASP/std-make stage receipts inside those warm processes were 0.15--0.21
+seconds in the representative runs. The complete NASA certification atomic
+chain, including reader observability and all authority-boundary assertions,
+completed in 3.87 seconds. The GitHub Workflow atomic test likewise passed.
+These corrected results reject the earlier claim that 13--19 seconds was an
+unavoidable upstream =std/make= floor.
+
+The production projection is now closed over nine native public entrypoints:
+the contribution identity, governance, five discovered module =interface.ss=
+files, and the User Interface =init.ss=/=config.ss= pair. An immediate warm run
+reported nine receipts, no compile row, 318ms inside the ASP Build API and
+1.54 seconds wall time. =poo-flow-load-modules= accepts only the source
+collection and always projects =modules/<module-name>/interface.ss=; internal
+=config.ss= selection uses a separately named loader function that is excluded
+from the public loader facades.
+
+The same validation exposed a terminal-only lifecycle defect. GNU =timeout=
+created a background process group, so a completed =gxi= process could be
+stopped by the terminal with state =T= after its final receipt. All Just build,
+test and observation boundaries now use =timeout --foreground=. The Scheme
+build adapter contains no TTY handling, and both production warm build and
+atomic tests now exit normally from an attached terminal.

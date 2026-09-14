@@ -1,8 +1,8 @@
 ;;; Executable implementation ledger.  Implementation completeness and a
 ;;; project's compliance decision are deliberately separate dimensions.
-(import :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d-catalog
+(import (only-in :clan/poo/object .o .ref)
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d-catalog
         (only-in :std/srfi/1 every filter)
         (only-in :std/srfi/13 string-contains))
 (export nasa-implementation-matrix nasa-implementation-summary)

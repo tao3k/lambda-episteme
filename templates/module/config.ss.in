@@ -1,6 +1,6 @@
 ;;; Copy all five role files; replace example and ExampleProfile.
 (import :poo-flow/src/module-system/declaration/interface
-        :lambda-episteme/modules/example/funs)
+        :poo-flow/lambda-episteme/modules/example/funs)
 (export example-config)
 (def (example-config selection)
   (unless (and (poo-flow-user-module-selection? selection)

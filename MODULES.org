@@ -4,13 +4,19 @@
 The normative layout is documented by POO Flow in
 =docs/10-19-design/10.06-poo-module-system/contribution-module-layout.org=.
 Each module follows =types.ss=, =objects.ss=, =funs.ss=, =config.ss= and
-=interface.ss=. This repository does not implement its own layout checker.
-=build.ss= declares one ASP PackageSpec with two public entries: the package
-=interface.ss= and the independent =user-interface/interface.ss=. Upstream
-=public-entry-modules= computes their native import closure. No downstream
-=modules= override, =all-gerbil-modules= call, scanner or compiler is supplied.
-A new public module is exported through the package interface; an imported helper
-is discovered automatically without editing the build declaration.
+=interface.ss=. This repository does not implement its own layout checker,
+Gerbil package, source registry, build script, or =modules/init.ss=. POO Flow's
+trusted contribution registry maps =lambda-episteme= and its public module
+names to this repository's pinned source. POO Flow's =poo-flow-load-modules=
+discovers direct =modules/<module-name>/= directories through their sole public
+=interface.ss= entrypoints and constructs the
+contributor and user source collections from repository roots. Its root-owned
+contribution adapter projects those directories to one
+ASP source stage per =modules/<name>/= tree. The shared deterministic tree walk
+automatically supplies that module's Scheme files. No downstream =modules=
+override, =all-gerbil-modules= call, contribution-owned source object, compiler,
+scheduler, or cache is supplied. Imported helpers remain native =std/make=
+dependencies and never need to be repeated in the build declaration.
 
 * NASA coverage
 NASA NPR 7150.2D now has a 130-identity catalog: 30 Chapter 2 institutional
@@ -49,9 +55,9 @@ discovery and execution to =:clan/testing=.
 Core policy and macro documentation live in POO Flow's
 =contribution-test-ownership-rfc.org=, not a child-owned testing framework.
 
-* Upstream PackageSpec integration
-The sole build entrypoint derives directly from
-=asp-gerbil-scheme-library-package-prototype=, selects public entry modules through
-=asp-gerbil-scheme-package-spec!=, and passes =(spec)=
-to =defbuild-script=. There is no contribution-owned catalog, compiler,
-scheduler, or artifact cache.
+* POO Flow contribution build integration
+POO Flow owns the default core PackageSpec, package namespace, root-level
+contribution adapter, =std/make= handoff, and build environment. Contribution
+production and test stages are independent from the core public closure but
+install into the shared namespace. There is no contribution-owned package
+manager, build script, compiler, scheduler, or artifact cache.

@@ -23,25 +23,38 @@ See [[file:MODULES.org][the module layout and build contract]] for the required 
 * Development
 
 Standalone complex user scenarios live in [[file:user-interface/README.org][user-interface/]]. They share the
-package's single build and =unit-tests.ss= entrypoint.
+POO Flow-owned contribution builder and =unit-tests.ss= entrypoint. Production
+sources and legacy scenario fixtures use separate build roots.
 The SDLC review API prepares review packets from explicit evidence and project
 facts; it does not produce compliance decisions.
 
-Install/build a POO Flow revision exporting
-=:poo-flow/src/module-system/contribution/interface=, then run:
+From a POO Flow checkout containing this top-level contribution, run:
 
 #+begin_src sh
 just build-scheme
 just test-scheme
+just test-scheme-atomic sdlc unit/nasa-certification-test.ss
 #+end_src
 
-The new interface is currently a coordinated working change, not a published
-release. =gerbil.pkg= records the upstream repository dependency; a release
-must pin a real published/reviewed revision containing that interface.
+The atomic file target first runs POO Flow's reader-native POO authoring
+observations over the selected module and test source. It rejects recursive
+=.o slot: slot= initializers before loading domain code, then runs the exact
+gxtest file with verbose case/check output and a hard time bound. Atomic tests
+import the narrow owning modules they exercise. The top-level =interface.ss=
+exports only the source object and source-neutral module bundle; each selected
+domain module retains its own public =interface.ss=.
+The atomic build submits that one explicitly selected test file through an ASP
+=package-source-stage= and writes only test artifacts to the
+separate =.gerbil/contributions/lambda-episteme/atomic-test= image. Production
+source selection uses the same ordered POO module load path as normal loading.
+
+The contribution has no =gerbil.pkg= or build script and does not acquire ASP
+or Gerbil POO directly. POO Flow owns the package namespace, locked dependencies,
+core =build.ss=, and the independent root-level contribution build/test adapters.
 An installed gerbil-parser is currently needed by the GQL source tests.
 
-Tests operate on this repository and explicitly installed libraries. They do
-not inspect a superproject, rebuild POO Flow, install a runtime, or query a graph.
+Tests run through the POO Flow environment. They do not install a runtime or
+query a graph.
 See [[file:CONTRIBUTING.org][contribution guidance]] for ownership and qualification.
 
 * Legacy assets

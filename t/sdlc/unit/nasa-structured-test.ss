@@ -1,10 +1,10 @@
 (import :std/test :std/error
         :poo-flow/src/module-system/contribution/interface
         :poo-flow/src/module-system/contribution/verification
-        :lambda-episteme/modules/sdlc/interface
-        :lambda-episteme/modules/sdlc/standards/nasa-review
-        :lambda-episteme/modules/sdlc/standards/nasa-structured
-        :lambda-episteme/modules/sdlc/standards/nasa-lifecycle
+        :poo-flow/lambda-episteme/modules/sdlc/interface
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-review
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-structured
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-lifecycle
         (only-in :std/srfi/1 append-map))
 (export nasa-structured-test)
 (include "../support/inventories.ss")

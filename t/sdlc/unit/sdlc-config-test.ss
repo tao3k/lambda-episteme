@@ -3,7 +3,7 @@
         :poo-flow/src/module-system/load
         :poo-flow/src/module-system/declaration/interface
         :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/modules/sdlc/config)
+        :poo-flow/lambda-episteme/modules/sdlc/config)
 (def (selected . flags)
   (sdlc-config (poo-flow-user-module-selection 'custom 'sdlc flags)))
 (export sdlc-config-test)
@@ -11,7 +11,7 @@
   (test-suite "SDLC init selection projection"
     (test-case "existing custom module syntax selects the standard"
       (let* ((bundles (poo-flow-modules!
-                       :custom (sdlc "../lambda-episteme/modules/sdlc" +nasa-7150-2d)))
+                       :custom (sdlc @ "../lambda-episteme/modules/sdlc" +nasa-7150-2d)))
              (selection (caar bundles))
              (contribution (sdlc-config selection))
              (standards (.ref (.ref contribution 'profile) 'standards)))

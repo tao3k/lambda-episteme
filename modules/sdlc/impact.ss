@@ -1,6 +1,6 @@
 ;;; Finite source-inventory impact projection, not a graph runtime or approval.
-(import :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/modules/sdlc/types
+(import (only-in :clan/poo/object .o .ref)
+        :poo-flow/lambda-episteme/modules/sdlc/types
         (only-in :std/srfi/1 every filter any find delete-duplicates)
         :std/sort)
 (export sdlc-change-impact)

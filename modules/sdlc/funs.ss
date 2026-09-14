@@ -1,7 +1,7 @@
-(import :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/governance/objects
+(import (only-in :clan/poo/object .o .ref)
+        :poo-flow/lambda-episteme/governance/objects
         (only-in :std/srfi/1 every delete-duplicates))
-(import :lambda-episteme/modules/sdlc/types :lambda-episteme/modules/sdlc/objects)
+(import :poo-flow/lambda-episteme/modules/sdlc/types :poo-flow/lambda-episteme/modules/sdlc/objects)
 (export sdlc-with-standards sdlc-module)
 (def (sdlc-with-standards profile-value standard-values)
   (unless (and (sdlc-profile? profile-value)

@@ -1,10 +1,10 @@
 ;;; Source-bound review across every catalog requirement. No authority execution.
-(import :poo-flow/src/module-system/contribution/interface
+(import (only-in :clan/poo/object .o .ref .slot? object?)
         :poo-flow/src/module-system/contribution/model
-        :lambda-episteme/modules/sdlc/types
-        :lambda-episteme/modules/sdlc/objects
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d-catalog
+        :poo-flow/lambda-episteme/modules/sdlc/types
+        :poo-flow/lambda-episteme/modules/sdlc/objects
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d-catalog
         (only-in :std/srfi/1 every any filter delete-duplicates iota))
 (export nasa-requirement-criteria nasa-criterion-evidence nasa-assess-project
         nasa-tailoring-requirements nasa-safety-component nasa-safety-review)
@@ -80,10 +80,10 @@
 (def (nasa-assess-project class-value project context evidence)
   (validate-review-inputs project context evidence)
   (let* ((rows (map (lambda (row) (assess-one row class-value project context evidence)) nasa-requirement-catalog))
-         (pending (filter (lambda (r) (not (memq (.ref r 'status) '(evidence-present not-invoked)))) rows)))
+         (pending-values (filter (lambda (r) (not (memq (.ref r 'status) '(evidence-present not-invoked)))) rows)))
     (.o kind: 'sdlc.nasa-assessment subject: (.ref project 'subject)
         revision: (.ref project 'revision) scope: (.ref project 'scope)
-        software-class: class-value requirements: rows pending: pending
+        software-class: class-value requirements: rows pending: pending-values
         release-authorized?: #f compliance: 'not-evaluated authority: 'not-verified)))
 
 ;;; Appendix C routing plus Chapter 2. Context facts describe scope, not approval.

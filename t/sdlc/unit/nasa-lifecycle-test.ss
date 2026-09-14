@@ -1,11 +1,11 @@
 (import :std/test :std/error
-        :poo-flow/src/module-system/contribution/interface
+        (only-in :clan/poo/object .o .ref)
         :poo-flow/src/module-system/contribution/verification
-        :lambda-episteme/modules/sdlc/interface
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d
-        :lambda-episteme/modules/sdlc/standards/nasa-coverage
-        :lambda-episteme/modules/sdlc/standards/nasa-review
-        :lambda-episteme/modules/sdlc/standards/nasa-lifecycle
+        :poo-flow/lambda-episteme/modules/sdlc/objects
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-coverage
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-review
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-lifecycle
         (only-in :std/srfi/1 every filter append-map))
 (include "../support/inventories.ss")
 (def project (sdlc-project "test-flight" "r1" "software" #t))
@@ -49,6 +49,9 @@
       (check-equal? (.ref summary 'implementation-gap-identities) '())
       (check-equal? (.ref summary 'implementation-complete?) #t)
       (check-equal? (.ref summary 'certification) 'not-claimed)
+      (check-equal? (nasa-rule-mode "SWE-023") 'conditional)
+      (check-equal? (nasa-rule-mode "SWE-013") 'unconditional)
+      (check-equal? (nasa-rule-mode "SWE-002") 'institutional)
       (check-exception (nasa-rule-mode "SWE-999") Error?)))
   (test-case "baseline policies explicitly separate all project and institutional duties"
     (check-equal? (length (.ref (nasa-baseline-policy "project") 'requirements)) 100)

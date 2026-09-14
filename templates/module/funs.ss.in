@@ -1,7 +1,7 @@
 ;;; Copy all five role files; replace example and ExampleProfile.
-(import :lambda-episteme/governance/objects
-        :lambda-episteme/modules/example/types
-        :lambda-episteme/modules/example/objects)
+(import :poo-flow/lambda-episteme/governance/objects
+        :poo-flow/lambda-episteme/modules/example/types
+        :poo-flow/lambda-episteme/modules/example/objects)
 (export example-contribution example-module)
 (def (example-contribution profile)
   (unless (example-profile? profile) (error "invalid example profile"))

@@ -1,14 +1,53 @@
-#+title: Independent contribution user scenarios
+#+title: Lambda Episteme User Interface
 
-This directory is the contribution repository's user-facing example surface.
-It contains executable scenarios, not a second root init configuration.
-=sdlc-cases.ss= demonstrates the existing module selection syntax, NASA plus a
-local standard, native POO derivation, explicit facts and pure review preparation.
-It imports installed POO Flow interfaces and this package only; it never imports
-the parent project's user-interface configuration.
+This is a closed, Doom-like repository surface with NixOS-style classification.
+The direct children have fixed responsibilities:
 
-Run =just build-scheme= followed by =just test-scheme=. The sole package build
-includes these source-owned scenarios.
+| Path | Responsibility |
+|------+----------------|
+| =init.ss= | Module enablement only; one =poo-flow!= declaration selects Modules and flags. |
+| =config.ss= | Final User Composition declarations using direct =use-composition= forms. |
+| =modules/= | User-owned modules that are private or not ready for contribution. |
+| =profiles/= | Reusable, inheritable POO Profile objects. |
+| =scenarios/= | Reusable scenario cases and review exercises referenced by compositions. |
+
+No other top-level Scheme file is accepted by the POO Flow contributor builder.
+This keeps a repository readable from its directory shape and prevents a
+scenario from silently becoming a second module registry or Profile library.
+There is no =package.ss=: POO Flow owns construction and module loading.
+=modules/<module-name>/= is the only admitted local-module shape. Each module
+contains =types.ss=, =objects.ss=, =funs.ss=, =config.ss= and =interface.ss=;
+the directory itself contains no loader or registry. Local module directories
+are ignored by Git so unfinished work is not pushed accidentally. A ready
+module moves to the repository's top-level =modules/= tree and passes the
+contribution gate.
+
+=init.ss= enables Funflow and SDLC only. POO Flow's internal User Interface
+loader discovers every Scheme module under =profiles/= and =scenarios/= once,
+imports those bindings into =config.ss=, and then expands its direct
+=use-composition= declarations. The user writes no discovery list, aggregate
+interface, outer =def=, or =use-interface= wrapper.
+
+Profile filenames name concrete
+reusable cases: =profiles/github/actions.ss=, =developer.ss= and =promotion.ss=;
+the NASA cases live under =profiles/sdlc/=. “Best practice” is the Profile's
+responsibility and review standard, not a filename category.
+
+=profiles/tao3k/promotion.ss= demonstrates the user namespace: it inherits the
+common promotion Profile, identifies its owner and features, and is reused by
+=github-workflow-tao3k= in =config.ss=. NASA NPR 7150.2D remains one SDLC
+standard family, not the identity of the SDLC module. The
+=github-workflow= composition only names those existing objects
+and declares developer, staging, and production stages. It does not execute
+GitHub or authorize release.
+
+=scenarios/sdlc-cases.ss= demonstrates NASA plus a local standard, native POO
+derivation, explicit facts, and pure review preparation. The files import the
+installed POO Flow interface and this contribution only; they do not import the
+parent repository's downstream configuration.
+
+Run =just build-scheme= followed by =just test-scheme=. Both commands delegate
+to the POO Flow root environment; this contribution has no =gerbil.pkg=.
 
 * Team release policy
 The fictional =team/release-v1= profile adds a =RELEASE-REVIEW= obligation for
@@ -34,9 +73,9 @@ The caller's completeness claim and producer names are not authenticated here.
 Compliance remains =not-evaluated= and authority =not-verified= in every packet.
 This is Scheme control-plane preparation, with no parser or graph executor.
 
-The next SDLC capabilities remain explicit work:
-lifecycle gate obligations, remaining conditional requirement interpretations,
-authenticated approvals and evidence freshness, and application-side execution. These cases establish a reusable starting point for that work.
+Production authentication, persistent signatures and application-side workflow
+execution remain host responsibilities. The UI now supplies lifecycle gate and
+provider integration declarations without claiming those external effects.
 
 * Qualification
 2026-09-12: native module and separate scenario builds passed. The independent
@@ -46,7 +85,7 @@ These 63 checks exercise explicit source facts, not live authority or runtime
 integration. Tests used isolated child output and POO Flow library dependencies.
 
 * NASA release review case
-=nasa-release.ss= assembles all 130 applicability records and class-specific
+=scenarios/nasa-release.ss= assembles all 130 applicability records and class-specific
 trace reviews. =t/sdlc/user-interface/nasa-release-test.ss= exercises an end-to-end Class F inventory
 with all required trace families present. Unresolved context and approval remain
 visible and release authorization stays false. Failed evidence takes precedence
@@ -55,7 +94,7 @@ rejected. The package build delegates directory discovery to upstream, so new
 user scenarios do not require adding filenames to a build list.
 
 * Change review
-=change-review.ss= supplies a scoped requirement → design → code → verification
+=scenarios/change-review.ss= supplies a scoped requirement → design → code → verification
 inventory and exports =change-review=. Tests in
 =t/sdlc/user-interface/change-review-test.ss= exercise concrete witness paths,
 unrelated verification exclusion, cyclic relations, deterministic input order,
@@ -65,7 +104,7 @@ existing directory build API without a build-list change.
 
 * Verified lifecycle exercise
 
-=nasa-lifecycle.ss= returns native verification requests and an =evaluate=
+=scenarios/nasa-lifecycle.ss= returns native verification requests and an =evaluate=
 function for a two-stage planning example. The caller supplies a configured
 verification adapter, issued receipts and the current time. Its independent
 =t/sdlc/user-interface/nasa-lifecycle-test.ss= checks pending, admitted and expired

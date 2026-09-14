@@ -1,0 +1,12 @@
+#+title: User-owned modules
+
+This directory is the local module source. Put unready or private modules under
+=modules/<module-name>/= using the normal =types.ss=, =objects.ss=, =funs.ss=,
+=config.ss= and =interface.ss= roles. Local module directories are ignored by
+Git so they are not pushed to the contribution repository accidentally.
+
+The directory itself contains no registry or loader file. POO Flow discovers
+each direct =modules/<module-name>/= directory and rejects a module missing any
+required role. When a module is ready for community ownership, move it to the
+contribution repository's top-level =modules/= tree and review it through the
+contribution gate.

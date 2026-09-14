@@ -1,9 +1,9 @@
 (import :std/test :std/error
         :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/modules/sdlc/interface
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d
-        :lambda-episteme/modules/sdlc/standards/nasa-7150-2d-catalog
-        :lambda-episteme/modules/sdlc/standards/nasa-review
+        :poo-flow/lambda-episteme/modules/sdlc/interface
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d-catalog
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-review
         (only-in :std/srfi/1 every find))
 (def project (sdlc-project "flight" "r1" "software" #t))
 (def known-context

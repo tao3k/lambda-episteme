@@ -1,7 +1,7 @@
-(import :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/governance/objects
+(import (only-in :clan/poo/object .o .ref)
+        :poo-flow/lambda-episteme/governance/objects
         :poo-flow/src/module-system/contribution/model
-        :lambda-episteme/modules/sdlc/types)
+        :poo-flow/lambda-episteme/modules/sdlc/types)
 (export StandardProfile. SdlcProfile)
 (def StandardProfile.
   (.o (:: @ (poo-flow-model-prototype SdlcStandard)) kind: 'lambda-episteme.sdlc-standard coverage: 'partial

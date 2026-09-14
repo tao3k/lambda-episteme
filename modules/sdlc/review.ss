@@ -1,9 +1,9 @@
 ;;; Pure review preparation over explicitly supplied facts; no graph execution
 ;;; or authority authentication. A ready packet is never a compliance decision.
-(import :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/modules/sdlc/types
-        :lambda-episteme/modules/sdlc/objects
-        :lambda-episteme/modules/sdlc/funs
+(import (only-in :clan/poo/object .o .ref .slot?)
+        :poo-flow/lambda-episteme/modules/sdlc/types
+        :poo-flow/lambda-episteme/modules/sdlc/objects
+        :poo-flow/lambda-episteme/modules/sdlc/funs
         (only-in :std/srfi/1 every filter any delete-duplicates))
 (export sdlc-project sdlc-obligation sdlc-evidence sdlc-tailoring-request
         sdlc-review)

@@ -1,6 +1,6 @@
-(import :lambda-episteme/governance/objects
-        :lambda-episteme/modules/decision-kind/types
-        :lambda-episteme/modules/decision-kind/objects)
+(import :poo-flow/lambda-episteme/governance/objects
+        :poo-flow/lambda-episteme/modules/decision-kind/types
+        :poo-flow/lambda-episteme/modules/decision-kind/objects)
 (export decision-kind-contribution decision-kind-module)
 (def (decision-kind-contribution profile)
   (unless (decision-kind-profile? profile) (error "invalid decision-kind profile"))

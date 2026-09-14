@@ -1,5 +1,5 @@
 (import :poo-flow/src/module-system/contribution/interface
-        :lambda-episteme/governance/objects)
+        :poo-flow/lambda-episteme/governance/objects)
 (export diataxis-profile?)
 (def (diataxis-profile? value)
   (and (governance-profile? value)
