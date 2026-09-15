@@ -15,16 +15,11 @@ and the User Interface scenario are explicit non-module stages. There is no
 =modules= override, =all-gerbil-modules= call, implementation-file enumeration,
 second compiler, scheduler, or artifact cache.
 
-The separately invoked atomic-test build is narrower by definition: its user
-selected =t/<module-name>/<test-file>= path becomes one ASP
-=package-source-stage=. This does not change the production stages or enumerate
-a module directory.
-
-A module-scoped test build uses the shared deterministic core tree walk to
-derive every =*-test.ss= below =t/<module-name>/= and submits those files plus
-=build-root.ss= as one ASP stage. This prevents =gxtest= from falling back to
-stale test artifacts in a production image while keeping the BuildSpec free of
-hand-maintained per-file declarations.
+Atomic and module-scoped tests pass the selected
+=t/<module-name>/<test-file>= or =t/<module-name>/...= path directly to native
+=gxtest=. A clean combined check builds the contribution's production owners
+once, then lets =gxtest= own test discovery, expansion and execution. There is
+no test PackageSpec, test source stage, or second build script.
 
 ASP Build API and native =std/make= remain the only source projection,
 freshness, compiler, and scheduling owners. Module structure is expressed through each
@@ -223,13 +218,11 @@ rejected the import at 179,551,496 live bytes with
 =entries-value= removed the lazy self-reference; isolated registry import then
 completed in about 1.1 seconds; the final warm observed test import took 70ms.
 
-The exact-test preflight now flushes source and dynamic-import phases before
-=gxtest=. NASA certification scanned 389 authoring observations with zero
-diagnostics, imported in 592ms, and passed all 20 assertions. Its immediate
-warm build stage reported 159ms with zero compile rows. The complete test-only
-path, including preflight, completed in about 2.6 seconds in the preceding
-receipt. These are focused implementation receipts, not NASA institutional
-certification.
+The exact-test preflight flushes reader-native source phases before =gxtest=.
+NASA certification scanned 389 authoring observations with zero diagnostics
+and passed all 20 assertions in the historical staged receipt. The retired
+test build stage reported 159ms with zero compile rows. These are focused
+implementation receipts, not NASA institutional certification.
 
 * Atomic observability and import-closure qualification (2026-09-14)
 
@@ -388,6 +381,8 @@ compiled-library dependency loading from recursive source-context expansion.
 | GitHub Workflow test        |    4.96 |
 | NASA certification test     |    4.16 |
 
+** Retired root-scoped test BuildSpec
+
 Gerbil 0.18.2 =defbuild-script= derives =srcdir= from the directory containing
 the script. Because =build-contribute-tests.ss= is POO Flow-owned at the
 repository root, its old invocation added the complete checkout to the source
@@ -402,15 +397,13 @@ dependencies resolved from compiled libraries. The same root-visible source
 probe took about 5.02 seconds. The difference is the source-root boundary, not
 the =use-composition= macro body and not a fixed native initialization charge.
 
-The POO Flow entry now declares one ASP =package-source-stage= per standardized
-=t/<module-name>/build-root.ss=, or per exact selected test. Each stage passes
-the target's containing directory as =srcdir= and its full package identity as
-=prefix=; ASP continues to delegate currentness, dependency scheduling and
-compilation to upstream =std/make=. The =all= form discovers module roots with
-Gerbil =directory-files=, sorts them through =std/sort=, and builds the aggregate
-=t/support/build-root.ss= last. It does not enumerate individual tests.
+That intermediate repair was later removed with =build-contribute-tests.ss=.
+The current POO Flow entry builds contribution production owners once and
+passes module trees or exact files directly to native =gxtest=. The retained
+=build-root.ss= fixtures express shared test imports; they no longer define or
+seed a separate BuildSpec.
 
-| Corrected build path | First affected run | Immediate warm run | Warm compile entries |
+| Historical staged path | First affected run | Immediate warm run | Warm compile entries |
 |----------------------+--------------------+--------------------+----------------------|
 | NASA certification exact file | 1.73s | 1.59s | 0 |
 | GitHub Workflow exact file | 4.47s | 1.54s | 0 |

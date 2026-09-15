@@ -173,5 +173,5 @@ test-scheme-atomic module="sdlc" test_file="unit/nasa-certification-test.ss":
 
 test-scheme-all:
     echo "[lambda-episteme-test] phase=module-selected module=all"
-    cd '{{ self_root }}/..' && just build-contribute-tests lambda-episteme all
+    cd '{{ self_root }}/..' && just build-contribute lambda-episteme
     cd '{{ self_root }}/..' && GERBIL_PATH="$PWD/.gerbil/contributions/lambda-episteme/test" GERBIL_LOADPATH="$PWD/.gerbil/contributions/lambda-episteme/test/lib:$PWD/.gerbil/lib" gxi ./lambda-episteme/unit-tests.ss

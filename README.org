@@ -43,10 +43,11 @@ gxtest file with verbose case/check output and a hard time bound. Atomic tests
 import the narrow owning modules they exercise. The top-level =interface.ss=
 exports only the source object and source-neutral module bundle; each selected
 domain module retains its own public =interface.ss=.
-The atomic build submits that one explicitly selected test file through an ASP
-=package-source-stage= and writes only test artifacts to the
-separate =.gerbil/contributions/lambda-episteme/atomic-test= image. Production
-source selection uses the same ordered POO module load path as normal loading.
+The atomic lane passes the explicitly selected test file directly to native
+=gxtest= and writes test artifacts to the separate
+=.gerbil/contributions/lambda-episteme/atomic-test= image. The contribution's
+production owners are built once through POO Flow before a clean combined
+check; no test BuildSpec or test build script exists.
 
 The contribution has no =gerbil.pkg= or build script and does not acquire ASP
 or Gerbil POO directly. POO Flow owns the package namespace, locked dependencies,

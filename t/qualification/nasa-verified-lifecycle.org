@@ -56,9 +56,7 @@ and revoked receipts independently block those baselines.
 Current reproduction from the containing POO Flow checkout:
 
 #+begin_src sh
-just build-contribute lambda-episteme
-just build-contribute-tests lambda-episteme
-gerbil env ./lambda-episteme/unit-tests.ss
+just check-contribute lambda-episteme sdlc
 #+end_src
 
 * Limits that remain explicit
