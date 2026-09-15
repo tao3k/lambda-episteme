@@ -519,7 +519,7 @@ final architecture.  Treating every discovered module interface as a native
 build target makes package planning proportional to the available catalog and
 does not support a Doom-like contribution ecosystem.
 
-The parent POO Flow PackageSpec is now a clean-image bootstrap containing ten
+The parent POO Flow PackageSpec is now a clean-image bootstrap containing seven
 stable framework targets and zero catalog targets. It imports only ASP's Build
 API: importing a =:poo-flow= loader before the package exists failed in the
 hermetic Bazel image and exposed the stale local =.ssi= dependency. Module
@@ -535,3 +535,20 @@ module-system suites passed together.  The Lambda NASA certification atomic
 path built one exact test source in 213ms inside the ASP Build API, completed
 its observed import in 729ms, and passed all 20 assertions.  This remains
 project qualification evidence rather than official NASA certification.
+
+* Lazy framework bootstrap correction (2026-09-15)
+
+The earlier ten-root parent bootstrap still compiled three sources that its own
+module registry classifies as lazy framework entrypoints: =init-syntax.ss=,
+=config-discovery-syntax.ss= and =declaration-case.ss=. The ordinary Doom-style
+=user-interface/init.ss= entry uses =init-declaration-syntax.ss= and therefore
+does not consume that advanced syntax closure.
+
+Removing those three roots left seven stable framework targets and zero catalog
+targets. The exact hermetic Bazel action completed in 23.746 seconds with a
+2,872,836,096-byte peak process-tree footprint, compared with 107.456 seconds
+and 5,363,187,712 bytes for the preceding ten-root action in the same checkout.
+Total Bazel wall time fell from 127.060 seconds to 44.836 seconds. Atomic tests
+then imported the advanced init syntax, configuration discovery compositions,
+and declaration cases successfully. The lazy sources remain available through
+the POO registry and compile only for consumers that select them.
