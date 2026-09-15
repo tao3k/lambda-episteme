@@ -4,9 +4,9 @@
 * Source and architecture
 
 The contribution has no =gerbil.pkg= and owns no executable build script.
-POO Flow's default =build.ss= contains only its seven maintained public roots:
-core, module metadata, declaration syntax, loader facade, feature interface,
-the hygienic init declaration entry, and configuration discovery syntax.
+POO Flow's default =build.ss= contains only its six maintained public roots:
+core API, Module System API, Feature System interface, Agent loop, kernel
+profiles, and the hygienic User Interface init declaration owner.
 The POO Flow-owned =build-contribute.ss= adapter constructs the contribution
 source internally, consumes Lambda's source-neutral module bundle, and submits each selected module
 tree to the ASP Build API as an independent source stage. The source files are
@@ -519,7 +519,8 @@ final architecture.  Treating every discovered module interface as a native
 build target makes package planning proportional to the available catalog and
 does not support a Doom-like contribution ecosystem.
 
-The parent POO Flow PackageSpec is now a clean-image bootstrap containing seven
+At this stage the parent POO Flow PackageSpec became a clean-image bootstrap
+containing seven
 stable framework targets and zero catalog targets. It imports only ASP's Build
 API: importing a =:poo-flow= loader before the package exists failed in the
 hermetic Bazel image and exposed the stale local =.ssi= dependency. Module
@@ -552,3 +553,53 @@ Total Bazel wall time fell from 127.060 seconds to 44.836 seconds. Atomic tests
 then imported the advanced init syntax, configuration discovery compositions,
 and declaration cases successfully. The lazy sources remain available through
 the POO registry and compile only for consumers that select them.
+
+* Testing owner isolation correction (2026-09-15)
+
+The seven-root bootstrap still included
+=src/module-system/observability/testing-extension.ss=. That owner supplies
+testing profiles and observed test execution; no production bootstrap consumer
+imports it. It now compiles through its explicit focused testing lane, leaving
+six production framework targets and zero catalog targets.
+
+The first exact six-root hermetic Bazel action completed in 26.496 seconds with
+a 2,806,267,904-byte peak process-tree footprint and reported runnable
+saturation. After correcting the User Interface root below, the exact cold
+action completed in 22.457 seconds with a 2,784,985,088-byte peak and no
+saturation: runnable process count 6 under the native core limit 7. Total Bazel
+wall time was 41.443 seconds. After an exact focused compilation of the testing
+owner, its Observability extension suite passed. No upstream source, alternate
+scheduler, cache, or dependency projector was introduced.
+
+* User Interface owner correction (2026-09-15)
+
+The production root named =src/user-interface/facade.ss= even though top-level
+=user-interface/init.ss= imports
+=src/user-interface/init-declaration-syntax.ss=. The facade is an advanced
+presentation owner whose graph includes workflow, sandbox, session and Module
+System presentation capabilities. Gerbil's native dependency inspection
+reported 429 runtime dependencies before the aggregate Module System re-export
+was removed and 345 afterward. It is now a lazy consumer-selected surface.
+
+The production PackageSpec instead names the lightweight declaration-syntax
+owner used by the real init entry. This is an import ownership correction:
+package bootstrap follows the actual production consumer edge rather than an
+unrelated facade with a much wider closure.
+
+* Module owner admission and Observability correction (2026-09-15)
+
+Every maintained module role is now inspected by the reader-native owner-import
+policy before =poo-flow-load-modules= admits its =interface.ss=. Importing an
+aggregate framework surface from an implementation role produces a native
+=poo-flow.module-owner-import-observation.v1= receipt and fails with
+=POO-FLOW-MODULE-E008=. The receipt retains the source scope, aggregate owner,
+=module-admission= phase, =aggregate-owner-import= status, stable code, and
+=import-precise-owner= recommendation without expanding or evaluating source.
+
+The regression suite recursively inspects every =src/modules/**/*.ss= file and
+requires an empty diagnostic set. The suite itself previously imported the
+aggregate Module System facade; replacing that edge with the exact
+=observability/funcs= owner reduced its warm end-to-end time from approximately
+25 seconds to 2.69 seconds while preserving all checks. This is executable
+evidence that owner closure, rather than a fixed native =std/make= cost, caused
+the delay.
