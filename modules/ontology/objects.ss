@@ -16,7 +16,8 @@
                  poo-flow-composition-object/profiles)
         (only-in :poo-flow/src/modules/governance/objects
                  PooFlowGovernanceProfile.
-                 poo-flow-governance-source)
+                 poo-flow-governance-source
+                 poo-flow-governance-threat-model)
         (only-in :poo-flow/lambda-episteme/modules/ontology/types
                  ontology-concept? ontology-profile? ontology-relation?
                  ontology-rule?
@@ -252,6 +253,7 @@
       .add-rule: (.o)
       .add-query: (.o)
       .add-conflict: (.o)
+      .add-threat: (.o)
       imports: (ontology-declaration-values .import '.import)
       ontology:
       (ontology-vocabulary
@@ -265,6 +267,10 @@
       rules: (ontology-declaration-values .add-rule '.add-rule)
       queries: (ontology-declaration-values .add-query '.add-query)
       conflicts: (ontology-declaration-values .add-conflict '.add-conflict)
+      threat-model:
+      (poo-flow-governance-threat-model
+       (string-append identity "/threat-model")
+       (ontology-declaration-values .add-threat '.add-threat))
       .project:
       (lambda (profile)
         (.o identity: (.ref profile 'identity)

@@ -14,6 +14,8 @@
                  poo-flow-composition?
                  poo-flow-composition-object/profiles
                  poo-flow-composition-profiles)
+        (only-in :poo-flow/src/modules/governance/funs
+                 poo-flow-governance-evaluate)
         (only-in :poo-flow/lambda-episteme/modules/ontology/types
                  ontology-case? ontology-case-composition-receipt?
                  ontology-profile? ontology-source?)
@@ -351,6 +353,8 @@
         profiles: '()
         sources: '()
         environment: (.ref receipt 'environment)
+        governance-assessments: '()
+        governance-handoff-ready?: #f
         projection: '()
         diagnostics: (list receipt-diagnostic)
         runtime-executed?: #f)))
@@ -444,9 +448,29 @@
                 (ontology-case-source-diagnostics
                  case-id scenario case-sources)
                 '()))
-             (diagnostics
+             (pre-governance-diagnostics
               (append input-diagnostics index-diagnostics
                       profile-diagnostics source-diagnostics))
+             (governance-assessments
+              (if (null? pre-governance-diagnostics)
+                (map (lambda (profile)
+                       (poo-flow-governance-evaluate profile case-value))
+                     profiles)
+                '()))
+             (governance-diagnostics
+              (append-map
+               (lambda (assessment)
+                 (if (.ref assessment 'handoff-ready?)
+                   '()
+                   (list
+                    (ontology-diagnostic
+                     'governance-handoff-blocked
+                     (list 'cases case-id 'governance
+                           (.ref assessment 'profile-identity))
+                     (.ref assessment 'unresolved-threats)))))
+               governance-assessments))
+             (diagnostics
+              (append pre-governance-diagnostics governance-diagnostics))
              (accepted? (null? diagnostics))
              ;; `.o` evaluates slot expressions in the object's slot scope.
              ;; Keep receipt values under distinct lexical names so a slot such
@@ -461,6 +485,12 @@
              (receipt-sources
               (if (and accepted? (list? case-sources)) case-sources '()))
              (receipt-environment semantic-environment)
+             (receipt-governance-assessments governance-assessments)
+             (receipt-governance-handoff-ready?
+              (and (pair? governance-assessments)
+                   (every (lambda (assessment)
+                            (.ref assessment 'handoff-ready?))
+                          governance-assessments)))
              (receipt-projection
               (if accepted?
                 (map ontology-profile-projection profiles)
@@ -475,6 +505,8 @@
               profiles: receipt-profiles
               sources: receipt-sources
               environment: receipt-environment
+              governance-assessments: receipt-governance-assessments
+              governance-handoff-ready?: receipt-governance-handoff-ready?
               projection: receipt-projection
               diagnostics: receipt-diagnostics
               runtime-executed?: #f)))))))

@@ -3,6 +3,9 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .def .o)
+        (only-in :poo-flow/src/modules/governance/objects
+                 poo-flow-governance-precondition
+                 poo-flow-governance-threat)
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  ontology-concept ontology-relation)
         (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
@@ -36,6 +39,19 @@
         'CONTRAINDICATED_BY 'Medication 'Contraindication '())))
   (.add-source (.o))
   (.add-rule (.o))
+  (.add-threat
+   (.o contraindication-evidence-drift:
+       (poo-flow-governance-threat
+        "healthcare/medication/threat/contraindication-evidence-drift"
+        'critical
+        'mitigated
+        (list
+         (poo-flow-governance-precondition
+          "healthcare/medication/precondition/reconciliation-observed"
+          #t
+          "evidence:post-operative-medication-reconciliation"))
+        mitigations:
+        '("medication reconciliation bound to encounter evidence"))))
   (policies (.o medication-change: 'review-required
                 disclosure: 'minimum-necessary))
   (.add-query (.o medication-safety-review: 'medication-safety-review)))

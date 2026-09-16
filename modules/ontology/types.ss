@@ -2,12 +2,14 @@
 ;;;
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
-(import (only-in :clan/poo/object .ref .slot? object?)
+(import (only-in :clan/poo/object .all-slots .ref .slot? object?)
         (only-in :std/srfi/1 every)
         (only-in :poo-flow/src/graph/types poo-flow-graph?)
         (only-in :poo-flow/src/modules/governance/types
+                 poo-flow-governance-assessment?
                  poo-flow-governance-profile?
-                 poo-flow-governance-source?))
+                 poo-flow-governance-source?
+                 poo-flow-governance-threat?))
 
 (export ontology-concept?
         ontology-relation?
@@ -94,7 +96,7 @@
        (ontology-has-slots?
         value
         '(name profile-scope scenario .import .add-concept .add-relation
-               .add-source .add-rule .add-query .add-conflict
+               .add-source .add-rule .add-query .add-conflict .add-threat
                imports ontology terms rules queries conflicts))
        (symbol? (.ref value 'name))
        (memq (.ref value 'profile-scope) '(common scenario))
@@ -108,13 +110,17 @@
                     (.ref value '.add-source)
                     (.ref value '.add-rule)
                     (.ref value '.add-query)
-                    (.ref value '.add-conflict)))
+                    (.ref value '.add-conflict)
+                    (.ref value '.add-threat)))
        (list? (.ref value 'imports))
        (ontology-vocabulary? (.ref value 'ontology))
        (equal? (.ref value 'terms)
                (map (lambda (concept) (.ref concept 'identity))
                     (.ref (.ref value 'ontology) 'concepts)))
        (every ontology-source? (.ref value 'source-assets))
+       (every poo-flow-governance-threat?
+              (map (lambda (slot) (.ref (.ref value '.add-threat) slot))
+                   (.all-slots (.ref value '.add-threat))))
        (every ontology-rule? (.ref value 'rules))
        (every list?
               (list (.ref value 'terms)
@@ -157,7 +163,8 @@
   (and (ontology-has-slots?
         value
         '(kind accepted? case case-id scenario compositions profiles sources
-               environment projection diagnostics runtime-executed?))
+               environment governance-assessments governance-handoff-ready?
+               projection diagnostics runtime-executed?))
        (eq? (.ref value 'kind)
             'lambda-episteme.ontology-case-composition-receipt)
        (boolean? (.ref value 'accepted?))
@@ -168,6 +175,15 @@
        (list? (.ref value 'profiles))
        (list? (.ref value 'sources))
        (ontology-semantic-environment? (.ref value 'environment))
+       (list? (.ref value 'governance-assessments))
+       (every poo-flow-governance-assessment?
+              (.ref value 'governance-assessments))
+       (boolean? (.ref value 'governance-handoff-ready?))
+       (eq? (.ref value 'governance-handoff-ready?)
+            (and (pair? (.ref value 'governance-assessments))
+                 (every (lambda (assessment)
+                          (.ref assessment 'handoff-ready?))
+                        (.ref value 'governance-assessments))))
        (list? (.ref value 'projection))
        (list? (.ref value 'diagnostics))
        (eq? (.ref value 'runtime-executed?) #f)))

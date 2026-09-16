@@ -38,6 +38,61 @@ Profile into an identity-bound authority snapshot; only the independent
 Rust+Lean Runtime Host evaluates that snapshot.  Domain admission, Cedar input
 projection and runtime authorization are three separate receipts.
 
+* Security Governance evidence chain
+
+Vertical threat knowledge belongs beside the Scenario and Profile that gives
+it meaning.  Lambda therefore declares Healthcare, finance, manufacturing or
+other domain threats through the POO Flow Governance slots; it does not create
+a second generic Governance module.  For example, the Healthcare medication
+safety Profile declares a critical contraindication-evidence threat through
+=.add-threat=.  That slot is projected to the core =ThreatModel= automatically,
+and every selected Profile is assessed while its Case composition receipt is
+built.
+
+#+begin_src scheme
+(.def (MedicationSafetyProfile @ HealthcareBaseProfile)
+  ;; ontology declarations omitted
+  (.add-threat
+   (.o contraindication-evidence-drift:
+       (poo-flow-governance-threat
+        "healthcare/medication/threat/contraindication-evidence-drift"
+        'critical
+        'mitigated
+        (list
+         (poo-flow-governance-precondition
+          "healthcare/medication/precondition/reconciliation-observed"
+          #t
+          "evidence:post-operative-medication-reconciliation"))
+        mitigations:
+        '("medication reconciliation bound to encounter evidence")))))
+#+end_src
+
+This remains declarative user configuration: Profile authors do not maintain a
+parallel threat list, assessment registry or Cedar document.  The Case receipt
+contains =governance-assessments= and =governance-handoff-ready?=.  Replacing
+the threat phase with =exposed= or =realized= in a derived Profile makes the
+Case fail closed with =governance-handoff-blocked= and the exact unresolved
+threat identity.
+
+The complete assurance path has distinct owners:
+
+1. Lambda owns vertical Scenario/Profile/Case meaning and explicit Source
+   provenance.
+2. POO Flow owns typed threat admission and inert handoff-readiness receipts.
+3. TLA+ with official TLC checks the Governance transition system and emits a
+   digest-bound model receipt.
+4. Lean proves the general enterprise obligations, including typed security
+   graph closure, evidence identity, separation of duties, and the theorem
+   that an active critical threat prevents Provider handoff.
+5. Cedar receives only an admitted, identity-bound snapshot; the independent
+   Runtime Host remains the authorization and execution boundary.
+
+No step collapses into the next.  A Lambda Case does not grant authority, a
+TLC run is not a Lean theorem, a Lean theorem is not a current Cedar decision,
+and Cedar cannot bypass an unresolved Governance threat.  This separation is
+the basis for high-assurance enterprise use rather than an implementation
+detail.
+
 * Repository shape
 
 #+begin_example

@@ -38,6 +38,25 @@
 
 (export lambda-episteme-source-collection-test)
 
+;;; Contribution module Sources are intentionally expressed from the POO Flow
+;;; composition root.  Scope the cwd change to one test so another file in the
+;;; same native gxtest batch never observes fixture state.
+(def +poo-flow-composition-root+
+  (if (file-exists? "modules/sdlc/interface.ss")
+    (path-normalize (path-expand ".."))
+    (current-directory)))
+
+(def (call-with-poo-flow-composition-root thunk)
+  (let (previous-directory (current-directory))
+    (dynamic-wind
+      (lambda () (current-directory +poo-flow-composition-root+))
+      thunk
+      (lambda () (current-directory previous-directory)))))
+
+(defrule (composition-root-test-case name body ...)
+  (test-case name
+    (call-with-poo-flow-composition-root (lambda () body ...))))
+
 (def (metadata-ref source-ref key)
   (let (entry (assq key (poo-flow-module-source-ref-metadata source-ref)))
     (and entry (cdr entry))))
@@ -62,7 +81,7 @@
 
 (def lambda-episteme-source-collection-test
   (test-suite "Lambda module source collection and unified POO load path"
-    (test-case "poo-flow-load-modules discovers public module interfaces"
+    (composition-root-test-case "poo-flow-load-modules discovers public module interfaces"
       (let (sources
             (poo-flow-load-modules lambda-episteme-module-source))
         (check-equal?
@@ -89,7 +108,7 @@
          (map (lambda (source) (metadata-ref source 'entrypoint-role)) sources)
          '(interface interface interface interface interface interface))))
 
-    (test-case "Lambda init uses the same source-neutral module declaration"
+    (composition-root-test-case "Lambda init uses the same source-neutral module declaration"
       (let* ((selections
               (poo-flow-user-module-bundles->modules
                lambda-user-module-bundles))
@@ -97,7 +116,7 @@
         (check-equal? (poo-flow-user-module-selection-source-ref selection) #f)
         (check-equal? (poo-flow-user-module-selection-entrypoint selection) #f)))
 
-    (test-case "an explicit @ modules path resolves public interfaces"
+    (composition-root-test-case "an explicit @ modules path resolves public interfaces"
       (let* ((selection
               (caar
                (poo-flow-modules!
@@ -114,7 +133,7 @@
            "lambda-episteme/modules/ontology/interface.ss"
            "lambda-episteme/modules/sdlc/interface.ss"))))
 
-    (test-case "an official registered name expands the trusted contribution"
+    (composition-root-test-case "an official registered name expands the trusted contribution"
       (let* ((selection
               (caar (poo-flow-modules! :custom (lambda-episteme))))
              (sources
@@ -134,7 +153,7 @@
            "lambda-episteme/modules/ontology/interface.ss"
            "lambda-episteme/modules/sdlc/interface.ss"))))
 
-    (test-case "a registered module name resolves one contributed module"
+    (composition-root-test-case "a registered module name resolves one contributed module"
       (let* ((selection (caar (poo-flow-modules! :custom (sdlc))))
              (source
               (car
@@ -145,7 +164,7 @@
         (check-equal? (poo-flow-module-source-ref-value source)
                       "lambda-episteme/modules/sdlc/interface.ss")))
 
-    (test-case "a missing registered checkout produces a pinned materialization source"
+    (composition-root-test-case "a missing registered checkout produces a pinned materialization source"
       (let* ((registry
               (make-poo-flow-contribution-registry
                (list
@@ -168,7 +187,7 @@
         (check-equal? (metadata-ref source 'revision) "0123456789abcdef")
         (check-equal? (metadata-ref source 'materialization) 'required)))
 
-    (test-case "the User Interface exposes a user-first private module source"
+    (composition-root-test-case "the User Interface exposes a user-first private module source"
       (check-equal?
        (map poo-flow-module-source-collection-identity
             (poo-flow-module-load-path-collections
@@ -183,7 +202,7 @@
         lambda-episteme-user-module-source)
        "lambda-episteme/user-interface/modules"))
 
-    (test-case "the extended load path resolves core before contributor sources"
+    (composition-root-test-case "the extended load path resolves core before contributor sources"
       (check-equal?
        (map poo-flow-module-source-collection-identity
             (poo-flow-module-load-path-collections
@@ -199,7 +218,7 @@
         (check-equal? (poo-flow-module-source-ref-value core-source)
                       "src/modules/funflow/interface.ss")))
 
-    (test-case "the same selection syntax resolves Lambda through its source object"
+    (composition-root-test-case "the same selection syntax resolves Lambda through its source object"
       (let* ((selection
               (car
                (reverse
@@ -213,7 +232,7 @@
         (check-equal? (poo-flow-module-source-ref-value source)
                       "lambda-episteme/modules/sdlc/interface.ss")))
 
-    (test-case "a user source placed first overrides the contributor source"
+    (composition-root-test-case "a user source placed first overrides the contributor source"
       (let* ((user-source
               (make-poo-flow-module-source-collection
                'user-modules 'user "lambda-episteme" "modules"))
@@ -233,7 +252,7 @@
                     user-first selection))))
         (check-equal? (metadata-ref source 'source-collection) 'user-modules)))
 
-    (test-case "duplicate collection identities fail during composition"
+    (composition-root-test-case "duplicate collection identities fail during composition"
       (check-exception
        (extend-poo-flow-module-load-path
         lambda-episteme-module-load-path
@@ -241,7 +260,7 @@
         (list lambda-episteme-module-source))
        Error?))
 
-    (test-case "explicit private paths remain an intentional escape hatch"
+    (composition-root-test-case "explicit private paths remain an intentional escape hatch"
       (let* ((selection
               (caar
                (poo-flow-modules!
@@ -252,7 +271,7 @@
         (check-equal? (poo-flow-module-source-ref-value source)
                       "./private/module/interface.ss")))
 
-    (test-case "a missing source fails before loader execution"
+    (composition-root-test-case "a missing source fails before loader execution"
       (check-exception
        (poo-flow-module-selection-source-refs
         lambda-episteme-module-load-path

@@ -4,13 +4,14 @@
 
 (import :poo-flow/src/module-system/contribution/testing)
 (import :std/test
-        (only-in :clan/poo/object .cc .o .ref .set! object?)
+        (only-in :clan/poo/object .cc .def .o .ref .set! object?)
         (only-in :std/srfi/1 every find)
         (only-in :poo-flow/src/graph/types
                  poo-flow-graph poo-flow-graph-edge poo-flow-graph-node
                  poo-flow-graph?)
         :poo-flow/src/module-system/contribution/interface
         :poo-flow/src/module-system/profile-composition/interface
+        :poo-flow/src/modules/governance/interface
         :poo-flow/lambda-episteme/modules/ontology/interface
         :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
         :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
@@ -76,6 +77,28 @@
    'conflicting '()
    (list EvidenceProfile PrivacyProfile HealthcareBaseProfile
          MedicationSafetyProfile ConflictingProfile)
+   '()))
+
+(.def (UnmitigatedMedicationSafetyProfile @ MedicationSafetyProfile)
+  (identity "lambda-episteme/ontology/healthcare/medication-safety/unmitigated")
+  (name 'medication-safety-unmitigated)
+  (.add-threat
+   (.o contraindication-evidence-drift:
+       (poo-flow-governance-threat
+        "healthcare/medication/threat/contraindication-evidence-drift"
+        'critical
+        'exposed
+        (list
+         (poo-flow-governance-precondition
+          "healthcare/medication/precondition/reconciliation-missing"
+          #t
+          "evidence:medication-reconciliation-missing"))))))
+
+(def unmitigated-medication-composition
+  (poo-flow-composition-object/profiles
+   'unmitigated-medication '()
+   (list EvidenceProfile PrivacyProfile HealthcareBaseProfile
+         UnmitigatedMedicationSafetyProfile)
    '()))
 
 (def CustomProjectionProfile
@@ -195,6 +218,12 @@
   (map (lambda (source) (.ref source 'path))
        (.ref profile 'source-assets)))
 
+(def (contributor-source-path path)
+  (let (local-path (path-expand path "."))
+    (if (file-exists? local-path)
+      local-path
+      (path-expand path "lambda-episteme"))))
+
 (def ontology-test
   (test-suite
    "Ontology Profiles, Scenarios, Sources and Cases"
@@ -221,6 +250,7 @@
      (check (object? (.ref HealthcareBaseProfile '.add-source)) => #t)
      (check (object? (.ref HealthcareBaseProfile '.add-rule)) => #t)
      (check (object? (.ref HealthcareBaseProfile '.add-query)) => #t)
+     (check (object? (.ref HealthcareBaseProfile '.add-threat)) => #t)
      (check (map (lambda (profile) (.ref profile 'identity))
                  (.ref MedicationSafetyProfile 'imports))
             => (list "lambda-episteme/ontology/healthcare/base"
@@ -243,6 +273,30 @@
      (check (length (.ref post-operative-healing-receipt 'projection)) => 5)
      (check (.ref post-operative-healing-receipt 'runtime-executed?) => #f))
 
+   (test-case "Case composition evaluates declared vertical Governance threats"
+     (let* ((threats
+             (.ref (.ref MedicationSafetyProfile 'threat-model) 'threats))
+            (assessments
+             (.ref post-operative-healing-receipt
+                   'governance-assessments))
+            (medication-assessment
+             (find
+              (lambda (assessment)
+                (equal?
+                 (.ref assessment 'profile-identity)
+                 "lambda-episteme/ontology/healthcare/medication-safety"))
+              assessments)))
+       (check (length threats) => 1)
+       (check (poo-flow-governance-threat? (car threats)) => #t)
+       (check (.ref (car threats) 'phase) => 'mitigated)
+       (check (length assessments) => 5)
+       (check (poo-flow-governance-assessment? medication-assessment) => #t)
+       (check (.ref medication-assessment 'handoff-ready?) => #t)
+       (check (.ref medication-assessment 'runtime-executed?) => #f)
+       (check (.ref post-operative-healing-receipt
+                    'governance-handoff-ready?)
+              => #t)))
+
    (test-case "native Rule objects execute over declarative Case Graphs"
      (for-each
       (lambda (evaluation)
@@ -255,6 +309,28 @@
             transaction-posting-evaluation
             work-order-execution-evaluation
             enrollment-context-evaluation)))
+
+   (test-case "unmitigated vertical threat blocks Case handoff"
+     (let* ((receipt
+             (compose-healthcare-test-case
+              'unsafe-medication-case
+              (list unmitigated-medication-composition)
+              '()))
+            (assessment
+             (find
+              (lambda (item)
+                (equal?
+                 (.ref item 'profile-identity)
+                 "lambda-episteme/ontology/healthcare/medication-safety/unmitigated"))
+              (.ref receipt 'governance-assessments))))
+       (check (.ref receipt 'accepted?) => #f)
+       (check (.ref receipt 'governance-handoff-ready?) => #f)
+       (check (memq 'governance-handoff-blocked
+                    (ontology-case-diagnostic-codes receipt))
+              ? values)
+       (check (.ref assessment 'unresolved-threats)
+              => '("healthcare/medication/threat/contraindication-evidence-drift"))
+       (check (.ref assessment 'runtime-executed?) => #f)))
 
    (test-case "vertical assets are native Scenario Profile Case values"
      (for-each
@@ -321,14 +397,14 @@
         (for-each
          (lambda (source)
            (check (file-exists?
-                   (path-expand (.ref source 'path) "lambda-episteme"))
+                   (contributor-source-path (.ref source 'path)))
                   => #t))
          (.ref profile 'source-assets)))
       (list EvidenceProfile SoftwareEngineeringBaseProfile
             CommercialFinanceBaseProfile HealthcareBaseProfile
             ManufacturingBaseProfile EducationBaseProfile))
      (check (file-exists?
-             (path-expand (.ref TestCaseSource 'path) "lambda-episteme"))
+             (contributor-source-path (.ref TestCaseSource 'path)))
             => #t))
 
    (test-case "Scenario and Case Sources have non-reversing ownership"

@@ -20,6 +20,13 @@
 
 (export sdlc-source-admission-test)
 
+;;; Hold the contributor root as a value.  Never mutate cwd while another test
+;;; file may be imported in the same native gxtest batch.
+(def +lambda-contributor-root+
+  (if (file-exists? "modules/sdlc/interface.ss")
+    (current-directory)
+    (path-normalize (path-expand "lambda-episteme"))))
+
 (def +source-admission-budget-us+ 15000000)
 
 (def (sdlc-test-entries root)
@@ -35,7 +42,7 @@
         +testing-source-admission-profile+)
        .admit-prepared-source-graph:
        (lambda (_test entries)
-         (let* ((root (path-normalize (path-expand "lambda-episteme")))
+         (let* ((root +lambda-contributor-root+)
                 (receipt (poo-flow-source-admission root entries)))
            (displayln "[poo-flow-observability] phase=source-scanned"
                       " owner=lambda-episteme module=sdlc"
@@ -55,8 +62,7 @@
            receipt))))
 
 (def +sdlc-prepared-source-roots+
-  (let (root (path-normalize (path-expand "lambda-episteme")))
-    (sdlc-test-entries root)))
+  (sdlc-test-entries +lambda-contributor-root+))
 
 (def sdlc-source-admission-test
   (testing-interface-prepared-source-admission-suite
