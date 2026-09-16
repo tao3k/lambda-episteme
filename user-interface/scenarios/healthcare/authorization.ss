@@ -4,7 +4,7 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 ;;; Healthcare owns vertical authorization meaning. The Cedar Provider owns
-;;; standard policy/schema parsing and dual-engine execution.
+;;; standard policy/schema parsing and authorization execution.
 (import (only-in :clan/poo/object .cc .o .ref .slot? object?)
         (only-in :std/crypto/digest sha256)
         (only-in :std/misc/ports read-all-as-string)
@@ -22,7 +22,7 @@
                  poo-flow-authorization-capability-contract
                  poo-flow-authorization-capabilities-digest)
         (only-in :poo-flow/src/modules/authorization/providers/cedar/interface
-                 CedarDualEngineAuthorizationProvider
+                 CedarAuthorizationProvider
                  poo-flow-cedar-authorization-request
                  poo-flow-cedar-authority-context?
                  poo-flow-cedar-entities
@@ -234,7 +234,7 @@
   (unless (ontology-case-composition-receipt? receipt)
     (error "Healthcare capability digest requires a Case receipt" receipt))
   (poo-flow-authorization-capabilities-digest
-   CedarDualEngineAuthorizationProvider
+   CedarAuthorizationProvider
    (list (medication-capability (.ref receipt 'profiles)))))
 
 (def (healthcare-case-cedar-snapshot
@@ -265,7 +265,7 @@
              (.ref proof-binding 'independent-bundle)))
     (let (capability-contract
           (poo-flow-authorization-capability-contract
-           CedarDualEngineAuthorizationProvider (list capability)))
+           CedarAuthorizationProvider (list capability)))
       (unless (equal? (.ref capability-contract 'contract-digest)
                       (.ref proof-binding 'capability-contract))
         (error "Healthcare capability contract does not match Cedar proof binding"
