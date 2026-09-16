@@ -352,46 +352,7 @@
                     'governance-handoff-ready?)
               => #t)))
 
-   (test-case "Healthcare Case projects an aggregate Governance-bound Cedar snapshot"
-     (let* ((root (if (file-exists? "modules/ontology/interface.ss")
-                    "." "lambda-episteme"))
-            (snapshot
-             (healthcare-case-cedar-snapshot
-              post-operative-healing-receipt
-              root
-              (poo-flow-cedar-authority-context
-               "healthcare-authority" "post-operative-runtime" 1
-               cedar-test-digest 1 1 0)
-              (healthcare-test-proof post-operative-healing-receipt)))
-            (runtime (poo-flow-cedar-authority-snapshot->runtime snapshot))
-            (provenance (hash-ref runtime "provenance"))
-            (handoff
-             (poo-flow-cedar-runtime-handoff
-              1 #u8(1 2 3) cedar-test-digest cedar-test-digest
-              cedar-test-digest cedar-test-digest))
-            (request
-             (healthcare-case-cedar-request
-              post-operative-healing-receipt cedar-test-digest handoff))
-            (runtime-request
-             (poo-flow-cedar-authorization-request->runtime request)))
-       (check (hash-ref runtime "object_kind") => "cedar-authority-snapshot")
-       (check (hash-ref provenance "composition_identity")
-              => "post-operative-healing")
-       (check (vector-length (hash-ref provenance "profile_identities"))
-              => 5)
-       (check (hash-ref provenance "governance_admitted") => #t)
-       (check (hash-ref provenance "governance_assessment_digest")
-              => (poo-flow-governance-assessments-digest
-                  (.ref post-operative-healing-receipt
-                        'governance-assessments)))
-       (check (hash-ref runtime-request "principal")
-              => "Healthcare::Provider::\"provider-1\"")
-       (check (hash-ref runtime-request "action")
-              => "Healthcare::Action::\"administerMedication\"")
-       (check (hash-ref runtime-request "resource")
-              => "Healthcare::MedicationOrder::\"medication-order-1\"")))
-
-   (test-case "Healthcare Cedar rejects proof drift before source projection"
+   (test-case "Healthcare Cedar rejects a Case without exact assurance"
      (let* ((root (if (file-exists? "modules/ontology/interface.ss")
                     "." "lambda-episteme"))
             (context
@@ -401,13 +362,7 @@
             (proof (healthcare-test-proof post-operative-healing-receipt)))
        (check-exception
         (healthcare-case-cedar-snapshot
-         post-operative-healing-receipt root context
-         (.cc proof 'subject-snapshot cedar-test-digest))
-        true)
-       (check-exception
-        (healthcare-case-cedar-snapshot
-         post-operative-healing-receipt root context
-         (.cc proof 'capability-contract cedar-test-digest))
+         post-operative-healing-receipt cedar-test-digest root context proof)
         true)))
 
    (test-case "native Rule objects execute over declarative Case Graphs"

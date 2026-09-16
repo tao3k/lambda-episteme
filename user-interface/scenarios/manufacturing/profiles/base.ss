@@ -39,5 +39,4 @@
        work-order-part:
        (ontology-required-relation-rule
         'work-order-must-consume-part 'WorkOrder 'consumesPart 'source)))
-  (.add-query
-   (.o missing-execution-context: 'work-orders-missing-execution-context)))
+  (.add-query (.o)))

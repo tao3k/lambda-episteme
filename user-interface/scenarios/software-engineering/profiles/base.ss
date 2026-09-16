@@ -48,6 +48,4 @@
        (ontology-required-relation-rule
         'implementation-must-link-decision
         'ImplementationArtifact 'implementsDecision 'source)))
-  (.add-query
-   (.o dependency-cycles: 'architecture-dependency-cycles
-       decision-traceability: 'implementation-decision-traceability)))
+  (.add-query (.o)))

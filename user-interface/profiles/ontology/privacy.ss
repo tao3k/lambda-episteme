@@ -29,4 +29,4 @@
         'REDACTED_BY 'Evidence 'Redaction '(source-preserving))))
   (policies (.o disclosure: 'explicit-authorization
                 redaction: 'source-preserving))
-  (.add-query (.o authorized-evidence: 'authorized-evidence)))
+  (.add-query (.o)))

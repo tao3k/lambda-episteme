@@ -16,6 +16,12 @@
                  PrivacyProfile)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/governance
                  healthcare-contextual-governance-assessment)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/reasoning
+                 CaseProfileRelationsSource ProfileImpactSource
+                 PrescriptionCausalTrajectorySource
+                 HealthcareCaseProfileRelationsQuery
+                 HealthcareProfileImpactQuery
+                 HealthcarePrescriptionCausalTrajectoryQuery)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
                  HealthcareBaseProfile))
 
@@ -63,7 +69,10 @@
        (ontology-source
         "healthcare/ai-cds/governance-evidence"
         "user-interface/scenarios/healthcare/sources/ai-clinical-governance-evidence.json"
-        'json 'scenario 'healthcare #f)))
+        'json 'scenario 'healthcare #f)
+       case-profile-relations: CaseProfileRelationsSource
+       profile-impact: ProfileImpactSource
+       prescription-causal-trajectory: PrescriptionCausalTrajectorySource))
   (.add-rule (.o))
   (.add-threat
    (.o autonomous-prescription:
@@ -108,7 +117,11 @@
         "Healthcare::Action::\"recommendMedication\""
         4201
         'ordinary)))
-  (.add-query (.o ai-clinical-impact: 'ai-clinical-impact))
+  (.add-query
+   (.o case-profile-relations: HealthcareCaseProfileRelationsQuery
+       profile-impact: HealthcareProfileImpactQuery
+       prescription-causal-trajectory:
+       HealthcarePrescriptionCausalTrajectoryQuery))
   (.assess-governance
    (lambda (context)
      (healthcare-contextual-governance-assessment

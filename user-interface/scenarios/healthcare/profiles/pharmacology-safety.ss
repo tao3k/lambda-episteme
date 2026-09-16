@@ -106,7 +106,7 @@
        pharmacology-uncertainty: 'explicit
        evidence-type: HealthcarePharmacologyEvidence))
   (.add-capability (.o))
-  (.add-query (.o pharmacology-impact: 'pharmacology-impact))
+  (.add-query (.o))
   (.assess-governance
    (lambda (context)
      (healthcare-contextual-governance-assessment

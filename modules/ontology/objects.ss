@@ -22,13 +22,14 @@
                  poo-flow-governance-threat-model)
         (only-in :poo-flow/lambda-episteme/modules/ontology/types
                  ontology-concept? ontology-profile? ontology-relation?
-                 ontology-rule?
+                 ontology-rule? ontology-query?
                  ontology-scenario? ontology-source? ontology-vocabulary?))
 
 (export ontology-concept ontology-relation ontology-vocabulary
         ontology-vocabulary-concept-identities ontology-semantic-project
         ontology-required-relation-rule ontology-acyclic-relation-rule
         ontology-rule-evaluate
+        ontology-query
         ontology-source OntologyProfile ontology-profile-project
         OntologyScenario ontology-scenario-admits-profile?
         OntologyCase)
@@ -231,6 +232,19 @@
             case-id: case-id-value))
     (unless (ontology-source? value)
       (error "invalid ontology source" identity-value))
+    value))
+
+(def (ontology-query identity-value revision-value source-value
+                     expected-source-content-id-value graph-kind-value)
+  (let (value
+        (.o kind: 'lambda-episteme.ontology-query
+            identity: identity-value
+            revision: revision-value
+            source: source-value
+            expected-source-content-id: expected-source-content-id-value
+            graph-kind: graph-kind-value))
+    (unless (ontology-query? value)
+      (error "invalid ontology query" identity-value))
     value))
 
 (def OntologyScenario

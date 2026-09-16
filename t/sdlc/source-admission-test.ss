@@ -5,20 +5,17 @@
 
 (import :gerbil/gambit
         (only-in :clan/poo/object .cc .o .ref)
-        (only-in :clan/testing find-test-files)
         (only-in :asp-gerbil-scheme/testing-api
                  +asp-testing-interface+
                  +testing-source-admission-profile+
                  testing-interface-add-profile
                  testing-interface-prepared-source-admission-suite)
-        (only-in :std/misc/path path-enough)
-        (only-in :std/srfi/1 filter)
-        (only-in :std/srfi/13 string-prefix?)
         (only-in :std/test check)
         (only-in :poo-flow/src/module-system/observability/source-admission
                  poo-flow-source-admission-observability-profile-prototype
                  poo-flow-observe-source-admission!
-                 poo-flow-source-admission))
+                 poo-flow-source-admission)
+        "./build-root")
 
 (export sdlc-source-admission-test)
 
@@ -39,13 +36,6 @@
       (module 'sdlc)
       (emit-summary? #t)
       (emit-diagnostics? #t)))
-
-(def (sdlc-test-entries root)
-  (filter (lambda (path)
-            (and (string-prefix? "t/sdlc/" path)
-                 (not (equal? path "t/sdlc/source-admission-test.ss"))))
-          (map (lambda (path) (path-enough path root))
-               (find-test-files root))))
 
 (def +sdlc-source-admission-interface+
   (.cc (testing-interface-add-profile
@@ -71,7 +61,10 @@
            receipt))))
 
 (def +sdlc-prepared-source-roots+
-  (sdlc-test-entries +lambda-contributor-root+))
+  ;; The native module graph is declared once by the module's test build root.
+  ;; Importing that root above makes it resident before this suite runs; no
+  ;; filesystem scan, parallel catalog or cold closure replay is allowed here.
+  '("t/sdlc/build-root.ss"))
 
 (def sdlc-source-admission-test
   (testing-interface-prepared-source-admission-suite

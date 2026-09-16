@@ -32,4 +32,4 @@
   (.add-rule (.o))
   (policies (.o observation: 'time-bound
                 outcome: 'evidence-required))
-  (.add-query (.o healing-progress: 'healing-progress)))
+  (.add-query (.o)))

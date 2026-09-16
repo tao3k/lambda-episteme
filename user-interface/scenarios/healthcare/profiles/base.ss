@@ -45,4 +45,4 @@
        encounter-provider:
        (ontology-required-relation-rule
         'encounter-must-link-provider 'Encounter 'HAS_PROVIDER 'source)))
-  (.add-query (.o encounter-care-context: 'encounter-care-context)))
+  (.add-query (.o)))

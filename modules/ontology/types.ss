@@ -19,6 +19,7 @@
 (export ontology-concept?
         ontology-relation?
         ontology-rule?
+        ontology-query?
         ontology-vocabulary?
         ontology-semantic-environment?
         ontology-source?
@@ -60,6 +61,18 @@
        (symbol? (.ref value 'identity))
        (procedure? (.ref value '.evaluate))
        (procedure? (.ref value '.project))))
+
+(def (ontology-query? value)
+  (and (ontology-has-slots?
+        value '(kind identity revision source expected-source-content-id
+                     graph-kind))
+       (eq? (.ref value 'kind) 'lambda-episteme.ontology-query)
+       (symbol? (.ref value 'identity))
+       (string? (.ref value 'revision))
+       (ontology-source? (.ref value 'source))
+       (string? (.ref value 'expected-source-content-id))
+       (memq (.ref value 'graph-kind)
+             '(ontology-reasoning causal-event-graph))))
 
 (def (ontology-vocabulary? value)
   (and (ontology-has-slots? value '(kind concepts relations))
@@ -131,11 +144,11 @@
               (map (lambda (slot) (.ref (.ref value '.add-threat) slot))
                    (.all-slots (.ref value '.add-threat))))
        (every ontology-rule? (.ref value 'rules))
-       (every list?
-              (list (.ref value 'terms)
-                    (.ref value 'rules)
-                    (.ref value 'queries)
-                    (.ref value 'conflicts)))))
+       (list? (.ref value 'terms))
+       (list? (.ref value 'rules))
+       (list? (.ref value 'queries))
+       (every ontology-query? (.ref value 'queries))
+       (list? (.ref value 'conflicts))))
 
 (def (ontology-profile? value)
   (and (ontology-profile-shape? value)

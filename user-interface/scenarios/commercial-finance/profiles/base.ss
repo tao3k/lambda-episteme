@@ -41,4 +41,4 @@
        (ontology-required-relation-rule
         'transaction-must-post-to-account
         'Transaction 'postsTransaction 'target)))
-  (.add-query (.o unposted-transactions: 'unposted-transactions)))
+  (.add-query (.o)))

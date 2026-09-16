@@ -84,4 +84,4 @@
         "Healthcare::Action::\"administerMedication\""
         4101
         'elevated)))
-  (.add-query (.o medication-safety-review: 'medication-safety-review)))
+  (.add-query (.o)))

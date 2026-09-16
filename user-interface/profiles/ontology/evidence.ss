@@ -34,6 +34,4 @@
         'supersedes 'BaseEntity 'BaseEntity '(irreflexive))))
   (policies (.o source-binding: 'digest-required
                 missing-evidence: 'unknown))
-  (.add-query
-   (.o evidence-by-subject: 'evidence-by-subject
-       provenance-chain: 'provenance-chain)))
+  (.add-query (.o)))

@@ -79,15 +79,16 @@ operation works for a Profile, Source, Threat or Capability node.  Adding a
 second Healthcare Case to the Scenario graph makes it appear automatically if
 its accepted Profile closure depends on that target.
 
-Two standard GQL Sources live under =reasoning/=: one inspects
-Scenario/Case/Profile relations and one asks which Case is affected by the
-medication policy Source.  Gerbil-parser qualifies their ISO GQL syntax and
-byte-exact roundtrip.  The current repository does not contain a GQL execution
-engine, so parser acceptance is not presented as an executed query receipt;
-native Scheme graph construction and Impact evaluation are the executable
-authority today.  The explicit =just check-healthcare-gql= gate enters the
-parser owner's package environment and reads the Case-owned Sources by path;
-Lambda's native test tree never takes a reverse dependency on gerbil-parser.
+Three standard GQL Sources live under =reasoning/=: Scenario/Case/Profile
+relations, Profile Impact, and the prescription causal trajectory.
+Gerbil-parser qualifies their ISO GQL syntax and byte-exact roundtrip.  The
+current Lambda package does not execute GQL, so parser acceptance is not
+presented as an execution receipt; native Scheme graph construction and Impact
+evaluation are the executable authority today.  A later MRR Rust library may
+consume these content-bound Sources through gerbil-parser's native FFI.  The
+explicit =just check-healthcare-gql= gate reads the Sources enumerated by
+=HealthcareCaseQualificationMetadata=; Lambda's native test tree never takes a
+reverse dependency on gerbil-parser.
 
 Structural dependency is only the first Impact dimension.  It answers which
 Cases depend on a changed Profile or Source, but it does not claim that a drug
@@ -107,13 +108,22 @@ committed facts.  Classification at horizon 6 returns separate past, current,
 future and counterfactual identities.  Missing parent identities remain an
 explicit =unknown-frontier= and prevent a complete classification.
 
-The Scheme classification is structural and horizon-relative.  Its
-=assurance-closed?= and =release-authorized?= slots remain false.  GQL execution,
-TLC model exhaustion, Lean refinement closure and a fresh Cedar decision remain
-separate receipts; none is inferred from the Scheme classification.  The
-explicit =check-healthcare-temporal-model= gate now qualifies the TLA+ source
-and exhausts its finite TLC state graph, but ordinary Scheme build and unit-test
-paths do not invoke that assurance gate.
+The Scheme classification is structural and horizon-relative.  Its own
+=assurance-closed?= and =release-authorized?= slots remain false.  The exact
+=ai-assisted-antibiotic-prescription= qualification combines that native
+classification with independent TLC model exhaustion and the Healthcare Lean
+refinement; GQL remains a declared, parser-qualified analysis contract rather
+than evidence in that safety closure.  The resulting assurance receipt is
+closed but still not release-authorized.  Only its exact digest is admitted to
+the fresh Cedar request.  Ordinary Scheme build and unit-test paths do not run
+these cross-runtime qualification gates.
+
+All Case-owned evidence locations and proof identities are declared once in
+the POO object =HealthcareCaseQualificationMetadata=: contributor root, GQL
+query objects, TLA+ source/config, TLC and Lean receipt paths, TLC worker
+profile, Lean library/module/source digest and certification names.  Just
+selects the capability to run; shell environment variables do not reconstruct
+the Case semantics.
 
 * Assurance and authorization flow
 

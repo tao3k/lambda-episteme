@@ -91,6 +91,14 @@ The complete assurance path has distinct owners:
 5. Cedar receives only an admitted, identity-bound snapshot; the independent
    Runtime Host remains the authorization and execution boundary.
 
+The exact AI-assisted prescription qualification declares its GQL, TLA+, TLC
+receipt and Lean receipt/proof identities in one POO
+=HealthcareCaseQualificationMetadata= object.  Just invokes the independent
+capabilities but does not reconstruct those semantics with path environment
+variables.  GQL execution is intentionally outside this safety closure: a
+future MRR Rust library consumes gerbil-parser's native FFI and must publish its
+own execution receipt.
+
 No step collapses into the next.  A Lambda Case does not grant authority, a
 TLC run is not a Lean theorem, a Lean theorem is not a current Cedar decision,
 and Cedar cannot bypass an unresolved Governance threat.  This separation is
@@ -301,11 +309,12 @@ Testing extensions such as source admission, timeout, heap observation,
 debugging and tracing are declarative ASP Testing Profiles around the native
 gxtest lifecycle.  Every =*-test.ss= is mapped to ASP's process-isolation
 Profile, so its heap limit applies to that file rather than a multi-file batch.
-The heavy source-admission suite additionally uses ASP's serial-resource
-Profile and runs after the parallel lane.  Source admission evaluates the
-prepared native test graph; it is not an outer closure process started once per
-file.  With =GERBIL_BUILD_VERBOSE=1=, the POO Flow Observability extension emits
-per-operation receipts and 15-second heartbeats for a stuck native batch.
+The source-admission suite additionally uses ASP's serial-resource Profile and
+runs after the parallel lane.  Its scope is the imported native
+=t/sdlc/build-root.ss= graph already prepared by =gxtest=; it never scans the
+test directory, rebuilds a source catalog, or launches an outer closure process
+per file.  With =GERBIL_BUILD_VERBOSE=1=, the POO Flow Observability extension
+emits per-operation receipts and 15-second heartbeats for a stuck native batch.
 
 The parent checkout owns locked dependencies, =std/make= handoff and build
 parallelism.  =GERBIL_BUILD_CORES= is inherited by that build environment; this

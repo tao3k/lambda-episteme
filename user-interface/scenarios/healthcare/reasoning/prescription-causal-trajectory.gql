@@ -1,3 +1,3 @@
 MATCH (prescription:CausalEvent)-[:CAUSAL_PARENT]->(event:CausalEvent)
-WHERE prescription.identity = 'prescription-1/rev1'
+WHERE prescription.identity = 'ai-tmp-smx-recommendation-1'
 RETURN prescription.identity, event.identity, event.modality

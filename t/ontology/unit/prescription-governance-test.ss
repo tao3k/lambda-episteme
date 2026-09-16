@@ -26,13 +26,13 @@
           (equal? (.ref assessment 'profile-identity) identity))
         (.ref receipt 'governance-assessments)))
 
-(def (case-proof receipt)
+(def (case-proof receipt independent-digest)
   (let* ((profiles (.ref receipt 'profiles))
          (authorization (car (.ref (.ref receipt 'case) 'authorizations))))
     (poo-flow-cedar-proof-binding
      (symbol->string (.ref receipt 'case-id))
      (map (lambda (profile) (.ref profile 'identity)) profiles)
-     qualification-digest qualification-digest qualification-digest
+     qualification-digest qualification-digest independent-digest
      (healthcare-authorization-capability-digest receipt)
      (poo-flow-governance-assessments-digest
       (.ref receipt 'governance-assessments))
@@ -154,42 +154,30 @@
        (check (.ref assessment 'unresolved-threats)
               => '("healthcare/ai-cds/threat/autonomous-prescription"))))
 
-   (test-case "only the clinician-selected order crosses the Cedar boundary"
+   (test-case "Cedar rejects the Case until independent assurance is closed"
      (let* ((receipt
              (ontology-compose-case AIAssistedAntibioticPrescriptionCase))
             (root (if (file-exists? "modules/ontology/interface.ss")
                     "." "lambda-episteme"))
-            (snapshot
-             (healthcare-case-cedar-snapshot
-              receipt root
-              (poo-flow-cedar-authority-context
-               "healthcare-authority" "prescription-runtime" 1
-               qualification-digest 1 1 0)
-              (case-proof receipt)))
-            (runtime
-             (poo-flow-cedar-authority-snapshot->runtime snapshot))
+            (context
+             (poo-flow-cedar-authority-context
+              "healthcare-authority" "prescription-runtime" 1
+              qualification-digest 1 1 0))
             (handoff
              (poo-flow-cedar-runtime-handoff
               1 #u8(1 2 3) qualification-digest qualification-digest
-              qualification-digest qualification-digest))
-            (request
-             (healthcare-case-cedar-request
-              receipt qualification-digest handoff))
-            (runtime-request
-             (poo-flow-cedar-authorization-request->runtime request)))
+              qualification-digest qualification-digest)))
        (check (healthcare-cedar-governance-projection-canonical receipt)
               => '(("lambda-episteme/ontology/healthcare/pharmacology-safety"
                     #t #t #t)
                    ("lambda-episteme/ontology/healthcare/ai-clinical-decision-support"
                     #t #t #t)))
-       (check (hash-ref runtime "object_kind")
-              => "cedar-authority-snapshot")
-       (check (hash-ref (hash-ref runtime "provenance")
-                        "governance_admitted")
-              => #t)
-       (check (hash-ref runtime-request "principal")
-              => "Healthcare::Provider::\"clinician-1\"")
-       (check (hash-ref runtime-request "action")
-              => "Healthcare::Action::\"administerMedication\"")
-       (check (hash-ref runtime-request "resource")
-              => "Healthcare::MedicationOrder::\"alternative-order-1\"")))))
+       (check-exception
+        (healthcare-case-cedar-snapshot
+         receipt qualification-digest root context
+         (case-proof receipt qualification-digest))
+        true)
+       (check-exception
+        (healthcare-case-cedar-request
+         receipt qualification-digest qualification-digest handoff)
+        true)))))

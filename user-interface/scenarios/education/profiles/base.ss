@@ -40,5 +40,4 @@
        enrollment-course:
        (ontology-required-relation-rule
         'enrollment-must-link-course 'Enrollment 'forCourse 'source)))
-  (.add-query
-   (.o enrollments-missing-context: 'enrollments-missing-context)))
+  (.add-query (.o)))

@@ -5,7 +5,7 @@
 
 ;;; Healthcare owns vertical authorization meaning. The Cedar Provider owns
 ;;; standard policy/schema parsing and dual-engine execution.
-(import (only-in :clan/poo/object .o .ref .slot? object?)
+(import (only-in :clan/poo/object .cc .o .ref .slot? object?)
         (only-in :std/crypto/digest sha256)
         (only-in :std/misc/ports read-all-as-string)
         (only-in :std/srfi/1 every find)
@@ -34,6 +34,9 @@
                  poo-flow-cedar-schema)
         (only-in :poo-flow/lambda-episteme/modules/ontology/types
                  ontology-case-composition-receipt? ontology-source?)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/assurance
+                 healthcare-case-assurance?
+                 healthcare-case-assurance-digest)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization-projection
                  healthcare-cedar-governance-projection-canonical))
 
@@ -182,13 +185,17 @@
    CedarDualEngineAuthorizationProvider
    (list (medication-capability (.ref receipt 'profiles)))))
 
-(def (healthcare-case-cedar-snapshot receipt root authority-context proof-binding)
+(def (healthcare-case-cedar-snapshot
+      receipt assurance root authority-context proof-binding)
   (unless (and (ontology-case-composition-receipt? receipt)
                (.ref receipt 'accepted?)
                (.ref receipt 'governance-handoff-ready?)
+               (healthcare-case-assurance? assurance)
+               (eq? (.ref assurance 'case-id) (.ref receipt 'case-id))
                (poo-flow-cedar-authority-context? authority-context)
                (poo-flow-cedar-proof-binding? proof-binding))
-    (error "Healthcare Cedar snapshot requires an admitted Case" receipt))
+    (error "Healthcare Cedar snapshot requires an assurance-closed admitted Case"
+           receipt))
   (let* ((profiles (.ref receipt 'profiles))
          (authorization (car (.ref (.ref receipt 'case) 'authorizations)))
          (capability (medication-capability profiles)))
@@ -199,6 +206,10 @@
              (.ref proof-binding 'subject-snapshot))
       (error "Healthcare subject snapshot does not match Cedar proof binding"
              (.ref proof-binding 'subject-snapshot)))
+    (unless (equal? (healthcare-case-assurance-digest assurance)
+                    (.ref proof-binding 'independent-bundle))
+      (error "Healthcare assurance does not match Cedar proof binding"
+             (.ref proof-binding 'independent-bundle)))
     (let (capability-contract
           (poo-flow-authorization-capability-contract
            CedarDualEngineAuthorizationProvider (list capability)))
@@ -206,31 +217,35 @@
                       (.ref proof-binding 'capability-contract))
         (error "Healthcare capability contract does not match Cedar proof binding"
                (.ref proof-binding 'capability-contract))))
-    (poo-flow-cedar-governance-snapshot
-     (symbol->string (.ref receipt 'case-id))
-     profiles
-     (.ref receipt 'governance-assessments)
-     authority-context
-     proof-binding
-     (list
-      (poo-flow-cedar-policy
-       "healthcare-medication-permit"
-       (source-text root profiles +medication-policy-source+ 'cedar))
-      (poo-flow-cedar-policy
-       "healthcare-medication-revocation"
-       (source-text root profiles +medication-revocation-source+ 'cedar)))
-     (poo-flow-cedar-schema
-      (source-text root profiles +medication-schema-source+ 'json))
-     (poo-flow-cedar-entities (healthcare-entities authorization))
-     (list
-      (poo-flow-cedar-runtime-capability
-       (.ref capability 'action) (.ref capability 'event-kind))))))
+    (.cc
+     (poo-flow-cedar-governance-snapshot
+      (symbol->string (.ref receipt 'case-id))
+      profiles
+      (.ref receipt 'governance-assessments)
+      authority-context
+      proof-binding
+      (list
+       (poo-flow-cedar-policy
+        "healthcare-medication-permit"
+        (source-text root profiles +medication-policy-source+ 'cedar))
+       (poo-flow-cedar-policy
+        "healthcare-medication-revocation"
+        (source-text root profiles +medication-revocation-source+ 'cedar)))
+      (poo-flow-cedar-schema
+       (source-text root profiles +medication-schema-source+ 'json))
+      (poo-flow-cedar-entities (healthcare-entities authorization))
+      (list
+       (poo-flow-cedar-runtime-capability
+        (.ref capability 'action) (.ref capability 'event-kind))))
+     'assurance assurance)))
 
-(def (healthcare-case-cedar-request receipt intent handoff)
+(def (healthcare-case-cedar-request receipt assurance intent handoff)
   (unless (and (ontology-case-composition-receipt? receipt)
                (.ref receipt 'accepted?)
+               (healthcare-case-assurance? assurance)
+               (eq? (.ref assurance 'case-id) (.ref receipt 'case-id))
                (poo-flow-cedar-runtime-handoff? handoff))
-    (error "Healthcare Cedar request requires an admitted Case and handoff"))
+    (error "Healthcare Cedar request requires assurance closure and handoff"))
   (let (authorization (car (.ref (.ref receipt 'case) 'authorizations)))
     (unless (healthcare-medication-administration? authorization)
       (error "Healthcare Case requires medication authorization" authorization))
@@ -240,6 +255,7 @@
      "Healthcare::Action::\"administerMedication\""
      (string-append "Healthcare::MedicationOrder::\""
                     (.ref authorization 'order) "\"")
-     (.o)
+     (.o assurance_digest: (healthcare-case-assurance-digest assurance)
+         assurance_closed: #t)
      intent
      handoff)))
