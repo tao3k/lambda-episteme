@@ -1,0 +1,151 @@
+#+begin_comment
+SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
+#+end_comment
+
+#+title: Healthcare Scenario — relations, Temporal Causality, and assurance flow
+
+* Enterprise purpose
+
+=HealthcareScenario= is the vertical boundary.  A Case is one concrete
+enterprise situation inside that boundary; a Profile is a reusable semantic,
+Governance and authorization-capability slice selected by one or more Cases.
+Profiles solve reuse and controlled change: evidence, privacy, care-context,
+healing and medication-safety meaning can evolve independently, while each
+Case receipt records the exact effective closure it admitted.
+
+The =post-operative-healing= Case currently selects three named compositions:
+
+- =common=: evidence and privacy;
+- =healthcare=: the Healthcare base vocabulary and healing semantics;
+- =medication=: medication-safety Sources, Threat and Capability.
+
+Case authors maintain only =.use-composition=, =.add-source=,
+=.add-authorization=, =.add-event=, =.add-node= and =.add-edge= declarations.  They do not
+maintain reverse Profile indexes, Scenario Case registries or Impact lists.
+
+* Reasoning relations
+
+After a Case is admitted, =ontology-case-reasoning-graph= projects its accepted
+POO values into the ordinary POO Flow Graph.  For several Cases,
+=ontology-scenario-reasoning-graph= produces one Scenario graph.  The projection
+contains these typed relations:
+
+| Relation | Meaning | Modality |
+|----------+---------+----------|
+| =HAS_CASE= | Scenario owns the admitted Case boundary | declared |
+| =USES_COMPOSITION= | Case selected a named composition | declared |
+| =SELECTS_PROFILE= | Composition directly selected a Profile | declared |
+| =IMPORTS_PROFILE= | Profile imports another Profile | declared |
+| =HAS_EFFECTIVE_PROFILE= | Profile is in the accepted transitive closure | derived |
+| =DECLARES_SOURCE= | Profile owns an authority Source | declared |
+| =DECLARES_THREAT= | Profile owns a Governance Threat | declared |
+| =DECLARES_CAPABILITY= | Profile owns an authorization Capability | declared |
+| =HAS_EVENT= | Case declares one causal fact or candidate | declared |
+| =CAUSAL_PARENT= | Event declares an explicit causal parent | event modality |
+
+#+begin_src mermaid
+flowchart LR
+    S[Healthcare Scenario] -->|HAS_CASE| C[Post-operative healing Case]
+    C -->|USES_COMPOSITION| CM[Medication composition]
+    CM -->|SELECTS_PROFILE| MP[Medication Safety Profile]
+    MP -->|IMPORTS_PROFILE| HP[Healthcare Base Profile]
+    MP -->|IMPORTS_PROFILE| EP[Evidence Profile]
+    MP -->|IMPORTS_PROFILE| PP[Privacy Profile]
+    C -.->|HAS_EFFECTIVE_PROFILE / derived| MP
+    MP -->|DECLARES_SOURCE| CS[Cedar policy Source]
+    MP -->|DECLARES_THREAT| T[Contraindication evidence drift]
+    MP -->|DECLARES_CAPABILITY| A[Administer medication]
+#+end_src
+
+The graph is a projection, not a second authority.  Its node payloads are the
+same POO objects admitted in the composition receipt, and derived edges are
+marked as derived.
+
+* Structural Impact is reverse reasoning
+
+Impact is intentionally not a user-authored =IMPACTS= edge.  Such an edge
+would become stale whenever a Profile import or Case composition changed.
+=ontology-reasoning-impact= instead walks the reverse dependency cone of an
+exact graph node and returns an inert POO receipt containing the target,
+dependency-node set and impacted Case identities.  This first receipt is
+explicitly =snapshot-scoped-impact= with =scope: structural-snapshot=;
+=temporal-impact-assessed?= and =release-authorized?= are both false.
+
+For example, changing
+=healthcare/medication/authorization/policy= reaches
+=MedicationSafetyProfile= and then =PostOperativeHealingCase=.  The same
+operation works for a Profile, Source, Threat or Capability node.  Adding a
+second Healthcare Case to the Scenario graph makes it appear automatically if
+its accepted Profile closure depends on that target.
+
+Two standard GQL Sources live under =reasoning/=: one inspects
+Scenario/Case/Profile relations and one asks which Case is affected by the
+medication policy Source.  Gerbil-parser qualifies their ISO GQL syntax and
+byte-exact roundtrip.  The current repository does not contain a GQL execution
+engine, so parser acceptance is not presented as an executed query receipt;
+native Scheme graph construction and Impact evaluation are the executable
+authority today.  The explicit =just check-healthcare-gql= gate enters the
+parser owner's package environment and reads the Case-owned Sources by path;
+Lambda's native test tree never takes a reverse dependency on gerbil-parser.
+
+Structural dependency is only the first Impact dimension.  It answers which
+Cases depend on a changed Profile or Source, but it does not claim that a drug
+caused an observed condition, that a past administration can be rewritten, or
+that a future adverse outcome will occur.  The temporal-causal extension is
+specified in POO Flow RFC 161 as the =Temporal Causality= core.  It requires a
+causal event graph, immutable event cuts, causal trajectories, present exposure,
+bounded future horizons, counterfactual trajectories and an explicit unknown
+frontier.  Impact Analysis is a derived view of that core, not its name.
+
+The first executable slice is =wrong-prescription-review=.  Its =.add-event=
+slot declares seven events once: four observed and committed clinical facts,
+one scheduled administration, one counterfactual corrected prescription and
+one prospective reassessment.  The core seals all seven into one
+=CausalEventGraph=, while the cut at logical position 4 contains only the four
+committed facts.  Classification at horizon 6 returns separate past, current,
+future and counterfactual identities.  Missing parent identities remain an
+explicit =unknown-frontier= and prevent a complete classification.
+
+The Scheme classification is structural and horizon-relative.  Its
+=assurance-closed?= and =release-authorized?= slots remain false.  GQL execution,
+TLC model exhaustion, Lean refinement closure and a fresh Cedar decision remain
+separate receipts; none is inferred from the Scheme classification.  The
+explicit =check-healthcare-temporal-model= gate now qualifies the TLA+ source
+and exhausts its finite TLC state graph, but ordinary Scheme build and unit-test
+paths do not invoke that assurance gate.
+
+* Assurance and authorization flow
+
+The relation graph explains composition and change propagation.  It does not
+collapse the independent assurance roles:
+
+#+begin_src mermaid
+flowchart LR
+    P[Gerbil POO declarations] --> R[Accepted relation graph]
+    R --> I[Impact receipt]
+    P --> T[TLA+ model]
+    T --> TLC[TLC bounded temporal check]
+    P --> L[Lean enterprise proof]
+    P --> B[Cedar authority snapshot]
+    B --> CR[Cedar Rust decision]
+    B --> CL[Lean Cedar.Spec decision]
+    CR --> H[Strict lockstep Runtime Host]
+    CL --> H
+    TLC --> H
+    L --> H
+    H --> E[Signed authorization evidence]
+#+end_src
+
+- Gerbil POO owns selected facts, Profiles and relation projection.
+- GQL describes graph questions; it grants no authority.
+- TLA+/TLC checks the bounded temporal transition system.
+- Lean proves general Governance and enterprise-security obligations.
+- Cedar Rust makes the production authorization decision.
+- Lean =Cedar.Spec= supplies an independent executable semantic witness.
+- The Runtime Host admits only matching, identity-bound evidence before an
+  effect handoff.
+
+This separation lets an enterprise answer both questions without conflation:
+"what changes are affected?" is an Impact query; "may this exact action run?"
+is a current dual-engine authorization decision.

@@ -33,7 +33,9 @@
                  poo-flow-cedar-runtime-handoff?
                  poo-flow-cedar-schema)
         (only-in :poo-flow/lambda-episteme/modules/ontology/types
-                 ontology-case-composition-receipt? ontology-source?))
+                 ontology-case-composition-receipt? ontology-source?)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization-projection
+                 healthcare-cedar-governance-projection-canonical))
 
 (export healthcare-medication-administration
         healthcare-medication-administration?
@@ -109,7 +111,8 @@
                 (poo-flow-graph-edges graph))
            (map (lambda (slot) (.ref authorization slot))
                 '(provider patient encounter order reconciliation-observed?
-                  revoked?))))))
+                  revoked?))
+           (healthcare-cedar-governance-projection-canonical receipt)))))
 
 (def (record . fields)
   (let (value (make-hash-table))

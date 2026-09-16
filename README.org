@@ -126,6 +126,10 @@ Engineering, Commercial Finance, Manufacturing and Education.  They all reuse
 the same =modules/ontology= mechanism; no industry creates a second ontology
 engine or module registry.
 
+Healthcare's concrete enterprise relation model, derived Impact analysis and
+separation between GQL, TLA+/TLC, Lean and Cedar are documented in
+[[file:user-interface/scenarios/healthcare/README.org][Healthcare Scenario relations and assurance flow]].
+
 * Declarative user interface
 
 The User Interface exposes concrete POO declarations.  A contributor composes
@@ -238,6 +242,13 @@ an accepted POO value at that consumer boundary.  Generated RDF must not be
 read back to mutate or supersede the Profile and Case semantics.  The same rule
 applies to optional GQL, SQL and registry artifacts: they are explicit Sources
 or consumer projections, not hidden runtime owners.
+
+For accepted Scenario/Case/Profile compositions, the Ontology module can
+project the same POO objects into a POO Flow Graph.  GQL may query that
+projection, while native reverse dependency analysis derives Impact receipts
+for changed Profiles, Sources, Threats or Capabilities.  Impact is never a
+parallel user-maintained registry.  Parser-qualified GQL source establishes
+syntax and lossless authoring only; it does not claim query execution.
 
 * Adding a contribution
 

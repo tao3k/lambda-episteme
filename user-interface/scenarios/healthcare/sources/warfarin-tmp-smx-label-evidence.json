@@ -1,0 +1,22 @@
+{
+  "SPDX-FileCopyrightText": "2026 tao3k team and Contributors",
+  "SPDX-License-Identifier": "Apache-2.0 AND LGPL-2.1-or-later",
+  "identity": "healthcare/pharmacology/warfarin-tmp-smx-label-evidence/v1",
+  "retrieved": "2026-09-16",
+  "use": "Synthetic qualification case; not patient-specific medical advice.",
+  "facts": [
+    {
+      "subject": "sulfamethoxazole-trimethoprim",
+      "relation": "may-prolong-prothrombin-time-with",
+      "object": "warfarin",
+      "required-review": "Monitor prothrombin time and INR; reassess coagulation time.",
+      "source": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d60c218c-6529-4944-af0b-a9dc720f32e9"
+    },
+    {
+      "subject": "warfarin",
+      "relation": "requires-more-frequent-INR-monitoring-when-starting-or-stopping",
+      "object": "antibiotics-or-antifungals",
+      "source": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=a4cf3107-5646-4b91-8aae-94548e4409ef"
+    }
+  ]
+}

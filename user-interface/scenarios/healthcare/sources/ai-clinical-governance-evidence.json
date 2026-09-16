@@ -1,0 +1,19 @@
+{
+  "SPDX-FileCopyrightText": "2026 tao3k team and Contributors",
+  "SPDX-License-Identifier": "Apache-2.0 AND LGPL-2.1-or-later",
+  "evidenceIdentity": "healthcare/ai-cds/governance-evidence/v1",
+  "retrievedDate": "2026-09-16",
+  "scenarioUse": "Governance qualification source; not a regulatory determination.",
+  "controls": [
+    {
+      "control": "independent-clinician-review",
+      "requirement": "The healthcare professional can independently review the basis of a recommendation and does not rely primarily on it.",
+      "source": "https://www.fda.gov/medical-devices/digital-health-center-excellence/step-6-software-function-intended-provide-clinical-decision-support"
+    },
+    {
+      "control": "human-ai-role-separation",
+      "requirement": "Human and AI roles, responsibilities and oversight are explicitly differentiated.",
+      "source": "https://airc.nist.gov/airmf-resources/airmf/5-sec-core/"
+    }
+  ]
+}

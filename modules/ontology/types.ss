@@ -7,6 +7,9 @@
         (only-in :poo-flow/src/graph/types poo-flow-graph?)
         (only-in :poo-flow/src/modules/authorization/types
                  poo-flow-authorization-capability?)
+        (only-in :poo-flow/src/modules/temporal-causality/types
+                 poo-flow-causal-event?
+                 poo-flow-structural-impact-receipt?)
         (only-in :poo-flow/src/modules/governance/types
                  poo-flow-governance-assessment?
                  poo-flow-governance-profile?
@@ -23,7 +26,8 @@
         ontology-scenario?
         ontology-case?
         ontology-case-composition-receipt?
-        ontology-case-evaluation-receipt?)
+        ontology-case-evaluation-receipt?
+        ontology-reasoning-impact?)
 
 (def (ontology-has-slots? value slots)
   (and (object? value)
@@ -153,24 +157,27 @@
   (and (ontology-has-slots?
         value
         '(kind case-id scenario .use-composition .add-source .add-authorization
-               compositions sources authorizations graph))
+               .add-event compositions sources authorizations events graph))
        (eq? (.ref value 'kind) 'lambda-episteme.ontology-case)
        (symbol? (.ref value 'case-id))
        (ontology-scenario? (.ref value 'scenario))
        (object? (.ref value '.use-composition))
        (object? (.ref value '.add-source))
        (object? (.ref value '.add-authorization))
+       (object? (.ref value '.add-event))
        (list? (.ref value 'compositions))
        (pair? (.ref value 'compositions))
        (list? (.ref value 'sources))
        (list? (.ref value 'authorizations))
        (every object? (.ref value 'authorizations))
+       (list? (.ref value 'events))
+       (every poo-flow-causal-event? (.ref value 'events))
        (poo-flow-graph? (.ref value 'graph))))
 
 (def (ontology-case-composition-receipt? value)
   (and (ontology-has-slots?
         value
-        '(kind accepted? case case-id scenario compositions profiles sources
+        '(kind accepted? case case-id scenario compositions profiles sources events
                environment governance-assessments governance-handoff-ready?
                projection diagnostics runtime-executed?))
        (eq? (.ref value 'kind)
@@ -182,6 +189,8 @@
        (list? (.ref value 'compositions))
        (list? (.ref value 'profiles))
        (list? (.ref value 'sources))
+       (list? (.ref value 'events))
+       (every poo-flow-causal-event? (.ref value 'events))
        (ontology-semantic-environment? (.ref value 'environment))
        (list? (.ref value 'governance-assessments))
        (every poo-flow-governance-assessment?
@@ -206,3 +215,17 @@
        (poo-flow-graph? (.ref value 'graph))
        (list? (.ref value 'diagnostics))
        (eq? (.ref value 'runtime-executed?) #t)))
+
+(def (ontology-reasoning-impact? value)
+  (and (ontology-has-slots?
+        value
+        '(kind domain-kind target-node-id target-entity-kind
+               dependency-node-ids impacted-case-ids))
+       (poo-flow-structural-impact-receipt? value)
+       (eq? (.ref value 'domain-kind)
+            'lambda-episteme.ontology-reasoning-impact)
+       (string? (.ref value 'target-node-id))
+       (symbol? (.ref value 'target-entity-kind))
+       (list? (.ref value 'dependency-node-ids))
+       (list? (.ref value 'impacted-case-ids))
+       (every symbol? (.ref value 'impacted-case-ids))))

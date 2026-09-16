@@ -6,14 +6,20 @@
         (only-in :std/sort sort)
         (only-in :std/srfi/1 append-map every filter find)
         (only-in :poo-flow/src/graph/types
+                 poo-flow-graph poo-flow-graph-edge
                  poo-flow-graph-edge-from poo-flow-graph-edge-kind
                  poo-flow-graph-edge-to poo-flow-graph-edges
+                 poo-flow-graph-node
                  poo-flow-graph-node-id poo-flow-graph-node-payload
-                 poo-flow-graph-nodes)
+                 poo-flow-graph-node-metadata poo-flow-graph-nodes)
         (only-in :poo-flow/src/module-system/profile-composition/interface
                  poo-flow-composition?
+                 poo-flow-composition-name
                  poo-flow-composition-object/profiles
                  poo-flow-composition-profiles)
+        (only-in :poo-flow/src/modules/temporal-causality/interface
+                 poo-flow-causal-event?
+                 poo-flow-structural-impact-analyze)
         (only-in :poo-flow/src/modules/governance/funs
                  poo-flow-governance-evaluate)
         (only-in :poo-flow/lambda-episteme/modules/ontology/types
@@ -26,8 +32,220 @@
 (export ontology-compose-case
         ontology-evaluate-case
         ontology-remove-case-profile
+        ontology-case-reasoning-graph
+        ontology-scenario-reasoning-graph
+        ontology-reasoning-impact
         ontology-case-diagnostic-codes
         ontology-evaluation-diagnostic-codes)
+
+(def (ontology-reasoning-identity->string identity)
+  (cond
+   ((string? identity) identity)
+   ((symbol? identity) (symbol->string identity))
+   ((number? identity) (number->string identity))
+   (else (error "reasoning graph identity must be stable" identity))))
+
+(def (ontology-reasoning-node-id kind identity)
+  (string-append (symbol->string kind) ":"
+                 (ontology-reasoning-identity->string identity)))
+
+(def (ontology-reasoning-edge-key from to kind)
+  (string-append from "\n" (symbol->string kind) "\n" to))
+
+;;; Project accepted POO declarations into one queryable relation graph.  The
+;;; graph is derived state: Cases and Profiles remain the sole declarations,
+;;; while reverse Impact is computed from these exact dependency edges.
+(def (ontology-scenario-reasoning-graph scenario receipts)
+  (unless (and (object? scenario)
+               (eq? (.ref scenario 'kind)
+                    'lambda-episteme.ontology-scenario))
+    (error "invalid ontology Scenario" scenario))
+  (unless (list? receipts)
+    (error "ontology reasoning receipts must be a list" receipts))
+  (let ((nodes '())
+        (edges '())
+        (node-index (make-hash-table))
+        (edge-index (make-hash-table))
+        (scenario-identity (.ref scenario 'identity)))
+    (def (add-node! id payload entity-kind identity)
+      (unless (hash-get node-index id)
+        (hash-put! node-index id #t)
+        (set! nodes
+              (cons (poo-flow-graph-node
+                     id payload
+                     (list (cons 'entity-kind entity-kind)
+                           (cons 'identity identity)))
+                    nodes))))
+    (def (add-edge! from to kind modality)
+      (let (key (ontology-reasoning-edge-key from to kind))
+        (unless (hash-get edge-index key)
+          (hash-put! edge-index key #t)
+          (set! edges
+                (cons (poo-flow-graph-edge
+                       from to kind (list (cons 'modality modality)))
+                      edges)))))
+    (def (add-profile! profile)
+      (let* ((identity (.ref profile 'identity))
+             (profile-id (ontology-reasoning-node-id 'profile identity)))
+        (add-node! profile-id profile 'profile identity)
+        (for-each
+         (lambda (imported)
+           (let* ((imported-identity (.ref imported 'identity))
+                  (imported-id
+                   (ontology-reasoning-node-id
+                    'profile imported-identity)))
+             (add-node! imported-id imported 'profile imported-identity)
+             (add-edge! profile-id imported-id 'IMPORTS_PROFILE 'declared)))
+         (.ref profile 'imports))
+        (for-each
+         (lambda (source)
+           (let* ((identity (.ref source 'identity))
+                  (source-id (ontology-reasoning-node-id 'source identity)))
+             (add-node! source-id source 'source identity)
+             (add-edge! profile-id source-id 'DECLARES_SOURCE 'declared)))
+         (.ref profile 'source-assets))
+        (for-each
+         (lambda (threat)
+           (let* ((identity (.ref threat 'identity))
+                  (threat-id (ontology-reasoning-node-id 'threat identity)))
+             (add-node! threat-id threat 'threat identity)
+             (add-edge! profile-id threat-id 'DECLARES_THREAT 'declared)))
+         (.ref (.ref profile 'threat-model) 'threats))
+        (for-each
+         (lambda (capability)
+           (let* ((identity (.ref capability 'identity))
+                  (capability-id
+                   (ontology-reasoning-node-id 'capability identity)))
+             (add-node! capability-id capability 'capability identity)
+             (add-edge! profile-id capability-id
+                        'DECLARES_CAPABILITY 'declared)))
+         (.ref profile 'capabilities))))
+    (let (scenario-id
+          (ontology-reasoning-node-id 'scenario scenario-identity))
+      (add-node! scenario-id scenario 'scenario scenario-identity)
+      (for-each
+       (lambda (receipt)
+         (unless (and (ontology-case-composition-receipt? receipt)
+                      (.ref receipt 'accepted?))
+           (error "reasoning graph requires an accepted Case receipt" receipt))
+         (unless (eq? (.ref receipt 'scenario) scenario-identity)
+           (error "Case receipt belongs to another Scenario" receipt))
+         (let* ((case-value (.ref receipt 'case))
+                (case-identity (.ref receipt 'case-id))
+                (case-id
+                 (ontology-reasoning-node-id 'case case-identity)))
+           (add-node! case-id case-value 'case case-identity)
+           (add-edge! scenario-id case-id 'HAS_CASE 'declared)
+           (for-each
+            (lambda (composition)
+              (let* ((name (poo-flow-composition-name composition))
+                     (composition-identity
+                      (string-append
+                       (ontology-reasoning-identity->string case-identity)
+                       "/"
+                       (ontology-reasoning-identity->string name)))
+                     (composition-id
+                      (ontology-reasoning-node-id
+                       'composition composition-identity)))
+                (add-node! composition-id composition
+                           'composition composition-identity)
+                (add-edge! case-id composition-id
+                           'USES_COMPOSITION 'declared)
+                (for-each
+                 (lambda (profile)
+                   (add-profile! profile)
+                   (add-edge!
+                    composition-id
+                    (ontology-reasoning-node-id
+                     'profile (.ref profile 'identity))
+                    'SELECTS_PROFILE 'declared))
+                 (poo-flow-composition-profiles composition))))
+            (.ref receipt 'compositions))
+           (for-each
+            (lambda (profile)
+              (add-profile! profile)
+              (add-edge!
+               case-id
+               (ontology-reasoning-node-id
+                'profile (.ref profile 'identity))
+               'HAS_EFFECTIVE_PROFILE 'derived))
+            (.ref receipt 'profiles))
+           (for-each
+            (lambda (event)
+              (let* ((identity (.ref event 'identity))
+                     (event-id
+                      (ontology-reasoning-node-id 'event identity)))
+                (add-node! event-id event 'causal-event identity)
+                (add-edge! case-id event-id 'HAS_EVENT 'declared)
+                (for-each
+                 (lambda (parent-identity)
+                   (add-edge!
+                    (ontology-reasoning-node-id 'event parent-identity)
+                    event-id
+                    'CAUSAL_PARENT
+                    (.ref event 'modality)))
+                 (.ref event 'causal-parent-identities))))
+            (.ref receipt 'events))))
+       receipts)
+      (poo-flow-graph
+       (list 'ontology-reasoning scenario-identity)
+       (reverse nodes)
+       (reverse edges)
+       (list (cons 'projection 'ontology-reasoning.v1)
+             (cons 'scenario scenario-identity))))))
+
+(def (ontology-case-reasoning-graph receipt)
+  (unless (ontology-case-composition-receipt? receipt)
+    (error "invalid ontology Case composition receipt" receipt))
+  (ontology-scenario-reasoning-graph
+   (.ref (.ref receipt 'case) 'scenario)
+   (list receipt)))
+
+(def (ontology-reasoning-node-entity-kind node)
+  (let (entry (assq 'entity-kind (poo-flow-graph-node-metadata node)))
+    (and entry (cdr entry))))
+
+;;; Impact is a reverse dependency view, not a second user-maintained relation.
+;;; Its evidence is the complete dependency cone rooted at the changed node.
+(def (ontology-reasoning-impact graph target-id)
+  (let* ((target
+          (find (lambda (node)
+                  (equal? (poo-flow-graph-node-id node) target-id))
+                (poo-flow-graph-nodes graph))))
+    (unless target
+      (error "reasoning Impact target is absent" target-id))
+    (let* ((impact
+            (poo-flow-structural-impact-analyze
+             graph
+             (list target-id)
+             '(HAS_CASE USES_COMPOSITION SELECTS_PROFILE IMPORTS_PROFILE
+                        HAS_EFFECTIVE_PROFILE DECLARES_SOURCE DECLARES_THREAT
+                        DECLARES_CAPABILITY HAS_EVENT CAUSAL_PARENT)
+             'dependents
+             #t))
+           (impacted-node-ids (.ref impact 'affected-node-ids))
+           (dependency-index (make-hash-table))
+           (impacted-cases '()))
+      (for-each (lambda (id) (hash-put! dependency-index id #t))
+                impacted-node-ids)
+      (for-each
+       (lambda (node)
+         (when (and (hash-get dependency-index
+                              (poo-flow-graph-node-id node))
+                    (eq? (ontology-reasoning-node-entity-kind node) 'case))
+           (set! impacted-cases
+                 (cons (.ref (poo-flow-graph-node-payload node) 'case-id)
+                       impacted-cases))))
+       (poo-flow-graph-nodes graph))
+      ;; Extend the strict core receipt directly.  Do not retain the receipt in
+      ;; another lazy slot: that duplicates the same value and can create a
+      ;; self-resolving POO path when the duplicate slot is forced.
+      (.cc impact
+           'domain-kind 'lambda-episteme.ontology-reasoning-impact
+           'target-node-id target-id
+           'target-entity-kind (ontology-reasoning-node-entity-kind target)
+           'dependency-node-ids impacted-node-ids
+           'impacted-case-ids (reverse impacted-cases)))))
 
 (def (ontology-diagnostic code-value path-value detail-value)
   (.o kind: 'lambda-episteme.ontology-diagnostic
@@ -352,6 +570,7 @@
         compositions: receipt-compositions
         profiles: '()
         sources: '()
+        events: (.ref receipt 'events)
         environment: (.ref receipt 'environment)
         governance-assessments: '()
         governance-handoff-ready?: #f
@@ -402,7 +621,8 @@
          (scenario-definition (.ref case-value 'scenario))
          (scenario (.ref scenario-definition 'identity))
          (compositions (.ref case-value 'compositions))
-         (case-sources (.ref case-value 'sources)))
+         (case-sources (.ref case-value 'sources))
+         (case-events (.ref case-value 'events)))
     (let* ((input-diagnostics
           (append
            (if (and (list? compositions) (pair? compositions)
@@ -413,7 +633,12 @@
                     compositions)))
            (if (list? case-sources) '()
              (list (ontology-diagnostic
-                    'invalid-case-sources '(sources) case-sources)))))
+                    'invalid-case-sources '(sources) case-sources)))
+           (if (and (list? case-events)
+                    (every poo-flow-causal-event? case-events))
+             '()
+             (list (ontology-diagnostic
+                    'invalid-case-events '(events) case-events)))))
          (profile-values
           (if (null? input-diagnostics)
             (append-map poo-flow-composition-profiles compositions)
@@ -484,6 +709,8 @@
              (receipt-profiles (if accepted? profiles '()))
              (receipt-sources
               (if (and accepted? (list? case-sources)) case-sources '()))
+             (receipt-events
+              (if (and accepted? (list? case-events)) case-events '()))
              (receipt-environment semantic-environment)
              (receipt-governance-assessments governance-assessments)
              (receipt-governance-handoff-ready?
@@ -504,6 +731,7 @@
               compositions: receipt-compositions
               profiles: receipt-profiles
               sources: receipt-sources
+              events: receipt-events
               environment: receipt-environment
               governance-assessments: receipt-governance-assessments
               governance-handoff-ready?: receipt-governance-handoff-ready?

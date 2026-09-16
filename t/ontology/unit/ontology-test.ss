@@ -8,6 +8,8 @@
         (only-in :std/srfi/1 every find)
         (only-in :poo-flow/src/graph/types
                  poo-flow-graph poo-flow-graph-edge poo-flow-graph-node
+                 poo-flow-graph-edge-kind poo-flow-graph-edges
+                 poo-flow-graph-node-metadata poo-flow-graph-nodes
                  poo-flow-graph?)
         :poo-flow/src/module-system/contribution/interface
         :poo-flow/src/module-system/profile-composition/interface
@@ -291,6 +293,40 @@
             => '(evidence privacy healthcare-base healing medication-safety))
      (check (length (.ref post-operative-healing-receipt 'projection)) => 5)
      (check (.ref post-operative-healing-receipt 'runtime-executed?) => #f))
+
+   (test-case "reasoning graph derives Case, Profile and Impact relations"
+     (let* ((reasoning
+             (ontology-case-reasoning-graph
+              post-operative-healing-receipt))
+            (edges (poo-flow-graph-edges reasoning))
+            (edge-kinds (map poo-flow-graph-edge-kind edges))
+            (impact
+             (ontology-reasoning-impact
+              reasoning
+              "source:healthcare/medication/authorization/policy")))
+       (check (poo-flow-graph? reasoning) => #t)
+       (check (length (filter (lambda (kind) (eq? kind 'HAS_CASE))
+                              edge-kinds))
+              => 1)
+       (check (length (filter (lambda (kind)
+                                (eq? kind 'USES_COMPOSITION))
+                              edge-kinds))
+              => 3)
+       (check (length (filter (lambda (kind)
+                                (eq? kind 'HAS_EFFECTIVE_PROFILE))
+                              edge-kinds))
+              => 5)
+       (check (memq 'DECLARES_SOURCE edge-kinds) ? values)
+       (check (memq 'DECLARES_THREAT edge-kinds) ? values)
+       (check (memq 'DECLARES_CAPABILITY edge-kinds) ? values)
+       (check (ontology-reasoning-impact? impact) => #t)
+       (check (.ref impact 'target-entity-kind) => 'source)
+       (check (.ref impact 'impacted-case-ids)
+              => '(post-operative-healing))
+       (check (.ref impact 'status) => 'snapshot-scoped-impact)
+       (check (.ref impact 'temporal-impact-assessed?) => #f)
+       (check (.ref impact 'release-authorized?) => #f)
+       (check (.ref impact 'runtime-executed?) => #f)))
 
    (test-case "Case composition evaluates declared vertical Governance threats"
      (let* ((threats

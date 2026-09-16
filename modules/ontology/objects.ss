@@ -78,10 +78,12 @@
       .use-composition: (.o)
       .add-source: (.o)
       .add-authorization: (.o)
+      .add-event: (.o)
       compositions: (ontology-case-composition-values .use-composition)
       sources: (ontology-declaration-values .add-source '.add-source)
       authorizations:
       (ontology-declaration-values .add-authorization '.add-authorization)
+      events: (ontology-declaration-values .add-event '.add-event)
       graph: #f))
 
 (def (ontology-rule-diagnostic rule-value code-value path-value detail-value)
