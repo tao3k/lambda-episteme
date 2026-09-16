@@ -8,7 +8,8 @@
         (only-in :asp-gerbil-scheme/testing-api
                  +asp-testing-interface+
                  +testing-source-admission-profile+
-                 testing-interface-add-profile
+                 testing-interface-add-profile)
+        (only-in :asp-gerbil-scheme/testing-source-admission-api
                  testing-interface-prepared-source-admission-suite)
         (only-in :std/test check)
         (only-in :poo-flow/src/module-system/observability/source-admission
