@@ -5,36 +5,41 @@
 (import :std/test
         (only-in :clan/poo/object .cc .ref)
         (only-in :std/srfi/1 find)
+        (only-in :poo-flow/src/module-system/profile-composition/interface
+                 poo-flow-composition-name)
         :poo-flow/src/modules/temporal-causality/interface
         :poo-flow/lambda-episteme/modules/ontology/interface
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/australian-personal-care-coordination/case)
+        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/personal-care-coordination/case)
 
-(export australian-personal-care-test)
+(export personal-care-coordination-test)
 
 (def admitted-receipt
-  (ontology-compose-case AustralianPersonalCareCoordinationCase))
+  (ontology-compose-case PersonalCareCoordinationCase))
 
 (def (assessment-by-profile receipt identity)
   (find (lambda (assessment)
           (equal? (.ref assessment 'profile-identity) identity))
         (.ref receipt 'governance-assessments)))
 
-(def australian-personal-care-test
+(def personal-care-coordination-test
   (test-suite
-   "Australian personal care coordination"
+   "Regional personal care coordination"
 
    (test-case "primary care and Support at Home Profiles admit one Case"
      (let ((evaluation (ontology-evaluate-case admitted-receipt)))
        (check (.ref admitted-receipt 'accepted?) => #t)
        (check (.ref admitted-receipt 'governance-handoff-ready?) => #t)
+       (check (map poo-flow-composition-name
+                   (.ref PersonalCareCoordinationCase 'compositions))
+              => '(common healthcare personal-care regions))
        (check (map (lambda (profile) (.ref profile 'name))
                    (.ref admitted-receipt 'profiles))
-              => '(evidence privacy healthcare-base australian-primary-care
-                            australian-support-at-home))
+              => '(evidence privacy healthcare-base primary-care
+                            support-at-home australia))
        (check (map (lambda (assessment)
                      (.ref assessment 'unresolved-threats))
                    (.ref admitted-receipt 'governance-assessments))
-              => '(() () () () ()))
+              => '(() () () () () ()))
        (check (.ref evaluation 'accepted?) => #t)
        (check (.ref evaluation 'runtime-executed?) => #t)))
 
@@ -50,10 +55,10 @@
        (check (.ref classification 'past-event-ids)
               => '("personal-care-request-1"
                    "primary-care-triage-1"
-                   "mymedicare-registration-confirmed-1"
+                   "primary-care-registration-confirmed-1"
                    "preferred-gp-consultation-1"
                    "support-at-home-referral-1"
-                   "aged-care-assessment-approved-1"
+                   "care-needs-assessment-approved-1"
                    "support-plan-issued-1"))
        (check (.ref classification 'current-event-ids)
               => '("home-care-provider-accepted-1"))
@@ -73,22 +78,22 @@
             (impact
              (ontology-reasoning-impact
               reasoning
-              "source:healthcare/australia/support-at-home/authority-evidence")))
+              "source:healthcare/regions/australia/support-at-home/authority-evidence")))
        (check (.ref impact 'status) => 'snapshot-scoped-impact)
        (check (.ref impact 'target-entity-kind) => 'source)
        (check (.ref impact 'impacted-case-ids)
-              => '(australian-personal-care-coordination))
+              => '(personal-care-coordination))
        (check (.ref impact 'temporal-impact-assessed?) => #f)
        (check (.ref impact 'release-authorized?) => #f)))
 
-   (test-case "each missing Australian care observation blocks handoff"
+   (test-case "each missing care or selected Region observation blocks handoff"
      (for-each
       (lambda (specification)
         (let* ((slot (car specification))
                (profile-identity (cadr specification))
                (threat-identity (caddr specification))
                (unsafe-case
-                (.cc AustralianPersonalCareCoordinationCase
+               (.cc PersonalCareCoordinationCase
                      'case-id
                      (string->symbol
                       (string-append "missing-" (symbol->string slot)))
@@ -100,27 +105,33 @@
           (check (.ref receipt 'governance-handoff-ready?) => #f)
           (check (.ref assessment 'unresolved-threats)
                  => (list threat-identity))))
-      '((mymedicare-dual-consent-observed?
-         "lambda-episteme/ontology/healthcare/australia/primary-care"
-         "healthcare/australia/primary-care/threat/unconsented-registration")
+      '((primary-care-registration-consent-observed?
+         "lambda-episteme/ontology/healthcare/primary-care"
+         "healthcare/primary-care/threat/unconsented-registration")
         (primary-care-provider-eligibility-verified?
-         "lambda-episteme/ontology/healthcare/australia/primary-care"
-         "healthcare/australia/primary-care/threat/ineligible-practice-or-gp")
+         "lambda-episteme/ontology/healthcare/primary-care"
+         "healthcare/primary-care/threat/ineligible-practice-or-provider")
         (clinical-triage-complete?
-         "lambda-episteme/ontology/healthcare/australia/primary-care"
-         "healthcare/australia/primary-care/threat/untriaged-appointment")
+         "lambda-episteme/ontology/healthcare/primary-care"
+         "healthcare/primary-care/threat/untriaged-appointment")
         (health-information-sharing-consented?
-         "lambda-episteme/ontology/healthcare/australia/primary-care"
-         "healthcare/australia/primary-care/threat/health-information-over-disclosure")
-        (aged-care-assessment-approved?
-         "lambda-episteme/ontology/healthcare/australia/support-at-home"
-         "healthcare/australia/support-at-home/threat/assessment-bypass")
+         "lambda-episteme/ontology/healthcare/primary-care"
+         "healthcare/primary-care/threat/health-information-over-disclosure")
+        (care-needs-assessment-approved?
+         "lambda-episteme/ontology/healthcare/support-at-home"
+         "healthcare/support-at-home/threat/assessment-bypass")
         (support-plan-bound?
-         "lambda-episteme/ontology/healthcare/australia/support-at-home"
-         "healthcare/australia/support-at-home/threat/unbound-support-plan")
-        (referral-code-active?
-         "lambda-episteme/ontology/healthcare/australia/support-at-home"
-         "healthcare/australia/support-at-home/threat/invalid-referral-code")
+         "lambda-episteme/ontology/healthcare/support-at-home"
+         "healthcare/support-at-home/threat/unbound-support-plan")
+        (referral-credential-active?
+         "lambda-episteme/ontology/healthcare/support-at-home"
+         "healthcare/support-at-home/threat/invalid-referral-credential")
         (consumer-provider-choice-observed?
-         "lambda-episteme/ontology/healthcare/australia/support-at-home"
-         "healthcare/australia/support-at-home/threat/provider-choice-overridden"))))))
+         "lambda-episteme/ontology/healthcare/support-at-home"
+         "healthcare/support-at-home/threat/provider-choice-overridden")
+        (regional-primary-care-program-verified?
+         "lambda-episteme/ontology/healthcare/regions/australia"
+         "healthcare/regions/australia/threat/primary-care-program-drift")
+        (regional-home-support-program-verified?
+         "lambda-episteme/ontology/healthcare/regions/australia"
+         "healthcare/regions/australia/threat/home-support-program-drift"))))))

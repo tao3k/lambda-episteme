@@ -1,7 +1,7 @@
 {
   "SPDX-FileCopyrightText": "2026 tao3k team and Contributors",
   "SPDX-License-Identifier": "Apache-2.0 AND LGPL-2.1-or-later",
-  "evidenceIdentity": "healthcare/australia/primary-care/authority-evidence/v1",
+  "evidenceIdentity": "healthcare/regions/australia/primary-care/authority-evidence/v1",
   "jurisdiction": "Australia",
   "retrievedDate": "2026-09-16",
   "scenarioUse": "Primary-care coordination qualification source; not medical or legal advice.",

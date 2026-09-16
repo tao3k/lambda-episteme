@@ -13,10 +13,12 @@
                  EvidenceProfile)
         (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
                  PrivacyProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/australian-primary-care
-                 AustralianPrimaryCareProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/australian-support-at-home
-                 AustralianSupportAtHomeProfile)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/primary-care
+                 PrimaryCareProfile)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/support-at-home
+                 SupportAtHomeProfile)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/regions/australia
+                 AustraliaHealthcareRegionProfile)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
                  HealthcareBaseProfile)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/scenario
@@ -24,22 +26,24 @@
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/temporal-causality
                  healthcare-clinical-event))
 
-(export AustralianPersonalCareCoordinationCase)
+(export PersonalCareCoordinationCase)
 
-(.def (AustralianPersonalCareCoordinationCase @ OntologyCase)
-  (case-id 'australian-personal-care-coordination)
+(.def (PersonalCareCoordinationCase @ OntologyCase)
+  (case-id 'personal-care-coordination)
   (scenario HealthcareScenario)
 
   ;; Profile methods consume these Case-owned observations.  A false value is
   ;; a typed Governance rejection, not a fallback to an ungoverned booking.
-  (mymedicare-dual-consent-observed? #t)
+  (primary-care-registration-consent-observed? #t)
   (primary-care-provider-eligibility-verified? #t)
   (clinical-triage-complete? #t)
   (health-information-sharing-consented? #t)
-  (aged-care-assessment-approved? #t)
+  (care-needs-assessment-approved? #t)
   (support-plan-bound? #t)
-  (referral-code-active? #t)
+  (referral-credential-active? #t)
   (consumer-provider-choice-observed? #t)
+  (regional-primary-care-program-verified? #t)
+  (regional-home-support-program-verified? #t)
 
   (.use-composition
    (.o common:
@@ -47,9 +51,11 @@
            privacy: PrivacyProfile)
        healthcare:
        (.o base: HealthcareBaseProfile)
-       australian-care:
-       (.o primary-care: AustralianPrimaryCareProfile
-           support-at-home: AustralianSupportAtHomeProfile)))
+       personal-care:
+       (.o primary-care: PrimaryCareProfile
+           support-at-home: SupportAtHomeProfile)
+       regions:
+       (.o australia: AustraliaHealthcareRegionProfile)))
 
   (.add-event
    (.o care-request:
@@ -63,13 +69,13 @@
         'observed #t)
        registration:
        (healthcare-clinical-event
-        "person-1" "mymedicare-registration-confirmed-1"
-        'mymedicare-registration 3 "registration/person-1/practice-1"
+        "person-1" "primary-care-registration-confirmed-1"
+        'primary-care-registration 3 "registration/person-1/practice-1"
         '("primary-care-triage-1") 'observed #t)
        consultation:
        (healthcare-clinical-event
         "person-1" "preferred-gp-consultation-1" 'gp-consultation 4
-        "appointment-1" '("mymedicare-registration-confirmed-1")
+        "appointment-1" '("primary-care-registration-confirmed-1")
         'observed #t)
        referral:
        (healthcare-clinical-event
@@ -77,18 +83,18 @@
         "referral-1" '("preferred-gp-consultation-1") 'observed #t)
        assessment:
        (healthcare-clinical-event
-        "person-1" "aged-care-assessment-approved-1"
-        'aged-care-assessment 6 "assessment-1"
+        "person-1" "care-needs-assessment-approved-1"
+        'care-needs-assessment 6 "assessment-1"
         '("support-at-home-referral-1") 'observed #t)
        support-plan:
        (healthcare-clinical-event
         "person-1" "support-plan-issued-1" 'support-plan 7
-        "support-plan-1" '("aged-care-assessment-approved-1")
+        "support-plan-1" '("care-needs-assessment-approved-1")
         'observed #t)
        provider-acceptance:
        (healthcare-clinical-event
         "person-1" "home-care-provider-accepted-1" 'provider-acceptance 8
-        "provider-1/referral-code-1" '("support-plan-issued-1")
+        "provider-1/referral-credential-1" '("support-plan-issued-1")
         'observed #t)
        first-home-visit:
        (healthcare-clinical-event
@@ -112,7 +118,7 @@
 
   (graph
    (.o (:: @ Graph)
-       graph-id: 'australian-personal-care-coordination
+       graph-id: 'personal-care-coordination
        .add-node:
        (.o person-1: (poo-flow-graph-node 'person-1 'Patient)
            practice-1: (poo-flow-graph-node 'practice-1 'GeneralPractice)
@@ -120,21 +126,22 @@
            appointment-1:
            (poo-flow-graph-node 'appointment-1 'PrimaryCareAppointment)
            registration-1:
-           (poo-flow-graph-node 'registration-1 'MyMedicareRegistration)
+           (poo-flow-graph-node 'registration-1 'PrimaryCareRegistration)
            consent-1:
            (poo-flow-graph-node 'consent-1 'HealthInformationConsent)
            referral-1: (poo-flow-graph-node 'referral-1 'ClinicalReferral)
            assessment-1:
-           (poo-flow-graph-node 'assessment-1 'AgedCareAssessment)
+           (poo-flow-graph-node 'assessment-1 'CareNeedsAssessment)
            decision-1:
-           (poo-flow-graph-node 'decision-1 'NoticeOfDecision)
+           (poo-flow-graph-node 'decision-1 'CareEligibilityDecision)
            support-plan-1:
            (poo-flow-graph-node 'support-plan-1 'SupportPlan)
-           referral-code-1:
-           (poo-flow-graph-node 'referral-code-1 'AgedCareReferralCode)
+           referral-credential-1:
+           (poo-flow-graph-node
+            'referral-credential-1 'CareReferralCredential)
            provider-1:
-           (poo-flow-graph-node 'provider-1 'SupportAtHomeProvider)
-           service-1: (poo-flow-graph-node 'service-1 'HomeCareService))
+           (poo-flow-graph-node 'provider-1 'HomeSupportProvider)
+           service-1: (poo-flow-graph-node 'service-1 'HomeSupportService))
        .add-edge:
        (.o patient-registration:
            (poo-flow-graph-edge 'person-1 'practice-1 'REGISTERED_WITH)
@@ -165,6 +172,7 @@
            (poo-flow-graph-edge 'support-plan-1 'service-1 'AUTHORIZES_SERVICE)
            service-provider:
            (poo-flow-graph-edge 'service-1 'provider-1 'DELIVERED_BY)
-           referral-code-plan:
+           referral-credential-plan:
            (poo-flow-graph-edge
-            'referral-code-1 'support-plan-1 'REFERRAL_CODE_FOR)))))
+            'referral-credential-1
+            'support-plan-1 'REFERRAL_CREDENTIAL_FOR)))))

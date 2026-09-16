@@ -1,7 +1,7 @@
 {
   "SPDX-FileCopyrightText": "2026 tao3k team and Contributors",
   "SPDX-License-Identifier": "Apache-2.0 AND LGPL-2.1-or-later",
-  "evidenceIdentity": "healthcare/australia/support-at-home/authority-evidence/v1",
+  "evidenceIdentity": "healthcare/regions/australia/support-at-home/authority-evidence/v1",
   "jurisdiction": "Australia",
   "retrievedDate": "2026-09-16",
   "scenarioUse": "Support at Home coordination qualification source; not an eligibility determination.",
