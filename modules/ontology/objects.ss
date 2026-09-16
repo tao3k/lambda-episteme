@@ -14,6 +14,8 @@
                  poo-flow-graph-node-payload poo-flow-graph-nodes)
         (only-in :poo-flow/src/module-system/profile-composition/interface
                  poo-flow-composition-object/profiles)
+        (only-in :poo-flow/src/modules/authorization/types
+                 poo-flow-authorization-capability?)
         (only-in :poo-flow/src/modules/governance/objects
                  PooFlowGovernanceProfile.
                  poo-flow-governance-source
@@ -75,8 +77,11 @@
       scenario: #f
       .use-composition: (.o)
       .add-source: (.o)
+      .add-authorization: (.o)
       compositions: (ontology-case-composition-values .use-composition)
       sources: (ontology-declaration-values .add-source '.add-source)
+      authorizations:
+      (ontology-declaration-values .add-authorization '.add-authorization)
       graph: #f))
 
 (def (ontology-rule-diagnostic rule-value code-value path-value detail-value)
@@ -254,6 +259,7 @@
       .add-query: (.o)
       .add-conflict: (.o)
       .add-threat: (.o)
+      .add-capability: (.o)
       imports: (ontology-declaration-values .import '.import)
       ontology:
       (ontology-vocabulary
@@ -263,6 +269,8 @@
                     source-scope: 'non-reversing
                     runtime-mutation: 'forbidden)
       source-assets: (ontology-declaration-values .add-source '.add-source)
+      capabilities:
+      (ontology-declaration-values .add-capability '.add-capability)
       terms: (ontology-vocabulary-concept-identities ontology)
       rules: (ontology-declaration-values .add-rule '.add-rule)
       queries: (ontology-declaration-values .add-query '.add-query)
@@ -281,6 +289,9 @@
                           (.ref profile 'imports))
             sources: (map (lambda (value) (.ref value 'identity))
                           (.ref profile 'source-assets))
+            capabilities:
+            (map (lambda (value) (.ref value 'identity))
+                 (.ref profile 'capabilities))
             ontology:
             (.o concepts:
                 (map (lambda (semantic)

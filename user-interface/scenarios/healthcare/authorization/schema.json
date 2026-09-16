@@ -1,0 +1,33 @@
+{
+  "Healthcare": {
+    "entityTypes": {
+      "Provider": {},
+      "Patient": {},
+      "Encounter": {},
+      "MedicationOrder": {
+        "shape": {
+          "type": "Record",
+          "attributes": {
+            "assignedProvider": { "type": "Entity", "name": "Provider" },
+            "patient": { "type": "Entity", "name": "Patient" },
+            "encounter": { "type": "Entity", "name": "Encounter" },
+            "reconciliationObserved": { "type": "Boolean" },
+            "revoked": { "type": "Boolean" }
+          }
+        }
+      }
+    },
+    "actions": {
+      "administerMedication": {
+        "appliesTo": {
+          "principalTypes": ["Provider"],
+          "resourceTypes": ["MedicationOrder"],
+          "context": {
+            "type": "Record",
+            "attributes": {}
+          }
+        }
+      }
+    }
+  }
+}

@@ -5,6 +5,8 @@
 (import (only-in :clan/poo/object .all-slots .ref .slot? object?)
         (only-in :std/srfi/1 every)
         (only-in :poo-flow/src/graph/types poo-flow-graph?)
+        (only-in :poo-flow/src/modules/authorization/types
+                 poo-flow-authorization-capability?)
         (only-in :poo-flow/src/modules/governance/types
                  poo-flow-governance-assessment?
                  poo-flow-governance-profile?
@@ -97,7 +99,8 @@
         value
         '(name profile-scope scenario .import .add-concept .add-relation
                .add-source .add-rule .add-query .add-conflict .add-threat
-               imports ontology terms rules queries conflicts))
+               .add-capability imports ontology terms rules queries conflicts
+               capabilities))
        (symbol? (.ref value 'name))
        (memq (.ref value 'profile-scope) '(common scenario))
        (if (eq? (.ref value 'profile-scope) 'common)
@@ -111,13 +114,15 @@
                     (.ref value '.add-rule)
                     (.ref value '.add-query)
                     (.ref value '.add-conflict)
-                    (.ref value '.add-threat)))
+                    (.ref value '.add-threat)
+                    (.ref value '.add-capability)))
        (list? (.ref value 'imports))
        (ontology-vocabulary? (.ref value 'ontology))
        (equal? (.ref value 'terms)
                (map (lambda (concept) (.ref concept 'identity))
                     (.ref (.ref value 'ontology) 'concepts)))
        (every ontology-source? (.ref value 'source-assets))
+       (every poo-flow-authorization-capability? (.ref value 'capabilities))
        (every poo-flow-governance-threat?
               (map (lambda (slot) (.ref (.ref value '.add-threat) slot))
                    (.all-slots (.ref value '.add-threat))))
@@ -147,16 +152,19 @@
 (def (ontology-case? value)
   (and (ontology-has-slots?
         value
-        '(kind case-id scenario .use-composition .add-source
-               compositions sources graph))
+        '(kind case-id scenario .use-composition .add-source .add-authorization
+               compositions sources authorizations graph))
        (eq? (.ref value 'kind) 'lambda-episteme.ontology-case)
        (symbol? (.ref value 'case-id))
        (ontology-scenario? (.ref value 'scenario))
        (object? (.ref value '.use-composition))
        (object? (.ref value '.add-source))
+       (object? (.ref value '.add-authorization))
        (list? (.ref value 'compositions))
        (pair? (.ref value 'compositions))
        (list? (.ref value 'sources))
+       (list? (.ref value 'authorizations))
+       (every object? (.ref value 'authorizations))
        (poo-flow-graph? (.ref value 'graph))))
 
 (def (ontology-case-composition-receipt? value)

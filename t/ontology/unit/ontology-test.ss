@@ -12,6 +12,7 @@
         :poo-flow/src/module-system/contribution/interface
         :poo-flow/src/module-system/profile-composition/interface
         :poo-flow/src/modules/governance/interface
+        :poo-flow/src/modules/authorization/providers/cedar/interface
         :poo-flow/lambda-episteme/modules/ontology/interface
         :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
         :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
@@ -19,6 +20,7 @@
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/healing
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
+        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/post-operative-healing/case
         :poo-flow/lambda-episteme/user-interface/scenarios/software-engineering/profiles/base
         :poo-flow/lambda-episteme/user-interface/scenarios/software-engineering/scenario
@@ -100,6 +102,23 @@
    (list EvidenceProfile PrivacyProfile HealthcareBaseProfile
          UnmitigatedMedicationSafetyProfile)
    '()))
+
+(def cedar-test-digest
+  (string-append "sha256:" (make-string 64 #\0)))
+
+(def (healthcare-test-proof receipt)
+  (let* ((profiles (.ref receipt 'profiles))
+         (assessments (.ref receipt 'governance-assessments))
+         (authorization (car (.ref (.ref receipt 'case) 'authorizations))))
+    (poo-flow-cedar-proof-binding
+     (symbol->string (.ref receipt 'case-id))
+     (map (lambda (profile) (.ref profile 'identity)) profiles)
+     cedar-test-digest cedar-test-digest cedar-test-digest
+     (healthcare-authorization-capability-digest receipt)
+     (poo-flow-governance-assessments-digest assessments)
+     (healthcare-authorization-subject-digest receipt authorization)
+     '("PooFlowProof.Enterprise.GovernanceThreatAssuranceClosure"
+       "PooFlowProof.PooC3.CedarDualEngineArbitration"))))
 
 (def CustomProjectionProfile
   (.o (:: @ HealingProfile)
@@ -296,6 +315,64 @@
        (check (.ref post-operative-healing-receipt
                     'governance-handoff-ready?)
               => #t)))
+
+   (test-case "Healthcare Case projects an aggregate Governance-bound Cedar snapshot"
+     (let* ((root (if (file-exists? "modules/ontology/interface.ss")
+                    "." "lambda-episteme"))
+            (snapshot
+             (healthcare-case-cedar-snapshot
+              post-operative-healing-receipt
+              root
+              (poo-flow-cedar-authority-context
+               "healthcare-authority" "post-operative-runtime" 1
+               cedar-test-digest 1 1 0)
+              (healthcare-test-proof post-operative-healing-receipt)))
+            (runtime (poo-flow-cedar-authority-snapshot->runtime snapshot))
+            (provenance (hash-ref runtime "provenance"))
+            (handoff
+             (poo-flow-cedar-runtime-handoff
+              1 #u8(1 2 3) cedar-test-digest cedar-test-digest
+              cedar-test-digest cedar-test-digest))
+            (request
+             (healthcare-case-cedar-request
+              post-operative-healing-receipt cedar-test-digest handoff))
+            (runtime-request
+             (poo-flow-cedar-authorization-request->runtime request)))
+       (check (hash-ref runtime "object_kind") => "cedar-authority-snapshot")
+       (check (hash-ref provenance "composition_identity")
+              => "post-operative-healing")
+       (check (vector-length (hash-ref provenance "profile_identities"))
+              => 5)
+       (check (hash-ref provenance "governance_admitted") => #t)
+       (check (hash-ref provenance "governance_assessment_digest")
+              => (poo-flow-governance-assessments-digest
+                  (.ref post-operative-healing-receipt
+                        'governance-assessments)))
+       (check (hash-ref runtime-request "principal")
+              => "Healthcare::Provider::\"provider-1\"")
+       (check (hash-ref runtime-request "action")
+              => "Healthcare::Action::\"administerMedication\"")
+       (check (hash-ref runtime-request "resource")
+              => "Healthcare::MedicationOrder::\"medication-order-1\"")))
+
+   (test-case "Healthcare Cedar rejects proof drift before source projection"
+     (let* ((root (if (file-exists? "modules/ontology/interface.ss")
+                    "." "lambda-episteme"))
+            (context
+             (poo-flow-cedar-authority-context
+              "healthcare-authority" "post-operative-runtime" 1
+              cedar-test-digest 1 1 0))
+            (proof (healthcare-test-proof post-operative-healing-receipt)))
+       (check-exception
+        (healthcare-case-cedar-snapshot
+         post-operative-healing-receipt root context
+         (.cc proof 'subject-snapshot cedar-test-digest))
+        true)
+       (check-exception
+        (healthcare-case-cedar-snapshot
+         post-operative-healing-receipt root context
+         (.cc proof 'capability-contract cedar-test-digest))
+        true)))
 
    (test-case "native Rule objects execute over declarative Case Graphs"
      (for-each

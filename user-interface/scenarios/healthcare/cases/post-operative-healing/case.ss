@@ -20,7 +20,9 @@
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
                  MedicationSafetyProfile)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/scenario
-                 HealthcareScenario))
+                 HealthcareScenario)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization
+                 healthcare-medication-administration))
 
 (export PostOperativeHealingCase)
 
@@ -36,6 +38,11 @@
            healing: HealingProfile)
        medication:
        (.o medication-safety: MedicationSafetyProfile)))
+  (.add-authorization
+   (.o medication-administration:
+       (healthcare-medication-administration
+        "provider-1" "patient-1" "encounter-1" "medication-order-1"
+        #t #f)))
   (graph
    (.o (:: @ Graph)
        graph-id: 'post-operative-healing
@@ -47,7 +54,9 @@
            healing-episode-1:
            (poo-flow-graph-node 'healing-episode-1 'HealingEpisode)
            recovery-milestone-1:
-           (poo-flow-graph-node 'recovery-milestone-1 'RecoveryMilestone))
+           (poo-flow-graph-node 'recovery-milestone-1 'RecoveryMilestone)
+           medication-order-1:
+           (poo-flow-graph-node 'medication-order-1 'MedicationOrder))
        .add-edge:
        (.o encounter-patient:
            (poo-flow-graph-edge 'encounter-1 'patient-1 'HAS_PATIENT)
@@ -61,4 +70,10 @@
            episode-reaches-milestone:
            (poo-flow-graph-edge
             'healing-episode-1 'recovery-milestone-1
-            'REACHES_MILESTONE)))))
+            'REACHES_MILESTONE)
+           order-patient:
+           (poo-flow-graph-edge
+            'medication-order-1 'patient-1 'ORDER_FOR_PATIENT)
+           order-provider:
+           (poo-flow-graph-edge
+            'medication-order-1 'provider-1 'ASSIGNED_PROVIDER)))))

@@ -6,8 +6,10 @@
         (only-in :poo-flow/src/modules/governance/objects
                  poo-flow-governance-precondition
                  poo-flow-governance-threat)
+        (only-in :poo-flow/src/modules/authorization/objects
+                 poo-flow-authorization-capability)
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
-                 ontology-concept ontology-relation)
+                 ontology-concept ontology-relation ontology-source)
         (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
         (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
@@ -28,6 +30,8 @@
    (.o medication: (ontology-concept 'Medication '(BaseEntity) '())
        administration:
        (ontology-concept 'Administration '(Action) '(review-required))
+       medication-order:
+       (ontology-concept 'MedicationOrder '(Action) '(review-required))
        contraindication:
        (ontology-concept 'Contraindication '(Evidence) '())))
   (.add-relation
@@ -36,8 +40,27 @@
         'ADMINISTERED_TO 'Administration 'Patient '(review-required))
        contraindicated-by:
        (ontology-relation
-        'CONTRAINDICATED_BY 'Medication 'Contraindication '())))
-  (.add-source (.o))
+        'CONTRAINDICATED_BY 'Medication 'Contraindication '())
+       order-for-patient:
+       (ontology-relation 'ORDER_FOR_PATIENT 'MedicationOrder 'Patient '(required))
+       assigned-provider:
+       (ontology-relation 'ASSIGNED_PROVIDER 'MedicationOrder 'Provider '(required))))
+  (.add-source
+   (.o cedar-medication-policy:
+       (ontology-source
+        "healthcare/medication/authorization/policy"
+        "user-interface/scenarios/healthcare/authorization/medication-safety.cedar"
+        'cedar 'scenario 'healthcare #f)
+       cedar-medication-revocation:
+       (ontology-source
+        "healthcare/medication/authorization/revocation"
+        "user-interface/scenarios/healthcare/authorization/medication-revocation.cedar"
+        'cedar 'scenario 'healthcare #f)
+       cedar-healthcare-schema:
+       (ontology-source
+        "healthcare/medication/authorization/schema"
+        "user-interface/scenarios/healthcare/authorization/schema.json"
+        'json 'scenario 'healthcare #f)))
   (.add-rule (.o))
   (.add-threat
    (.o contraindication-evidence-drift:
@@ -54,4 +77,11 @@
         '("medication reconciliation bound to encounter evidence"))))
   (policies (.o medication-change: 'review-required
                 disclosure: 'minimum-necessary))
+  (.add-capability
+   (.o administer-medication:
+       (poo-flow-authorization-capability
+        "healthcare/medication/capability/administer"
+        "Healthcare::Action::\"administerMedication\""
+        4101
+        'elevated)))
   (.add-query (.o medication-safety-review: 'medication-safety-review)))

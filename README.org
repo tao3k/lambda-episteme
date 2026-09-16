@@ -35,7 +35,9 @@ Governance itself is not another Lambda top-level framework.  Lambda Profiles
 derive from POO Flow's =PooFlowGovernanceProfile.= and declare their contributor
 owner and revision explicitly.  POO Flow's Cedar bridge may project an admitted
 Profile into an identity-bound authority snapshot; only the independent
-Rust+Lean Runtime Host evaluates that snapshot.  Domain admission, Cedar input
+Rust+Lean Runtime Host evaluates that snapshot.  The Provider lives under POO
+Flow's core =src/modules/authorization/providers/cedar/= module rather than the
+legacy generic =policy= namespace.  Domain admission, Cedar input
 projection and runtime authorization are three separate receipts.
 
 * Security Governance evidence chain
@@ -68,7 +70,9 @@ built.
 #+end_src
 
 This remains declarative user configuration: Profile authors do not maintain a
-parallel threat list, assessment registry or Cedar document.  The Case receipt
+parallel threat list or assessment registry.  Standard Cedar policy/schema
+Sources stay beside the Healthcare Scenario, while the Case declares only its
+Provider, Patient, Encounter and Medication Order slots.  The Case receipt
 contains =governance-assessments= and =governance-handoff-ready?=.  Replacing
 the threat phase with =exposed= or =realized= in a derived Profile makes the
 Case fail closed with =governance-handoff-blocked= and the exact unresolved
@@ -276,17 +280,21 @@ just test-scheme-all
 #+end_src
 
 Use =test-scheme= for one module tree, =test-scheme-atomic= for one exact test
-file, and =test-scheme-all= for the complete contribution suite.  Tests are
-ordinary =:std/test= suites discovered and executed by upstream
-=:clan/testing= through the ASP Testing interface; Lambda Episteme does not own
-a parallel runner.
+file, and =test-scheme-all= for the complete acceptance suite.  The two focused
+commands are native =gxtest= filters for local diagnosis.  The complete entry
+is the authoritative profiled path: ordinary =:std/test= suites are discovered
+by upstream =:clan/testing= and executed through the ASP Testing interface;
+Lambda Episteme does not own a parallel runner.
 
 Testing extensions such as source admission, timeout, heap observation,
 debugging and tracing are declarative ASP Testing Profiles around the native
-gxtest lifecycle.  Source admission evaluates the prepared native test graph;
-it is not an outer closure process started once per file.  Resource containment
-protects a single test execution from a dynamic hang or memory overflow and is
-not a batch-size heuristic.
+gxtest lifecycle.  Every =*-test.ss= is mapped to ASP's process-isolation
+Profile, so its heap limit applies to that file rather than a multi-file batch.
+The heavy source-admission suite additionally uses ASP's serial-resource
+Profile and runs after the parallel lane.  Source admission evaluates the
+prepared native test graph; it is not an outer closure process started once per
+file.  With =GERBIL_BUILD_VERBOSE=1=, the POO Flow Observability extension emits
+per-operation receipts and 15-second heartbeats for a stuck native batch.
 
 The parent checkout owns locked dependencies, =std/make= handoff and build
 parallelism.  =GERBIL_BUILD_CORES= is inherited by that build environment; this
