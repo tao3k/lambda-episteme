@@ -27,8 +27,9 @@ than translating SQL text into MATCH clauses.
 
 1. Create =modules/<name>/= with =types.ss=, =objects.ss=, =funs.ss=,
    =config.ss= and the public =interface.ss=.
-2. Run =gerbil build= through the package's sole ASP PackageSpec declaration.
-   Do not add per-file entries or another build script.
+2. Run =just build-scheme= through POO Flow's root-owned contribution adapter
+   and official =std/make= handoff.  Do not add per-file entries, a child
+   PackageSpec or another build script.
 3. Include a runnable =user-interface/= scenario selecting or deriving the profile through the
    existing POO Flow composition API.
 4. Add native tests for contract validation, derivation and conflicting exports.

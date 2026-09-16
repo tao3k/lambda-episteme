@@ -1,83 +1,250 @@
-#+title: Lambda Episteme — POO Flow contribution modules
+#+title: Lambda Episteme — vertical knowledge as POO composition
 
-* Architecture
+* Purpose
 
-POO Flow is the existing core. This repository contributes POO-native domain
-profiles, ontology/policy declarations, source assets and examples. It does not
-implement a graph engine or require Rust, Python, SQL execution or gql-rust.
-GQL source is optional. gerbil-parser checks that source in a separate test lane.
+Lambda Episteme is the vertical-industry contribution field for POO Flow.  It
+turns domain concepts, relations, policies, sources and concrete situations
+into native Gerbil POO values that applications can select and compose.
 
-The current modules are =diataxis=, =adr=, =decision-kind=, =gitops=, =ontology=
-and =sdlc= under =modules/=.  Ontology is one contribution module whose
-industry variation lives under =user-interface/scenarios/= as Profiles and
-Cases; Healthcare, Software Engineering, Commercial Finance, Manufacturing and
-Education are the first migrated L1 Scenarios.
-Their terms, relations, imports and policies are native POO Profile values.
-RDF is not loaded by this module and is not a second semantic authority;
-interoperability formats, when needed, are one-way projections at an explicit
-consumer boundary.
-=sdlc= accepts multiple optional standards; NASA NPR 7150.2D is the first standard profile, with a complete requirement
-review surface for all 130 SWE identifiers, 255 source paragraphs, conditional
-applicability, institutional duties, safety measurements and tailoring records.
-It now consumes receipts from explicitly configured host verification adapters
-for cumulative lifecycle decisions; it supplies no production authenticator and
-does not certify compliance. See [[file:modules/sdlc/README.org][SDLC ownership, sources and qualification]].
-=examples/project.ss= demonstrates ordinary native prototype derivation and
-existing =use-composition= syntax. Adding a new module does not require editing
-POO Flow's core or introducing another contribution DSL.
+This repository owns domain meaning and contributor governance.  POO Flow owns
+the module system, composition engine, graph implementation, build API and
+runtime handoff.  Mounting this repository does not activate a Profile, grant a
+capability or authorize a decision; the consuming application must explicitly
+select the composition it accepts.
 
-See [[file:MODULES.org][the module layout and build contract]] for the required POO role files.
+The public model is:
 
-* Development
+#+begin_example
+Module     semantic mechanism and stable public API
+  |
+Scenario  one vertical-industry boundary
+  |
+Profile   reusable, inheritable domain configuration
+  |
+Case      concrete composition plus declarative graph facts
+  |
+Source    explicit common or Case-local external authority
+#+end_example
 
-Standalone complex user scenarios live in [[file:user-interface/README.org][user-interface/]]. They share the
-POO Flow-owned contribution builder and =unit-tests.ss= entrypoint. Production
-sources and legacy scenario fixtures use separate build roots.
-The SDLC review API prepares review packets from explicit evidence and project
-observations; it does not produce compliance decisions.
+These are different ownership levels, not interchangeable names.  For example,
+=ontology= is a Module; =healthcare= is a Scenario; =healing= is a Profile; and
+=post-operative-healing= is a Case.
 
-From a POO Flow checkout containing this top-level contribution, run:
+* Repository shape
+
+#+begin_example
+modules/
+  ontology/                  semantic mechanism
+  sdlc/                      lifecycle and standards mechanism
+  gitops/                    change/check/decision mechanism
+  adr/ diataxis/ decision-kind/
+
+user-interface/
+  init.ss                    selected Modules and feature flags
+  config.ss                  final compositions only
+  profiles/                  reusable cross-Scenario Profiles
+  scenarios/
+    <vertical>/
+      scenario.ss            vertical boundary and base Profile
+      profiles/              vertical reusable Profiles
+      cases/<case>/case.ss   one concrete declaration
+#+end_example
+
+Every contributed Module follows the POO Flow-owned five-role contract:
+=types.ss=, =objects.ss=, =funs.ss=, =config.ss= and =interface.ss=.  See
+[[file:MODULES.org][MODULES.org]] for the normative ownership of those files.
+
+The currently migrated ontology Scenarios are Healthcare, Software
+Engineering, Commercial Finance, Manufacturing and Education.  They all reuse
+the same =modules/ontology= mechanism; no industry creates a second ontology
+engine or module registry.
+
+* Declarative user interface
+
+The User Interface exposes concrete POO declarations.  A contributor composes
+objects through named slots instead of maintaining raw alists, parallel
+registries, stage DSLs or procedural setup code.
+
+** Profile
+
+A Profile inherits an existing prototype and declares only its additions:
+
+#+begin_src scheme
+(.def (HealingProfile @ HealthcareBaseProfile)
+  (identity "lambda-episteme/ontology/healthcare/healing")
+  (name 'healing)
+  (.import (.o healthcare: HealthcareBaseProfile
+               evidence: EvidenceProfile))
+  (.add-concept
+   (.o healing-episode:
+       (ontology-concept 'HealingEpisode '(Encounter) '(time-bound))))
+  (.add-relation
+   (.o recovers-from:
+       (ontology-relation
+        'RECOVERS_FROM 'HealingEpisode 'Condition '())))
+  (.add-source (.o))
+  (.add-rule (.o))
+  (.add-query (.o healing-progress: 'healing-progress)))
+#+end_src
+
+Top-level =user-interface/profiles/= contains reusable common Profiles.
+=user-interface/scenarios/<vertical>/profiles/= contains Profiles owned by one
+vertical Scenario.  Inheritance and =.import= composition make reuse explicit;
+filesystem placement alone never activates a Profile.
+
+** Case
+
+A Case is one POO declaration.  It selects Profiles with =.use-composition=,
+adds Case-local Sources with =.add-source= when needed, and declares graph
+topology through the Graph prototype's =.add-node= and =.add-edge= slots:
+
+#+begin_src scheme
+(.def (TransactionPostingCase @ OntologyCase)
+  (case-id 'transaction-posting)
+  (scenario CommercialFinanceScenario)
+  (.use-composition
+   (.o commercial-finance:
+       (.o evidence: EvidenceProfile
+           privacy: PrivacyProfile
+           base: CommercialFinanceBaseProfile)))
+  (graph
+   (.o (:: @ Graph)
+       graph-id: 'transaction-posting
+       .add-node:
+       (.o customer-1:
+           (poo-flow-graph-node 'customer-1 'Customer))
+       .add-edge: (.o))))
+#+end_src
+
+=.add-node= and =.add-edge= are real POO slots, not lists disguised as a graph
+DSL.  The Graph owner derives the projections used by algorithms.  Likewise,
+the framework derives composition sequences, source sequences, indexes,
+admission results and evaluations; Case authors do not duplicate those values
+as sibling =def= bindings.
+
+** Sources
+
+Sources follow the same scope model as Profiles:
+
+- a reusable Profile may declare common Sources in =.add-source=;
+- a Scenario Profile may declare vertical Sources;
+- a Case may add Sources that apply only to that concrete situation.
+
+A Source is explicit authority metadata, not an implicit file scan.  Its scope
+and ownership remain visible in the resulting composition.
+
+* Programming model
+
+The implementation uses the smallest native abstraction that matches the
+extension axis:
+
+- POO prototypes and ordinary slots are the default data and composition model.
+- =.defgeneric= slot dispatch owns behavior that varies along one Profile,
+  Scenario or semantic-object axis.  A derived object replaces the method slot
+  directly.
+- CLOS generics, class specializers and method bundles are reserved for a real
+  crossing of independently extensible axes, such as Provider/executor by
+  Profile, Scenario or Case.
+- =define-type= defines actual boundary contracts such as Git Change, Check and
+  Decision.  It does not simulate a class hierarchy.
+- =defrule= may remove repetition among Profile declarations.  It must expand
+  to ordinary POO-native or functional code, not introduce another public DSL.
+- =config.ss= selects and composes Profiles and Standards only.  It does not
+  repeat execution stages.
+- =interface.ss= is the sole public re-export boundary of a Module.
+
+Pure closure, indexing, admission and projection functions belong in
+=funs.ss=.  Side effects remain behind explicit runtime or application
+boundaries.  Imports express source ownership; selective =only-in= imports are
+used where they make dependencies precise, not as an invented substitute for
+the build graph.
+
+* Ontology without a second RDF authority
+
+The native authority is the accepted POO composition: Profiles own concepts,
+relations, rules, queries and Sources; Cases own concrete graph facts.  RDF is
+therefore neither a dependency of =modules/ontology= nor a second mutable
+semantic store.
+
+If an external consumer requires RDF, an adapter may project RDF one way from
+an accepted POO value at that consumer boundary.  Generated RDF must not be
+read back to mutate or supersede the Profile and Case semantics.  The same rule
+applies to optional GQL, SQL and registry artifacts: they are explicit Sources
+or consumer projections, not hidden runtime owners.
+
+* Adding a contribution
+
+** Add a vertical Scenario
+
+1. Add =user-interface/scenarios/<vertical>/scenario.ss= and derive one base
+   Profile from =OntologyProfile=.
+2. Put vertical reusable Profiles in =profiles/=.  Import common Profiles from
+   =user-interface/profiles/= explicitly.
+3. Add each concrete situation as one
+   =cases/<case-name>/case.ss= declaration.
+4. Declare common, vertical or Case-local Sources at the scope that owns them.
+5. Add native tests under =t/ontology/= for composition, admission, graph
+   behavior and relevant negative cases.
+
+** Add a Module
+
+1. Start from =templates/module/= and implement the five required role files.
+2. Keep domain behavior in the contribution; do not copy POO Flow's loader,
+   builder, scheduler, testing framework or artifact cache.
+3. Export only through the Module's =interface.ss=.
+4. Add a runnable User Interface composition and module-owned native tests.
+
+Detailed contribution rules are in [[file:CONTRIBUTING.org][CONTRIBUTING.org]].
+
+* Build and test
+
+=gerbil.pkg= declares the native package identity
+=poo-flow/lambda-episteme= only.  Lambda Episteme has no =build.ss= and does not
+own a second PackageSpec.  Its =justfile= delegates Scheme work to POO Flow's
+official build and test adapters.
+
+From this directory:
 
 #+begin_src sh
 just build-scheme
-just test-scheme
-just test-scheme-atomic sdlc unit/nasa-certification-test.ss
+just test-scheme ontology
+just test-scheme-atomic ontology unit/ontology-test.ss
+just test-scheme-all
 #+end_src
 
-Both module and atomic targets first run POO Flow's reader-native POO authoring
-observations over the exact native import closure rooted at the selected test
-files. They reject recursive =.o slot: slot= initializers before loading domain
-code, then run native =gxtest= with verbose case/check output and a hard time
-bound. Atomic tests import the narrow owning modules they exercise. The
-top-level =interface.ss=
-exports only the source object and source-neutral module bundle; each selected
-domain module retains its own public =interface.ss=.
-The atomic lane passes the explicitly selected test file directly to native
-=gxtest= and writes test artifacts to the separate
-=.gerbil/contributions/lambda-episteme/atomic-test= image. The contribution's
-production owners are built once through POO Flow before a clean combined
-check; no test BuildSpec or test build script exists.
+Use =test-scheme= for one module tree, =test-scheme-atomic= for one exact test
+file, and =test-scheme-all= for the complete contribution suite.  Tests are
+ordinary =:std/test= suites discovered and executed by upstream
+=:clan/testing= through the ASP Testing interface; Lambda Episteme does not own
+a parallel runner.
 
-The contribution's =gerbil.pkg= declares native package identity only; it has no
-build script and does not acquire ASP or Gerbil POO directly. POO Flow owns the
-locked dependencies, core =build.ss=, and independent root-level contribution
-build/test adapters.
-An installed gerbil-parser is currently needed by the GQL source tests.
+Testing extensions such as source admission, timeout, heap observation,
+debugging and tracing are declarative ASP Testing Profiles around the native
+gxtest lifecycle.  Source admission evaluates the prepared native test graph;
+it is not an outer closure process started once per file.  Resource containment
+protects a single test execution from a dynamic hang or memory overflow and is
+not a batch-size heuristic.
 
-Tests run through the POO Flow environment. They do not install a runtime or
-query a graph.
-See [[file:CONTRIBUTING.org][contribution guidance]] for ownership and qualification.
+The parent checkout owns locked dependencies, =std/make= handoff and build
+parallelism.  =GERBIL_BUILD_CORES= is inherited by that build environment; this
+repository does not calculate or override a competing core count.
 
-* Legacy assets
+* Ownership and limits
 
-The older =README.md=, RDF registry/promotion contracts, =policies/=, SQL
-artifacts, =tests/= Python alignment suite and Wendao command recipes describe
-the preceding Wendao integration. Mapping and policy files selected by a
-Profile remain explicit external Sources; the old SQL rules are not selected by
-the native Profiles because executable Rule objects own that behavior. RDF,
-SQL and registry assets remain only for legacy consumers while they migrate;
-the new Scheme module neither loads them nor treats them as semantic authority.
+Lambda Episteme can model evidence, prepare reviews and expose unresolved
+obligations.  It does not authenticate a producer, execute an external service,
+certify regulatory compliance or authorize release by itself.  Those effects
+belong to explicitly configured host Providers and independently tested
+application boundaries.
 
-POO declarations and GQL syntax qualification are not evidence of graph-query
-execution or runtime policy enforcement. The consuming application owns those
-separately tested boundaries.
+The SDLC module supports multiple Standards.  NASA NPR 7150.2D is one Standard
+Profile with a complete review surface, not the identity of SDLC and not an
+automatic certification claim.  See [[file:modules/sdlc/README.org][the SDLC ownership and qualification notes]].
+
+Historical RDF registries, SQL policies, Python alignment tests and Wendao
+command recipes remain migration inputs for legacy consumers.  New Scheme
+Profiles and Cases do not load them unless they are explicitly declared as a
+Source or projected at an interoperability boundary.
+
+For the closed user-facing directory contract, see
+[[file:user-interface/README.org][user-interface/README.org]].

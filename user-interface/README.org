@@ -59,7 +59,8 @@ installed POO Flow interface and this contribution only; they do not import the
 parent repository's downstream configuration.
 
 Run =just build-scheme= followed by =just test-scheme=. Both commands delegate
-to the POO Flow root environment; this contribution has no =gerbil.pkg=.
+to the POO Flow root environment.  The contribution's =gerbil.pkg= declares
+native package identity only; it owns no build script or PackageSpec.
 
 * Team release policy
 The fictional =team/release-v1= profile adds a =RELEASE-REVIEW= obligation for

@@ -106,10 +106,11 @@ be imported back to mutate or supersede Profile semantics.
 
 Because =.o= evaluates a slot initializer in the new object's slot scope,
 constructor parameters must not reuse the slot name.  Use names such as
-=scenario-value= for =scenario:=.  POO Flow's contributor test admission
-projects the exact native import closure before module loading and rejects a
-violation with =self-referential-slot-initializer=; the outer timeout remains
-containment for genuinely dynamic hangs, not the primary diagnostic.
+=scenario-value= for =scenario:=.  The ASP Testing Profile evaluates source
+admission over gxtest's prepared native graph and rejects a violation with
+=self-referential-slot-initializer=.  It does not start an outer closure process
+for every file; the per-test timeout remains containment for genuinely dynamic
+hangs, not the primary diagnostic.
 
 * POO Flow contribution build integration
 POO Flow owns the default core PackageSpec, package namespace, root-level
