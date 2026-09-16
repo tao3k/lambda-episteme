@@ -1,8 +1,11 @@
 (import :poo-flow/src/module-system/contribution/interface
-        :poo-flow/lambda-episteme/governance/objects)
+        (only-in :poo-flow/src/modules/governance/objects
+                 PooFlowGovernanceProfile.
+                 poo-flow-governance-source))
 (export AdrProfile)
 (def AdrProfile
-  (.o (:: @ GovernanceProfile.) identity: "lambda-episteme/adr"
+  (.o (:: @ PooFlowGovernanceProfile.) identity: "lambda-episteme/adr"
+      revision: "1" owner: "lambda-episteme"
       module-family: 'adr
       ontology: (.o decision-label: 'Decision reference-edge: 'REFERENCES
                     supersession-edge: 'SUPERSEDED_BY identity-property: 'id)
@@ -13,5 +16,6 @@
                         expired-reference: 'review-required
                         repair: 'proposal-only))
       source-assets:
-      (list (source-asset "adr/expired-reference-witnesses"
-                          "modules/adr/expired-references.gql" 'gql))))
+      (list (poo-flow-governance-source
+             "adr/expired-reference-witnesses"
+             "modules/adr/expired-references.gql" 'gql))))

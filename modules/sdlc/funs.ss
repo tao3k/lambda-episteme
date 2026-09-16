@@ -1,8 +1,9 @@
 (import (only-in :clan/poo/object .o .ref)
-        :poo-flow/lambda-episteme/governance/objects
+        (only-in :poo-flow/src/modules/governance/funs
+                 poo-flow-governance-contribution)
         (only-in :std/srfi/1 every delete-duplicates))
 (import :poo-flow/lambda-episteme/modules/sdlc/types :poo-flow/lambda-episteme/modules/sdlc/objects)
-(export sdlc-with-standards sdlc-module)
+(export sdlc-with-standards sdlc-contribution sdlc-module)
 (def (sdlc-with-standards profile-value standard-values)
   (unless (and (sdlc-profile? profile-value)
                (list? standard-values) (every standard-profile? standard-values))
@@ -11,7 +12,12 @@
     (unless (= (length identities) (length (delete-duplicates identities equal?)))
       (error "duplicate SDLC standard identity")))
   (.o (:: @ profile-value) standards: standard-values))
-(def sdlc-module (governance-module SdlcProfile))
+(def (sdlc-contribution profile-value)
+  (unless (sdlc-profile? profile-value)
+    (error "invalid SDLC profile" profile-value))
+  (poo-flow-governance-contribution
+   profile-value '(lifecycle-governance) '()))
+(def sdlc-module (sdlc-contribution SdlcProfile))
 
 (import (only-in :std/srfi/1 any filter find))
 (export sdlc-trace-review)

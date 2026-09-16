@@ -1,5 +1,4 @@
 (import :poo-flow/src/module-system/contribution/interface
-        :poo-flow/lambda-episteme/governance/interface
         :poo-flow/lambda-episteme/modules/diataxis/interface
         :poo-flow/lambda-episteme/modules/adr/interface
         :poo-flow/lambda-episteme/modules/decision-kind/interface)
@@ -10,7 +9,7 @@
       policies: (.o document-kind:
                     (.o (:: @ (.ref (.ref DiataxisProfile 'policies) 'document-kind))
                         severity: 'error))))
-(def project-diaclass (governance-module ProjectDiataxisProfile))
+(def project-diaclass (diataxis-contribution ProjectDiataxisProfile))
 (def project-composition
   (use-composition project-composition
     (use-module governance as policy

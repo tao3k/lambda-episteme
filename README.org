@@ -6,11 +6,12 @@ Lambda Episteme is the vertical-industry contribution field for POO Flow.  It
 turns domain concepts, relations, policies, sources and concrete situations
 into native Gerbil POO values that applications can select and compose.
 
-This repository owns domain meaning and contributor governance.  POO Flow owns
-the module system, composition engine, graph implementation, build API and
-runtime handoff.  Mounting this repository does not activate a Profile, grant a
-capability or authorize a decision; the consuming application must explicitly
-select the composition it accepts.
+This repository owns vertical-domain meaning, governance content and its
+qualification evidence.  POO Flow owns the Governance core contract, module
+system, composition engine, graph implementation, build API and runtime
+authorization handoff.  Mounting this repository does not activate a Profile,
+grant a capability or authorize a decision; the consuming application must
+explicitly select the composition it accepts.
 
 The public model is:
 
@@ -29,6 +30,13 @@ Source    explicit common or Case-local external authority
 These are different ownership levels, not interchangeable names.  For example,
 =ontology= is a Module; =healthcare= is a Scenario; =healing= is a Profile; and
 =post-operative-healing= is a Case.
+
+Governance itself is not another Lambda top-level framework.  Lambda Profiles
+derive from POO Flow's =PooFlowGovernanceProfile.= and declare their contributor
+owner and revision explicitly.  POO Flow's Cedar bridge may project an admitted
+Profile into an identity-bound authority snapshot; only the independent
+Rust+Lean Runtime Host evaluates that snapshot.  Domain admission, Cedar input
+projection and runtime authorization are three separate receipts.
 
 * Repository shape
 

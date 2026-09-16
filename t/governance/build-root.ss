@@ -1,6 +1,6 @@
 ;;; -*- Gerbil -*-
 ;;; Atomic fixture root for t/governance/...
-(import :poo-flow/lambda-episteme/governance/interface
+(import :poo-flow/src/modules/governance/interface
         :poo-flow/lambda-episteme/modules/diataxis/interface
         :poo-flow/lambda-episteme/modules/adr/interface
         :poo-flow/lambda-episteme/modules/decision-kind/interface)

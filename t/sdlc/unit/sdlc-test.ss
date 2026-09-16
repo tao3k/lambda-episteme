@@ -2,10 +2,9 @@
 (import :std/test :std/error
         :poo-flow/src/module-system/contribution/interface
         :poo-flow/lambda-episteme/modules/sdlc/interface
-        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d
-        :poo-flow/lambda-episteme/governance/objects)
+        :poo-flow/lambda-episteme/modules/sdlc/standards/nasa-7150-2d)
 (def ProjectSdlcProfile (sdlc-with-standards SdlcProfile (list Nasa7150_2D)))
-(def project-sdlc-module (governance-module ProjectSdlcProfile))
+(def project-sdlc-module (sdlc-contribution ProjectSdlcProfile))
 (export sdlc-test)
 (def sdlc-test
   (test-suite "SDLC source composition, without parsers or execution backends"

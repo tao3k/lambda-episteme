@@ -14,8 +14,9 @@
                  poo-flow-graph-node-payload poo-flow-graph-nodes)
         (only-in :poo-flow/src/module-system/profile-composition/interface
                  poo-flow-composition-object/profiles)
-        (only-in :poo-flow/lambda-episteme/governance/objects
-                 GovernanceProfile. source-asset)
+        (only-in :poo-flow/src/modules/governance/objects
+                 PooFlowGovernanceProfile.
+                 poo-flow-governance-source)
         (only-in :poo-flow/lambda-episteme/modules/ontology/types
                  ontology-concept? ontology-profile? ontology-relation?
                  ontology-rule?
@@ -214,7 +215,8 @@
 (def (ontology-source identity-value path-value language-value scope-value
                       scenario-value case-id-value)
   (let (value
-        (.o (:: @ (source-asset identity-value path-value language-value))
+        (.o (:: @ (poo-flow-governance-source
+                    identity-value path-value language-value))
             kind: 'lambda-episteme.ontology-source
             source-scope: scope-value
             scenario: scenario-value
@@ -236,8 +238,10 @@
                  (eq? (.ref profile 'scenario) identity))))))
 
 (def OntologyProfile
-  (.o (:: @ GovernanceProfile.)
+  (.o (:: @ PooFlowGovernanceProfile.)
       identity: "lambda-episteme/ontology"
+      revision: "1"
+      owner: "lambda-episteme"
       name: 'ontology
       profile-scope: 'common
       scenario: #f

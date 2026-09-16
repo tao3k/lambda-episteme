@@ -6,15 +6,16 @@
                  poo-flow-user-module-selection?
                  poo-flow-user-module-selection-flags
                  poo-flow-user-module-selection-key)
-        (only-in :poo-flow/lambda-episteme/governance/objects
-                 governance-module)
+        (only-in :poo-flow/src/modules/governance/funs
+                 poo-flow-governance-contribution)
         (only-in :poo-flow/lambda-episteme/modules/ontology/objects
                  OntologyProfile))
 
 (export ontology-module ontology-config)
 
 (def ontology-module
-  (governance-module OntologyProfile))
+  (poo-flow-governance-contribution
+   OntologyProfile '(ontology-governance) '()))
 
 (def (ontology-config selection)
   (unless (and (poo-flow-user-module-selection? selection)

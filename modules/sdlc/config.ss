@@ -1,6 +1,5 @@
 ;;; User selection projection. Importing this module enables no standard.
 (import :poo-flow/src/module-system/declaration/interface
-        :poo-flow/lambda-episteme/governance/objects
         :poo-flow/lambda-episteme/modules/sdlc/types
         :poo-flow/lambda-episteme/modules/sdlc/objects
         :poo-flow/lambda-episteme/modules/sdlc/funs
@@ -22,5 +21,5 @@
       (error "unsupported SDLC feature" flags))
     (unless (<= (length flags) 1)
       (error "duplicate SDLC feature" flags))
-    (governance-module
+    (sdlc-contribution
      (if (null? flags) SdlcProfile sdlc-nasa-7150-profile))))

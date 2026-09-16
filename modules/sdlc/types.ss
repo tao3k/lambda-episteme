@@ -1,6 +1,7 @@
 (import (only-in :clan/poo/object .ref .slot? object?)
         :poo-flow/src/module-system/contribution/model
-        :poo-flow/lambda-episteme/governance/objects
+        (only-in :poo-flow/src/modules/governance/types
+                 poo-flow-governance-profile?)
         (only-in :std/srfi/1 every)
         (only-in :std/misc/list delete-duplicates/hash))
 (export standard-profile? sdlc-profile? sdlc-text?
@@ -63,7 +64,7 @@
                        '(source-category target-category))))
 
 (def (sdlc-profile? value)
-  (and (governance-profile? value) (.slot? value 'standards)
+  (and (poo-flow-governance-profile? value) (.slot? value 'standards)
        (list? (.ref value 'standards))
        (every standard-profile? (.ref value 'standards))
        (let ((ids (map (lambda (s) (.ref s 'identity)) (.ref value 'standards))))

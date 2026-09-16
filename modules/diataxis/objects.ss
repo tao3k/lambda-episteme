@@ -1,13 +1,17 @@
 (import :poo-flow/src/module-system/contribution/interface
-        :poo-flow/lambda-episteme/governance/objects)
+        (only-in :poo-flow/src/modules/governance/objects
+                 PooFlowGovernanceProfile.
+                 poo-flow-governance-source))
 (export DiataxisProfile)
 (def diataxis-ontology
   (.o document-label: 'Document kind-property: 'kind identity-property: 'id))
 (def diataxis-source-assets
-  (list (source-asset "diataxis/document-kinds"
-                      "modules/diataxis/document-kinds.gql" 'gql)))
+  (list (poo-flow-governance-source
+         "diataxis/document-kinds"
+         "modules/diataxis/document-kinds.gql" 'gql)))
 (def DiataxisProfile
-  (.o (:: @ GovernanceProfile.) identity: "lambda-episteme/diataxis"
+  (.o (:: @ PooFlowGovernanceProfile.) identity: "lambda-episteme/diataxis"
+      revision: "1" owner: "lambda-episteme"
       module-family: 'diataxis
       ontology: diataxis-ontology
       policies: (.o document-kind:

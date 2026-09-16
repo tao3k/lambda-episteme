@@ -5,15 +5,20 @@
 #+PROPERTY: SDD_KIND rfc
 #+PROPERTY: STATUS draft-for-discussion
 
-* Current boundary, 2026-09-12
+* Current boundary, 2026-09-16
 
-The user superseded the separate physical =poo-flow-core= package requirement:
-POO Flow itself is the core. See [[file:../../README.org][the current source-contribution guide]].
-This repository contributes native POO domain declarations, profiles and
-optional source assets. It does not require gql-rust or own query execution.
-Optional GQL authoring checks use gerbil-parser; application runtime adapters
-and their evidence are independently qualified. Older physical-package and
-runtime-coupling requirements below are historical where they conflict with
+The user superseded both the separate physical =poo-flow-core= package
+requirement and this draft's assignment of the Governance core to Lambda
+Episteme.  POO Flow itself owns the engine-neutral Governance Profile, Source
+and Contribution contracts as a core module.  Lambda Episteme contributes
+vertical Profiles, Scenarios, Cases, policies, Sources and qualification
+evidence; it does not own another Governance framework or custom language
+runtime.  POO Flow's Cedar bridge binds an admitted Profile to an authority
+snapshot, while the independent Rust+Lean Runtime Host owns evaluation.
+
+See [[file:../../README.org][the current source-contribution guide]].  Older
+physical-package, permanent =#lang :wendao-episteme/governance=, and
+runtime-coupling requirements below are historical wherever they conflict with
 this boundary.
 
 * Status and decision discipline

@@ -1,7 +1,7 @@
 (import :poo-flow/src/module-system/contribution/testing)
 (import :std/test
         :poo-flow/src/module-system/contribution/interface
-        :poo-flow/lambda-episteme/governance/interface
+        :poo-flow/src/modules/governance/interface
         :poo-flow/lambda-episteme/modules/diataxis/interface
         :poo-flow/lambda-episteme/modules/adr/interface
         :poo-flow/lambda-episteme/modules/decision-kind/interface)
@@ -11,7 +11,7 @@
       policies: (.o document-kind:
                     (.o (:: @ (.ref (.ref DiataxisProfile 'policies) 'document-kind))
                         severity: 'error))))
-(def project-diaclass (governance-module ProjectDiataxisProfile))
+(def project-diaclass (diataxis-contribution ProjectDiataxisProfile))
 (def project-composition
   (use-composition project-composition
     (use-module governance as policy
@@ -24,7 +24,8 @@
     (test-case "native modules declare their source and policy ownership"
       (for-each (lambda (module)
                   (check-equal? (contribution? module) #t)
-                  (check-equal? (governance-profile? (.ref module 'profile)) #t))
+                  (check-equal?
+                   (poo-flow-governance-profile? (.ref module 'profile)) #t))
                 (list diataxis-module adr-module decision-kind-module)))
     (test-case "local derivation changes only the selected policy"
       (check-equal? (.ref (.ref (.ref ProjectDiataxisProfile 'policies) 'document-kind) 'severity) 'error)
@@ -41,7 +42,16 @@
     (test-case "duplicate exports are not resolved by filesystem order"
       (check-equal? (.ref (admit-contributions (list adr-module adr-module) '()) 'accepted?) #f))
     (test-case "query language is an optional source facet"
-      (let ((plain (.o (:: @ GovernanceProfile.) identity: "example/plain")))
-        (check-equal? (governance-profile? plain) #t)
-        (check-equal? (.ref (governance-module plain) 'requires) '())
+      (let ((plain
+             (.o (:: @ PooFlowGovernanceProfile.)
+                 identity: "example/plain"
+                 revision: "1"
+                 owner: "example-project")))
+        (check-equal? (poo-flow-governance-profile? plain) #t)
+        (check-equal?
+         (.ref
+          (poo-flow-governance-contribution
+           plain '(knowledge-governance) '())
+          'requires)
+         '())
         (check-equal? (.ref plain 'source-assets) '())))))

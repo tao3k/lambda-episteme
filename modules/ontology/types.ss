@@ -5,8 +5,9 @@
 (import (only-in :clan/poo/object .ref .slot? object?)
         (only-in :std/srfi/1 every)
         (only-in :poo-flow/src/graph/types poo-flow-graph?)
-        (only-in :poo-flow/lambda-episteme/governance/objects
-                 governance-profile? source-asset?))
+        (only-in :poo-flow/src/modules/governance/types
+                 poo-flow-governance-profile?
+                 poo-flow-governance-source?))
 
 (export ontology-concept?
         ontology-relation?
@@ -72,7 +73,7 @@
        (list? (.ref value 'diagnostics))))
 
 (def (ontology-source? value)
-  (and (source-asset? value)
+  (and (poo-flow-governance-source? value)
        (ontology-has-slots? value '(kind source-scope scenario case-id))
        (eq? (.ref value 'kind) 'lambda-episteme.ontology-source)
        (memq (.ref value 'source-scope) '(common scenario case))
@@ -89,7 +90,7 @@
          (else #f))))
 
 (def (ontology-profile-shape? value)
-  (and (governance-profile? value)
+  (and (poo-flow-governance-profile? value)
        (ontology-has-slots?
         value
         '(name profile-scope scenario .import .add-concept .add-relation

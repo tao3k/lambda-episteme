@@ -1,5 +1,6 @@
 (import (only-in :clan/poo/object .o .ref)
-        :poo-flow/lambda-episteme/governance/objects
+        (only-in :poo-flow/src/modules/governance/objects
+                 PooFlowGovernanceProfile.)
         :poo-flow/src/module-system/contribution/model
         :poo-flow/lambda-episteme/modules/sdlc/types)
 (export StandardProfile. SdlcProfile)
@@ -12,7 +13,8 @@
       relations: '(REFINES IMPLEMENTS VERIFIES EVIDENCES REVIEWS BASELINED_IN
                    DERIVED_FROM REQUESTS_RELIEF APPROVED_BY)))
 (def SdlcProfile
-  (.o (:: @ GovernanceProfile.) identity: "lambda-episteme/sdlc"
+  (.o (:: @ PooFlowGovernanceProfile.) identity: "lambda-episteme/sdlc"
+      revision: "1" owner: "lambda-episteme"
       ontology: sdlc-ontology standards: '()
       activities: '(planning requirements architecture design implementation
                     verification release operations maintenance retirement)
