@@ -24,6 +24,60 @@ Case authors maintain only =.use-composition=, =.add-source=,
 =.add-authorization=, =.add-event=, =.add-node= and =.add-edge= declarations.  They do not
 maintain reverse Profile indexes, Scenario Case registries or Impact lists.
 
+* Australian personal care and healthy ageing
+
+The =australian-personal-care-coordination= Case models one continuous care
+journey rather than treating an appointment as an isolated transaction.  Its
+two jurisdictional Profiles remain independently reusable:
+
+- =AustralianPrimaryCareProfile= governs voluntary MyMedicare registration,
+  the preferred practice and GP, provider eligibility, clinical triage and
+  purpose-limited health-information sharing;
+- =AustralianSupportAtHomeProfile= governs the aged-care assessment, Notice of
+  Decision, person-centred support plan, active referral code and the person's
+  choice of Support at Home provider.
+
+The Case composes those Profiles with the common Evidence, Privacy and
+Healthcare base Profiles.  The UI is only the declarative POO surface:
+=.use-composition= selects semantics, Case slots attest the evidence state,
+=.add-event= declares the causal trajectory, and =.add-node= / =.add-edge=
+declare the enterprise relation graph.  No Australian-specific stage runner or
+parallel registry is introduced.
+
+#+begin_src mermaid
+flowchart LR
+    R[Personal care request] --> T{Clinical triage}
+    T -->|urgent or emergency| E[Leave routine booking path]
+    T -->|routine| M[Voluntary MyMedicare registration]
+    M --> G[Preferred GP consultation]
+    G --> A[Support at Home assessment]
+    A --> N[Notice of Decision]
+    N --> P[Person-centred support plan]
+    P --> C[Consumer selects provider]
+    C --> H[Coordinated home-care service]
+    H -. prospective .-> O[Independent-living outcome]
+#+end_src
+
+The routine path is admitted only when all eight Profile-owned observations
+are present.  Removing consent, provider eligibility, triage, disclosure
+authority, assessment approval, plan binding, referral-code validity or
+consumer choice independently blocks the Governance handoff.  Unsafe routine
+booking and unconsented disclosure are explicit counterfactual branches; the
+future independence outcome remains hypothesized rather than asserted.
+
+This first Case deliberately does not conflate specialist referrals with
+ordinary primary-care and Support at Home coordination.  Specialist referral
+validity is a later composable Profile with its own evidence and lifecycle.
+Similarly, this structural and temporal receipt is not a clinical decision,
+eligibility determination or production authorization.
+
+Authority evidence is content-local under =sources/= and currently cites the
+Australian Department of Health and Aged Care MyMedicare patient, provider and
+2026 program guidance; My Aged Care assessment, Support at Home and care
+management guidance; and OAIC health-information guidance.  The evidence files
+record retrieval date and intended qualification use so a future authority
+refresh has a traceable structural Impact on this Case.
+
 * Reasoning relations
 
 After a Case is admitted, =ontology-case-reasoning-graph= projects its accepted

@@ -1,0 +1,30 @@
+{
+  "SPDX-FileCopyrightText": "2026 tao3k team and Contributors",
+  "SPDX-License-Identifier": "Apache-2.0 AND LGPL-2.1-or-later",
+  "evidenceIdentity": "healthcare/australia/primary-care/authority-evidence/v1",
+  "jurisdiction": "Australia",
+  "retrievedDate": "2026-09-16",
+  "scenarioUse": "Primary-care coordination qualification source; not medical or legal advice.",
+  "controls": [
+    {
+      "control": "voluntary-mymedicare-registration",
+      "requirement": "Registration is voluntary and records agreement by the patient and the registered practice; a patient has one current registered practice and may nominate a preferred GP.",
+      "source": "https://www.health.gov.au/our-work/mymedicare/patients"
+    },
+    {
+      "control": "eligible-practice-and-provider",
+      "requirement": "The practice is registered for MyMedicare and the linked GP is eligible and has a valid provider number.",
+      "source": "https://www.health.gov.au/our-work/mymedicare/practices-and-providers"
+    },
+    {
+      "control": "documented-consent",
+      "requirement": "The registration workflow records informed consent and retains evidence of the registration decision.",
+      "source": "https://www.health.gov.au/sites/default/files/2026-02/mymedicare-program-guidelines.pdf"
+    },
+    {
+      "control": "purpose-limited-health-information",
+      "requirement": "Health information is collected, used and disclosed for the consented care-coordination purpose unless a specific lawful exception applies.",
+      "source": "https://www.oaic.gov.au/privacy/your-privacy-rights/health-information/handling-health-information"
+    }
+  ]
+}

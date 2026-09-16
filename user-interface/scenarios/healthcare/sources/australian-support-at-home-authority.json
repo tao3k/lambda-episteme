@@ -1,0 +1,30 @@
+{
+  "SPDX-FileCopyrightText": "2026 tao3k team and Contributors",
+  "SPDX-License-Identifier": "Apache-2.0 AND LGPL-2.1-or-later",
+  "evidenceIdentity": "healthcare/australia/support-at-home/authority-evidence/v1",
+  "jurisdiction": "Australia",
+  "retrievedDate": "2026-09-16",
+  "scenarioUse": "Support at Home coordination qualification source; not an eligibility determination.",
+  "controls": [
+    {
+      "control": "assessment-before-service",
+      "requirement": "An aged-care assessment determines approved services and produces a Notice of Decision with reasons and review information.",
+      "source": "https://www.myagedcare.gov.au/assessment-outcome-support-at-home"
+    },
+    {
+      "control": "support-plan-binds-service",
+      "requirement": "The support plan records the assessed needs and approved services that govern subsequent care planning.",
+      "source": "https://www.myagedcare.gov.au/assessment-outcome-support-at-home"
+    },
+    {
+      "control": "consumer-selected-provider",
+      "requirement": "The consumer chooses a provider and supplies the referral code that permits that provider to access the client record and support plan.",
+      "source": "https://www.myagedcare.gov.au/assessment-outcome-support-at-home"
+    },
+    {
+      "control": "ongoing-care-management",
+      "requirement": "Care management coordinates services against the support plan and changes in the person's needs.",
+      "source": "https://www.myagedcare.gov.au/aged-care-services/care-management"
+    }
+  ]
+}
