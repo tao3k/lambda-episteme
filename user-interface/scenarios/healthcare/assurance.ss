@@ -29,6 +29,7 @@
         healthcare-publish-lean-refinement-receipt!
         healthcare-case-assurance
         healthcare-case-assurance?
+        healthcare-case-assurance-certifications
         healthcare-case-assurance-digest)
 
 (def +case-id+ 'ai-assisted-antibiotic-prescription)
@@ -215,6 +216,14 @@
   (unless (healthcare-case-assurance? value)
     (error "invalid Healthcare Case assurance receipt" value))
   (.ref value 'assurance-digest))
+
+(def (healthcare-case-assurance-certifications value)
+  (unless (healthcare-case-assurance? value)
+    (error "invalid Healthcare Case assurance receipt" value))
+  (append
+   (.ref (.ref value 'lean-receipt) 'certifications)
+   '("PooFlowProof.Enterprise.GovernanceThreatAssuranceClosure"
+     "PooFlowProof.PooC3.CedarDualEngineArbitration")))
 
 (def (healthcare-case-assurance? value)
   (and (object? value)

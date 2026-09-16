@@ -23,7 +23,7 @@
 
 (export PharmacologySafetyProfile)
 
-(.def (PharmacologySafetyProfile @ MedicationSafetyProfile)
+(.def (PharmacologySafetyProfile self MedicationSafetyProfile)
   (identity "lambda-episteme/ontology/healthcare/pharmacology-safety")
   (name 'pharmacology-safety)
   (.import
@@ -110,7 +110,7 @@
   (.assess-governance
    (lambda (context)
      (healthcare-contextual-governance-assessment
-      PharmacologySafetyProfile context
+      self context
       '((medication-reconciliation-observed?
          . "healthcare/pharmacology/threat/incomplete-medication-context")
         (interaction-review-observed?

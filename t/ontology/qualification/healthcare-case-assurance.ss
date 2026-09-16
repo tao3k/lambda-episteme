@@ -19,6 +19,7 @@
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/assurance
                  HealthcareCaseQualificationMetadata
                  healthcare-case-assurance
+                 healthcare-case-assurance-certifications
                  healthcare-case-assurance-digest
                  healthcare-case-assurance?
                  healthcare-case-qualification-path
@@ -28,7 +29,9 @@
                  healthcare-authorization-capability-digest
                  healthcare-authorization-subject-digest
                  healthcare-case-cedar-request
-                 healthcare-case-cedar-snapshot)
+                 healthcare-case-cedar-snapshot
+                 healthcare-profile-bundle-digest
+                 healthcare-profile-origin-digest)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/ai-assisted-antibiotic-prescription/case
                  AIAssistedAntibioticPrescriptionCase))
 
@@ -43,16 +46,15 @@
     (poo-flow-cedar-proof-binding
      (symbol->string (.ref receipt 'case-id))
      (map (lambda (profile) (.ref profile 'identity)) profiles)
-     qualification-digest
-     qualification-digest
+     (healthcare-profile-origin-digest
+      receipt (healthcare-case-qualification-path 'contributor-root))
+     (healthcare-profile-bundle-digest receipt)
      (healthcare-case-assurance-digest assurance)
      (healthcare-authorization-capability-digest receipt)
      (poo-flow-governance-assessments-digest
       (.ref receipt 'governance-assessments))
      (healthcare-authorization-subject-digest receipt authorization)
-     '("PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.wrongAutoApprovalCannotBeAdmitted"
-       "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.wrongAdministrationCannotBeAdmitted"
-       "PooFlowProof.PooC3.CedarDualEngineArbitration"))))
+     (healthcare-case-assurance-certifications assurance))))
 
 (def (qualification-receipt-and-assurance)
   (let* ((receipt
@@ -91,6 +93,8 @@
        (check (.ref assurance 'assurance-closed?) => #t)
        (check (.ref assurance 'release-authorized?) => #f)
        (check (length (.ref assurance 'query-contracts)) => 3)
+       (check (length (healthcare-case-assurance-certifications assurance))
+              => 6)
        (check (.ref assurance 'analysis-runtime-executed?) => #f)))
 
    (test-case "assurance digest binds the Cedar authority snapshot"

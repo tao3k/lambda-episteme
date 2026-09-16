@@ -156,6 +156,16 @@ flowchart LR
 - The Runtime Host admits only matching, identity-bound evidence before an
   effect handoff.
 
+Medication reconciliation, pharmacology review and AI review are independent
+Profile-owned Governance slots.  Their inherited methods bind the actual POO
+=self=, so a derived Profile retains its own threat-model identity.  At the
+Cedar crossing, CLOS supplies explicit Medication, Pharmacology and AI
+projection methods.  A Profile with declared threats and no applicable method
+fails closed instead of disappearing through a default projection.  The exact
+qualification binds the source-byte origin digest, canonical Profile bundle,
+Governance assessment, subject snapshot, capability contract and all six Lean
+certification names; placeholder digests are not admitted.
+
 This separation lets an enterprise answer both questions without conflation:
 "what changes are affected?" is an Impact query; "may this exact action run?"
 is a current dual-engine authorization decision.

@@ -14,12 +14,14 @@
                  EvidenceProfile)
         (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
                  PrivacyProfile)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/governance
+                 healthcare-contextual-governance-assessment)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
                  HealthcareBaseProfile))
 
 (export MedicationSafetyProfile)
 
-(.def (MedicationSafetyProfile @ HealthcareBaseProfile)
+(.def (MedicationSafetyProfile self HealthcareBaseProfile)
   (identity "lambda-episteme/ontology/healthcare/medication-safety")
   (name 'medication-safety)
   (.import
@@ -84,4 +86,10 @@
         "Healthcare::Action::\"administerMedication\""
         4101
         'elevated)))
-  (.add-query (.o)))
+  (.add-query (.o))
+  (.assess-governance
+   (lambda (context)
+     (healthcare-contextual-governance-assessment
+      self context
+      '((medication-reconciliation-observed?
+         . "healthcare/medication/threat/contraindication-evidence-drift"))))))

@@ -29,6 +29,7 @@
 (.def (PostOperativeHealingCase @ OntologyCase)
   (case-id 'post-operative-healing)
   (scenario HealthcareScenario)
+  (medication-reconciliation-observed? #t)
   (.use-composition
    (.o common:
        (.o evidence: EvidenceProfile

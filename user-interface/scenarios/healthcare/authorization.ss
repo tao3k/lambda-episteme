@@ -42,6 +42,8 @@
 
 (export healthcare-medication-administration
         healthcare-medication-administration?
+        healthcare-profile-origin-digest
+        healthcare-profile-bundle-digest
         healthcare-authorization-capability-digest
         healthcare-authorization-subject-digest
         healthcare-case-cedar-snapshot
@@ -93,6 +95,55 @@
    "sha256:"
    (hex-encode
     (sha256 (call-with-output-string (lambda (port) (write datum port)))))))
+
+(def (healthcare-profile-origin-digest receipt root)
+  (unless (ontology-case-composition-receipt? receipt)
+    (error "Healthcare origin digest requires a Case receipt" receipt))
+  (digest
+   (list
+    'lambda-episteme.healthcare.profile-origin.v1
+    (map
+     (lambda (profile)
+       (list
+        (.ref profile 'identity)
+        (.ref profile 'revision)
+        (map
+         (lambda (source)
+           (list (.ref source 'identity)
+                 (.ref source 'path)
+                 (.ref source 'language)
+                 (digest
+                  (call-with-input-file
+                   (path-expand (.ref source 'path) root)
+                   read-all-as-string))))
+         (.ref profile 'source-assets))))
+     (.ref receipt 'profiles)))))
+
+(def (healthcare-profile-bundle-digest receipt)
+  (unless (ontology-case-composition-receipt? receipt)
+    (error "Healthcare Profile digest requires a Case receipt" receipt))
+  (digest
+   (list
+    'lambda-episteme.healthcare.profile-bundle.v1
+    (map
+     (lambda (profile)
+       (list
+        (.ref profile 'identity)
+        (.ref profile 'revision)
+        (map (lambda (imported) (.ref imported 'identity))
+             (.ref profile 'imports))
+        (map (lambda (capability)
+               (list (.ref capability 'identity)
+                     (.ref capability 'action)
+                     (.ref capability 'event-kind)
+                     (.ref capability 'risk)))
+             (.ref profile 'capabilities))
+        (map (lambda (threat)
+               (list (.ref threat 'identity)
+                     (.ref threat 'severity)
+                     (.ref threat 'phase)))
+             (.ref (.ref profile 'threat-model) 'threats))))
+     (.ref receipt 'profiles)))))
 
 (def (healthcare-authorization-subject-digest receipt authorization)
   (unless (and (ontology-case-composition-receipt? receipt)

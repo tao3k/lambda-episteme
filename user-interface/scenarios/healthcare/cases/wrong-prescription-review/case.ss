@@ -29,6 +29,7 @@
 (.def (WrongPrescriptionReviewCase @ OntologyCase)
   (case-id 'wrong-prescription-review)
   (scenario HealthcareScenario)
+  (medication-reconciliation-observed? #t)
   (.use-composition
    (.o common:
        (.o evidence: EvidenceProfile

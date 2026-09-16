@@ -3,7 +3,7 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import :std/test
-        (only-in :clan/poo/object .o .ref)
+        (only-in :clan/poo/object .cc .o .ref)
         (only-in :clan/poo/mop element?)
         (only-in :clan/poo/io json-string<- <-json-string)
         (only-in :std/srfi/1 find)
@@ -14,12 +14,20 @@
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization-projection
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/pharmacology-evidence
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
+                 MedicationSafetyProfile)
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/ai-assisted-antibiotic-prescription/case)
 
 (export prescription-governance-test)
 
 (def qualification-digest
   (string-append "sha256:" (make-string 64 #\0)))
+
+;;; The admitted Case is immutable. Reusing this fixture keeps one gxtest file
+;;; inside its observation budget; every negative Case below is still composed
+;;; independently and no build-closure cache is introduced.
+(def admitted-receipt
+  (ontology-compose-case AIAssistedAntibioticPrescriptionCase))
 
 (def (assessment-by-profile receipt identity)
   (find (lambda (assessment)
@@ -45,8 +53,7 @@
    "AI-assisted prescription Governance Case"
 
    (test-case "Scenario Profiles admit the independently reviewed prescription"
-     (let* ((receipt
-             (ontology-compose-case AIAssistedAntibioticPrescriptionCase))
+     (let* ((receipt admitted-receipt)
             (evaluation (ontology-evaluate-case receipt))
             (profile-names
              (map (lambda (profile) (.ref profile 'name))
@@ -65,8 +72,7 @@
        (check (.ref evaluation 'runtime-executed?) => #t)))
 
    (test-case "causal cut separates observed future counterfactual and hypothesis"
-     (let* ((receipt
-             (ontology-compose-case AIAssistedAntibioticPrescriptionCase))
+     (let* ((receipt admitted-receipt)
             (event-graph
              (poo-flow-causal-event-graph
               "patient-1" (.ref receipt 'events)))
@@ -102,8 +108,7 @@
        (check (.ref classification 'release-authorized?) => #f)))
 
    (test-case "label evidence has a traceable impact on this Case"
-     (let* ((receipt
-             (ontology-compose-case AIAssistedAntibioticPrescriptionCase))
+     (let* ((receipt admitted-receipt)
             (reasoning (ontology-case-reasoning-graph receipt))
             (impact
              (ontology-reasoning-impact
@@ -154,9 +159,49 @@
        (check (.ref assessment 'unresolved-threats)
               => '("healthcare/ai-cds/threat/autonomous-prescription"))))
 
+   (test-case "each missing medication safety observation blocks handoff"
+     (for-each
+      (lambda (specification)
+        (let* ((slot (car specification))
+               (profile-identity (cadr specification))
+               (threat-identity (caddr specification))
+               (unsafe-case
+                (.cc AIAssistedAntibioticPrescriptionCase
+                     'case-id
+                     (string->symbol
+                      (string-append "missing-" (symbol->string slot)))
+                     slot #f))
+               (receipt (ontology-compose-case unsafe-case))
+               (assessment
+                (assessment-by-profile receipt profile-identity)))
+          (check (.ref receipt 'accepted?) => #f)
+          (check (.ref receipt 'governance-handoff-ready?) => #f)
+          (check (.ref assessment 'unresolved-threats)
+                 => (list threat-identity))))
+      '((medication-reconciliation-observed?
+         "lambda-episteme/ontology/healthcare/medication-safety"
+         "healthcare/medication/threat/contraindication-evidence-drift")
+        (interaction-review-observed?
+         "lambda-episteme/ontology/healthcare/pharmacology-safety"
+         "healthcare/pharmacology/threat/unreviewed-warfarin-antibiotic-interaction")
+        (monitoring-plan-observed?
+         "lambda-episteme/ontology/healthcare/pharmacology-safety"
+         "healthcare/pharmacology/threat/monitoring-plan-missing"))))
+
+   (test-case "a threatened Profile without a CLOS projection fails closed"
+     (let (unprojected
+           (.cc MedicationSafetyProfile
+                'identity
+                "lambda-episteme/ontology/healthcare/unprojected-threat"))
+       (check-exception
+        (healthcare-authorization-profile-project
+         HealthcareCedarAuthorizationProjector
+         unprojected
+         AIAssistedAntibioticPrescriptionCase)
+        true)))
+
    (test-case "Cedar rejects the Case until independent assurance is closed"
-     (let* ((receipt
-             (ontology-compose-case AIAssistedAntibioticPrescriptionCase))
+     (let* ((receipt admitted-receipt)
             (root (if (file-exists? "modules/ontology/interface.ss")
                     "." "lambda-episteme"))
             (context
@@ -168,7 +213,9 @@
               1 #u8(1 2 3) qualification-digest qualification-digest
               qualification-digest qualification-digest)))
        (check (healthcare-cedar-governance-projection-canonical receipt)
-              => '(("lambda-episteme/ontology/healthcare/pharmacology-safety"
+              => '(("lambda-episteme/ontology/healthcare/medication-safety"
+                    #t)
+                   ("lambda-episteme/ontology/healthcare/pharmacology-safety"
                     #t #t #t)
                    ("lambda-episteme/ontology/healthcare/ai-clinical-decision-support"
                     #t #t #t)))

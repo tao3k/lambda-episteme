@@ -10,6 +10,8 @@
         :poo-flow/src/module-system/poo-clos/interface
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
                  AIClinicalDecisionSupportProfile)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
+                 MedicationSafetyProfile)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/pharmacology-safety
                  PharmacologySafetyProfile))
 
@@ -58,7 +60,27 @@
      HealthcareAuthorizationProjectionExecutor)
     (poo-clos-any-specializer)
     (poo-clos-any-specializer))
-   (lambda (_frame _executor _profile _case-value) #f)))
+   (lambda (_frame _executor profile _case-value)
+     ;; Profiles without Governance threats are outside the Cedar projection
+     ;; axis. A threatened Profile must never disappear through the catch-all.
+     (if (and (.slot? profile 'threat-model)
+              (pair? (.ref (.ref profile 'threat-model) 'threats)))
+       (error "Healthcare threatened Profile lacks a Cedar projection method"
+              (.ref profile 'identity))
+       #f))))
+
+(def HealthcareCedarMedicationProjectionMethod
+  (poo-clos-method
+   'healthcare/cedar-medication-safety-projection
+   (list
+    (poo-clos-class-specializer
+     HealthcareCedarAuthorizationProjectionExecutor)
+    (poo-clos-eql-specializer MedicationSafetyProfile)
+    (poo-clos-any-specializer))
+   (lambda (_frame _executor profile case-value)
+     (.o profile-identity: (.ref profile 'identity)
+         medication-reconciliation-observed?:
+         (case-evidence case-value 'medication-reconciliation-observed?)))))
 
 (def HealthcareCedarPharmacologyProjectionMethod
   (poo-clos-method
@@ -97,6 +119,7 @@
 (.defmethod-bundle HealthcareAuthorizationProjectionMethods
   HealthcareAuthorizationProjectionProtocol
   HealthcareDefaultAuthorizationProjectionMethod
+  HealthcareCedarMedicationProjectionMethod
   HealthcareCedarPharmacologyProjectionMethod
   HealthcareCedarAIProjectionMethod)
 
@@ -120,15 +143,26 @@
   (map
    (lambda (projection)
      (let (identity (.ref projection 'profile-identity))
-       (if (equal?
-            identity
-            "lambda-episteme/ontology/healthcare/pharmacology-safety")
+       (cond
+        ((equal?
+          identity
+          "lambda-episteme/ontology/healthcare/medication-safety")
+         (list identity
+               (.ref projection 'medication-reconciliation-observed?)))
+        ((equal?
+          identity
+          "lambda-episteme/ontology/healthcare/pharmacology-safety")
          (list identity
                (.ref projection 'medication-reconciliation-observed?)
                (.ref projection 'interaction-review-observed?)
-               (.ref projection 'monitoring-plan-observed?))
+               (.ref projection 'monitoring-plan-observed?)))
+        ((equal?
+          identity
+          "lambda-episteme/ontology/healthcare/ai-clinical-decision-support")
          (list identity
                (.ref projection 'ai-advisory-only?)
                (.ref projection 'ai-basis-reviewable?)
-               (.ref projection 'independent-clinician-review?)))))
+               (.ref projection 'independent-clinician-review?)))
+        (else
+         (error "unknown Healthcare Cedar Governance projection" identity)))))
    (healthcare-cedar-governance-projection receipt)))

@@ -27,7 +27,7 @@
 
 (export AIClinicalDecisionSupportProfile)
 
-(.def (AIClinicalDecisionSupportProfile @ HealthcareBaseProfile)
+(.def (AIClinicalDecisionSupportProfile self HealthcareBaseProfile)
   (identity "lambda-episteme/ontology/healthcare/ai-clinical-decision-support")
   (name 'ai-clinical-decision-support)
   (.import
@@ -125,7 +125,7 @@
   (.assess-governance
    (lambda (context)
      (healthcare-contextual-governance-assessment
-      AIClinicalDecisionSupportProfile context
+      self context
       '((ai-advisory-only?
          . "healthcare/ai-cds/threat/autonomous-prescription")
         (ai-basis-reviewable?

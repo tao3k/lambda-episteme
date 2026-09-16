@@ -26,6 +26,9 @@
 (asp-gerbil-scheme-package-spec!
  (lambda-episteme-package @ asp-gerbil-scheme-library-package-prototype)
  (spec lambda-episteme-native-spec)
- (public-entry-modules +lambda-episteme-public-entry-modules+))
+ (public-entry-modules +lambda-episteme-public-entry-modules+)
+ (extra-spec
+  '((gxc: "testing-interface")
+    (gxc: "testing-observer"))))
 
 (defbuild-script (lambda-episteme-native-spec))
