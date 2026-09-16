@@ -36,7 +36,8 @@
                  ontology-case-composition-receipt? ontology-source?)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/assurance
                  healthcare-case-assurance?
-                 healthcare-case-assurance-digest)
+                 healthcare-case-assurance-digest
+                 healthcare-case-trajectory-assessment-digest)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization-projection
                  healthcare-cedar-governance-projection-canonical))
 
@@ -240,6 +241,7 @@
       receipt assurance root authority-context proof-binding)
   (unless (and (ontology-case-composition-receipt? receipt)
                (.ref receipt 'accepted?)
+               (.ref receipt 'trajectory-handoff-ready?)
                (.ref receipt 'governance-handoff-ready?)
                (healthcare-case-assurance? assurance)
                (eq? (.ref assurance 'case-id) (.ref receipt 'case-id))
@@ -293,6 +295,7 @@
 (def (healthcare-case-cedar-request receipt assurance intent handoff)
   (unless (and (ontology-case-composition-receipt? receipt)
                (.ref receipt 'accepted?)
+               (.ref receipt 'trajectory-handoff-ready?)
                (healthcare-case-assurance? assurance)
                (eq? (.ref assurance 'case-id) (.ref receipt 'case-id))
                (poo-flow-cedar-runtime-handoff? handoff))
@@ -306,7 +309,10 @@
      "Healthcare::Action::\"administerMedication\""
      (string-append "Healthcare::MedicationOrder::\""
                     (.ref authorization 'order) "\"")
-     (.o assurance_digest: (healthcare-case-assurance-digest assurance)
-         assurance_closed: #t)
+     (.o assuranceDigest: (healthcare-case-assurance-digest assurance)
+         assuranceClosed: #t
+         trajectoryAssessmentDigest:
+         (healthcare-case-trajectory-assessment-digest assurance)
+         trajectoryHandoffReady: #t)
      intent
      handoff)))

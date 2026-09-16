@@ -24,7 +24,12 @@
           "resourceTypes": ["MedicationOrder"],
           "context": {
             "type": "Record",
-            "attributes": {}
+            "attributes": {
+              "assuranceDigest": { "type": "String" },
+              "assuranceClosed": { "type": "Boolean" },
+              "trajectoryAssessmentDigest": { "type": "String" },
+              "trajectoryHandoffReady": { "type": "Boolean" }
+            }
           }
         }
       }

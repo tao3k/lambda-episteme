@@ -9,6 +9,8 @@
          (graph Graph))
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  OntologyCase)
+        (only-in :poo-flow/src/modules/temporal-causality/interface
+                 poo-flow-causal-trajectory-contract)
         (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
         (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
@@ -122,6 +124,22 @@
         "patient-1" "elevated-anticoagulation-risk-1"
         'pharmacology-risk 7 "risk/prolonged-prothrombin-time"
         '("wrong-tmp-smx-administration-1") 'hypothesized #f)))
+
+  (.add-trajectory
+   (.o prescription-safety:
+       (poo-flow-causal-trajectory-contract
+        "healthcare/prescription/ai-assisted-safety-trajectory"
+        "ai-tmp-smx-recommendation-1"
+        '("warfarin-tmp-smx-interaction-evidence-1"
+          "prescription-governance-hold-1"
+          "independent-clinician-review-1"
+          "alternative-prescription-1/rev1"
+          "pharmacy-verification-1"
+          "alternative-administration-ready-1")
+        '(("wrong-ai-auto-approval-1"
+           "wrong-tmp-smx-administration-1"))
+        '()
+        '("elevated-anticoagulation-risk-1"))))
 
   (graph
    (.o (:: @ Graph)

@@ -9,6 +9,8 @@
          (graph Graph))
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  OntologyCase)
+        (only-in :poo-flow/src/modules/temporal-causality/interface
+                 poo-flow-causal-trajectory-contract)
         (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
         (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
@@ -110,11 +112,41 @@
         "person-1" "unconsented-health-information-disclosure-1"
         'privacy-breach 5 "disclosure/provider-1"
         '("preferred-gp-consultation-1") 'counterfactual #f)
+       missed-urgent-escalation:
+       (healthcare-clinical-event
+        "person-1" "missed-urgent-escalation-impact-1"
+        'care-delay-impact 3 "impact/missed-urgent-escalation"
+        '("routine-booking-without-triage-1") 'hypothesized #f)
+       privacy-harm:
+       (healthcare-clinical-event
+        "person-1" "privacy-harm-impact-1"
+        'privacy-impact 6 "impact/unconsented-health-disclosure"
+        '("unconsented-health-information-disclosure-1")
+        'hypothesized #f)
        sustained-independence:
        (healthcare-clinical-event
         "person-1" "sustained-independent-living-1"
         'care-outcome 10 "outcome/independent-living"
         '("first-home-care-visit-1") 'hypothesized #f)))
+
+  (.add-trajectory
+   (.o personal-care:
+       (poo-flow-causal-trajectory-contract
+        "healthcare/personal-care/continuous-care-trajectory"
+        "personal-care-request-1"
+        '("primary-care-triage-1"
+          "primary-care-registration-confirmed-1"
+          "preferred-gp-consultation-1"
+          "support-at-home-referral-1"
+          "care-needs-assessment-approved-1"
+          "support-plan-issued-1"
+          "home-care-provider-accepted-1"
+          "first-home-care-visit-1")
+        '(("routine-booking-without-triage-1")
+          ("unconsented-health-information-disclosure-1"))
+        '("sustained-independent-living-1")
+        '("missed-urgent-escalation-impact-1"
+          "privacy-harm-impact-1"))))
 
   (graph
    (.o (:: @ Graph)

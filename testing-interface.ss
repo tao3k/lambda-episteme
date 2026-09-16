@@ -5,8 +5,10 @@
 ;;; Declarative Lambda test Profiles shared by the package entrypoint and the
 ;;; optional observer. Gerbil test remains the only execution framework.
 
-(import (only-in :asp-gerbil-scheme/testing-api
+(import (only-in :clan/poo/object .cc)
+        (only-in :asp-gerbil-scheme/testing-api
                  +asp-testing-interface+
+                 +testing-memory-profile+
                  +testing-process-isolation-profile+
                  +testing-serial-resource-profile+
                  testing-interface-map-profile
@@ -23,11 +25,24 @@
 (def +lambda-episteme-source-admission-selector+
   (testing-test-selector 'contains "source-admission-test.ss"))
 
+(def +lambda-episteme-healthcare-assurance-selector+
+  (testing-test-selector
+   'contains "qualification/healthcare-case-assurance.ss"))
+
+;;; Cross-engine qualification loads Scheme, Cedar, TLA and Lean receipts in
+;;; one isolated process. Its larger heap is a declarative per-test Profile,
+;;; not a command-line exception or a wider default.
+(def +lambda-episteme-healthcare-assurance-memory-profile+
+  (.cc +testing-memory-profile+ maxHeapMiB: 2048))
+
 (def +lambda-episteme-testing-interface+
   (poo-flow-testing-observability-extension
    (testing-interface-map-profile
     (testing-interface-map-profile
-     +asp-testing-interface+
+     (testing-interface-map-profile
+      +asp-testing-interface+
+      +lambda-episteme-healthcare-assurance-selector+
+      +lambda-episteme-healthcare-assurance-memory-profile+)
      +lambda-episteme-atomic-test-selector+
      +testing-process-isolation-profile+)
     +lambda-episteme-source-admission-selector+

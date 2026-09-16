@@ -19,6 +19,9 @@
                  poo-flow-composition-profiles)
         (only-in :poo-flow/src/modules/temporal-causality/interface
                  poo-flow-causal-event?
+                 poo-flow-causal-event-graph
+                 poo-flow-causal-trajectory-assess
+                 poo-flow-causal-trajectory-contract?
                  poo-flow-structural-impact-analyze)
         (only-in :poo-flow/src/modules/governance/funs
                  poo-flow-governance-evaluate)
@@ -571,6 +574,9 @@
         profiles: '()
         sources: '()
         events: (.ref receipt 'events)
+        trajectories: (.ref receipt 'trajectories)
+        trajectory-assessments: '()
+        trajectory-handoff-ready?: #t
         environment: (.ref receipt 'environment)
         governance-assessments: '()
         governance-handoff-ready?: #f
@@ -622,23 +628,31 @@
          (scenario (.ref scenario-definition 'identity))
          (compositions (.ref case-value 'compositions))
          (case-sources (.ref case-value 'sources))
-         (case-events (.ref case-value 'events)))
+         (case-events (.ref case-value 'events))
+         (case-trajectories (.ref case-value 'trajectories)))
     (let* ((input-diagnostics
-          (append
-           (if (and (list? compositions) (pair? compositions)
-                    (every poo-flow-composition? compositions))
-             '()
-             (list (ontology-diagnostic
-                    'invalid-case-compositions '(compositions)
-                    compositions)))
-           (if (list? case-sources) '()
-             (list (ontology-diagnostic
-                    'invalid-case-sources '(sources) case-sources)))
-           (if (and (list? case-events)
-                    (every poo-flow-causal-event? case-events))
-             '()
-             (list (ontology-diagnostic
-                    'invalid-case-events '(events) case-events)))))
+            (append
+             (if (and (list? compositions) (pair? compositions)
+                      (every poo-flow-composition? compositions))
+               '()
+               (list (ontology-diagnostic
+                      'invalid-case-compositions '(compositions)
+                      compositions)))
+             (if (list? case-sources) '()
+               (list (ontology-diagnostic
+                      'invalid-case-sources '(sources) case-sources)))
+             (if (and (list? case-events)
+                      (every poo-flow-causal-event? case-events))
+               '()
+               (list (ontology-diagnostic
+                      'invalid-case-events '(events) case-events)))
+             (if (and (list? case-trajectories)
+                      (every poo-flow-causal-trajectory-contract?
+                             case-trajectories))
+               '()
+               (list (ontology-diagnostic
+                      'invalid-case-trajectories
+                      '(trajectories) case-trajectories)))))
          (profile-values
           (if (null? input-diagnostics)
             (append-map poo-flow-composition-profiles compositions)
@@ -673,9 +687,33 @@
                 (ontology-case-source-diagnostics
                  case-id scenario case-sources)
                 '()))
+             (trajectory-assessments
+              (if (and (null? input-diagnostics)
+                       (pair? case-trajectories))
+                (let (event-graph
+                      (poo-flow-causal-event-graph
+                       (.ref (car case-events) 'subject) case-events))
+                  (map (lambda (trajectory)
+                         (poo-flow-causal-trajectory-assess
+                          trajectory event-graph))
+                       case-trajectories))
+                '()))
+             (trajectory-diagnostics
+              (append-map
+               (lambda (assessment)
+                 (if (.ref assessment 'accepted?)
+                   '()
+                   (list
+                    (ontology-diagnostic
+                     'trajectory-contract-rejected
+                     (list 'cases case-id 'trajectories
+                           (.ref assessment 'contract-identity))
+                     (.ref assessment 'diagnostics)))))
+               trajectory-assessments))
              (pre-governance-diagnostics
               (append input-diagnostics index-diagnostics
-                      profile-diagnostics source-diagnostics))
+                      profile-diagnostics source-diagnostics
+                      trajectory-diagnostics))
              (governance-assessments
               (if (null? pre-governance-diagnostics)
                 (map (lambda (profile)
@@ -711,10 +749,17 @@
               (if (and accepted? (list? case-sources)) case-sources '()))
              (receipt-events
               (if (and accepted? (list? case-events)) case-events '()))
+             (receipt-trajectories case-trajectories)
+             (receipt-trajectory-assessments trajectory-assessments)
+             (receipt-trajectory-handoff-ready?
+              (every (lambda (assessment)
+                       (.ref assessment 'accepted?))
+                     trajectory-assessments))
              (receipt-environment semantic-environment)
              (receipt-governance-assessments governance-assessments)
              (receipt-governance-handoff-ready?
-              (and (pair? governance-assessments)
+              (and receipt-trajectory-handoff-ready?
+                   (pair? governance-assessments)
                    (every (lambda (assessment)
                             (.ref assessment 'handoff-ready?))
                           governance-assessments)))
@@ -732,6 +777,10 @@
               profiles: receipt-profiles
               sources: receipt-sources
               events: receipt-events
+              trajectories: receipt-trajectories
+              trajectory-assessments: receipt-trajectory-assessments
+              trajectory-handoff-ready?:
+              receipt-trajectory-handoff-ready?
               environment: receipt-environment
               governance-assessments: receipt-governance-assessments
               governance-handoff-ready?: receipt-governance-handoff-ready?

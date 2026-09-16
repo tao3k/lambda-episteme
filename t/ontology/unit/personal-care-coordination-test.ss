@@ -29,6 +29,8 @@
      (let ((evaluation (ontology-evaluate-case admitted-receipt)))
        (check (.ref admitted-receipt 'accepted?) => #t)
        (check (.ref admitted-receipt 'governance-handoff-ready?) => #t)
+       (check (.ref admitted-receipt 'trajectory-handoff-ready?) => #t)
+       (check (length (.ref admitted-receipt 'trajectory-assessments)) => 1)
        (check (map poo-flow-composition-name
                    (.ref PersonalCareCoordinationCase 'compositions))
               => '(common healthcare personal-care regions))
@@ -68,7 +70,9 @@
               => '("routine-booking-without-triage-1"
                    "unconsented-health-information-disclosure-1"))
        (check (.ref classification 'hypothesized-event-ids)
-              => '("sustained-independent-living-1"))
+              => '("missed-urgent-escalation-impact-1"
+                   "privacy-harm-impact-1"
+                   "sustained-independent-living-1"))
        (check (.ref classification 'unknown-frontier) => '())
        (check (.ref classification 'release-authorized?) => #f)))
 
@@ -85,6 +89,29 @@
               => '(personal-care-coordination))
        (check (.ref impact 'temporal-impact-assessed?) => #f)
        (check (.ref impact 'release-authorized?) => #f)))
+
+   (test-case "trajectory contract standardizes intended error and Impact roles"
+     (let (assessment
+           (car (.ref admitted-receipt 'trajectory-assessments)))
+       (check (.ref assessment 'accepted?) => #t)
+       (check (.ref assessment 'intended-event-ids)
+              => '("primary-care-triage-1"
+                   "primary-care-registration-confirmed-1"
+                   "preferred-gp-consultation-1"
+                   "support-at-home-referral-1"
+                   "care-needs-assessment-approved-1"
+                   "support-plan-issued-1"
+                   "home-care-provider-accepted-1"
+                   "first-home-care-visit-1"))
+       (check (.ref assessment 'error-event-paths)
+              => '(("routine-booking-without-triage-1")
+                   ("unconsented-health-information-disclosure-1")))
+       (check (.ref assessment 'intended-impact-event-ids)
+              => '("sustained-independent-living-1"))
+       (check (.ref assessment 'error-impact-event-ids)
+              => '("missed-urgent-escalation-impact-1"
+                   "privacy-harm-impact-1"))
+       (check (.ref assessment 'release-authorized?) => #f)))
 
    (test-case "each missing care or selected Region observation blocks handoff"
      (for-each

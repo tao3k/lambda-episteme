@@ -80,11 +80,14 @@
       .add-source: (.o)
       .add-authorization: (.o)
       .add-event: (.o)
+      .add-trajectory: (.o)
       compositions: (ontology-case-composition-values .use-composition)
       sources: (ontology-declaration-values .add-source '.add-source)
       authorizations:
       (ontology-declaration-values .add-authorization '.add-authorization)
       events: (ontology-declaration-values .add-event '.add-event)
+      trajectories:
+      (ontology-declaration-values .add-trajectory '.add-trajectory)
       graph: #f))
 
 (def (ontology-rule-diagnostic rule-value code-value path-value detail-value)

@@ -9,6 +9,8 @@
                  poo-flow-authorization-capability?)
         (only-in :poo-flow/src/modules/temporal-causality/types
                  poo-flow-causal-event?
+                 poo-flow-causal-trajectory-contract?
+                 poo-flow-causal-trajectory-assessment?
                  poo-flow-structural-impact-receipt?)
         (only-in :poo-flow/src/modules/governance/types
                  poo-flow-governance-assessment?
@@ -170,7 +172,8 @@
   (and (ontology-has-slots?
         value
         '(kind case-id scenario .use-composition .add-source .add-authorization
-               .add-event compositions sources authorizations events graph))
+               .add-event .add-trajectory compositions sources authorizations
+               events trajectories graph))
        (eq? (.ref value 'kind) 'lambda-episteme.ontology-case)
        (symbol? (.ref value 'case-id))
        (ontology-scenario? (.ref value 'scenario))
@@ -178,6 +181,7 @@
        (object? (.ref value '.add-source))
        (object? (.ref value '.add-authorization))
        (object? (.ref value '.add-event))
+       (object? (.ref value '.add-trajectory))
        (list? (.ref value 'compositions))
        (pair? (.ref value 'compositions))
        (list? (.ref value 'sources))
@@ -185,12 +189,16 @@
        (every object? (.ref value 'authorizations))
        (list? (.ref value 'events))
        (every poo-flow-causal-event? (.ref value 'events))
+       (list? (.ref value 'trajectories))
+       (every poo-flow-causal-trajectory-contract?
+              (.ref value 'trajectories))
        (poo-flow-graph? (.ref value 'graph))))
 
 (def (ontology-case-composition-receipt? value)
   (and (ontology-has-slots?
         value
         '(kind accepted? case case-id scenario compositions profiles sources events
+               trajectories trajectory-assessments trajectory-handoff-ready?
                environment governance-assessments governance-handoff-ready?
                projection diagnostics runtime-executed?))
        (eq? (.ref value 'kind)
@@ -204,13 +212,25 @@
        (list? (.ref value 'sources))
        (list? (.ref value 'events))
        (every poo-flow-causal-event? (.ref value 'events))
+       (list? (.ref value 'trajectories))
+       (every poo-flow-causal-trajectory-contract?
+              (.ref value 'trajectories))
+       (list? (.ref value 'trajectory-assessments))
+       (every poo-flow-causal-trajectory-assessment?
+              (.ref value 'trajectory-assessments))
+       (boolean? (.ref value 'trajectory-handoff-ready?))
+       (eq? (.ref value 'trajectory-handoff-ready?)
+            (every (lambda (assessment)
+                     (.ref assessment 'accepted?))
+                   (.ref value 'trajectory-assessments)))
        (ontology-semantic-environment? (.ref value 'environment))
        (list? (.ref value 'governance-assessments))
        (every poo-flow-governance-assessment?
               (.ref value 'governance-assessments))
        (boolean? (.ref value 'governance-handoff-ready?))
        (eq? (.ref value 'governance-handoff-ready?)
-            (and (pair? (.ref value 'governance-assessments))
+            (and (.ref value 'trajectory-handoff-ready?)
+                 (pair? (.ref value 'governance-assessments))
                  (every (lambda (assessment)
                           (.ref assessment 'handoff-ready?))
                         (.ref value 'governance-assessments))))

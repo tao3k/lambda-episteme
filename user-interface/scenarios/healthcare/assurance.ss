@@ -7,10 +7,12 @@
 ;;; declared GQL is non-authoritative analysis input for a later MRR Runtime.
 (import (only-in :clan/poo/object .o .ref .slot? object?)
         (only-in :std/crypto/digest sha256)
-        (only-in :std/srfi/1 every)
+        (only-in :std/srfi/1 every find)
         (only-in :std/text/hex hex-encode)
         (only-in :poo-flow/src/modules/temporal-causality/interface
                  poo-flow-causal-cut poo-flow-causal-event-graph
+                 poo-flow-causal-trajectory-assessment-digest
+                 poo-flow-causal-trajectory-assessment?
                  poo-flow-temporal-causal-classify)
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  ontology-case-composition-receipt?)
@@ -18,7 +20,13 @@
                  HealthcareCaseProfileRelationsQuery
                  HealthcareProfileImpactQuery
                  HealthcarePrescriptionCausalTrajectoryQuery
-                 healthcare-query-source-path))
+                 healthcare-query-source-path)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/formal-assurance-projection
+                 HealthcareLeanAssuranceProjector
+                 HealthcareTLAPlusAssuranceProjector
+                 healthcare-formal-assurance-project)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
+                 AIClinicalDecisionSupportProfile))
 
 (export healthcare-tlc-model-receipt
         healthcare-tlc-model-receipt-read-file
@@ -30,15 +38,16 @@
         healthcare-case-assurance
         healthcare-case-assurance?
         healthcare-case-assurance-certifications
+        healthcare-case-trajectory-assessment-digest
         healthcare-case-assurance-digest)
 
 (def +case-id+ 'ai-assisted-antibiotic-prescription)
 (def +tla-source-content-id+
-  "sha256:9d4c51dc82e78105dcc04e18046f39782b93cfc5cffc042d209d98fb67b5d105")
+  "sha256:0f5adf60c5206a104c597ee981a53c32a202472d66af5033743665ce91da8c13")
 (def +tla-config-content-id+
-  "sha256:70e0cada5471377033bc9b2ccb5074ded56b861be684826d79279da79764fdf9")
+  "sha256:d53b08f84dfd34c9ec1e92ff14bf9bf62102e9506ff67dfd4833211705c37ab6")
 (def +lean-source-content-id+
-  "sha256:2d1db90512ff6fa297e2a86634f60809127c1d46a57ab93a9fc8958a085ee3c6")
+  "sha256:330577af4c2b839e13e3f67d4fa47f8b2f2e1422200870a70a1a02b54f575566")
 (def +lean-module+
   "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement")
 (def +lean-library+ "PooFlowScenarioHealthcareProof")
@@ -46,7 +55,11 @@
   '("PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.wrongAutoApprovalCannotBeAdmitted"
     "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.wrongAdministrationCannotBeAdmitted"
     "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.independentReviewCutExcludesWrongPath"
-    "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.alternativePrescriptionHasIndependentHumanParent"))
+    "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.alternativePrescriptionHasIndependentHumanParent"
+    "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.wrongPathSatisfiesTrajectoryContract"
+    "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.errorImpactSatisfiesTrajectoryContract"
+    "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.declaredErrorPathCannotBeAdmitted"
+    "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.declaredErrorImpactCannotBeAdmitted"))
 
 (def +query-contracts+
   (list HealthcareCaseProfileRelationsQuery
@@ -212,10 +225,38 @@
        (eq? (.ref value 'assurance-closed?) #f)
        (eq? (.ref value 'release-authorized?) #f)))
 
+(def (formal-assurance-binding-valid? value trajectory-digest)
+  (and (object? value)
+       (every (lambda (slot) (.slot? value slot))
+              '(kind engine profile-identity trajectory-contract-identity
+                     trajectory-assessment-digest evidence-source-content-id
+                     evidence-admitted?))
+       (eq? (.ref value 'kind)
+            'lambda-episteme.healthcare-formal-assurance-binding)
+       (memq (.ref value 'engine) '(tla-plus lean))
+       (equal? (.ref value 'trajectory-assessment-digest)
+               trajectory-digest)
+       (.ref value 'evidence-admitted?)))
+
+(def (formal-assurance-binding-canonical value)
+  (list (.ref value 'engine)
+        (.ref value 'profile-identity)
+        (.ref value 'trajectory-contract-identity)
+        (.ref value 'trajectory-assessment-digest)
+        (.ref value 'evidence-source-content-id)
+        (if (.slot? value 'evidence-certifications)
+          (.ref value 'evidence-certifications)
+          '())))
+
 (def (healthcare-case-assurance-digest value)
   (unless (healthcare-case-assurance? value)
     (error "invalid Healthcare Case assurance receipt" value))
   (.ref value 'assurance-digest))
+
+(def (healthcare-case-trajectory-assessment-digest value)
+  (unless (healthcare-case-assurance? value)
+    (error "invalid Healthcare Case assurance receipt" value))
+  (.ref value 'trajectory-assessment-digest))
 
 (def (healthcare-case-assurance-certifications value)
   (unless (healthcare-case-assurance? value)
@@ -229,6 +270,8 @@
   (and (object? value)
        (every (lambda (slot) (.slot? value slot))
               '(kind case-id query-contracts temporal-classification
+                     trajectory-assessment trajectory-assessment-digest
+                     formal-assurance-bindings
                      tlc-receipt lean-receipt assurance-digest
                      assurance-closed? release-authorized?
                      runtime-executed? analysis-runtime-executed?))
@@ -237,6 +280,20 @@
        (eq? (.ref value 'case-id) +case-id+)
        (equal? (.ref value 'query-contracts) +query-contract-canonical+)
        (classification-valid? (.ref value 'temporal-classification))
+       (poo-flow-causal-trajectory-assessment?
+        (.ref value 'trajectory-assessment))
+       (.ref (.ref value 'trajectory-assessment) 'accepted?)
+       (equal?
+        (.ref value 'trajectory-assessment-digest)
+        (poo-flow-causal-trajectory-assessment-digest
+         (.ref value 'trajectory-assessment)))
+       (let (trajectory-digest (.ref value 'trajectory-assessment-digest))
+         (and (list? (.ref value 'formal-assurance-bindings))
+              (= (length (.ref value 'formal-assurance-bindings)) 2)
+              (every (lambda (binding)
+                       (formal-assurance-binding-valid?
+                        binding trajectory-digest))
+                     (.ref value 'formal-assurance-bindings))))
        (tlc-receipt-valid? (.ref value 'tlc-receipt))
        (lean-receipt-valid? (.ref value 'lean-receipt))
        (string? (.ref value 'assurance-digest))
@@ -248,6 +305,7 @@
 (def (healthcare-case-assurance receipt root tlc-value lean-value)
   (unless (and (ontology-case-composition-receipt? receipt)
                (.ref receipt 'accepted?)
+               (.ref receipt 'trajectory-handoff-ready?)
                (.ref receipt 'governance-handoff-ready?)
                (eq? (.ref receipt 'case-id) +case-id+)
                (tlc-receipt-valid? tlc-value)
@@ -259,7 +317,31 @@
             +query-contracts+)
   ;; Keep lexical parameter names distinct from .o slot names below. POO slots
   ;; are lazy: `tlc-receipt: tlc-receipt` would resolve the slot recursively.
-  (let* ((event-graph
+  (let* ((trajectory-assessments (.ref receipt 'trajectory-assessments))
+         (_trajectory-count
+          (unless (= (length trajectory-assessments) 1)
+            (error "Healthcare Case requires exactly one trajectory assessment"
+                   trajectory-assessments)))
+         (trajectory-value (car trajectory-assessments))
+         (trajectory-digest-value
+          (poo-flow-causal-trajectory-assessment-digest
+           trajectory-value))
+         (assurance-profile
+          (find (lambda (profile)
+                  (eq? profile AIClinicalDecisionSupportProfile))
+                (.ref receipt 'profiles)))
+         (_profile-present
+          (unless assurance-profile
+            (error "Healthcare Case lacks the AI assurance Profile")))
+         (formal-bindings-value
+          (list
+           (healthcare-formal-assurance-project
+            HealthcareTLAPlusAssuranceProjector assurance-profile
+            trajectory-value tlc-value)
+           (healthcare-formal-assurance-project
+            HealthcareLeanAssuranceProjector assurance-profile
+            trajectory-value lean-value)))
+         (event-graph
           (poo-flow-causal-event-graph "patient-1" (.ref receipt 'events)))
          (cut (poo-flow-causal-cut event-graph 6))
          (classification
@@ -275,6 +357,9 @@
                   (.ref classification 'cut-identity)
                   (.ref classification 'counterfactual-event-ids)
                   (.ref classification 'hypothesized-event-ids)
+                  trajectory-digest-value
+                  (map formal-assurance-binding-canonical
+                       formal-bindings-value)
                   (map (lambda (slot) (.ref tlc-value slot))
                        '(source-content-id config-content-id generated-states
                          distinct-states states-left graph-depth))
@@ -285,6 +370,9 @@
                 case-id: +case-id+
                 query-contracts: +query-contract-canonical+
                 temporal-classification: classification
+                trajectory-assessment: trajectory-value
+                trajectory-assessment-digest: trajectory-digest-value
+                formal-assurance-bindings: formal-bindings-value
                 tlc-receipt: tlc-value
                 lean-receipt: lean-value
                 assurance-digest: (digest canonical)

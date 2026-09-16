@@ -84,6 +84,42 @@ OAIC health-information guidance.  A future authority refresh therefore has a
 traceable structural Impact through the Region Profile without changing the
 portable Case.
 
+* Standard two-layer causal trajectories
+
+Correct handling, error handling and Impact are not conventions local to one
+Healthcare Case.  The domain-neutral Temporal Causality core owns
+=PooFlowCausalTrajectoryContract=, and =OntologyCase= exposes it through the
+declarative =.add-trajectory= slot.  Every contract separates two layers:
+
+1. the operational layer declares one observed trigger, one ordered intended
+   path and one or more error paths;
+2. the Impact layer declares intended impacts separately from error impacts.
+
+An intended path may contain only =observed=, =declared= or =derived= events.
+An error path may contain only uncommitted =counterfactual= events.  Both kinds
+of Impact may contain only uncommitted =hypothesized= events.  Every member must
+resolve in the same event graph, intended and error paths must remain causally
+connected, and each Impact must descend from the corresponding path.  The
+framework evaluates these rules once in O(V + E + declared members) and places
+typed assessments in the Case composition receipt.  A rejected trajectory
+makes =trajectory-handoff-ready?= and the overall Governance handoff false.
+
+#+begin_src mermaid
+flowchart LR
+    T[Observed trigger] --> I1[Intended step]
+    I1 --> I2[Governance / independent review]
+    I2 --> F[Declared future handoff]
+    F -. hypothesized .-> PI[Intended Impact]
+    I1 -. counterfactual .-> E1[Error branch]
+    E1 -. counterfactual .-> E2[Unsafe effect]
+    E2 -. hypothesized .-> EI[Error Impact]
+#+end_src
+
+The AI-assisted prescription and personal-care coordination Cases now consume
+the same contract.  If automatic AI approval is changed from counterfactual to
+observed/committed, native Case admission returns
+=trajectory-contract-rejected=; it cannot silently become clinical fact.
+
 * Reasoning relations
 
 After a Case is admitted, =ontology-case-reasoning-graph= projects its accepted

@@ -9,5 +9,7 @@ permit (
 when {
   principal == resource.assignedProvider &&
   resource.reconciliationObserved &&
-  context.poo_flow.governanceAdmitted
+  context.poo_flow.governanceAdmitted &&
+  context.assuranceClosed &&
+  context.trajectoryHandoffReady
 };

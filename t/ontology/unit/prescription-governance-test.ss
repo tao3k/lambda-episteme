@@ -60,6 +60,8 @@
                   (.ref receipt 'profiles))))
        (check (.ref receipt 'accepted?) => #t)
        (check (.ref receipt 'governance-handoff-ready?) => #t)
+       (check (.ref receipt 'trajectory-handoff-ready?) => #t)
+       (check (length (.ref receipt 'trajectory-assessments)) => 1)
        (check profile-names
               => '(evidence privacy healthcare-base medication-safety
                             pharmacology-safety
@@ -70,6 +72,41 @@
               => '(() () () () () ()))
        (check (.ref evaluation 'accepted?) => #t)
        (check (.ref evaluation 'runtime-executed?) => #t)))
+
+   (test-case "prescription trajectory keeps the unsafe branch counterfactual"
+     (let (assessment
+           (car (.ref admitted-receipt 'trajectory-assessments)))
+       (check (.ref assessment 'accepted?) => #t)
+       (check (.ref assessment 'error-event-paths)
+              => '(("wrong-ai-auto-approval-1"
+                    "wrong-tmp-smx-administration-1")))
+       (check (.ref assessment 'error-impact-event-ids)
+              => '("elevated-anticoagulation-risk-1"))
+       (check (.ref assessment 'release-authorized?) => #f)))
+
+   (test-case "Case admission rejects an error branch presented as observed"
+     (let* ((unsafe-events
+             (map
+              (lambda (event)
+                (if (equal? (.ref event 'identity)
+                            "wrong-ai-auto-approval-1")
+                  (.cc event 'modality 'observed 'committed? #t)
+                  event))
+              (.ref AIAssistedAntibioticPrescriptionCase 'events)))
+            (unsafe-case
+             (.cc AIAssistedAntibioticPrescriptionCase
+                  'case-id 'observed-ai-auto-approval
+                  'events unsafe-events))
+            (receipt (ontology-compose-case unsafe-case))
+            (assessment
+             (car (.ref receipt 'trajectory-assessments))))
+       (check (.ref receipt 'accepted?) => #f)
+       (check (.ref receipt 'trajectory-handoff-ready?) => #f)
+       (check (memq 'trajectory-contract-rejected
+                    (ontology-case-diagnostic-codes receipt))
+              ? values)
+       (check (map car (.ref assessment 'diagnostics))
+              => '(invalid-error-modality))))
 
    (test-case "causal cut separates observed future counterfactual and hypothesis"
      (let* ((receipt admitted-receipt)

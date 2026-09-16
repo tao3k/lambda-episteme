@@ -21,6 +21,7 @@
                  healthcare-case-assurance
                  healthcare-case-assurance-certifications
                  healthcare-case-assurance-digest
+                 healthcare-case-trajectory-assessment-digest
                  healthcare-case-assurance?
                  healthcare-case-qualification-path
                  healthcare-lean-refinement-receipt-read-file
@@ -89,12 +90,22 @@
        (check (.ref HealthcareCaseQualificationMetadata 'kind)
               => 'lambda-episteme.healthcare-case-qualification-metadata)
        (check (.ref receipt 'accepted?) => #t)
+       (check (.ref receipt 'trajectory-handoff-ready?) => #t)
        (check (healthcare-case-assurance? assurance) => #t)
        (check (.ref assurance 'assurance-closed?) => #t)
        (check (.ref assurance 'release-authorized?) => #f)
+       (check (map (lambda (binding) (.ref binding 'engine))
+                   (.ref assurance 'formal-assurance-bindings))
+              => '(tla-plus lean))
+       (check (map (lambda (binding)
+                     (.ref binding 'trajectory-assessment-digest))
+                   (.ref assurance 'formal-assurance-bindings))
+              => (make-list
+                  2
+                  (healthcare-case-trajectory-assessment-digest assurance)))
        (check (length (.ref assurance 'query-contracts)) => 3)
        (check (length (healthcare-case-assurance-certifications assurance))
-              => 6)
+              => 10)
        (check (.ref assurance 'analysis-runtime-executed?) => #f)))
 
    (test-case "assurance digest binds the Cedar authority snapshot"
@@ -129,7 +140,14 @@
          (check (hash-ref runtime-request "resource")
                 => "Healthcare::MedicationOrder::\"alternative-order-1\"")
          (check (hash-ref (hash-ref runtime-request "context")
-                          "assurance_closed")
-                => #t))))))
+                          "assuranceClosed")
+                => #t)
+         (check (hash-ref (hash-ref runtime-request "context")
+                          "trajectoryHandoffReady")
+                => #t)
+         (check (hash-ref (hash-ref runtime-request "context")
+                          "trajectoryAssessmentDigest")
+                => (healthcare-case-trajectory-assessment-digest
+                    assurance)))))))
 
 (run-tests! healthcare-case-assurance-qualification)
