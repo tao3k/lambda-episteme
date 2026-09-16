@@ -16,7 +16,7 @@
              (contribution (sdlc-config selection))
              (standards (.ref (.ref contribution 'profile) 'standards)))
         (check-equal? (poo-flow-user-module-selection-entrypoint selection)
-                      "../lambda-episteme/modules/sdlc/config.ss")
+                      "../lambda-episteme/modules/sdlc/interface.ss")
         (check-equal? (map (lambda (s) (.ref s 'identity)) standards) '("nasa/npr-7150.2d"))
         (check-equal? (.ref (admit-contributions (list contribution) '()) 'accepted?) #t)))
     (test-case "no feature means no NASA selection"

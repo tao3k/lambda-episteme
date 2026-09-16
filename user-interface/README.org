@@ -41,6 +41,18 @@ standard family, not the identity of the SDLC module. The
 and declares developer, staging, and production stages. It does not execute
 GitHub or authorize release.
 
+Ontology UI files use one inherited POO declaration as their entire public
+configuration.  Profiles declare named =.import=, =.add-concept=,
+=.add-relation=, =.add-source=, =.add-rule= and =.add-query= slots; Scenarios
+declare identity and base Profile; Cases declare =.use-composition=,
+=.add-source= and =graph=, whose topology uses =.add-node= and =.add-edge=.
+List-shaped closure, vocabulary, receipt and evaluation values are derived by
+the owning module and are not maintained as sibling UI definitions.
+
+GitOps Profiles follow the same rule.  Their small declaration macro expands
+to ordinary =.def= inheritance with named slots.  =define-type= remains
+reserved for the Git Change, Check and Decision boundary contracts.
+
 =scenarios/sdlc-cases.ss= demonstrates NASA plus a local standard, native POO
 derivation, explicit facts, and pure review preparation. The files import the
 installed POO Flow interface and this contribution only; they do not import the

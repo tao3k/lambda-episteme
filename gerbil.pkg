@@ -1,0 +1,7 @@
+;;; SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+;;;
+;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
+
+;;; Native contributor package identity only. Profiles, Scenarios, Cases and
+;;; build behavior are owned by their Scheme sources and the parent build API.
+(package: poo-flow/lambda-episteme)

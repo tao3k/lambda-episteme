@@ -15,14 +15,18 @@
    (lambda (_frame _evaluator _composition _change _checks)
      'specialized-evaluation)))
 (.defmethod-bundle TestGitOpsMethods GitOpsEvaluationProtocol TestGitOpsMethod)
-(define-gitops-profile test-dev OpenGitOpsV1Profile dev pull-request
-  "develop" (build test) automatic staging)
-(define-gitops-profile base-dev OpenGitOpsV1Profile dev pull-request
-  "develop" (build) automatic staging)
+(define-gitops-profile test-dev OpenGitOpsV1Profile
+  environment: 'dev event: 'pull-request target-ref: "develop"
+  required-checks: '(build test)
+  reconciliation: 'automatic next-profile: 'staging)
+(define-gitops-profile base-dev OpenGitOpsV1Profile
+  environment: 'dev event: 'pull-request target-ref: "develop"
+  required-checks: '(build)
+  reconciliation: 'automatic next-profile: 'staging)
 
 (def gitops-protocol-test
   (test-suite "GitOps native dispatch closure"
-    (test-case "define-type validates a defrule-produced Profile"
+    (test-case "POO prototype validates a declarative Profile"
       (check-equal? (gitops-profile? test-dev) #t)
       (check-equal?
        (gitops-profile-matches?

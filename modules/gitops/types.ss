@@ -4,7 +4,6 @@
 (import :clan/poo/object :clan/poo/mop :clan/poo/type :clan/poo/number
         :clan/poo/brace)
 (export NonEmptyString GitOpsEvent GitOpsCheckConclusion
-        methods.gitops-profile GitOpsProfile.
         GitOpsChange GitOpsCheck GitOpsDecision
         gitops-profile? gitops-change? gitops-check? gitops-decision?)
 
@@ -15,14 +14,6 @@
   (Enum push pull-request workflow-dispatch reconciliation))
 (def GitOpsCheckConclusion
   (Enum success failure cancelled pending skipped))
-
-;;; A method trait is independently composable with future Profile families.
-(define-type (methods.gitops-profile @ [] .matches?)
-  .matches?: (lambda (_change) #f))
-(define-type (GitOpsProfile. @ [methods.gitops-profile Type.]
-                              name environment event target-ref required-checks
-                              reconciliation next-profile principles)
-  gitops-profile?: #t)
 
 (define-type (GitOpsChange @ Class.)
   slots: =>.+

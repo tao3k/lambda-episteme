@@ -7,27 +7,35 @@
         :poo-flow/lambda-episteme/modules/gitops/types)
 (export GitOpsEvaluator GitOpsDefaultEvaluator
         GitOpsEvaluationProtocol GitOpsEvaluationGeneric
-        OpenGitOpsV1Profile GitOpsModule
+        GitOpsProfile OpenGitOpsV1Profile GitOpsModule
         gitops-profile-matches?
         gitops-change gitops-check gitops-evaluate)
 
 (.defgeneric (gitops-profile-matches? profile change)
   slot: .matches?)
 
-(define-type (OpenGitOpsV1Profile @ GitOpsProfile.)
-  identity: "open-gitops/v1.0.0"
-  owner: 'lambda-episteme
-  name: 'open-gitops-v1
-  environment: 'unbound
-  event: 'reconciliation
-  target-ref: "unbound"
-  required-checks: '()
-  reconciliation: 'continuous
-  next-profile: 'complete
-  principles: '(declarative versioned-and-immutable pulled-automatically
-                 continuously-reconciled)
-  source-url: "https://opengitops.dev/"
-  runtime-executed: #f)
+(def GitOpsProfile
+  (.o gitops-profile?: #t
+      identity: "gitops/profile"
+      owner: 'lambda-episteme
+      name: 'gitops
+      environment: 'unbound
+      event: 'reconciliation
+      target-ref: "unbound"
+      required-checks: '()
+      reconciliation: 'continuous
+      next-profile: 'complete
+      principles: '()
+      source-url: #f
+      runtime-executed: #f
+      .matches?: (lambda (_change) #f)))
+
+(.def (OpenGitOpsV1Profile @ GitOpsProfile)
+  (identity "open-gitops/v1.0.0")
+  (name 'open-gitops-v1)
+  (principles '(declarative versioned-and-immutable pulled-automatically
+                continuously-reconciled))
+  (source-url "https://opengitops.dev/"))
 
 (def GitOpsEvaluator (poo-clos-class 'gitops/evaluator))
 (def GitOpsDefaultEvaluator (poo-clos-make-instance GitOpsEvaluator))

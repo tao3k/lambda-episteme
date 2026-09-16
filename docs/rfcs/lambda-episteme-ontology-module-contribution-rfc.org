@@ -1,0 +1,597 @@
+#+title: Lambda Episteme Ontology Profiles, Scenarios and Cases RFC
+#+date: [2026-09-15]
+#+filetags: :lambda-episteme:ontology:profiles:scenarios:cases:poo:rfc:
+#+property: SDD_KIND rfc
+#+property: STATUS first-slice-implemented
+
+* Status
+
+This RFC defines one strong Ontology contribution module. Its first native POO
+slice is implemented.  The preceding RDF registry and promotion pipeline remain
+legacy surfaces until consumers either migrate to the POO authority or require
+an explicit one-way interchange projection.
+
+The structure is:
+
+#+begin_example
+Ontology Module
+  |-- Sources                   common reusable Sources
+  |-- Profiles                  common reusable Profiles
+  `-- Scenarios
+       `-- Healthcare
+            |-- Profiles       Healthcare-scoped Profiles
+            `-- Cases          concrete Profile compositions
+                 `-- Sources   Case-scoped inputs and expectations
+#+end_example
+
+Healthcare is a Scenario. Healing is a Profile inside Healthcare. A concrete
+healing workflow is a Case that composes Profiles.
+
+Profiles and Cases import existing Scheme or source paths. Those paths are
+explicit references rather than another ontology abstraction.
+
+* POO Scenario Ontology semantic model
+
+This module is not an RDF vocabulary written with Scheme syntax. Scheme is the
+execution host, POO/MOP is the extension model, POO Flow CLOS owns independent
+cross-dispatch, and Lean may prove laws of the same small semantic kernel.
+
+The kernel has five value domains:
+
+| Value | Meaning | Native owner |
+|-------+---------+--------------|
+| Declaration | Concept, Relation and executable Rule objects | POO prototypes and method slots |
+| Environment | identity indexes and the closed declaration scope selected for one Case | pure Scheme composition |
+| Profile | an importable semantic contribution to an Environment | existing POO Flow Profile composition |
+| Scenario | admission policy and base Profile for one vertical context | =.admit-profile?= slot dispatch |
+| Case | concrete compositions, declarative Graph, evidence and local Sources | POO Case value and typed receipt |
+
+The primary judgment is:
+
+#+begin_example
+Scenario ; Selected Profiles ; Case Sources
+  |- Case
+  => Accepted(POO View, Receipt) | Rejected(Typed Diagnostics)
+#+end_example
+
+Composition is pure and performs no Provider execution.  It constructs Concept,
+Relation, Rule and Source indexes once; validates identity uniqueness, parent and
+endpoint closure, import direction and explicit conflict rules; and projects an
+ordered immutable view.  Within that selected Case, undeclared knowledge is
+=unknown= rather than silently true or false.  A Provider may later interpret
+the accepted view through a separate CLOS generic specialized on independent
+Provider, Scenario/Profile and Case axes.
+
+The extension disciplines are disjoint:
+
+- one semantic object's substitutable behavior uses a gerbil-poo method slot
+  and =.defgeneric=;
+- a real nominal boundary joins an existing Gerbil generic only through
+  =defmethod (@method generic Type)=;
+- independently extensible Provider and domain axes use POO Flow CLOS classes,
+  specializers, method bundles and method combination;
+- Lean specifications prove kernel properties; they do not replace the Scheme
+  runtime or become a second writable ontology.
+
+At minimum the kernel must preserve deterministic composition, identity
+uniqueness, closed reference resolution, non-reversing source scope, and the
+property that a rejected composition never reaches Provider execution.  Tests
+must exercise both positive derivations and counterexamples.
+
+** Why RDF is outside the kernel
+
+RDF provides globally named triples and an interchange ecosystem.  It does not
+own this module's Profile import graph, Scenario admission, Case-local closed
+scope, substitutable behavior, multiple dispatch, method combination or typed
+qualification receipt.  Making RDF authoritative would therefore duplicate the
+POO declarations and force executable semantics into a second representation.
+
+If an external consumer requires RDF, the only admitted direction is:
+
+#+begin_example
+Accepted POO View -> RDF adapter -> derived interchange artifact
+#+end_example
+
+The reverse edge is absent.  An RDF artifact cannot mutate, refine or supersede
+the POO authority.  The adapter is optional and its round-trip fidelity is not a
+kernel requirement.
+
+** Implementation closure
+
+The current slice implements POO Concept, Relation and executable Rule
+declarations, Profile/Scenario/Case composition, one-pass identity indexes,
+closed parent and relation-endpoint diagnostics, and deterministic POO
+projection.  Each Case declares its domain topology by deriving the POO Flow
+Graph prototype: =.add-node= and =.add-edge= are named POO object slots, while
+the core Graph lazily exposes the sequence required by existing algorithms.
+Provider cross-dispatch and Lean proofs remain separate milestones; symbolic
+constraint labels are not evidence that those milestones are complete.
+
+* Current problem
+
+The existing =ontology/= tree contains useful RDF/OWL, SQL rules, policies,
+dataset mappings, API declarations and guarded source-promotion artifacts. It
+is currently a central source bundle:
+
+- industries are entries in one shared manifest;
+- multiple industries share one API-surface file;
+- the generated registry sits beside authoritative sources;
+- tests import compiler behavior from a parent Python package;
+- a contributor must change central aggregation files.
+
+The correction is not one module per industry. Lambda Episteme should expose
+one Ontology module whose Profiles and Scenarios organize contributions.
+
+* NixOS-style Profile analogy
+
+The useful analogy is Profile placement and imports:
+
+- a Profile at the top level is a Common Profile;
+- it imports the paths needed for a reusable cross-Scenario configuration;
+- a Profile below a Scenario is directly scoped to that Scenario;
+- it imports Scenario paths and may also import Common Profiles;
+- a Case selects and composes Profiles into one concrete configuration.
+
+The import path is ordinary explicit dependency information. It does not
+create a new object category and moving a file does not silently alter semantic
+ownership.
+
+* One Ontology module
+
+The Ontology capability follows the existing five-role contribution layout:
+
+#+begin_example
+modules/ontology/
+  types.ss
+  objects.ss
+  funs.ss
+  config.ss
+  interface.ss
+
+  sources/
+    identity/
+    provenance/
+    temporal/
+
+  profiles/
+    evidence.ss
+    temporal.ss
+    privacy.ss
+    accountable-action.ss
+    interface.ss
+
+  scenarios/
+    healthcare/
+      scenario.ss
+      profiles/
+        base.ss
+        healing.ss
+        diagnosis.ss
+        medication-safety.ss
+        interface.ss
+      cases/
+        post-operative-healing/
+          case.ss
+          sources/
+            fixtures/
+            mappings/
+            policies/
+        chronic-care-review/
+          case.ss
+          sources/
+
+    commercial-finance/
+    manufacturing/
+#+end_example
+
+Nested Scheme files are implementation namespaces inside the one Ontology
+contribution module. A Scenario or Profile is not a new POO Flow module-system
+identity. =modules/ontology/interface.ss= is the sole public module entrypoint.
+
+Build and test discovery remain owned by POO Flow, =std/make=, ASP Testing and
+=clan/testing=. The Ontology module does not scan installed directories during
+import and does not own another registry, compiler, build API or test runner.
+
+* Common Profiles
+
+A top-level Profile is reusable across multiple Scenarios. It imports stable
+paths that do not belong exclusively to one vertical domain.
+
+Examples:
+
+- Evidence Profile imports identity, provenance and review paths;
+- Temporal Profile imports lifespan and supersession paths;
+- Privacy Profile imports classification, authorization and redaction paths;
+- Accountable Action Profile imports actor, evidence and decision paths.
+
+Ontology reuses POO Flow's existing Profile object and composition semantics.
+Ontology-specific Profile slots and validation record:
+
+- Profile identity, owner and revision;
+- scope =common=;
+- explicit imported paths and Profile references;
+- exported ontology/API declarations;
+- rules, policies and source references;
+- requirements, conflicts and refinements;
+- maturity, deprecation and replacement metadata.
+
+The user-facing representation is one inherited POO declaration per file.
+=.import=, =.add-concept=, =.add-relation=, =.add-source=, =.add-rule= and
+=.add-query= are named object slots.  The native list-shaped values consumed by
+closure and evaluation are framework projections; the user does not maintain a
+separate Vocabulary, Rule list, Source list or terms list beside the Profile.
+
+A Common Profile cannot import a Scenario-local Profile. Otherwise a supposedly
+generic Profile would acquire a hidden vertical dependency.
+
+* Scenarios
+
+A Scenario is the vertical contribution arena. It is not another package or
+framework module.
+
+The Scenario POO value owns:
+
+- Scenario identity and namespace;
+- semantic owner, maintainers and revision;
+- authoritative source roots;
+- default/base Profile policy;
+- available Scenario Profile identities;
+- permitted Common Profiles;
+- permitted cross-Scenario interfaces;
+- conflict, refinement and qualification policy;
+- lifecycle and prohibited effects.
+
+Healthcare remains one Scenario even though it includes clinical encounters,
+healing, diagnosis, medications, privacy and evidence. New healthcare
+specializations normally add a Profile and corresponding Cases below the same
+Scenario.
+
+* Scenario Profiles
+
+A Profile under =scenarios/<scenario>/profiles/= belongs directly to that
+Scenario. It may import:
+
+- paths within the Scenario;
+- the Scenario base Profile;
+- top-level Common Profiles;
+- other Profiles in the same Scenario;
+- an explicitly declared cross-Scenario interface.
+
+For Healthcare:
+
+- Healing Profile can import the Healthcare base, Temporal and Evidence
+  Profiles plus healing-specific source paths;
+- Diagnosis Profile can import the Healthcare base and Evidence Profile;
+- Medication Safety Profile can import the Healthcare base, Privacy and
+  Accountable Action Profiles.
+
+Illustrative POO shape:
+
+#+begin_src scheme
+(.def (HealingProfile @ HealthcareBaseProfile)
+  (identity "lambda-episteme/ontology/healthcare/healing")
+  (name 'healing)
+  (.import (.o healthcare: HealthcareBaseProfile evidence: EvidenceProfile))
+  (.add-concept
+   (.o healing-episode: HealingEpisode
+       recovery-milestone: RecoveryMilestone))
+  (.add-relation
+   (.o recovers-from: RecoversFrom
+       reaches-milestone: ReachesMilestone))
+  (.add-source (.o))
+  (.add-rule (.o))
+  (.add-query (.o healing-progress: 'healing-progress)))
+#+end_src
+
+These slots inherit and replace ordinary gerbil-poo slots.  They do not define
+a parallel Profile type, list DSL or second Profile engine.
+
+* Cases
+
+A Case is a concrete Profile composition and acceptance surface. It answers:
+“For this workflow, which Profiles are selected and what must their composed
+ontology project?”
+
+Ontology reuses POO Flow's native =use-composition= values. A Case is the
+user-owned assembly and acceptance boundary for those values; it does not wrap
+Profile prototypes in the feature-system Domain Case role composer. That runtime
+component abstraction has a different owner and composing the same Profile
+graph through it a second time causes duplicate dispatch semantics. A Case binds:
+
+- Case identity and revision;
+- primary Scenario;
+- selected Common Profiles;
+- selected Scenario Profiles;
+- optional cross-Scenario interface selections;
+- fixture/source inputs;
+- expected terms, links, rules, actions and queries;
+- expected diagnostics and evidence;
+- report-only runtime handoff expectations.
+
+A Case exposes one =.use-composition= POO slot. Its named child slots are
+bounded composition groups, and every group contains named Profile slots.
+=.add-source= uses the same shape for Case-local Sources. Ontology derives the
+native composition and source sequences from those declarations, indexes their
+selected Profiles once, orders the Profile dependency graph, applies Profile
+slot behavior, and returns one admission/projection receipt. It does not
+construct a second Case object or invoke a second role-composition pass.
+
+For example, the intended shape is:
+
+#+begin_src scheme
+(.def (PostOperativeHealingCase @ OntologyCase)
+  (case-id 'post-operative-healing)
+  (scenario HealthcareScenario)
+  (.use-composition
+   (.o common: (.o evidence: EvidenceProfile privacy: PrivacyProfile)
+       healthcare: (.o base: HealthcareBaseProfile healing: HealingProfile)
+       medication: (.o safety: MedicationSafetyProfile)))
+  (.add-source (.o))
+  (graph
+   (.o (:: @ Graph)
+       graph-id: 'post-operative-healing
+       .add-node: (.o patient: PatientNode episode: HealingEpisodeNode)
+       .add-edge: (.o episode-patient: EpisodePatientEdge)))))
+#+end_src
+
+The Case file exports only =PostOperativeHealingCase=. The composition values,
+source sequence, receipt and evaluation are consumer/framework projections of
+these slots, not sibling definitions in the user interface.
+
+Examples:
+
+- post-operative healing = Healing + Medication Safety + Privacy;
+- chronic-care review = Diagnosis + Medication Safety + Evidence;
+- insured equipment inspection = Manufacturing Quality + Finance Asset through
+  an explicit shared interface.
+
+A Case does not become a Profile. It is the final configuration, test and
+performance surface assembled from Profiles.
+
+* Source scopes
+
+Sources follow the same explicit placement and visibility rule as Profiles:
+
+- =modules/ontology/sources/= contains Common Sources reusable across
+  Scenarios;
+- a Profile declares the Common or Scenario-local source paths it consumes;
+- =cases/<case>/sources/= contains inputs, fixtures, mappings, policies and
+  expected data owned only by that Case;
+- a Case may combine its local Sources with Sources exposed through its
+  selected Profiles;
+- Case-local Sources cannot be imported by a Common or Scenario Profile and do
+  not silently become shared Scenario authority.
+
+There is therefore no single Healthcare =sources/= bundle shared by every
+Case. Source placement expresses visibility. Profile declarations own Ontology
+terms, relations and composition semantics; bound Source formats retain only
+their own external rule, mapping, policy, fixture or evidence content.
+
+* Composition direction
+
+#+begin_example
+top-level Common Profiles
+  -> Scenario base Profile
+  -> selected Scenario Profiles
+  -> explicit cross-Scenario interfaces
+  -> Case projection and receipt
+#+end_example
+
+For one Case, the pure composition operation must:
+
+1. validate Scenario and Profile scopes;
+2. resolve explicit Profile and Case source paths plus Profile references;
+3. construct Profile, term, API-name and source indexes exactly once;
+4. compute the Profile dependency DAG;
+5. reject missing, cyclic and reverse-scope imports;
+6. compose parents before derived Profiles using POO semantics;
+7. validate conflicts and explicit refinements;
+8. produce a composed POO ontology view or ordered typed diagnostics;
+9. project a source-bound POO view and qualification receipt for the Case.
+
+After index construction, dependency and conflict processing should be linear
+in declarations and import edges. No repeated source-tree scanning or registry
+reconstruction is allowed.
+
+Profile removal is first-class. Removing a Profile succeeds only if the
+remaining dependency closure is valid; otherwise all dependent Profiles that
+block removal are reported.
+
+* Authority boundary
+
+Profiles compose declarations and bind paths. The POO object graph is the
+single internal Ontology authority:
+
+- Profile slots own declared ontology terms, relations, imports and policies;
+- Org owns architecture, rationale and review decisions;
+- SQL owns deterministic read-only validation rules;
+- TOML may own dataset mappings or external interchange declarations;
+- Profile imports bind shared paths by role and digest;
+- Cases select Profiles and bind their own local source paths.
+
+RDF is neither an input nor a second authority of the native module. If a
+consumer later requires RDF interoperability, an adapter may project RDF from
+the accepted POO view. Such a projection is derived, replaceable and must never
+be read back to override Profile declarations.
+
+Importing a Profile performs no filesystem scan, SQL execution, mutation, hook
+installation or automatic activation.
+
+The current =registry.json= and RDF source-promotion contracts are legacy
+assets; the native module does not import them. Any future registry is a
+deterministic Case projection and receipt, not ontology truth or a central
+writable registry.
+
+** Native generic protocol admission
+
+=defmethod (@method generic Type)= is used when all three conditions hold:
+
+1. =Type= is a real nominal runtime boundary rather than a kind-tagged POO
+   object;
+2. =generic= is an existing Gerbil or dependency protocol whose callers should
+   dispatch without importing an Ontology-specific helper;
+3. the method preserves that protocol's substitution and representation
+   contract.
+
+This is how gerbil-poo connects its =object= and =TV= types to =:wr= and connects
+POO values to =:sexp= and JSON protocols.  It is not a replacement for
+=.defgeneric= slot dispatch or POO Flow CLOS.  Current Ontology Profiles,
+Scenarios and Cases are POO values, so they intentionally do not invent a
+nominal type merely to demonstrate =@method=.  GitOps Change, Check and Decision
+are existing nominal boundaries and are legitimate future candidates when a
+stable Gerbil protocol requirement is specified.
+
+* Conflict rules
+
+Composition rejects at least:
+
+- Common Profile importing a Scenario-local Profile;
+- Profile attached to the wrong Scenario;
+- missing or cyclic Profile dependency;
+- unresolved or unauthorized import path;
+- selected conflicting Profiles;
+- duplicate identity with different content;
+- namespace, IRI or API-name collision;
+- incompatible property type, link cardinality or inverse;
+- source/rule/mapping path not declared by the Profile;
+- cross-Scenario use without a shared interface;
+- implicit overwrite based only on priority;
+- incomplete owner, revision, provenance or license metadata;
+- mutation authority in a source-only action declaration;
+- generated registry presented as source authority.
+
+Refinement explicitly binds the refined identity, accepted base revision,
+owner and compatibility rule. Diagnostics have canonical order.
+
+* Contribution lifecycle
+
+The Scenario is the collaboration venue. A Profile revision is the ordinary
+reviewed contribution:
+
+#+begin_example
+draft -> reviewed -> qualified -> released -> deprecated -> withdrawn
+#+end_example
+
+Qualification binds the exact Scenario/Profile revisions, imported paths,
+Profile dependency closure, authoritative source digests, test receipts,
+Ontology module contract identity, owner/reviewer evidence, validity interval
+and revocation state.
+
+Qualification does not grant runtime mutation, application activation or
+industry compliance. Applications select qualified Profiles in a Case.
+
+* Testing
+
+Tests use ordinary =:std/test= suites through ASP Testing and =:clan/testing=.
+
+#+begin_example
+t/ontology/
+  unit/                         Profile/Scenario/Case primitives
+  source/                       imported path and source qualification
+  profiles/                     Common Profile composition
+  scenarios/
+    healthcare/
+      profiles/
+      cases/
+  integration/                  separate runtime consumers
+#+end_example
+
+Cases are the principal acceptance and performance surfaces. Resource limits
+and performance Profiles apply to a Case execution, not an arbitrary batch of
+source files.
+
+* Vertical migration
+
+The same Ontology module now carries five L1 industry Scenarios without moving
+industry vocabulary into the framework:
+
+| Scenario | POO semantic authority | First Case | Bound external sources |
+|----------+------------------------+------------+------------------------|
+| Healthcare | Healthcare base Profile | post-operative healing | SQL rule, TOML mapping and Case JSON |
+| Software Engineering | Software Engineering base Profile | architecture governance | two SQL rules and one Org/Markdown policy |
+| Commercial Finance | Commercial Finance base Profile | transaction posting | one SQL rule |
+| Manufacturing | Manufacturing base Profile | work-order execution | one SQL rule |
+| Education | Education base Profile | enrollment context | one SQL rule |
+
+The L2 Xiuxian source is not promoted to a peer industry Scenario: it imports
+Software Engineering and currently declares only an application entrypoint.
+It should become an application Profile or Case under an explicit Scenario
+only after a concrete composition and rule authority exist.
+
+The migration sequence is:
+
+1. Implement only Ontology-specific slots, validators and projections on the
+   existing POO Flow Profile and Case owners.
+2. Express shared core primitives directly through top-level Common Profiles.
+3. Migrate each L1 domain as a Scenario, one base Profile and one source-bound
+   Case before adding optional Scenario Profiles.
+4. Qualify each Case projection and every bound external Source without reading
+   semantic declarations back from the legacy registry or RDF.
+5. Remove legacy central declarations only after their remaining external
+   consumers migrate or accept a one-way projection contract.
+
+There is no compatibility reader that preserves both the old central manifest
+and new Profiles as writable authorities.
+
+* Current implementation surface
+
+The bounded native surface contains:
+
+- =modules/ontology/{types,objects,funs,config,interface}.ss=;
+- one top-level Common Evidence Profile owning common POO terms and relations;
+- Healthcare, Software Engineering, Commercial Finance, Manufacturing and
+  Education Scenarios with one semantic base Profile each;
+- Healing and Medication Safety Scenario Profiles;
+- one Case per Scenario whose external evidence is inherited through selected
+  Profiles and whose topology is a concrete POO Flow Graph;
+- deterministic compose, remove, Graph evaluation and Case projection;
+- negative tests for scope reversal, unresolved path, missing dependency,
+  cycle, conflict, incompatible term and invalid removal;
+- five user-facing Cases and representative external evidence authorities;
+- an Org qualification record with exact warm-build and test receipts.
+
+Acceptance requires:
+
+- exactly one Ontology contribution module;
+- top-level Profiles are Common Profiles built from explicit imports;
+- Scenario-local Profiles remain scoped to their Scenario;
+- Cases use one =.use-composition= object with named groups of named Profiles;
+- Common Sources and Case-local Sources have explicit, non-reversing scope;
+- public API is POO-native and reuses existing Profile composition;
+- no parallel Profile or Case abstraction;
+- no import-time scan, Python runtime dependency, custom build API or custom
+  test runner;
+- indexes and dependency closure are constructed once per Case;
+- warm build uses official =std/make= with zero recompilation;
+- POO Flow core remains independent of concrete Ontology Scenarios.
+
+* Closed decisions
+
+1. Scenario base Profiles are imported explicitly by Scenario Profiles or
+   selected explicitly by Cases; there is no implicit injection.
+2. Ontology Cases declare named Profile groups in =.use-composition=; the
+   framework projects existing native composition values and produces an
+   Ontology admission/projection receipt; they do not define a parallel Case
+   class or re-compose Profile prototypes through feature-system Domain Case.
+3. A Case file exports one Case declaration. =.use-composition=, =.add-source=
+   and =graph= are its user-maintained configuration slots; derived sequences,
+   receipts and evaluations are not user-interface definitions.
+4. Common Sources live at Ontology scope, while each Case may own distinct
+   local Sources that cannot flow back into Profiles.
+
+5. The first Common surface is Evidence plus Privacy, backed by the Entity and
+   Relation Common Sources.
+6. Scheme imports bind Profile implementations; ontology/data paths project as
+   typed Source assets. Neither path form transfers semantic ownership.
+7. Profile-local single dispatch uses =gerbil-poo .defgeneric= method slots.
+   CLOS is reserved for a real Provider/executor by Profile cross-dispatch.
+8. Scenario-local admission also uses =gerbil-poo .defgeneric= method slots.
+   Case composition remains a pure function over a POO Case value until an
+   independent Provider/executor axis creates a real multi-dispatch need.
+9. Gerbil-poo owns =(@method :wr object)= globally.  Ontology objects inherit
+   it and must not register a competing object-wide printer method.
+10. Contributor tests perform reader-native authoring admission over the exact
+    Gerbil import closure before loading a test.  A slot initializer that
+    resolves to its own =.o= slot is rejected as
+    =self-referential-slot-initializer= before it can grow the heap or reach the
+    outer timeout.

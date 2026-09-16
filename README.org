@@ -7,7 +7,15 @@ profiles, ontology/policy declarations, source assets and examples. It does not
 implement a graph engine or require Rust, Python, SQL execution or gql-rust.
 GQL source is optional. gerbil-parser checks that source in a separate test lane.
 
-The current modules are =diataxis=, =adr=, =decision-kind= and =sdlc= under =modules/=.
+The current modules are =diataxis=, =adr=, =decision-kind=, =gitops=, =ontology=
+and =sdlc= under =modules/=.  Ontology is one contribution module whose
+industry variation lives under =user-interface/scenarios/= as Profiles and
+Cases; Healthcare, Software Engineering, Commercial Finance, Manufacturing and
+Education are the first migrated L1 Scenarios.
+Their terms, relations, imports and policies are native POO Profile values.
+RDF is not loaded by this module and is not a second semantic authority;
+interoperability formats, when needed, are one-way projections at an explicit
+consumer boundary.
 =sdlc= accepts multiple optional standards; NASA NPR 7150.2D is the first standard profile, with a complete requirement
 review surface for all 130 SWE identifiers, 255 source paragraphs, conditional
 applicability, institutional duties, safety measurements and tailoring records.
@@ -26,7 +34,7 @@ Standalone complex user scenarios live in [[file:user-interface/README.org][user
 POO Flow-owned contribution builder and =unit-tests.ss= entrypoint. Production
 sources and legacy scenario fixtures use separate build roots.
 The SDLC review API prepares review packets from explicit evidence and project
-facts; it does not produce compliance decisions.
+observations; it does not produce compliance decisions.
 
 From a POO Flow checkout containing this top-level contribution, run:
 
@@ -36,11 +44,12 @@ just test-scheme
 just test-scheme-atomic sdlc unit/nasa-certification-test.ss
 #+end_src
 
-The atomic file target first runs POO Flow's reader-native POO authoring
-observations over the selected module and test source. It rejects recursive
-=.o slot: slot= initializers before loading domain code, then runs the exact
-gxtest file with verbose case/check output and a hard time bound. Atomic tests
-import the narrow owning modules they exercise. The top-level =interface.ss=
+Both module and atomic targets first run POO Flow's reader-native POO authoring
+observations over the exact native import closure rooted at the selected test
+files. They reject recursive =.o slot: slot= initializers before loading domain
+code, then run native =gxtest= with verbose case/check output and a hard time
+bound. Atomic tests import the narrow owning modules they exercise. The
+top-level =interface.ss=
 exports only the source object and source-neutral module bundle; each selected
 domain module retains its own public =interface.ss=.
 The atomic lane passes the explicitly selected test file directly to native
@@ -49,9 +58,10 @@ The atomic lane passes the explicitly selected test file directly to native
 production owners are built once through POO Flow before a clean combined
 check; no test BuildSpec or test build script exists.
 
-The contribution has no =gerbil.pkg= or build script and does not acquire ASP
-or Gerbil POO directly. POO Flow owns the package namespace, locked dependencies,
-core =build.ss=, and the independent root-level contribution build/test adapters.
+The contribution's =gerbil.pkg= declares native package identity only; it has no
+build script and does not acquire ASP or Gerbil POO directly. POO Flow owns the
+locked dependencies, core =build.ss=, and independent root-level contribution
+build/test adapters.
 An installed gerbil-parser is currently needed by the GQL source tests.
 
 Tests run through the POO Flow environment. They do not install a runtime or
@@ -60,10 +70,13 @@ See [[file:CONTRIBUTING.org][contribution guidance]] for ownership and qualifica
 
 * Legacy assets
 
-The older =README.md=, =policies/=, SQL artifacts, =tests/= Python alignment
-suite and Wendao command recipes describe the preceding Wendao integration.
-They remain available as source/reference assets. The new Scheme source-module
-lane is independently built and tested; it does not automatically execute them.
+The older =README.md=, RDF registry/promotion contracts, =policies/=, SQL
+artifacts, =tests/= Python alignment suite and Wendao command recipes describe
+the preceding Wendao integration. Mapping and policy files selected by a
+Profile remain explicit external Sources; the old SQL rules are not selected by
+the native Profiles because executable Rule objects own that behavior. RDF,
+SQL and registry assets remain only for legacy consumers while they migrate;
+the new Scheme module neither loads them nor treats them as semantic authority.
 
 POO declarations and GQL syntax qualification are not evidence of graph-query
 execution or runtime policy enforcement. The consuming application owns those

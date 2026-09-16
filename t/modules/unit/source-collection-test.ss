@@ -71,6 +71,7 @@
            "lambda-episteme/modules/decision-kind/interface.ss"
            "lambda-episteme/modules/diataxis/interface.ss"
            "lambda-episteme/modules/gitops/interface.ss"
+           "lambda-episteme/modules/ontology/interface.ss"
            "lambda-episteme/modules/sdlc/interface.ss"))
         (check-equal?
          (map (lambda (source) (metadata-ref source 'module-key)) sources)
@@ -78,14 +79,15 @@
            (custom . decision-kind)
            (custom . diataxis)
            (custom . gitops)
+           (custom . ontology)
            (custom . sdlc)))
         (check-equal?
          (map (lambda (source) (metadata-ref source 'module-layout)) sources)
          '(poo-flow-module-v1 poo-flow-module-v1 poo-flow-module-v1
-           poo-flow-module-v1 poo-flow-module-v1))
+           poo-flow-module-v1 poo-flow-module-v1 poo-flow-module-v1))
         (check-equal?
          (map (lambda (source) (metadata-ref source 'entrypoint-role)) sources)
-         '(interface interface interface interface interface))))
+         '(interface interface interface interface interface interface))))
 
     (test-case "Lambda init uses the same source-neutral module declaration"
       (let* ((selections
@@ -109,6 +111,7 @@
            "lambda-episteme/modules/decision-kind/interface.ss"
            "lambda-episteme/modules/diataxis/interface.ss"
            "lambda-episteme/modules/gitops/interface.ss"
+           "lambda-episteme/modules/ontology/interface.ss"
            "lambda-episteme/modules/sdlc/interface.ss"))))
 
     (test-case "an official registered name expands the trusted contribution"
@@ -118,16 +121,17 @@
               (poo-flow-module-selection-source-refs
                poo-flow-official-contribution-load-path
                selection)))
-        (check-equal? (length sources) 5)
+        (check-equal? (length sources) 6)
         (check-equal?
          (map poo-flow-module-source-ref-kind sources)
-         '(local local local local local))
+         '(local local local local local local))
         (check-equal?
          (map poo-flow-module-source-ref-value sources)
          '("lambda-episteme/modules/adr/interface.ss"
            "lambda-episteme/modules/decision-kind/interface.ss"
            "lambda-episteme/modules/diataxis/interface.ss"
            "lambda-episteme/modules/gitops/interface.ss"
+           "lambda-episteme/modules/ontology/interface.ss"
            "lambda-episteme/modules/sdlc/interface.ss"))))
 
     (test-case "a registered module name resolves one contributed module"
