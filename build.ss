@@ -4,11 +4,11 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 ;;; -*- Gerbil -*-
-;;; Native Lambda package build.  ASP projects the import closure of these
-;;; public roots; std/make alone owns currentness, scheduling and clean.
+;;; Native Lambda package build. ASP projects the import closure of these
+;;; public roots; std/make alone owns currentness, scheduling, and clean.
 
 (import (only-in :std/build-script defbuild-script)
-        (only-in :asp-gerbil-scheme/build-api
+        (only-in :asp-gerbil-scheme/building-api
                  asp-gerbil-scheme-package-spec!
                  asp-gerbil-scheme-library-package-prototype))
 
@@ -18,8 +18,10 @@
     "modules/decision-kind/interface.ss"
     "modules/diataxis/interface.ss"
     "modules/gitops/interface.ss"
+    "modules/healthcare/interface.ss"
     "modules/ontology/interface.ss"
     "modules/sdlc/interface.ss"
+    "user-interface/scenarios/healthcare/profiles/regions/australia.ss"
     "user-interface/init.ss"
     "user-interface/config.ss"))
 
