@@ -110,9 +110,8 @@ detail.
 #+begin_example
 modules/
   ontology/                  semantic mechanism
-  sdlc/                      lifecycle and standards mechanism
-  gitops/                    change/check/decision mechanism
-  adr/ diataxis/ decision-kind/
+  diataxis/                  knowledge-document classification
+  decision-kind/             decision-kind knowledge model
 
 user-interface/
   init.ss                    selected Modules and feature flags
@@ -285,9 +284,10 @@ Detailed contribution rules are in [[file:CONTRIBUTING.org][CONTRIBUTING.org]].
 * Build and test
 
 =gerbil.pkg= declares the native package identity
-=poo-flow/lambda-episteme= only.  Lambda Episteme has no =build.ss= and does not
-own a second PackageSpec.  Its =justfile= delegates Scheme work to POO Flow's
-official build and test adapters.
+=poo-flow/lambda-episteme= only.  The narrow =build.ss= declares public roots
+through POO Flow's source-owned building API; it does not own a second build
+framework.  Its =justfile= delegates Scheme work to POO Flow's official build
+and test adapters.
 
 From this directory:
 
@@ -309,12 +309,8 @@ Testing extensions such as source admission, timeout, heap observation,
 debugging and tracing are declarative ASP Testing Profiles around the native
 gxtest lifecycle.  Every =*-test.ss= is mapped to ASP's process-isolation
 Profile, so its heap limit applies to that file rather than a multi-file batch.
-The source-admission suite additionally uses ASP's serial-resource Profile and
-runs after the parallel lane.  Its scope is the imported native
-=t/sdlc/build-root.ss= graph already prepared by =gxtest=; it never scans the
-test directory, rebuilds a source catalog, or launches an outer closure process
-per file.  With =GERBIL_BUILD_VERBOSE=1=, the POO Flow Observability extension
-emits per-operation receipts and 15-second heartbeats for a stuck native batch.
+With =GERBIL_BUILD_VERBOSE=1=, the POO Flow Observability extension emits
+per-operation receipts and heartbeats for a stuck native batch.
 
 The parent checkout owns locked dependencies, =std/make= handoff and build
 parallelism.  =GERBIL_BUILD_CORES= is inherited by that build environment; this
@@ -328,9 +324,9 @@ certify regulatory compliance or authorize release by itself.  Those effects
 belong to explicitly configured host Providers and independently tested
 application boundaries.
 
-The SDLC module supports multiple Standards.  NASA NPR 7150.2D is one Standard
-Profile with a complete review surface, not the identity of SDLC and not an
-automatic certification claim.  See [[file:modules/sdlc/README.org][the SDLC ownership and qualification notes]].
+ADR, GitOps and software-lifecycle assurance are owned and maintained by
+Lambda Aitia.  Lambda Episteme does not retain compatibility modules, copied
+qualification receipts or a second namespace for those semantics.
 
 Historical RDF registries, SQL policies, Python alignment tests and Wendao
 command recipes remain migration inputs for legacy consumers.  New Scheme

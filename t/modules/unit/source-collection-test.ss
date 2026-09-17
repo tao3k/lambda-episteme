@@ -42,8 +42,8 @@
 ;;; composition root.  Scope the cwd change to one test so another file in the
 ;;; same native gxtest batch never observes fixture state.
 (def +poo-flow-composition-root+
-  (if (file-exists? "modules/sdlc/interface.ss")
-    (path-normalize (path-expand ".."))
+  (if (file-exists? "modules/ontology/interface.ss")
+    (path-normalize (path-expand "../.."))
     (current-directory)))
 
 (def (call-with-poo-flow-composition-root thunk)
@@ -63,20 +63,20 @@
 
 (def lambda-episteme-module-source
   (make-poo-flow-contribution-module-source
-   'lambda-episteme "lambda-episteme"))
+   'lambda-episteme "packages/lambda-episteme"))
 
 (def lambda-episteme-module-load-path
   (make-poo-flow-contribution-module-load-path
-   'lambda-episteme "lambda-episteme"))
+   'lambda-episteme "packages/lambda-episteme"))
 
 (def lambda-episteme-user-module-source
   (make-poo-flow-user-interface-module-source
-   'lambda-episteme-user "lambda-episteme/user-interface"))
+   'lambda-episteme-user "packages/lambda-episteme/user-interface"))
 
 (def lambda-episteme-user-module-load-path
   (make-poo-flow-user-interface-module-load-path
    'lambda-episteme-user
-   "lambda-episteme/user-interface"
+   "packages/lambda-episteme/user-interface"
    lambda-episteme-module-load-path))
 
 (def lambda-episteme-source-collection-test
@@ -86,27 +86,20 @@
             (poo-flow-load-modules lambda-episteme-module-source))
         (check-equal?
          (map poo-flow-module-source-ref-value sources)
-         '("lambda-episteme/modules/adr/interface.ss"
-           "lambda-episteme/modules/decision-kind/interface.ss"
-           "lambda-episteme/modules/diataxis/interface.ss"
-           "lambda-episteme/modules/gitops/interface.ss"
-           "lambda-episteme/modules/ontology/interface.ss"
-           "lambda-episteme/modules/sdlc/interface.ss"))
+         '("packages/lambda-episteme/modules/decision-kind/interface.ss"
+           "packages/lambda-episteme/modules/diataxis/interface.ss"
+           "packages/lambda-episteme/modules/ontology/interface.ss"))
         (check-equal?
          (map (lambda (source) (metadata-ref source 'module-key)) sources)
-         '((custom . adr)
-           (custom . decision-kind)
+         '((custom . decision-kind)
            (custom . diataxis)
-           (custom . gitops)
-           (custom . ontology)
-           (custom . sdlc)))
+           (custom . ontology)))
         (check-equal?
          (map (lambda (source) (metadata-ref source 'module-layout)) sources)
-         '(poo-flow-module-v1 poo-flow-module-v1 poo-flow-module-v1
-           poo-flow-module-v1 poo-flow-module-v1 poo-flow-module-v1))
+         '(poo-flow-module-v1 poo-flow-module-v1 poo-flow-module-v1))
         (check-equal?
          (map (lambda (source) (metadata-ref source 'entrypoint-role)) sources)
-         '(interface interface interface interface interface interface))))
+         '(interface interface interface))))
 
     (composition-root-test-case "Lambda init uses the same source-neutral module declaration"
       (let* ((selections
@@ -120,18 +113,15 @@
       (let* ((selection
               (caar
                (poo-flow-modules!
-                :custom (@ "lambda-episteme/modules" +private))))
+                :custom (@ "packages/lambda-episteme/modules" +private))))
              (sources
               (poo-flow-module-selection-source-refs
                lambda-episteme-module-load-path selection)))
         (check-equal?
          (map poo-flow-module-source-ref-value sources)
-         '("lambda-episteme/modules/adr/interface.ss"
-           "lambda-episteme/modules/decision-kind/interface.ss"
-           "lambda-episteme/modules/diataxis/interface.ss"
-           "lambda-episteme/modules/gitops/interface.ss"
-           "lambda-episteme/modules/ontology/interface.ss"
-           "lambda-episteme/modules/sdlc/interface.ss"))))
+         '("packages/lambda-episteme/modules/decision-kind/interface.ss"
+           "packages/lambda-episteme/modules/diataxis/interface.ss"
+           "packages/lambda-episteme/modules/ontology/interface.ss"))))
 
     (composition-root-test-case "an official registered name expands the trusted contribution"
       (let* ((selection
@@ -140,21 +130,18 @@
               (poo-flow-module-selection-source-refs
                poo-flow-official-contribution-load-path
                selection)))
-        (check-equal? (length sources) 6)
+        (check-equal? (length sources) 3)
         (check-equal?
          (map poo-flow-module-source-ref-kind sources)
-         '(local local local local local local))
+         '(local local local))
         (check-equal?
          (map poo-flow-module-source-ref-value sources)
-         '("lambda-episteme/modules/adr/interface.ss"
-           "lambda-episteme/modules/decision-kind/interface.ss"
-           "lambda-episteme/modules/diataxis/interface.ss"
-           "lambda-episteme/modules/gitops/interface.ss"
-           "lambda-episteme/modules/ontology/interface.ss"
-           "lambda-episteme/modules/sdlc/interface.ss"))))
+         '("packages/lambda-episteme/modules/decision-kind/interface.ss"
+           "packages/lambda-episteme/modules/diataxis/interface.ss"
+           "packages/lambda-episteme/modules/ontology/interface.ss"))))
 
     (composition-root-test-case "a registered module name resolves one contributed module"
-      (let* ((selection (caar (poo-flow-modules! :custom (sdlc))))
+      (let* ((selection (caar (poo-flow-modules! :custom (ontology))))
              (source
               (car
                (poo-flow-module-selection-source-refs
@@ -162,7 +149,7 @@
         (check-equal? (metadata-ref source 'source-collection)
                       'lambda-episteme)
         (check-equal? (poo-flow-module-source-ref-value source)
-                      "lambda-episteme/modules/sdlc/interface.ss")))
+                      "packages/lambda-episteme/modules/ontology/interface.ss")))
 
     (composition-root-test-case "a missing registered checkout produces a pinned materialization source"
       (let* ((registry
@@ -200,7 +187,7 @@
       (check-equal?
        (poo-flow-module-source-collection-modules-root
         lambda-episteme-user-module-source)
-       "lambda-episteme/user-interface/modules"))
+       "packages/lambda-episteme/user-interface/modules"))
 
     (composition-root-test-case "the extended load path resolves core before contributor sources"
       (check-equal?
@@ -226,22 +213,22 @@
                  lambda-user-module-bundles))))
              (source
               (car (poo-flow-module-selection-source-refs
-                    lambda-episteme-module-load-path selection))))
+                    poo-flow-official-contribution-load-path selection))))
         (check-equal? (metadata-ref source 'source-collection) 'lambda-episteme)
         (check-equal? (metadata-ref source 'source-owner) 'contributor)
         (check-equal? (poo-flow-module-source-ref-value source)
-                      "lambda-episteme/modules/sdlc/interface.ss")))
+                      "packages/lambda-episteme/modules/ontology/interface.ss")))
 
     (composition-root-test-case "a user source placed first overrides the contributor source"
       (let* ((user-source
               (make-poo-flow-module-source-collection
-               'user-modules 'user "lambda-episteme" "modules"))
+               'user-modules 'user "packages/lambda-episteme" "modules"))
              (user-first
              (make-poo-flow-module-load-path
                'user-first
                (cons user-source
                      (poo-flow-module-load-path-collections
-                      lambda-episteme-module-load-path))))
+                      poo-flow-official-contribution-load-path))))
              (selection
               (car
                (reverse

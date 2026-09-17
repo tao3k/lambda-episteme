@@ -19,36 +19,6 @@ override, =all-gerbil-modules= call, contribution-owned source object, compiler,
 scheduler, or cache is supplied. Imported helpers remain native =std/make=
 dependencies and never need to be repeated in the build declaration.
 
-* NASA coverage
-NASA NPR 7150.2D now has a 130-identity catalog: 30 Chapter 2 institutional
-requirements and 100 Appendix C project matrix rows. Each row preserves edition,
-section, source URL, a source excerpt and an unevaluated assessment. Matrix rows
-retain A-F invocation and both authority columns. Chapter 2 applicability remains
-in the requirement text. Blank matrix cells mean not invoked by that matrix;
-they do not grant a waiver or establish final project applicability.
-
-The source snapshots and SHA-256 values accompany the catalog. Regenerate with:
-#+begin_src sh
-python3 tools/import-nasa-catalog.py \
-  modules/sdlc/standards/sources \
-  modules/sdlc/standards/nasa-7150-2d-catalog.ss
-#+end_src
-The authoring tool requires BeautifulSoup. Python is not a Scheme build or
-runtime dependency. Authoritative Chapters 2–5 now supply 255 paragraph-level
-review criteria for all 130 identifiers; Appendix C supplies class/authority
-routing. Notes remain separate. The catalog uses a shared POO constructor over
-quoted data, avoiding one macro expansion per source row during native builds.
-External standards, authentic signatures, and substantive human review remain
-outside automatic compliance claims. Chapter 6 is retained as a source snapshot
-for documentation guidance; it does not create additional SWE requirements.
-
-* Qualification on 2026-09-12
-The POO Flow-owned directory build compiled 25 discovered module/support sources.
-The independent user-scenario build also passed. Governance, SDLC, config,
-user-scenario and NASA-catalog suites passed 18, 17, 7, 39 and 268 checks
-respectively (349 total). The catalogue regenerated identically from the saved
-source snapshots. This validates source modeling and review preparation only.
-
 * Module-owned tests
 Executable tests live under =t/<owner>/<lane>/= and declare/export ordinary
 =:std/test= suites with the same binding as the file basename. The single =unit-tests.ss= entry delegates
@@ -61,7 +31,7 @@ The five roles divide ownership rather than naming five interchangeable source
 files:
 
 - =types.ss= defines boundary predicates and actual nominal data contracts.
-  =define-type= is appropriate for Git Change, Check and Decision values; it
+  =define-type= is appropriate for a closed wire or runtime boundary value; it
   must not simulate a prototype or class hierarchy.
 - =objects.ss= owns POO prototypes, declaration projections and default method
   slots.  A user Profile exports one =.def= and declares =.import=,

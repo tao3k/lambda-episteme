@@ -6,7 +6,7 @@
         (only-in :clan/poo/object .cc .ref)
         (only-in :std/srfi/1 find)
         (only-in :poo-flow/src/module-system/profile-composition/interface
-                 poo-flow-composition-name)
+                 poo-flow-scenario-case-name)
         :poo-flow/src/modules/temporal-causality/interface
         :poo-flow/lambda-episteme/modules/ontology/interface
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/personal-care-coordination/case)
@@ -31,7 +31,7 @@
        (check (.ref admitted-receipt 'governance-handoff-ready?) => #t)
        (check (.ref admitted-receipt 'trajectory-handoff-ready?) => #t)
        (check (length (.ref admitted-receipt 'trajectory-assessments)) => 1)
-       (check (map poo-flow-composition-name
+       (check (map poo-flow-scenario-case-name
                    (.ref PersonalCareCoordinationCase 'compositions))
               => '(common healthcare personal-care regions))
        (check (map (lambda (profile) (.ref profile 'name))

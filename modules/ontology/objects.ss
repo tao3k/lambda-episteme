@@ -13,7 +13,7 @@
                  poo-flow-graph-edges poo-flow-graph-node-id
                  poo-flow-graph-node-payload poo-flow-graph-nodes)
         (only-in :poo-flow/src/module-system/profile-composition/interface
-                 poo-flow-composition-object/profiles)
+                 poo-flow-scenario-case)
         (only-in :poo-flow/src/modules/authorization/types
                  poo-flow-authorization-capability?)
         (only-in :poo-flow/src/modules/governance/objects
@@ -60,12 +60,13 @@
     (error "Case .use-composition must be a POO object" declarations))
   (map
    (lambda (composition-name)
-     (poo-flow-composition-object/profiles
+     (poo-flow-scenario-case
       composition-name
       '()
       (ontology-declaration-values
        (.ref declarations composition-name)
        (list '.use-composition composition-name))
+      '()
       '()))
    (.all-slots declarations)))
 

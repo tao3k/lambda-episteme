@@ -437,9 +437,9 @@ This is how gerbil-poo connects its =object= and =TV= types to =:wr= and connect
 POO values to =:sexp= and JSON protocols.  It is not a replacement for
 =.defgeneric= slot dispatch or POO Flow CLOS.  Current Ontology Profiles,
 Scenarios and Cases are POO values, so they intentionally do not invent a
-nominal type merely to demonstrate =@method=.  GitOps Change, Check and Decision
-are existing nominal boundaries and are legitimate future candidates when a
-stable Gerbil protocol requirement is specified.
+nominal type merely to demonstrate =@method=.  A closed external transport
+value is a legitimate future candidate only when a stable Gerbil protocol
+requirement is specified.
 
 * Conflict rules
 
