@@ -37,7 +37,9 @@
         (if (and (string-suffix? ".ss" test-path)
                  (file-exists? test-path))
           (list test-path)
-          (let* ((package-local? (string-prefix? "t/" test-path))
+          (let* ((package-local?
+                  (or (equal? test-path "t")
+                      (string-prefix? "t/" test-path)))
                  (test-boundary
                   (and (not package-local?)
                        (string-contains test-path "/t/"))))
@@ -52,7 +54,7 @@
                     (string-append
                      (if package-local? "./" "")
                      test-path
-                     "/")))
+                     (if (string-suffix? "/" test-path) "" "/"))))
               (filter
                (lambda (path) (string-prefix? directory-prefix path))
                (testing-interface-test-files

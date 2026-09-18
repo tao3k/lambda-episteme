@@ -1,5 +1,6 @@
 .gerbil/
 .qualification/
+proof/lean/.lake/
 __pycache__/
 *.pyc
 manifest.ss

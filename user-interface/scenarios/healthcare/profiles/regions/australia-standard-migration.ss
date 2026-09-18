@@ -56,17 +56,22 @@
        tla-migration-model:
        (ontology-source
         "healthcare/standard-migration/formal-model/tla-plus"
-        "../proof/tla/HealthcareStandardMigration.tla"
+        "user-interface/scenarios/healthcare/cases/au-legacy-interface-fhir-migration/proof/tla/HealthcareStandardMigration.tla"
         'tla-plus 'scenario 'healthcare #f)
        tla-migration-config:
        (ontology-source
         "healthcare/standard-migration/formal-model/tlc-config"
-        "../proof/tla/HealthcareStandardMigration.cfg"
+        "user-interface/scenarios/healthcare/cases/au-legacy-interface-fhir-migration/proof/tla/HealthcareStandardMigration.cfg"
         'tla-plus-config 'scenario 'healthcare #f)
        lean-migration-refinement:
        (ontology-source
         "healthcare/standard-migration/refinement/lean"
-        "../proof/lean/PooFlowProof/Vertical/Healthcare/StandardMigrationRefinement.lean"
+        "proof/lean/EpistemeProof/Healthcare/StandardMigrationRefinement.lean"
+        'lean 'scenario 'healthcare #f)
+       cedar-migration-authorization-spec:
+       (ontology-source
+        "healthcare/standard-migration/authorization/cedar-lean-spec"
+        "proof/lean/EpistemeProof/Healthcare/StandardMigrationCedarAuthorization.lean"
         'lean 'scenario 'healthcare #f)))
   (.add-rule (.o))
   (.add-threat

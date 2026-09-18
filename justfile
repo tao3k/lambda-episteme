@@ -1,33 +1,68 @@
 set shell := ["bash", "-uc"]
 
 self_root := justfile_directory()
+gerbil_parser_root := env_var_or_default("GERBIL_PARSER_ROOT", "")
 
 default:
     @just --justfile '{{ self_root }}/justfile' --list
 
-# Canonical repository acceptance: native Gerbil tests only. Production build
-# remains a separate command and runs only after tests have passed.
-test: test-scheme-all
+# The contributor owns its test interface. Every native Scheme test enters
+# through `gerbil test`; the profiled runner emits observable worker receipts.
+[group('test')]
+test: test-scheme-all test-proof-impact test-proof
 
-# Source-module lanes: consume installed POO Flow, never build a superproject.
-build-scheme:
-    cd '{{ self_root }}/../..' && just build-contribute lambda-episteme
-
-test-scheme module="ontology":
-    echo "[lambda-episteme-test] phase=module-selected module={{ module }}"
-    cd '{{ self_root }}/../..' && just test-contribute lambda-episteme "{{ module }}"
-
-test-scheme-atomic module="ontology" test_file="unit/ontology-test.ss":
-    echo "[lambda-episteme-test] phase=file-selected module={{ module }} test={{ test_file }}"
-    cd '{{ self_root }}/../..' && just test-contribute-atomic lambda-episteme "{{ module }}" "{{ test_file }}"
-
+[group('test')]
 test-scheme-all:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    test_root="$(mktemp -d "${TMPDIR:-/tmp}/lambda-episteme-all-test.XXXXXX")"
-    trap 'rm -rf -- "$test_root"' EXIT
-    cd '{{ self_root }}'
-    GERBIL_BUILD_VERBOSE=1 GERBIL_PATH="$test_root" GERBIL_LOADPATH="$PWD:$test_root/lib:$PWD/../../.gerbil/lib" env -u SDKROOT gxi ./unit-tests.ss
+    cd '{{ self_root }}' && GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 180s gerbil test -v ./profiled-unit-tests.ss
 
+[group('test')]
+test-scheme module="ontology":
+    cd '{{ self_root }}' && GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v "t/{{ module }}/build-root.ss"
+
+[group('test')]
+test-scheme-atomic test_file:
+    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='{{ test_file }}' GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v ./selected-test.ss
+
+[group('test')]
+test-proof-impact:
+    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='t/qualification/healthcare-standard-migration-assurance/impact-test.ss' GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v ./selected-test.ss
+
+[group('test')]
+test-proof:
+    cd '{{ self_root }}/proof/lean' && lake build EpistemeHealthcareProof
+
+[group('test')]
+test-proof-temporal:
+    cd '{{ self_root }}/proof/lean' && lake build EpistemeHealthcareTemporalProof
+
+[group('test')]
+test-proof-cedar:
+    cd '{{ self_root }}/proof/lean' && lake build EpistemeHealthcareCedarProof
+
+# Builds are deliberately separate and depend on the complete native test
+# surface. std/make owns build concurrency and verbose compiler diagnostics.
+[group('build')]
+build: test
+    cd '{{ self_root }}' && GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" gerbil build
+
+[group('build')]
+build-scheme:
+    cd '{{ self_root }}' && GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" gerbil build
+
+[group('qualification')]
+qualify-healthcare-hl7v2:
+    test -n '{{ gerbil_parser_root }}'
+    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='t/qualification/healthcare-hl7v2-migration/parser-receipt-test.ss' GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="{{ gerbil_parser_root }}:$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v ./selected-test.ss
+
+[group('qualification')]
+qualify-healthcare-fhirpath:
+    test -n '{{ gerbil_parser_root }}'
+    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='t/qualification/healthcare-fhirpath-syntax/parser-receipt-test.ss' GERBIL_BUILD_VERBOSE=1 GERBIL_PARSER_DIR='{{ gerbil_parser_root }}' GERBIL_LOADPATH="{{ gerbil_parser_root }}:$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v ./selected-test.ss
+
+[group('qualification')]
+qualify-healthcare-fhir-reference-validator:
+    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='t/qualification/healthcare-fhir-reference-validator/replay-test.ss' GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=5s 120s gerbil test -v ./selected-test.ss
+
+[group('maintenance')]
 update-fhir-sources-lock:
-    cd '{{ self_root }}/../..' && GERBIL_BUILD_VERBOSE=1 GERBIL_PATH="$PWD/.gerbil/contributions/lambda-episteme/source-lock-tool" GERBIL_LOADPATH="$PWD/packages/lambda-episteme:$PWD/.gerbil/lib" timeout --foreground --signal=TERM --kill-after=3s 30s gerbil interactive packages/lambda-episteme/tools/update-fhir-sources-lock.ss packages/lambda-episteme
+    cd '{{ self_root }}' && GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 30s gerbil interactive tools/update-fhir-sources-lock.ss .

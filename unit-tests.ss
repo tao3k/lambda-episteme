@@ -1,10 +1,7 @@
-#!/usr/bin/env gxi
-(import :gerbil/gambit)
+;;; -*- Gerbil -*-
+;;; Conventional package test module. The executable public test entrypoint is
+;;; `profiled-unit-tests.ss`, invoked exclusively through `gerbil test`.
 
-;;; This file intentionally stays a minimal native Gerbil bootstrap.  Static
-;;; imports are loaded only after the first observable receipt, so a cold
-;;; compiler cannot leave the developer with an unexplained silent interval.
-(displayln "[asp-testing] phase=bootstrap-start")
-(force-output)
+(import "profiled-unit-tests.ss")
 
-(load "./profiled-unit-tests.ss")
+(export (import: "profiled-unit-tests.ss"))

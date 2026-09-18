@@ -12,6 +12,13 @@
                  poo-flow-standard-governance-interface)
         (only-in :poo-flow/src/modules/standards/funs
                  poo-flow-standard-digest)
+        (only-in :poo-flow/src/modules/proof/interface
+                 poo-flow-proof-artifact
+                 poo-flow-proof-receipt
+                 poo-flow-proof-impact-binding
+                 poo-flow-proof-refinement-binding
+                 poo-flow-proof-assurance
+                 poo-flow-proof-assurance?)
         (only-in :poo-flow/src/modules/authorization/providers/cedar/config
                  CedarAuthorizationProvider)
         (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/fhir/objects
@@ -33,7 +40,13 @@
         AULegacyHL7v2PatientMigrationReview
         AULegacyHL7v2PatientMigrationCase
         AUHealthcareMigrationFormalModelEvidence
+        AUHealthcareMigrationTLAConfigEvidence
         AUHealthcareMigrationRefinementProofEvidence
+        AUHealthcareMigrationRefinementReceipt
+        AUHealthcareMigrationCedarAuthorizationEvidence
+        AUHealthcareMigrationCedarAuthorizationReceipt
+        AUHealthcareMigrationRefinementBinding
+        AUHealthcareMigrationProofAssurance
         AUHealthcareMigrationImpactContract
         HealthcareStandardMigrationGovernanceInterface)
 
@@ -42,56 +55,123 @@
 (def +au-migration-tla-config-digest+
   "sha256:6abcb5349eb74d53d96bfb7fea2bf74631e3891f656a337fde3a083008837bc4")
 (def +au-migration-lean-source-digest+
-  "sha256:b5974da9a7e4aa26561f4b20e6d80b43f8450789c4de3ab8a66e622cb191644a")
+  "sha256:4f1f157441ae98843faf1030c3244d326f3ff96b0bee044044b457118253f57e")
+(def +au-migration-cedar-lean-source-digest+
+  "sha256:3661cc83e29981c20da89301dd53fd135aee01703ce7e7edf6edd1d65c08ef93")
 
 (def AUHealthcareMigrationFormalModelEvidence
-  (.o engine: 'tla-plus
-      module: "HealthcareStandardMigration"
-      source-path: "packages/proof/tla/HealthcareStandardMigration.tla"
-      config-path: "packages/proof/tla/HealthcareStandardMigration.cfg"
-      source-digest: +au-migration-tla-source-digest+
-      config-digest: +au-migration-tla-config-digest+
-      invariants:
-      '(AINeverGrantsAuthority ReviewRequiresConformance
-        CedarPermitRequiresHumanReview CutoverRequiresCedarPermit
-        CutoverRequiresCompleteEvidence)
-      runtime-executed?: #f))
+  (poo-flow-proof-artifact
+   "lambda-episteme/healthcare/standard-migration/tla-model"
+   'tlc 'tla-plus
+   "user-interface/scenarios/healthcare/cases/au-legacy-interface-fhir-migration/proof/tla/HealthcareStandardMigration.tla"
+   +au-migration-tla-source-digest+
+   '(AINeverGrantsAuthority ReviewRequiresConformance
+     CedarPermitRequiresHumanReview CutoverRequiresCedarPermit
+     CutoverRequiresCompleteEvidence)
+   (.o module: "HealthcareStandardMigration"
+       config-digest: +au-migration-tla-config-digest+)))
+
+(def AUHealthcareMigrationTLAConfigEvidence
+  (poo-flow-proof-artifact
+   "lambda-episteme/healthcare/standard-migration/tlc-config"
+   'tlc 'tla-plus-config
+   "user-interface/scenarios/healthcare/cases/au-legacy-interface-fhir-migration/proof/tla/HealthcareStandardMigration.cfg"
+   +au-migration-tla-config-digest+ '()
+   (.o model-artifact:
+       "lambda-episteme/healthcare/standard-migration/tla-model")))
 
 (def AUHealthcareMigrationRefinementProofEvidence
-  (.o engine: 'lean
-      library: "PooFlowScenarioHealthcareProof"
-      module:
-      "PooFlowProof.Vertical.Healthcare.StandardMigrationRefinement"
-      source-path:
-      "packages/proof/lean/PooFlowProof/Vertical/Healthcare/StandardMigrationRefinement.lean"
-      source-digest: +au-migration-lean-source-digest+
-      tla-source-digest: +au-migration-tla-source-digest+
-      certifications:
-      '(aiCannotAuthorize cutoverRequiresHumanCedarAndEvidence
-        tlaImpactContractBindsExactSource)
-      runtime-executed?: #f))
+  (poo-flow-proof-artifact
+   "lambda-episteme/healthcare/standard-migration/lean-refinement"
+   'lean 'lean
+   "proof/lean/EpistemeProof/Healthcare/StandardMigrationRefinement.lean"
+   +au-migration-lean-source-digest+
+   '(aiCannotAuthorize cutoverRequiresHumanCedarAndEvidence
+     tlaImpactContractBindsExactSource)
+   (.o library: "EpistemeHealthcareProof"
+       module: "EpistemeProof.Healthcare.StandardMigrationRefinement"
+       tla-source-digest: +au-migration-tla-source-digest+)))
+
+(def AUHealthcareMigrationRefinementReceipt
+  (poo-flow-proof-receipt
+   "lambda-episteme/healthcare/standard-migration/lean-receipt"
+   AUHealthcareMigrationRefinementProofEvidence 'lean
+   '(aiCannotAuthorize cutoverRequiresHumanCedarAndEvidence
+     tlaImpactContractBindsExactSource)
+   (poo-flow-standard-digest
+    (list 'EpistemeHealthcareProof +au-migration-lean-source-digest+))
+   #t))
+
+(def AUHealthcareMigrationCedarAuthorizationEvidence
+  (poo-flow-proof-artifact
+   "lambda-episteme/healthcare/standard-migration/cedar-lean-spec"
+   'lean 'lean
+   "proof/lean/EpistemeProof/Healthcare/StandardMigrationCedarAuthorization.lean"
+   +au-migration-cedar-lean-source-digest+
+   '(cutoverRequiresIndependentHumanReview
+     cutoverNeverDelegatesAuthorityToAI
+     cutoverRequiresExactHealthcareCedarProjection
+     cedarDenyBlocksCutover
+     explicitCedarForbidBlocksCutover)
+   (.o library: "EpistemeHealthcareCedarProof"
+       module:
+       "EpistemeProof.Healthcare.StandardMigrationCedarAuthorization"
+       upstream-semantics:
+       "PooFlowProof.PooC3.CedarAuthorizationSemantics"
+       cedar-spec-revision:
+       "e9fa9c1e6b636f29b0897d8706bd7aa5eaf06f9a")))
+
+(def AUHealthcareMigrationCedarAuthorizationReceipt
+  (poo-flow-proof-receipt
+   "lambda-episteme/healthcare/standard-migration/cedar-lean-receipt"
+   AUHealthcareMigrationCedarAuthorizationEvidence 'lean
+   '(cutoverRequiresIndependentHumanReview
+     cutoverNeverDelegatesAuthorityToAI
+     cutoverRequiresExactHealthcareCedarProjection
+     cedarDenyBlocksCutover
+     explicitCedarForbidBlocksCutover)
+   (poo-flow-standard-digest
+    (list 'EpistemeHealthcareCedarProof
+          +au-migration-cedar-lean-source-digest+
+          "e9fa9c1e6b636f29b0897d8706bd7aa5eaf06f9a"))
+   #t))
 
 ;;; This is the executable change-impact boundary: a new TLA+ source digest or
 ;;; invariant set cannot reuse an old Lean qualification.  The Agent must write
 ;;; a new refinement-proof Binding before review/admission can pass again.
 (def AUHealthcareMigrationImpactContract
-  (.o kind: 'lambda-episteme.healthcare-standard-migration-proof-impact.v1
-      upstream-engine: 'tla-plus
-      upstream-source-digest: +au-migration-tla-source-digest+
-      downstream-engine: 'lean
-      downstream-source-digest: +au-migration-lean-source-digest+
-      impact-map:
-      (.o AINeverGrantsAuthority: '(aiCannotAuthorize)
-          ReviewRequiresConformance:
-          '(cutoverRequiresHumanCedarAndEvidence)
-          CedarPermitRequiresHumanReview:
-          '(cutoverRequiresHumanCedarAndEvidence)
-          CutoverRequiresCedarPermit:
-          '(cutoverRequiresHumanCedarAndEvidence)
-          CutoverRequiresCompleteEvidence:
-          '(cutoverRequiresHumanCedarAndEvidence))
-      stale-downstream-policy: 'reject
-      runtime-executed?: #f))
+  (poo-flow-proof-impact-binding
+   "lambda-episteme/healthcare/standard-migration/tla-to-lean-impact"
+   AUHealthcareMigrationFormalModelEvidence
+   AUHealthcareMigrationRefinementProofEvidence
+   (.o AINeverGrantsAuthority: '(aiCannotAuthorize)
+       ReviewRequiresConformance:
+       '(cutoverRequiresHumanCedarAndEvidence)
+       CedarPermitRequiresHumanReview:
+       '(cutoverRequiresHumanCedarAndEvidence)
+       CutoverRequiresCedarPermit:
+       '(cutoverRequiresHumanCedarAndEvidence)
+       CutoverRequiresCompleteEvidence:
+       '(cutoverRequiresHumanCedarAndEvidence))))
+
+(def AUHealthcareMigrationRefinementBinding
+  (poo-flow-proof-refinement-binding
+   "lambda-episteme/healthcare/standard-migration/refinement-binding"
+   AUHealthcareMigrationFormalModelEvidence
+   AUHealthcareMigrationRefinementProofEvidence
+   AUHealthcareMigrationRefinementReceipt
+   AUHealthcareMigrationImpactContract))
+
+(def AUHealthcareMigrationProofAssurance
+  (poo-flow-proof-assurance
+   "lambda-episteme/healthcare/standard-migration/proof-assurance"
+   (list AUHealthcareMigrationFormalModelEvidence
+         AUHealthcareMigrationTLAConfigEvidence
+         AUHealthcareMigrationRefinementProofEvidence
+         AUHealthcareMigrationCedarAuthorizationEvidence)
+   (list AUHealthcareMigrationRefinementReceipt
+         AUHealthcareMigrationCedarAuthorizationReceipt)
+   (list AUHealthcareMigrationRefinementBinding)))
 
 ;;; The landscape is explicit so a migration program can select one old
 ;;; interface without pretending that Australia has a single cut-over format.
@@ -242,22 +322,13 @@
              (.slot? payload 'decision)
              (equal? (.ref (.ref payload 'request) 'action)
                      "Healthcare::Action::\"approveStandardMigrationCutover\""))))
-      ((formal-model)
-       (and (equal? (.ref payload 'source-digest)
-                    +au-migration-tla-source-digest+)
-            (equal? (.ref payload 'config-digest)
-                    +au-migration-tla-config-digest+)))
-      ((refinement-proof)
-       (and (equal? (.ref payload 'source-digest)
-                    +au-migration-lean-source-digest+)
-            (equal? (.ref payload 'tla-source-digest)
-                    +au-migration-tla-source-digest+)))
-      ((impact-contract)
-       (and (equal? (.ref payload 'upstream-source-digest)
-                    +au-migration-tla-source-digest+)
-            (equal? (.ref payload 'downstream-source-digest)
-                    +au-migration-lean-source-digest+)
-            (eq? (.ref payload 'stale-downstream-policy) 'reject)))
+      ((proof-assurance)
+       (and (poo-flow-proof-assurance? payload)
+            (.ref payload 'current?)
+            (.ref payload 'admitted?)
+            (equal? (.ref payload 'assurance-digest)
+                    (.ref AUHealthcareMigrationProofAssurance
+                          'assurance-digest))))
       ((conformance)
        (eq? payload FHIRAUCorePatientStandardProfile))
       ((audit-receipt)
@@ -283,27 +354,16 @@
         '(Healthcare::MigrationReviewer
           Healthcare::Action::approveStandardMigrationCutover
           Healthcare::StandardMigration))
-       formal-model:
+       proof-assurance:
        (migration-governance-binding
-        'formal-model "lambda-healthcare/standard-migration"
-        'tla-plus-model 'qualified #f AUHealthcareMigrationFormalModelEvidence
-        (list +au-migration-tla-source-digest+
-              +au-migration-tla-config-digest+))
-       refinement-proof:
-       (migration-governance-binding
-        'refinement-proof "lambda-healthcare/standard-migration"
-        'lean-refinement 'qualified #f
-        AUHealthcareMigrationRefinementProofEvidence
-        (list +au-migration-lean-source-digest+
-              +au-migration-tla-source-digest+))
-       impact-contract:
-       (migration-governance-binding
-        'impact-contract "lambda-healthcare/standard-migration"
-        'tla-to-lean-proof-impact 'qualified #f
-        AUHealthcareMigrationImpactContract
-        (list +au-migration-tla-source-digest+
+        'proof-assurance "lambda-healthcare/standard-migration"
+        'poo-flow-proof-assurance 'qualified #f
+        AUHealthcareMigrationProofAssurance
+        (list (.ref AUHealthcareMigrationProofAssurance 'assurance-digest)
+              +au-migration-tla-source-digest+
+              +au-migration-tla-config-digest+
               +au-migration-lean-source-digest+
-              'reject-stale-downstream))
+              +au-migration-cedar-lean-source-digest+))
        conformance:
        (migration-governance-binding
         'conformance "lambda-healthcare/fhir"

@@ -30,7 +30,6 @@
                  poo-flow-module-source-collection-modules-root
                  poo-flow-load-modules
                  poo-flow-module-load-path-collections
-                 poo-flow-official-contribution-load-path
                  poo-flow-module-selection-source-refs)
         (rename-in :poo-flow/lambda-episteme/user-interface/init
                    (poo-flow-user-module-bundles
@@ -38,24 +37,10 @@
 
 (export lambda-episteme-source-collection-test)
 
-;;; Contribution module Sources are intentionally expressed from the POO Flow
-;;; composition root.  Scope the cwd change to one test so another file in the
-;;; same native gxtest batch never observes fixture state.
-(def +poo-flow-composition-root+
-  (if (file-exists? "modules/ontology/interface.ss")
-    (path-normalize (path-expand "../.."))
-    (current-directory)))
-
-(def (call-with-poo-flow-composition-root thunk)
-  (let (previous-directory (current-directory))
-    (dynamic-wind
-      (lambda () (current-directory +poo-flow-composition-root+))
-      thunk
-      (lambda () (current-directory previous-directory)))))
-
+;;; The contributor is tested from its own checkout. Parent-repository mount
+;;; paths belong to POO Flow integration tests, not this independent package.
 (defrule (composition-root-test-case name body ...)
-  (test-case name
-    (call-with-poo-flow-composition-root (lambda () body ...))))
+  (test-case name body ...))
 
 (def (metadata-ref source-ref key)
   (let (entry (assq key (poo-flow-module-source-ref-metadata source-ref)))
@@ -63,21 +48,35 @@
 
 (def lambda-episteme-module-source
   (make-poo-flow-contribution-module-source
-   'lambda-episteme "packages/lambda-episteme"))
+   'lambda-episteme "."))
 
 (def lambda-episteme-module-load-path
   (make-poo-flow-contribution-module-load-path
-   'lambda-episteme "packages/lambda-episteme"))
+   'lambda-episteme "."))
 
 (def lambda-episteme-user-module-source
   (make-poo-flow-user-interface-module-source
-   'lambda-episteme-user "packages/lambda-episteme/user-interface"))
+   'lambda-episteme-user "user-interface"))
 
 (def lambda-episteme-user-module-load-path
   (make-poo-flow-user-interface-module-load-path
    'lambda-episteme-user
-   "packages/lambda-episteme/user-interface"
+   "user-interface"
    lambda-episteme-module-load-path))
+
+(def lambda-episteme-registry
+  (make-poo-flow-contribution-registry
+   (list
+    (make-poo-flow-contribution-registry-entry
+     'lambda-episteme
+     "https://github.com/tao3k/lambda-episteme.git"
+     "independent-checkout"
+     "."
+     "modules"
+     '(decision-kind diataxis healthcare ontology)))))
+
+(def lambda-episteme-registry-load-path
+  (poo-flow-contribution-registry-load-path lambda-episteme-registry))
 
 (def lambda-episteme-source-collection-test
   (test-suite "Lambda module source collection and unified POO load path"
@@ -86,10 +85,10 @@
             (poo-flow-load-modules lambda-episteme-module-source))
         (check-equal?
          (map poo-flow-module-source-ref-value sources)
-         '("packages/lambda-episteme/modules/decision-kind/interface.ss"
-           "packages/lambda-episteme/modules/diataxis/interface.ss"
-           "packages/lambda-episteme/modules/healthcare/interface.ss"
-           "packages/lambda-episteme/modules/ontology/interface.ss"))
+         '("modules/decision-kind/interface.ss"
+           "modules/diataxis/interface.ss"
+           "modules/healthcare/interface.ss"
+           "modules/ontology/interface.ss"))
         (check-equal?
          (map (lambda (source) (metadata-ref source 'module-key)) sources)
          '((custom . decision-kind)
@@ -116,23 +115,23 @@
       (let* ((selection
               (caar
                (poo-flow-modules!
-                :custom (@ "packages/lambda-episteme/modules" +private))))
+                :custom (@ "./modules" +private))))
              (sources
               (poo-flow-module-selection-source-refs
                lambda-episteme-module-load-path selection)))
         (check-equal?
          (map poo-flow-module-source-ref-value sources)
-         '("packages/lambda-episteme/modules/decision-kind/interface.ss"
-           "packages/lambda-episteme/modules/diataxis/interface.ss"
-           "packages/lambda-episteme/modules/healthcare/interface.ss"
-           "packages/lambda-episteme/modules/ontology/interface.ss"))))
+         '("./modules/decision-kind/interface.ss"
+           "./modules/diataxis/interface.ss"
+           "./modules/healthcare/interface.ss"
+           "./modules/ontology/interface.ss"))))
 
     (composition-root-test-case "an official registered name expands the trusted contribution"
       (let* ((selection
               (caar (poo-flow-modules! :custom (lambda-episteme))))
              (sources
               (poo-flow-module-selection-source-refs
-               poo-flow-official-contribution-load-path
+               lambda-episteme-registry-load-path
                selection)))
         (check-equal? (length sources) 4)
         (check-equal?
@@ -140,21 +139,21 @@
          '(local local local local))
         (check-equal?
          (map poo-flow-module-source-ref-value sources)
-         '("packages/lambda-episteme/modules/decision-kind/interface.ss"
-           "packages/lambda-episteme/modules/diataxis/interface.ss"
-           "packages/lambda-episteme/modules/healthcare/interface.ss"
-           "packages/lambda-episteme/modules/ontology/interface.ss"))))
+         '("modules/decision-kind/interface.ss"
+           "modules/diataxis/interface.ss"
+           "modules/healthcare/interface.ss"
+           "modules/ontology/interface.ss"))))
 
     (composition-root-test-case "a registered module name resolves one contributed module"
       (let* ((selection (caar (poo-flow-modules! :custom (ontology))))
              (source
               (car
                (poo-flow-module-selection-source-refs
-                poo-flow-official-contribution-load-path selection))))
+                lambda-episteme-registry-load-path selection))))
         (check-equal? (metadata-ref source 'source-collection)
                       'lambda-episteme)
         (check-equal? (poo-flow-module-source-ref-value source)
-                      "packages/lambda-episteme/modules/ontology/interface.ss")))
+                      "modules/ontology/interface.ss")))
 
     (composition-root-test-case "a missing registered checkout produces a pinned materialization source"
       (let* ((registry
@@ -192,23 +191,7 @@
       (check-equal?
        (poo-flow-module-source-collection-modules-root
         lambda-episteme-user-module-source)
-       "packages/lambda-episteme/user-interface/modules"))
-
-    (composition-root-test-case "the extended load path resolves core before contributor sources"
-      (check-equal?
-       (map poo-flow-module-source-collection-identity
-            (poo-flow-module-load-path-collections
-             lambda-episteme-module-load-path))
-       '(poo-flow-maintained lambda-episteme))
-      (let* ((core-selection
-              (poo-flow-user-module-selection 'flow 'funflow '()))
-             (core-source
-              (car (poo-flow-module-selection-source-refs
-                    lambda-episteme-module-load-path core-selection))))
-        (check-equal? (metadata-ref core-source 'source-collection)
-                      'poo-flow-maintained)
-        (check-equal? (poo-flow-module-source-ref-value core-source)
-                      "src/modules/funflow/interface.ss")))
+       "user-interface/modules"))
 
     (composition-root-test-case "the same selection syntax resolves Lambda through its source object"
       (let* ((selection
@@ -218,22 +201,22 @@
                  lambda-user-module-bundles))))
              (source
               (car (poo-flow-module-selection-source-refs
-                    poo-flow-official-contribution-load-path selection))))
+                    lambda-episteme-registry-load-path selection))))
         (check-equal? (metadata-ref source 'source-collection) 'lambda-episteme)
         (check-equal? (metadata-ref source 'source-owner) 'contributor)
         (check-equal? (poo-flow-module-source-ref-value source)
-                      "packages/lambda-episteme/modules/ontology/interface.ss")))
+                      "modules/ontology/interface.ss")))
 
     (composition-root-test-case "a user source placed first overrides the contributor source"
       (let* ((user-source
               (make-poo-flow-module-source-collection
-               'user-modules 'user "packages/lambda-episteme" "modules"))
+               'user-modules 'user "." "modules"))
              (user-first
              (make-poo-flow-module-load-path
                'user-first
                (cons user-source
                      (poo-flow-module-load-path-collections
-                      poo-flow-official-contribution-load-path))))
+                      lambda-episteme-registry-load-path))))
              (selection
               (car
                (reverse

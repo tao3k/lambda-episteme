@@ -8,9 +8,11 @@
 (import (only-in :clan/poo/object .cc)
         (only-in :asp-gerbil-scheme/testing-api
                  +asp-testing-interface+
+                 +testing-discovery-profile+
                  +testing-memory-profile+
                  +testing-process-isolation-profile+
                  +testing-serial-resource-profile+
+                 testing-interface-add-profile
                  testing-interface-map-profile
                  testing-test-selector)
         (only-in :poo-flow/src/module-system/observability/testing-extension
@@ -28,6 +30,9 @@
 (def +lambda-episteme-healthcare-assurance-selector+
   (testing-test-selector
    'contains "qualification/healthcare-case-assurance.ss"))
+
+(def +lambda-episteme-healthcare-qualification-selector+
+  (testing-test-selector 'contains "t/qualification/healthcare-"))
 
 (def +lambda-episteme-healthcare-standard-migration-selector+
   (testing-test-selector
@@ -58,7 +63,16 @@
        (testing-interface-map-profile
         (testing-interface-map-profile
          (testing-interface-map-profile
-          +asp-testing-interface+
+          (testing-interface-map-profile
+           (testing-interface-add-profile
+            +asp-testing-interface+
+            (.cc +testing-discovery-profile+
+                 ignoreDirectories:
+                 '("t/qualification/healthcare-hl7v2-migration"
+                   "t/qualification/healthcare-fhirpath-syntax"
+                   "t/qualification/healthcare-fhir-reference-validator")))
+           +lambda-episteme-healthcare-qualification-selector+
+           +lambda-episteme-2048-mib-memory-profile+)
           +lambda-episteme-healthcare-assurance-selector+
           +lambda-episteme-2048-mib-memory-profile+)
          +lambda-episteme-healthcare-standard-migration-selector+
