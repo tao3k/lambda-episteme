@@ -16,6 +16,7 @@ require «poo-flow-proof» from git
   @ "848fd3d056c28491795bec8b8c896783e6fcd8a5"
   / "packages/proof/lean"
 
+@[default_target]
 lean_lib EpistemeHealthcareTemporalProof where
   roots := #[
     `EpistemeProof.Healthcare.AIAssistedPrescriptionCausalityRefinement,
@@ -29,7 +30,6 @@ lean_lib EpistemeHealthcareCedarProof where
 
 /-! Release/CI aggregate. Developers build one owner-specific library above
 without materializing the unrelated Cedar or temporal import closure. -/
-@[default_target]
 lean_lib EpistemeHealthcareProof where
   roots := #[
     `EpistemeProof

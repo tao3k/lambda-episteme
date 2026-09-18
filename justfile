@@ -29,15 +29,15 @@ test-proof-impact:
 
 [group('test')]
 test-proof:
-    cd '{{ self_root }}/proof/lean' && lake build EpistemeHealthcareProof
+    cd '{{ self_root }}/proof/lean' && if test -d .lake/build; then lake build EpistemeHealthcareProof; else lake --try-cache build EpistemeHealthcareProof; fi
 
 [group('test')]
 test-proof-temporal:
-    cd '{{ self_root }}/proof/lean' && lake build EpistemeHealthcareTemporalProof
+    cd '{{ self_root }}/proof/lean' && if test -d .lake/build; then lake build EpistemeHealthcareTemporalProof; else lake --try-cache build EpistemeHealthcareTemporalProof; fi
 
 [group('test')]
 test-proof-cedar:
-    cd '{{ self_root }}/proof/lean' && lake build EpistemeHealthcareCedarProof
+    cd '{{ self_root }}/proof/lean' && if test -d .lake/build; then lake build EpistemeHealthcareCedarProof; else lake --try-cache build EpistemeHealthcareCedarProof; fi
 
 # Builds are deliberately separate and depend on the complete native test
 # surface. std/make owns build concurrency and verbose compiler diagnostics.
