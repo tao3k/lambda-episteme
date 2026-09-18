@@ -36,7 +36,7 @@
    (.o care-delivery-mapping:
        (ontology-source
         "ontology/healthcare/synthetic-care-delivery-mapping"
-        "ontology/30_Healthcare/mappings/healthcare_synthetic_care_delivery.toml"
+        "user-interface/scenarios/healthcare/sources/synthetic-care-delivery.toml"
         'toml 'scenario 'healthcare #f)))
   (.add-rule
    (.o encounter-patient:

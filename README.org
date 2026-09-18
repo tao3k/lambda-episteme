@@ -354,10 +354,10 @@ ADR, GitOps and software-lifecycle assurance are owned and maintained by
 Lambda Aitia.  Lambda Episteme does not retain compatibility modules, copied
 qualification receipts or a second namespace for those semantics.
 
-Historical RDF registries, SQL policies, Python alignment tests and Wendao
-command recipes remain migration inputs for legacy consumers.  New Scheme
-Profiles and Cases do not load them unless they are explicitly declared as a
-Source or projected at an interoperability boundary.
+The former RDF registry, SQL policy, Python alignment and Wendao command
+surfaces have been removed.  Their retained domain semantics now live only in
+POO-native Modules, Profiles, Scenarios and Cases; external evidence is bound
+through explicitly owned Scenario sources.
 
 For the closed user-facing directory contract, see
 [[file:user-interface/README.org][user-interface/README.org]].

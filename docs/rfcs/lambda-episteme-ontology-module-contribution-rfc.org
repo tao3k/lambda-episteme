@@ -6,10 +6,10 @@
 
 * Status
 
-This RFC defines one strong Ontology contribution module. Its first native POO
-slice is implemented.  The preceding RDF registry and promotion pipeline remain
-legacy surfaces until consumers either migrate to the POO authority or require
-an explicit one-way interchange projection.
+This RFC defines one strong Ontology contribution module. Its native POO slice
+is implemented.  The preceding RDF registry, SQL-policy and Python promotion
+pipeline have been removed; they are not compatibility inputs or secondary
+authorities.
 
 The structure is:
 
@@ -107,20 +107,14 @@ the core Graph lazily exposes the sequence required by existing algorithms.
 Provider cross-dispatch and Lean proofs remain separate milestones; symbolic
 constraint labels are not evidence that those milestones are complete.
 
-* Current problem
+* Resolved architecture problem
 
-The existing =ontology/= tree contains useful RDF/OWL, SQL rules, policies,
-dataset mappings, API declarations and guarded source-promotion artifacts. It
-is currently a central source bundle:
-
-- industries are entries in one shared manifest;
-- multiple industries share one API-surface file;
-- the generated registry sits beside authoritative sources;
-- tests import compiler behavior from a parent Python package;
-- a contributor must change central aggregation files.
-
-The correction is not one module per industry. Lambda Episteme should expose
-one Ontology module whose Profiles and Scenarios organize contributions.
+The former central =ontology/= tree combined RDF/OWL, SQL rules, policies,
+dataset mappings, API declarations and source-promotion artifacts.  That model
+required shared manifests, generated registries and a parent Python compiler.
+It has been removed.  Lambda Episteme now exposes one Ontology module whose
+POO-native Profiles and Scenarios organize contributions without a second
+semantic authority.
 
 * NixOS-style Profile analogy
 
@@ -404,8 +398,9 @@ single internal Ontology authority:
 
 - Profile slots own declared ontology terms, relations, imports and policies;
 - Org owns architecture, rationale and review decisions;
-- SQL owns deterministic read-only validation rules;
-- TOML may own dataset mappings or external interchange declarations;
+- POO Rule objects own executable deterministic validation;
+- TOML may bind external dataset mappings or interchange declarations without
+  defining an execution engine;
 - Profile imports bind shared paths by role and digest;
 - Cases select Profiles and bind their own local source paths.
 
@@ -417,10 +412,9 @@ be read back to override Profile declarations.
 Importing a Profile performs no filesystem scan, SQL execution, mutation, hook
 installation or automatic activation.
 
-The current =registry.json= and RDF source-promotion contracts are legacy
-assets; the native module does not import them. Any future registry is a
-deterministic Case projection and receipt, not ontology truth or a central
-writable registry.
+The removed =registry.json= and RDF source-promotion contracts are not inputs.
+Any future registry must be a deterministic Case projection and receipt, not
+ontology truth or a central writable registry.
 
 ** Native generic protocol admission
 
@@ -507,18 +501,18 @@ industry vocabulary into the framework:
 
 | Scenario | POO semantic authority | First Case | Bound external sources |
 |----------+------------------------+------------+------------------------|
-| Healthcare | Healthcare base Profile | post-operative healing | SQL rule, TOML mapping and Case JSON |
-| Software Engineering | Software Engineering base Profile | architecture governance | two SQL rules and one Org/Markdown policy |
-| Commercial Finance | Commercial Finance base Profile | transaction posting | one SQL rule |
-| Manufacturing | Manufacturing base Profile | work-order execution | one SQL rule |
-| Education | Education base Profile | enrollment context | one SQL rule |
+| Healthcare | Healthcare base Profile | post-operative healing | POO Rules and Scenario-owned TOML evidence |
+| Software Engineering | Software Engineering base Profile | architecture governance | POO Rules and Scenario-owned Markdown evidence |
+| Commercial Finance | Commercial Finance base Profile | transaction posting | POO Rules |
+| Manufacturing | Manufacturing base Profile | work-order execution | POO Rules |
+| Education | Education base Profile | enrollment context | POO Rules |
 
 The L2 Xiuxian source is not promoted to a peer industry Scenario: it imports
 Software Engineering and currently declares only an application entrypoint.
 It should become an application Profile or Case under an explicit Scenario
 only after a concrete composition and rule authority exist.
 
-The migration sequence is:
+The completed migration sequence was:
 
 1. Implement only Ontology-specific slots, validators and projections on the
    existing POO Flow Profile and Case owners.
@@ -526,12 +520,10 @@ The migration sequence is:
 3. Migrate each L1 domain as a Scenario, one base Profile and one source-bound
    Case before adding optional Scenario Profiles.
 4. Qualify each Case projection and every bound external Source without reading
-   semantic declarations back from the legacy registry or RDF.
-5. Remove legacy central declarations only after their remaining external
-   consumers migrate or accept a one-way projection contract.
+   semantic declarations from the former registry or RDF.
+5. Remove the central declarations, compiler, command recipes and fixtures.
 
-There is no compatibility reader that preserves both the old central manifest
-and new Profiles as writable authorities.
+There is no compatibility reader or retained central manifest.
 
 * Current implementation surface
 
