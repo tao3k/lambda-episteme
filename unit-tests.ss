@@ -1,7 +1,10 @@
 #!/usr/bin/env gxi
-(import (only-in :asp-gerbil-scheme/testing-runner-api
-                 init-profiled-test-environment!)
-        (only-in "testing-interface.ss"
-                 +lambda-episteme-testing-interface+))
+(import :gerbil/gambit)
 
-(init-profiled-test-environment! +lambda-episteme-testing-interface+)
+;;; This file intentionally stays a minimal native Gerbil bootstrap.  Static
+;;; imports are loaded only after the first observable receipt, so a cold
+;;; compiler cannot leave the developer with an unexplained silent interval.
+(displayln "[asp-testing] phase=bootstrap-start")
+(force-output)
+
+(load "./profiled-unit-tests.ss")

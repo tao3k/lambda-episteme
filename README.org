@@ -318,6 +318,17 @@ is the authoritative profiled path: ordinary =:std/test= suites are discovered
 by upstream =:clan/testing= and executed through the ASP Testing interface;
 Lambda Episteme does not own a parallel runner.
 
+Focused module and atomic commands allocate one ephemeral =GERBIL_PATH= per
+invocation.  Compiled test dependencies therefore remain reusable by batches
+inside that invocation but cannot shadow changed source in a later run.  A
+module selector is first expanded by upstream =:clan/testing= into exact test
+files; ASP then applies file-level Profiles and native concurrency.  Passing a
+directory directly to one =gerbil test= process is not an accepted shortcut.
+The complete suite uses the same ephemeral-path rule and emits a native Gerbil
+=bootstrap-start= receipt before loading its profiled entry, so even cold
+compilation is observable.  Testing and production build remain separate
+commands: run the relevant test command before =just build-scheme=.
+
 Testing extensions such as source admission, timeout, heap observation,
 debugging and tracing are declarative ASP Testing Profiles around the native
 gxtest lifecycle.  Every =*-test.ss= is mapped to ASP's process-isolation
@@ -325,7 +336,7 @@ Profile, so its heap limit applies to that file rather than a multi-file batch.
 The source-admission suite additionally uses ASP's serial-resource Profile and
 runs after the parallel lane. With =GERBIL_BUILD_VERBOSE=1=, the POO Flow
 Observability extension emits
-per-operation receipts and 15-second heartbeats for a stuck native batch.
+per-operation receipts and 5-second heartbeats for a stuck native batch.
 
 The parent checkout owns locked dependencies, =std/make= handoff and build
 parallelism.  =GERBIL_BUILD_CORES= is inherited by that build environment; this
