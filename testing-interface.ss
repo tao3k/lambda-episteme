@@ -29,10 +29,20 @@
   (testing-test-selector
    'contains "qualification/healthcare-case-assurance.ss"))
 
-;;; Cross-engine qualification loads Scheme, Cedar, TLA and Lean receipts in
-;;; one isolated process. Its larger heap is a declarative per-test Profile,
-;;; not a command-line exception or a wider default.
-(def +lambda-episteme-healthcare-assurance-memory-profile+
+(def +lambda-episteme-healthcare-standard-migration-selector+
+  (testing-test-selector
+   'contains "healthcare-standard-migration-case-test.ss"))
+
+(def +lambda-episteme-personal-care-selector+
+  (testing-test-selector 'contains "personal-care-coordination-test.ss"))
+
+(def +lambda-episteme-user-composition-selector+
+  (testing-test-selector 'contains "t/user-interface/unit/config-test.ss"))
+
+;;; Cross-engine qualification and the selected large static POO compositions
+;;; exceed the ordinary 1 GiB cold-compile heap. The larger heap is attached to
+;;; exact test selectors, never widened into the default Testing Profile.
+(def +lambda-episteme-2048-mib-memory-profile+
   (.cc +testing-memory-profile+ maxHeapMiB: 2048))
 
 (def +lambda-episteme-testing-interface+
@@ -40,9 +50,18 @@
    (testing-interface-map-profile
     (testing-interface-map-profile
      (testing-interface-map-profile
-      +asp-testing-interface+
-      +lambda-episteme-healthcare-assurance-selector+
-      +lambda-episteme-healthcare-assurance-memory-profile+)
+      (testing-interface-map-profile
+       (testing-interface-map-profile
+        (testing-interface-map-profile
+         +asp-testing-interface+
+         +lambda-episteme-healthcare-assurance-selector+
+         +lambda-episteme-2048-mib-memory-profile+)
+        +lambda-episteme-healthcare-standard-migration-selector+
+        +lambda-episteme-2048-mib-memory-profile+)
+       +lambda-episteme-personal-care-selector+
+       +lambda-episteme-2048-mib-memory-profile+)
+      +lambda-episteme-user-composition-selector+
+      +lambda-episteme-2048-mib-memory-profile+)
      +lambda-episteme-atomic-test-selector+
      +testing-process-isolation-profile+)
     +lambda-episteme-source-admission-selector+

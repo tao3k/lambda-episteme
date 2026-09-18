@@ -8,7 +8,7 @@
                  poo-flow-user-module-selection-key)
         (only-in :poo-flow/src/modules/governance/funs
                  poo-flow-governance-contribution)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/objects
+        (only-in "objects.ss"
                  OntologyProfile))
 
 (export ontology-module ontology-config)

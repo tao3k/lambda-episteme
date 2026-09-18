@@ -1,4 +1,9 @@
-(import :poo-flow/src/module-system/contribution/interface
+;;; -*- Gerbil -*-
+;;; SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+;;;
+;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
+
+(import (only-in :clan/poo/object .o)
         (only-in :poo-flow/src/modules/governance/objects
                  PooFlowGovernanceProfile.
                  poo-flow-governance-source))
@@ -11,7 +16,7 @@
       ontology: (.o document-label: 'Document decision-label: 'Decision
                     documents-edge: 'DOCUMENTS)
       policies: (.o conflict:
-                    (.o requires-modules: '("lambda-episteme/diataxis" "lambda-episteme/adr")
+                    (.o requires-modules: '("lambda-episteme/diataxis" "lambda-aitia/ADR")
                         protected-facet: 'decision-contract
                         conflicting-kinds: '("tutorial" "explanation")
                         severity: 'error

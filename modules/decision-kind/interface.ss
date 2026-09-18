@@ -1,8 +1,10 @@
-(import :poo-flow/lambda-episteme/modules/decision-kind/types)
-(export (import: :poo-flow/lambda-episteme/modules/decision-kind/types))
-(import :poo-flow/lambda-episteme/modules/decision-kind/objects)
-(export (import: :poo-flow/lambda-episteme/modules/decision-kind/objects))
-(import :poo-flow/lambda-episteme/modules/decision-kind/funs)
-(export (import: :poo-flow/lambda-episteme/modules/decision-kind/funs))
-(import :poo-flow/lambda-episteme/modules/decision-kind/config)
-(export (import: :poo-flow/lambda-episteme/modules/decision-kind/config))
+;;; -*- Gerbil -*-
+;;; SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+;;;
+;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
+
+(import "types.ss" "objects.ss" "funs.ss" "config.ss")
+(export (import: "types.ss")
+        (import: "objects.ss")
+        (import: "funs.ss")
+        (import: "config.ss"))

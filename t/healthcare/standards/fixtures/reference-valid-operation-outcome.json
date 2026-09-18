@@ -1,0 +1,31 @@
+{
+  "resourceType": "OperationOutcome",
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-file",
+      "valueString": "t/fixtures/standards/fhir/medication-request-valid.json"
+    }
+  ],
+  "issue": [
+    {
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+          "valueCode": "http://hl7.org/fhir/StructureDefinition/DomainResource#dom-6"
+        },
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-context",
+          "valueString": "http://hl7.org/fhir/StructureDefinition/MedicationRequest|4.0.1"
+        }
+      ],
+      "severity": "warning",
+      "code": "invariant",
+      "details": {
+        "text": "Constraint failed: dom-6: A resource should have narrative for robust management"
+      },
+      "expression": [
+        "MedicationRequest"
+      ]
+    }
+  ]
+}

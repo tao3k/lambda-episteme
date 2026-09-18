@@ -4,9 +4,10 @@
 The normative layout is documented by POO Flow in
 =docs/10-19-design/10.06-poo-module-system/contribution-module-layout.org=.
 Each module follows =types.ss=, =objects.ss=, =funs.ss=, =config.ss= and
-=interface.ss=. The narrow =gerbil.pkg= declares native package identity only;
-this repository does not implement its own layout checker, source registry,
-build script, or =modules/init.ss=. POO Flow's
+=interface.ss=. The narrow =gerbil.pkg= declares native package identity and
+the sole =build.ss= derives its PackageSpec from ASP's library prototype.  This
+repository does not implement its own layout checker, source registry, source
+walker, compiler, scheduler, cache, or =modules/init.ss=. POO Flow's
 trusted contribution registry maps =lambda-episteme= and its public module
 names to this repository's pinned source. POO Flow's =poo-flow-load-modules=
 discovers direct =modules/<module-name>/= directories through their sole public
@@ -18,6 +19,12 @@ automatically supplies that module's Scheme files. No downstream =modules=
 override, =all-gerbil-modules= call, contribution-owned source object, compiler,
 scheduler, or cache is supplied. Imported helpers remain native =std/make=
 dependencies and never need to be repeated in the build declaration.
+
+* Qualification on 2026-09-17
+Historical qualification remains available through repository history. Current
+acceptance is recorded in =t/qualification/clos-and-package-spec.org= and covers
+only the four Episteme-owned public modules: decision-kind, Diataxis,
+Healthcare and Ontology.
 
 * Module-owned tests
 Executable tests live under =t/<owner>/<lane>/= and declare/export ordinary
@@ -87,4 +94,19 @@ POO Flow owns the default core PackageSpec, package namespace, root-level
 contribution adapter, =std/make= handoff, and build environment. Contribution
 production and test stages are independent from the core public closure but
 install into the shared namespace. There is no contribution-owned package
-manager, build script, compiler, scheduler, or artifact cache.
+manager, build framework, compiler, scheduler, or artifact cache; =build.ss=
+is only the native Gerbil entry that selects the inherited ASP PackageSpec.
+
+The contribution build includes stable Module interfaces and the lightweight
+=user-interface/init.ss= declaration.  Final =user-interface/config.ss=
+compositions remain consumer-owned, demand-loaded entries and are exercised by
+their atomic User Interface tests rather than widened into the reusable package
+closure.
+
+* Generated source identity
+An external artifact owned by a Module is declared in editable =sources.ss=.
+Its adjacent =source.lock.ss= is generated through POO Flow's Sources Lock
+Feature and is never edited by hand.  Runtime loaders must derive the path,
+canonical URI, exact version, representation, digest and size from the lock and
+must preserve the verification receipt.  Domain parsing and semantic admission
+remain Module responsibilities after source identity succeeds.

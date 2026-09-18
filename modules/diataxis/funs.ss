@@ -1,10 +1,13 @@
+;;; -*- Gerbil -*-
+;;; SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+;;;
+;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
+
 (import (only-in :poo-flow/src/modules/governance/funs
-                 poo-flow-governance-contribution)
-        :poo-flow/lambda-episteme/modules/diataxis/types
-        :poo-flow/lambda-episteme/modules/diataxis/objects)
+                 poo-flow-governance-module-contribution)
+        "objects.ss")
 (export diataxis-contribution diataxis-module)
 (def (diataxis-contribution profile)
-  (unless (diataxis-profile? profile) (error "invalid diataxis profile"))
-  (poo-flow-governance-contribution
-   profile '(knowledge-governance) '()))
+  (poo-flow-governance-module-contribution
+   profile 'diataxis '(knowledge-governance) '()))
 (def diataxis-module (diataxis-contribution DiataxisProfile))

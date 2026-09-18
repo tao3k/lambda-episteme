@@ -1,0 +1,23 @@
+#+title: AU Base 5.0.0 source snapshot
+#+property: header-args :eval never
+
+# SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+# SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
+
+* Identity
+
+- Package: =hl7.fhir.au.base#5.0.0=
+- Publisher: HL7 Australia
+- Immutable package URL: =https://hl7.org.au/fhir/5.0.0/package.tgz=
+- Retrieved: 2026-09-17
+- Package archive SHA-256: =168a71b4fcfdfab57256739f510abd593f06fdd7eb0918a7168bc087e77094d4=
+
+* Fixed JSON sources
+
+| Source | Bytes | SHA-256 |
+|-
+| =package.json= | 901 | =04734e48db1fa353d9588d5c777ae5056334c4533b38a1eef6a4bc35c8a30de0= |
+| =ImplementationGuide-hl7.fhir.au.base.json= | 181762 | =6dfcaed1bbcd28803eaa68bc9079911072fa641cc0771a5378dca5dfc50a50b8= |
+
+Both files are retained byte-for-byte. Runtime admission verifies their size
+and digest before package and ImplementationGuide identity checks.

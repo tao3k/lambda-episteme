@@ -174,4 +174,7 @@ test-scheme-atomic module="ontology" test_file="unit/ontology-test.ss":
 test-scheme-all:
     echo "[lambda-episteme-test] phase=module-selected module=all"
     cd '{{ self_root }}/../..' && just build-contribute lambda-episteme
-    cd '{{ self_root }}/../..' && GERBIL_PATH="$PWD/.gerbil/contributions/lambda-episteme/test" GERBIL_LOADPATH="$PWD/.gerbil/contributions/lambda-episteme/test/lib:$PWD/.gerbil/lib" env -u SDKROOT gxi ./packages/lambda-episteme/unit-tests.ss
+    cd '{{ self_root }}' && GERBIL_PATH="$PWD/../../.gerbil/contributions/lambda-episteme/test" GERBIL_LOADPATH="$PWD:$PWD/../../.gerbil/contributions/lambda-episteme/test/lib:$PWD/../../.gerbil/lib" env -u SDKROOT gxi ./unit-tests.ss
+
+update-fhir-sources-lock:
+    cd '{{ self_root }}/../..' && GERBIL_BUILD_VERBOSE=1 GERBIL_PATH="$PWD/.gerbil/contributions/lambda-episteme/source-lock-tool" GERBIL_LOADPATH="$PWD/packages/lambda-episteme:$PWD/.gerbil/lib" timeout --foreground --signal=TERM --kill-after=3s 30s gerbil interactive packages/lambda-episteme/tools/update-fhir-sources-lock.ss packages/lambda-episteme

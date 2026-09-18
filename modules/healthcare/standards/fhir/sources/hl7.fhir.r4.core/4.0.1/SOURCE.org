@@ -1,0 +1,28 @@
+#+title: HL7 FHIR R4 Core 4.0.1 source snapshot
+#+property: header-args :eval never
+
+# SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+# SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
+
+* Identity
+
+- Package: =hl7.fhir.r4.core#4.0.1=
+- Publisher: HL7 International
+- Retrieved: 2026-09-17
+- Package archive SHA-256: =b090bf929e1f665cf2c91583720849695bc38d2892a7c5037c56cb00817fb091=
+
+* Fixed JSON sources
+
+| Source | Bytes | SHA-256 |
+|-
+| =package.json= | 434 | =7614377a54db343e48a9b3b862114f9f63ad1d5f746f6f0f7af68e55ac81c6f7= |
+| =StructureDefinition-MedicationRequest.json= | 119646 | =46b8f013a124b14d6d81ab36d149ab6579ab53d3cf4a3d416dfca939d7a90700= |
+
+Both files are retained byte-for-byte from the fixed package archive. Runtime
+source admission verifies byte count and SHA-256 before JSON parsing. The
+bounded MedicationRequest constraint surface is projected from the admitted
+=StructureDefinition.snapshot.element= rows; it is not a second hand-written
+authority.
+
+XML is not retained because it adds no distinct required coverage for this
+slice.

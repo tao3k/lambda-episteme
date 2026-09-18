@@ -3,6 +3,8 @@
         :poo-flow/src/module-system/contribution/interface
         (only-in :poo-flow/src/module-system/profile-composition/interface
                  poo-flow-scenario-case-profiles)
+        (only-in :poo-flow/src/module-system/declaration/interface
+                 poo-flow-user-module-selection)
         :poo-flow/src/modules/governance/interface
         :poo-flow/lambda-episteme/modules/diataxis/interface
         :poo-flow/lambda-episteme/modules/decision-kind/interface)
@@ -41,7 +43,26 @@
         (check-equal? (.ref receipt 'runtime-executed?) #f)
         (check-equal? (length (.ref receipt 'selected)) 2)))
     (test-case "duplicate exports are not resolved by filesystem order"
-      (check-equal? (.ref (admit-contributions (list decision-kind-module decision-kind-module) '()) 'accepted?) #f))
+      (check-equal?
+       (.ref (admit-contributions
+              (list decision-kind-module decision-kind-module) '())
+             'accepted?)
+       #f))
+    (test-case "module config delegates exact family admission to POO Flow"
+      (check-equal?
+       (eq? (diataxis-config
+             (poo-flow-user-module-selection 'custom 'diataxis '()))
+            diataxis-module)
+       #t)
+      (check-equal?
+       (eq? (decision-kind-config
+             (poo-flow-user-module-selection 'custom 'decision-kind '()))
+            decision-kind-module)
+       #t)
+      (check-exception
+       (decision-kind-config
+        (poo-flow-user-module-selection 'custom 'diataxis '()))
+       true))
     (test-case "query language is an optional source facet"
       (let ((plain
              (.o (:: @ PooFlowGovernanceProfile.)

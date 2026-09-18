@@ -1,0 +1,25 @@
+;;; SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+;;;
+;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
+
+((benchmarkKind . scenario-e2e)
+ (max_total . 100ms)
+ (target_total . 40ms)
+ (regression_budget . 60ms)
+ (expected_over_input_budget . 15ms)
+ (sampleCount . 20)
+ (targetRationale . "Indexed required-relation evaluation over 10,000 domain nodes and 9,999 relation edges.")
+ (maxRssMb . 256)
+ (memoryMetric . resident-set-size)
+ (memoryUnit . "MB")
+ (iterations . 1)
+ (unit . "ms")
+ (sourcePath . "t/scenarios/performance/ontology-required-relation-index/benchmark.ss")
+ (rule . GERBIL-SCHEME-AGENT-R031)
+ (feature . ontology-required-relation-index)
+ (optimizationFocus . "single-pass std hash endpoint index and POO Flow functional filter-map")
+ (inputShape . "10,000 Transaction nodes, one Account node and 9,999 postsTo edges")
+ (expectedOutcome . "one missing required-relation diagnostic without a node-by-edge nested scan")
+ (expectedRepair . "retain one endpoint index per rule evaluation; do not restore per-node full-edge find")
+ (measurementPhases collect-before policy-before collect-after policy-after assert-time-gate observe-runtime-memory)
+ (tags poo ontology graph stdlib hash performance big-o))

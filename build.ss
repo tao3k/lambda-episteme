@@ -16,6 +16,7 @@
   '("interface.ss"
     "modules/decision-kind/interface.ss"
     "modules/diataxis/interface.ss"
+    "modules/healthcare/interface.ss"
     "modules/ontology/interface.ss"
     "user-interface/init.ss"))
 

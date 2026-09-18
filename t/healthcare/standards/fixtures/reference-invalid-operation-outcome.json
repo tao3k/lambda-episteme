@@ -1,0 +1,27 @@
+{
+  "resourceType": "OperationOutcome",
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-file",
+      "valueString": "t/fixtures/standards/fhir/medication-request-invalid.json"
+    }
+  ],
+  "issue": [
+    {
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+          "valueCode": "Validation_VAL_Profile_WrongType"
+        }
+      ],
+      "severity": "error",
+      "code": "invalid",
+      "details": {
+        "text": "Specified profile type was MedicationRequest but found Observation"
+      },
+      "expression": [
+        "Observation"
+      ]
+    }
+  ]
+}

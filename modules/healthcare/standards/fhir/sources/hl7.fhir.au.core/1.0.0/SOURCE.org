@@ -1,0 +1,40 @@
+#+title: AU Core Patient 1.0.0 source snapshot
+#+property: header-args :eval never
+
+# SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+# SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
+
+* Identity
+
+- Canonical: =http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient=
+- Version: =1.0.0=
+- Publisher: HL7 Australia
+- Upstream license statement: Creative Commons No Rights Reserved (CC0)
+- Retrieved: 2026-09-17
+
+* Package authority
+
+- Package: =hl7.fhir.au.core#1.0.0=
+- Immutable package URL: =https://hl7.org.au/fhir/core/1.0.0/package.tgz=
+- Package archive SHA-256: =26b3e5ea603957ca7cbf3cd04a171fe689bf180a03364dcfe0d576346c311a60=
+
+* Fixed JSON sources
+
+| Source | Immutable upstream URL | Bytes | SHA-256 |
+|-
+| =package.json= | =https://hl7.org.au/fhir/core/1.0.0/package.tgz= | 1293 | =ff5ba22a2db64ba745374fb6f9790bc73a923a3e440733ddaad11d1981a9f040= |
+| =ImplementationGuide-hl7.fhir.au.core.json= | =https://hl7.org.au/fhir/core/1.0.0/package.tgz= | 74024 | =d8f1af4970962feb45c3ddff4cb5f745b9984f24e83aab1a6d1a3f4013ca29b4= |
+| =StructureDefinition-au-core-patient.json= | =https://hl7.org.au/fhir/core/1.0.0/StructureDefinition-au-core-patient.json= | 232474 | =d54424c6d6c7a779e1cb3428ddb4a8c03ebc0039f982791cae04b81cc5477a39= |
+
+The JSON files are retained byte-for-byte. Runtime source admission verifies
+byte count and SHA-256 before representation parsing. JSON parse success does not
+itself establish FHIR or AU Core conformance.
+
+The lazy materializer parses the admitted byte vector directly with Gerbil
+=std/text/json= =bytes->json-object=.  The generated XHTML under =text.div= is
+only a JSON string: no XHTML/XML parser is invoked, and that narrative is not
+retained in the materialized runtime artifact.
+
+XML is intentionally not vendored because the upstream XML represents the same
+canonical profile, version and constraint coverage.  A second representation is
+admitted only when it contributes distinct required coverage.

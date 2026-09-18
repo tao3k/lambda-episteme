@@ -88,18 +88,21 @@
          (map poo-flow-module-source-ref-value sources)
          '("packages/lambda-episteme/modules/decision-kind/interface.ss"
            "packages/lambda-episteme/modules/diataxis/interface.ss"
+           "packages/lambda-episteme/modules/healthcare/interface.ss"
            "packages/lambda-episteme/modules/ontology/interface.ss"))
         (check-equal?
          (map (lambda (source) (metadata-ref source 'module-key)) sources)
          '((custom . decision-kind)
            (custom . diataxis)
+           (custom . healthcare)
            (custom . ontology)))
         (check-equal?
          (map (lambda (source) (metadata-ref source 'module-layout)) sources)
-         '(poo-flow-module-v1 poo-flow-module-v1 poo-flow-module-v1))
+         '(poo-flow-module-v1 poo-flow-module-v1
+           poo-flow-module-v1 poo-flow-module-v1))
         (check-equal?
          (map (lambda (source) (metadata-ref source 'entrypoint-role)) sources)
-         '(interface interface interface))))
+         '(interface interface interface interface))))
 
     (composition-root-test-case "Lambda init uses the same source-neutral module declaration"
       (let* ((selections
@@ -121,6 +124,7 @@
          (map poo-flow-module-source-ref-value sources)
          '("packages/lambda-episteme/modules/decision-kind/interface.ss"
            "packages/lambda-episteme/modules/diataxis/interface.ss"
+           "packages/lambda-episteme/modules/healthcare/interface.ss"
            "packages/lambda-episteme/modules/ontology/interface.ss"))))
 
     (composition-root-test-case "an official registered name expands the trusted contribution"
@@ -130,14 +134,15 @@
               (poo-flow-module-selection-source-refs
                poo-flow-official-contribution-load-path
                selection)))
-        (check-equal? (length sources) 3)
+        (check-equal? (length sources) 4)
         (check-equal?
          (map poo-flow-module-source-ref-kind sources)
-         '(local local local))
+         '(local local local local))
         (check-equal?
          (map poo-flow-module-source-ref-value sources)
          '("packages/lambda-episteme/modules/decision-kind/interface.ss"
            "packages/lambda-episteme/modules/diataxis/interface.ss"
+           "packages/lambda-episteme/modules/healthcare/interface.ss"
            "packages/lambda-episteme/modules/ontology/interface.ss"))))
 
     (composition-root-test-case "a registered module name resolves one contributed module"

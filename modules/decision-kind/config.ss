@@ -1,9 +1,12 @@
-(import :poo-flow/src/module-system/declaration/interface
-        :poo-flow/lambda-episteme/modules/decision-kind/funs)
+;;; -*- Gerbil -*-
+;;; SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+;;;
+;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
+
+(import (only-in :poo-flow/src/modules/governance/funs
+                 poo-flow-governance-module-config)
+        "funs.ss")
 (export decision-kind-config)
 (def (decision-kind-config selection)
-  (unless (and (poo-flow-user-module-selection? selection)
-               (equal? (poo-flow-user-module-selection-key selection) '(custom . decision-kind))
-               (null? (poo-flow-user-module-selection-flags selection)))
-    (error "invalid decision-kind module selection"))
-  decision-kind-module)
+  (poo-flow-governance-module-config
+   selection 'decision-kind decision-kind-module))

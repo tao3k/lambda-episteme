@@ -243,7 +243,7 @@
   (let (local-path (path-expand path "."))
     (if (file-exists? local-path)
       local-path
-      (path-expand path "lambda-episteme"))))
+      (path-expand path "packages/lambda-episteme"))))
 
 (def ontology-test
   (test-suite

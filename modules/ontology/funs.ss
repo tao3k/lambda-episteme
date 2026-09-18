@@ -25,10 +25,10 @@
                  poo-flow-structural-impact-analyze)
         (only-in :poo-flow/src/modules/governance/funs
                  poo-flow-governance-evaluate)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/types
+        (only-in "types.ss"
                  ontology-case? ontology-case-composition-receipt?
                  ontology-profile? ontology-source?)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/objects
+        (only-in "objects.ss"
                  ontology-profile-project ontology-rule-evaluate
                  ontology-scenario-admits-profile?))
 
