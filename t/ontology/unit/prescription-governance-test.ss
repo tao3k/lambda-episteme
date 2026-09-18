@@ -159,8 +159,13 @@
        (check (.ref impact 'release-authorized?) => #f)))
 
    (test-case "pharmacology JSON is a typed round-trip boundary"
-     (let* ((root (if (file-exists? "modules/ontology/interface.ss")
-                    "." "lambda-episteme"))
+     (let* ((root
+             (cond
+              ((file-exists? "modules/ontology/interface.ss") ".")
+              ((file-exists?
+                "packages/lambda-episteme/modules/ontology/interface.ss")
+               "packages/lambda-episteme")
+              (else "lambda-episteme")))
             (evidence
              (healthcare-pharmacology-evidence-read-file
               (path-expand

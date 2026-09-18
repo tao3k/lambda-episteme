@@ -32,6 +32,18 @@ order and each =entry.resource= is the Validator's unmodified
 =OperationOutcome=.  The normal test path only imports this fixed evidence; it
 does not download packages or execute Java.
 
+The executable qualification entrypoint is:
+
+#+begin_src sh
+FHIR_VALIDATOR_JAR=/path/to/validator_cli.jar \
+  just check-healthcare-fhir-reference-validator
+#+end_src
+
+It verifies the JAR digest, streams Validator progress, and compares the
+complete decoded output Bundle.  The local FHIR package cache must already
+contain the pinned package closure; package acquisition is not part of this
+qualification gate.
+
 * SHA-256 receipt
 
 | Artifact | SHA-256 |

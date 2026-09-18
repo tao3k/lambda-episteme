@@ -14,6 +14,56 @@ Profiles solve reuse and controlled change: evidence, privacy, care-context,
 healing and medication-safety meaning can evolve independently, while each
 Case receipt records the exact effective closure it admitted.
 
+* AI-assisted legacy Standard migration
+
+The demand-loaded =au-legacy-interface-fhir-migration= Case implements one
+bounded Australian migration path:
+=HL7v2 2.5.1 ADT^A08 -> hl7.fhir.au.core@1.0.0 Patient=.  It does not resolve
+=latest= and it does not imply that the separately declared CDA or national
+service families are executable.
+
+The AI assistant follows a typed, evidence-bound workflow:
+
+1. inventory the exact legacy source snapshot and parser qualification;
+2. normalize through the =gerbil-parser=-owned lossless HL7v2 artifact;
+3. propose reviewed field mappings and identify every unmapped required field;
+4. assess identity-collision, semantic-drift and parallel-interface risks;
+5. generate an AU Core Patient candidate;
+6. submit that candidate to the deterministic FHIR Provider;
+7. explain conformance failures without changing the target edition;
+8. bind an independent human review to the exact proposal digest;
+9. recommend shadow validation and a phased cutover; and
+10. request migration admission from the typed policy gate.
+
+AI remains =advisory-only=.  Any AI authority escalation, unbound analysis,
+unresolved required mapping, target-edition drift, missing human approval or
+unbound conformance receipt fails closed.  Admission still does not authorize
+cutover: the application owns that decision and retains the legacy source
+snapshot and interface for rollback.
+
+The Healthcare Migration Feature extends the core Standards Governance
+Interface rather than adding an independent registry.  Its mandatory Slots are
+=authority-provider=, =human-authorization=, =formal-model=,
+=refinement-proof=, =impact-contract=, =conformance= and =audit-receipt=.
+=documentation=, =presentation-metadata=, =reference-implementation= and
+=non-authoritative-analysis= are optional enrichment only.  The Agent may write
+either class only through =.write-governance=; undeclared Slots, stale TLA+
+digests and mismatched vertical payloads are rejected.
+
+The migration assurance chain is concrete and stage-sensitive.  TLC checks the
+=HealthcareStandardMigration= transition system; the Lean refinement binds the
+exact TLA+ source digest; the impact contract rejects stale downstream proof;
+and Cedar accepts only the exact human reviewer, migration action and migration
+resource.  Review and admission accept qualified proof evidence.  Cutover
+requires every mandatory Slot to be =admitted=, including a fresh Cedar permit.
+The Case stores the Interface identity and relationship graph, while the
+Healthcare Standard Feature owns the executable POO Interface.
+
+The Case selects =AustraliaHealthcareStandardMigrationProfile= rather than the
+general Australia care-delivery Profile.  This keeps migration governance
+independent of Primary Care and Support at Home evidence while reusing the
+same Healthcare, Evidence, Privacy and exact Standard objects.
+
 The =post-operative-healing= Case currently selects three named compositions:
 
 - =common=: evidence and privacy;

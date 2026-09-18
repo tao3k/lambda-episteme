@@ -8,7 +8,8 @@
 
 (import (only-in :clan/poo/object .o)
         (only-in :poo-flow/src/feature-system/source-lock-feature
-                 SourceReference. SourceLockEntry. SourcesLock.))
+                 SourceReference. SourceLockEntry. SourcesLock.
+                 sources-lock-value))
 
 (export +poo-flow-fhir-r4-package-source-identity+
         +poo-flow-fhir-medication-request-source-identity+

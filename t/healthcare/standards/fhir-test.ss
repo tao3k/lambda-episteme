@@ -152,6 +152,28 @@
 
 (def standards-fhir-test
   (test-suite "Lambda Healthcare FHIR Standard Provider"
+    (test-case "capabilities separate bounded, reference, and unevaluated claims"
+      (check-equal?
+       (.ref (.ref FHIRValidationCapabilities 'bounded-structure) 'state)
+       'native-bounded)
+      (check-equal?
+       (.ref (.ref FHIRValidationCapabilities 'au-core-patient-reference)
+             'state)
+       'reference-qualified)
+      (let (syntax-capability
+            (.ref FHIRValidationCapabilities 'fhirpath-syntax))
+        (check-equal? (poo-flow-fhir-capability? syntax-capability) #t)
+        (check-equal? (.ref syntax-capability 'state) 'syntax-qualified)
+        (check-equal? (.ref syntax-capability 'owner) "gerbil-parser")
+        (check-equal? (length (.ref syntax-capability 'evidence-digests)) 2))
+      (for-each
+       (lambda (capability)
+         (check-equal? (poo-flow-fhir-capability? capability) #t)
+         (check-equal? (.ref capability 'state) 'not-evaluated))
+       (list (.ref FHIRValidationCapabilities 'general-fhirpath)
+             (.ref FHIRValidationCapabilities 'slicing)
+             (.ref FHIRValidationCapabilities 'terminology)
+             (.ref FHIRValidationCapabilities 'remote-reference-resolution))))
     (test-case "Healthcare composes the core Standards module as its public root"
       (let (standards (.ref HealthcareModule 'standards))
         (check-equal? (lambda-healthcare-module? HealthcareModule) #t)

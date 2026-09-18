@@ -16,7 +16,20 @@
         FHIRValidationExecutor
         FHIRMedicationRequestStandardProfile
         FHIRAUCorePatientStandardProfile
+        poo-flow-fhir-capability
         poo-flow-fhir-constraint)
+
+(def (poo-flow-fhir-capability identity-value capability-value state-value
+                               owner-value evidence-digests-value detail-value)
+  (validate
+   PooFlowFhirCapability
+   (.o kind: +poo-flow-fhir-capability-kind+
+       identity: identity-value
+       capability: capability-value
+       state: state-value
+       owner: owner-value
+       evidence-digests: evidence-digests-value
+       detail: detail-value)))
 
 (def FHIRStandardValidationExecutor
   (poo-clos-class

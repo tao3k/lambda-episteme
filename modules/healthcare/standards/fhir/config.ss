@@ -33,6 +33,7 @@
         AUCoreStandardRef
         FHIRStandardsCatalog
         FHIRValidationProfiles
+        FHIRValidationCapabilities
         FHIRValidationProvider
         poo-flow-fhir-validation-profile
         poo-flow-fhir-medication-request-constraints
@@ -44,6 +45,50 @@
   "hl7.fhir.r4.core@4.0.1/MedicationRequest")
 (def +poo-flow-fhir-au-core-patient-artifact-identity+
   "hl7.fhir.au.core@1.0.0/StructureDefinition/au-core-patient")
+
+;;; A bounded Provider and one reference fixture must not be projected as
+;;; blanket support for the whole FHIR conformance surface.
+(def FHIRValidationCapabilities
+  (.o bounded-structure:
+      (poo-flow-fhir-capability
+       "lambda-episteme/fhir/capability/bounded-structure/v1"
+       'bounded-structure 'native-bounded "lambda-healthcare" '()
+       "named structural constraints admitted by the selected closure")
+      au-core-patient-reference:
+      (poo-flow-fhir-capability
+       "lambda-episteme/fhir/capability/au-core-patient-reference/v1"
+       'au-core-patient-reference 'reference-qualified
+       "hl7.fhir.validator-cli"
+       '("sha256:0e53ab1d1a6f1e35f505255c0b8ce10a35fcf27e6e96b503640f784cd07e5ad6"
+         "sha256:a152b8d0656bbf8d61559dae318922550471db4f6026a6884b460eca0cc1337c")
+       "four AU Core Patient fixtures replayed by Validator 6.9.12")
+      fhirpath-syntax:
+      (poo-flow-fhir-capability
+       "lambda-episteme/fhir/capability/fhirpath-syntax/v1"
+       'fhirpath-syntax 'syntax-qualified "gerbil-parser"
+       '("sha256:cf2a7cf29475e29b1a9188fcabea77782db59c9309b200059b3ef3f781eaae13"
+         "sha256:0ea46f50855a85b6721fc425ecb5b4ba977b3f1cf3a68eb507b0e07c51d4d5ed")
+       "FHIRPath 2.0.0 normative syntax; no evaluation semantics")
+      general-fhirpath:
+      (poo-flow-fhir-capability
+       "lambda-episteme/fhir/capability/general-fhirpath/v1"
+       'general-fhirpath 'not-evaluated "gerbil-parser" '()
+       "syntax is qualified separately; no general evaluator is admitted")
+      slicing:
+      (poo-flow-fhir-capability
+       "lambda-episteme/fhir/capability/slicing/v1"
+       'slicing 'not-evaluated "lambda-healthcare" '()
+       "no complete slicing acceptance suite is admitted")
+      terminology:
+      (poo-flow-fhir-capability
+       "lambda-episteme/fhir/capability/terminology/v1"
+       'terminology 'not-evaluated "lambda-healthcare" '()
+       "the reference run uses tx n/a and makes no terminology claim")
+      remote-reference-resolution:
+      (poo-flow-fhir-capability
+       "lambda-episteme/fhir/capability/remote-reference-resolution/v1"
+       'remote-reference-resolution 'not-evaluated "lambda-healthcare" '()
+       "remote reference resolution is outside the bounded Provider")))
 
 (def fhir-r4-package-source-entry
   (poo-flow-fhir-source-lock-entry

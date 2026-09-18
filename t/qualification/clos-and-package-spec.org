@@ -1,5 +1,5 @@
 #+title: Lambda Episteme native package qualification
-#+date: 2026-09-17
+#+date: 2026-09-18
 
 * Current source boundary
 
@@ -19,10 +19,21 @@ checks that the selected ontology module resolves to the Episteme source owner.
 On 2026-09-17, verification overlapped edits from another session: Healthcare
 sources acquired new modification times while immediate build replays were in
 progress.  Those replays therefore cannot establish a =std/make= invalidation
-defect or a convergence count.  After source edits stopped and the dependency
-closure settled, the final build projected the same 42-target closure in 4.861
-seconds and emitted zero compile rows.  This is the valid final warm receipt;
-the overlapping and still-converging runs are excluded from performance claims.
+defect or a convergence count and are excluded from performance claims.
+
+A later controlled edit to the FHIR validator did expose a distinct native
+incremental-build limit.  The first invocation rebuilt the FHIR and Standards
+layer, the second rebuilt =healthcare/standards/interface.ss= and
+=healthcare/config.ss=, the third rebuilt =healthcare/interface.ss=, and the
+fourth emitted zero compile rows.  ASP's projected closure is dependency-first;
+Gerbil 0.18.2 =std/make= waits for direct dependencies but retains library
+timestamps while deciding dependent currentness.  POO Flow does not compensate
+with force builds, timestamp mutation, retries or a second scheduler.  Therefore
+single-invocation incremental convergence remains an upstream boundary rather
+than a completed optimization claim.
+
+The final stable warm build projected the same 42-target closure in 4.861
+seconds and emitted zero compile rows.
 
 The complete Lambda Scheme suite discovered eleven test files, dispatched
 eleven parallel batches and completed every batch.  The focused Governance
@@ -38,6 +49,34 @@ operation-count reduction.  The executable 10,000-node and 9,999-edge Scenario
 reported p95 =6.287813ms= and maximum =7.065773ms= across 20 samples, below its
 40ms target and 100ms maximum, with zero measured heap and live-memory growth
 after the benchmark GC precondition.
+
+* AI-assisted Healthcare Standard migration evidence
+
+The demand-loaded =au-legacy-interface-fhir-migration= Case now binds one exact
+=HL7v2 2.5.1 ADT^A08 -> hl7.fhir.au.core@1.0.0 Patient= path.  Its typed AI
+analysis retains the source snapshot, parser qualification, target edition,
+mapping evidence, unresolved required fields, assessed risks, advisory role and
+ordered workflow stages.  Admission recomputes the source qualification over
+the source, grammar and parser receipt digests and fails closed on evidence
+tampering, AI authority escalation, mapping gaps, target-edition drift, missing
+human approval or unbound conformance.
+
+On 2026-09-18, the focused Healthcare migration suite completed in
+=3.535758s=.  The complete Healthcare owner tree passed in =3.405485s=.  The complete Ontology
+owner tree, including the new migration Case and the 10,000-node indexed
+Scenario, completed its observed test operation in =29.565129s= with a
+heartbeat approximately every five seconds.  The root cross-repository
+qualification performed 19 checks from retained HL7v2 bytes through
+=gerbil-parser=, typed AI analysis, AU Core candidate validation, migration
+admission and Ontology composition; all passed.
+
+The contribution build projected 42 targets and completed its ASP/std-make
+projection in =4.520s=.  POO Flow's build then projected 157 targets in
+=24.108s= after adding the public config-discovery macro to =build.ss=.  The
+ordinary child User Interface config test subsequently passed from the
+installed macro and emitted a five-second heartbeat during its =9.283745s=
+operation.  POO Flow's own discovery-role and Doom-config tests also passed,
+proving that packaged contributor discovery does not change root UI discovery.
 
 * Limits
 

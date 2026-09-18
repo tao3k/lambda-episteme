@@ -1,0 +1,26 @@
+{
+  "Healthcare": {
+    "entityTypes": {
+      "MigrationReviewer": {},
+      "StandardMigration": {}
+    },
+    "actions": {
+      "approveStandardMigrationCutover": {
+        "appliesTo": {
+          "principalTypes": ["MigrationReviewer"],
+          "resourceTypes": ["StandardMigration"],
+          "context": {
+            "type": "Record",
+            "attributes": {
+              "migrationDigest": { "type": "String" },
+              "formalAssuranceDigest": { "type": "String" },
+              "humanReviewDigest": { "type": "String" },
+              "targetStandardEdition": { "type": "String" },
+              "aiAuthority": { "type": "Boolean" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

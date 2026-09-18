@@ -29,6 +29,10 @@
   (testing-test-selector
    'contains "qualification/healthcare-case-assurance.ss"))
 
+(def +lambda-episteme-healthcare-standard-migration-selector+
+  (testing-test-selector
+   'contains "healthcare-standard-migration-case-test.ss"))
+
 ;;; Cross-engine qualification loads Scheme, Cedar, TLA and Lean receipts in
 ;;; one isolated process. Its larger heap is a declarative per-test Profile,
 ;;; not a command-line exception or a wider default.
@@ -40,8 +44,11 @@
    (testing-interface-map-profile
     (testing-interface-map-profile
      (testing-interface-map-profile
-      +asp-testing-interface+
-      +lambda-episteme-healthcare-assurance-selector+
+      (testing-interface-map-profile
+       +asp-testing-interface+
+       +lambda-episteme-healthcare-assurance-selector+
+       +lambda-episteme-healthcare-assurance-memory-profile+)
+      +lambda-episteme-healthcare-standard-migration-selector+
       +lambda-episteme-healthcare-assurance-memory-profile+)
      +lambda-episteme-atomic-test-selector+
      +testing-process-isolation-profile+)

@@ -7,42 +7,11 @@
 ;;; Included by sources.ss after the public Feature prototypes.
 
 (def FHIRSourcesLock
-  (.o (:: @ SourcesLock.)
-      lock-id: "lambda-episteme/healthcare/fhir/sources"
-      revision: "hl7.fhir.r4.core@4.0.1+hl7.fhir.au.base@5.0.0+hl7.fhir.au.core@1.0.0"
-      digest: "sha256:ef5df6cd03d1b1bbfebddc7e9f2ec5186334d4dc358c3f8c17c218ce734f3d90"
-      entries:
+  (sources-lock-value
+      "lambda-episteme/healthcare/fhir/sources"
+      "hl7.fhir.r4.core@4.0.1+hl7.fhir.au.base@5.0.0+hl7.fhir.au.core@1.0.0"
+      "sha256:7aa3bb08a448f7e0d4ecedc41e278b13b86a4a5c24d2173dfceb642835eb0c04"
       (list
-       (.o (:: @ SourceLockEntry.)
-           identity: "hl7.fhir.r4.core@4.0.1/source/package.json"
-           path: "modules/healthcare/standards/fhir/sources/hl7.fhir.r4.core/4.0.1/package.json"
-           canonical-uri: "https://packages2.fhir.org/packages/hl7.fhir.r4.core/4.0.1"
-           exact-version: "4.0.1"
-           representation: 'json
-           digest: "sha256:7614377a54db343e48a9b3b862114f9f63ad1d5f746f6f0f7af68e55ac81c6f7"
-           size-bytes: 434
-           metadata: '((authority . hl7-international) (package . "hl7.fhir.r4.core") (artifact . "package.json") (archive-sha256 . "b090bf929e1f665cf2c91583720849695bc38d2892a7c5037c56cb00817fb091"))
-           )
-       (.o (:: @ SourceLockEntry.)
-           identity: "hl7.fhir.r4.core@4.0.1/source/StructureDefinition-MedicationRequest"
-           path: "modules/healthcare/standards/fhir/sources/hl7.fhir.r4.core/4.0.1/StructureDefinition-MedicationRequest.json"
-           canonical-uri: "https://hl7.org/fhir/R4/StructureDefinition-MedicationRequest.json"
-           exact-version: "4.0.1"
-           representation: 'json
-           digest: "sha256:46b8f013a124b14d6d81ab36d149ab6579ab53d3cf4a3d416dfca939d7a90700"
-           size-bytes: 119646
-           metadata: '((authority . hl7-international) (package . "hl7.fhir.r4.core") (artifact . "StructureDefinition-MedicationRequest") (archive-sha256 . "b090bf929e1f665cf2c91583720849695bc38d2892a7c5037c56cb00817fb091"))
-           )
-       (.o (:: @ SourceLockEntry.)
-           identity: "hl7.fhir.au.base@5.0.0/source/package.json"
-           path: "modules/healthcare/standards/fhir/sources/hl7.fhir.au.base/5.0.0/package.json"
-           canonical-uri: "https://hl7.org.au/fhir/5.0.0/package.tgz#package/package.json"
-           exact-version: "5.0.0"
-           representation: 'json
-           digest: "sha256:04734e48d98e25d2d45fc74ffd34caf670e51af3b3955eb06ac79b08df2136d4"
-           size-bytes: 901
-           metadata: '((authority . hl7-australia) (package . "hl7.fhir.au.base") (artifact . "package.json") (archive-sha256 . "168a71b4fcfdfab57256739f510abd593f06fdd7eb0918a7168bc087e77094d4"))
-           )
        (.o (:: @ SourceLockEntry.)
            identity: "hl7.fhir.au.base@5.0.0/source/ImplementationGuide-hl7.fhir.au.base"
            path: "modules/healthcare/standards/fhir/sources/hl7.fhir.au.base/5.0.0/ImplementationGuide-hl7.fhir.au.base.json"
@@ -54,14 +23,14 @@
            metadata: '((authority . hl7-australia) (package . "hl7.fhir.au.base") (artifact . "ImplementationGuide-hl7.fhir.au.base") (archive-sha256 . "168a71b4fcfdfab57256739f510abd593f06fdd7eb0918a7168bc087e77094d4"))
            )
        (.o (:: @ SourceLockEntry.)
-           identity: "hl7.fhir.au.core@1.0.0/source/package.json"
-           path: "modules/healthcare/standards/fhir/sources/hl7.fhir.au.core/1.0.0/package.json"
-           canonical-uri: "https://hl7.org.au/fhir/core/1.0.0/package.tgz#package/package.json"
-           exact-version: "1.0.0"
+           identity: "hl7.fhir.au.base@5.0.0/source/package.json"
+           path: "modules/healthcare/standards/fhir/sources/hl7.fhir.au.base/5.0.0/package.json"
+           canonical-uri: "https://hl7.org.au/fhir/5.0.0/package.tgz#package/package.json"
+           exact-version: "5.0.0"
            representation: 'json
-           digest: "sha256:ff5ba22b95ae19b135e358ea5ce87ef51bf75177422263a5d098ac74afba764a"
-           size-bytes: 1293
-           metadata: '((authority . hl7-australia) (package . "hl7.fhir.au.core") (artifact . "package.json") (archive-sha256 . "26b3e5ea603957ca7cbf3cd04a171fe689bf180a03364dcfe0d576346c311a60"))
+           digest: "sha256:04734e48d98e25d2d45fc74ffd34caf670e51af3b3955eb06ac79b08df2136d4"
+           size-bytes: 901
+           metadata: '((authority . hl7-australia) (package . "hl7.fhir.au.base") (artifact . "package.json") (archive-sha256 . "168a71b4fcfdfab57256739f510abd593f06fdd7eb0918a7168bc087e77094d4"))
            )
        (.o (:: @ SourceLockEntry.)
            identity: "hl7.fhir.au.core@1.0.0/source/ImplementationGuide-hl7.fhir.au.core"
@@ -82,5 +51,35 @@
            digest: "sha256:d54424c6d6c7a779e1cb3428ddb4a8c03ebc0039f982791cae04b81cc5477a39"
            size-bytes: 232474
            metadata: '((authority . hl7-australia) (package . "hl7.fhir.au.core") (artifact . "StructureDefinition-au-core-patient") (archive-sha256 . "26b3e5ea603957ca7cbf3cd04a171fe689bf180a03364dcfe0d576346c311a60"))
+           )
+       (.o (:: @ SourceLockEntry.)
+           identity: "hl7.fhir.au.core@1.0.0/source/package.json"
+           path: "modules/healthcare/standards/fhir/sources/hl7.fhir.au.core/1.0.0/package.json"
+           canonical-uri: "https://hl7.org.au/fhir/core/1.0.0/package.tgz#package/package.json"
+           exact-version: "1.0.0"
+           representation: 'json
+           digest: "sha256:ff5ba22b95ae19b135e358ea5ce87ef51bf75177422263a5d098ac74afba764a"
+           size-bytes: 1293
+           metadata: '((authority . hl7-australia) (package . "hl7.fhir.au.core") (artifact . "package.json") (archive-sha256 . "26b3e5ea603957ca7cbf3cd04a171fe689bf180a03364dcfe0d576346c311a60"))
+           )
+       (.o (:: @ SourceLockEntry.)
+           identity: "hl7.fhir.r4.core@4.0.1/source/StructureDefinition-MedicationRequest"
+           path: "modules/healthcare/standards/fhir/sources/hl7.fhir.r4.core/4.0.1/StructureDefinition-MedicationRequest.json"
+           canonical-uri: "https://hl7.org/fhir/R4/StructureDefinition-MedicationRequest.json"
+           exact-version: "4.0.1"
+           representation: 'json
+           digest: "sha256:46b8f013a124b14d6d81ab36d149ab6579ab53d3cf4a3d416dfca939d7a90700"
+           size-bytes: 119646
+           metadata: '((authority . hl7-international) (package . "hl7.fhir.r4.core") (artifact . "StructureDefinition-MedicationRequest") (archive-sha256 . "b090bf929e1f665cf2c91583720849695bc38d2892a7c5037c56cb00817fb091"))
+           )
+       (.o (:: @ SourceLockEntry.)
+           identity: "hl7.fhir.r4.core@4.0.1/source/package.json"
+           path: "modules/healthcare/standards/fhir/sources/hl7.fhir.r4.core/4.0.1/package.json"
+           canonical-uri: "https://packages2.fhir.org/packages/hl7.fhir.r4.core/4.0.1"
+           exact-version: "4.0.1"
+           representation: 'json
+           digest: "sha256:7614377a54db343e48a9b3b862114f9f63ad1d5f746f6f0f7af68e55ac81c6f7"
+           size-bytes: 434
+           metadata: '((authority . hl7-international) (package . "hl7.fhir.r4.core") (artifact . "package.json") (archive-sha256 . "b090bf929e1f665cf2c91583720849695bc38d2892a7c5037c56cb00817fb091"))
            ))
-      metadata: '((authority . hl7-international+hl7-australia) (standard-family . fhir) (packages "hl7.fhir.r4.core@4.0.1" "hl7.fhir.au.base@5.0.0" "hl7.fhir.au.core@1.0.0"))))
+      '((authority . hl7-international+hl7-australia) (standard-family . fhir) (packages "hl7.fhir.r4.core@4.0.1" "hl7.fhir.au.base@5.0.0" "hl7.fhir.au.core@1.0.0"))))
