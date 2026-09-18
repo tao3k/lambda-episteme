@@ -41,7 +41,6 @@ SHA-256 of its contribution object owner:
 | Query source | SHA-256 |
 |--------------+---------|
 | modules/diataxis/document-kinds.gql | d36109a9c4cf1773a0bbb4c6aa3c1487127ff4716a8e7f333ebe2bd7bf647884 |
-| modules/adr/expired-references.gql | 51571bbbfc8192c9445bcea19543354b0f41b08f9cc3073c8bd91ffb998ff677 |
 | modules/decision-kind/witnesses.gql | c42936c117d49d3c0e02f7cf86a9492615d37908adeb4f2107037a84a993322b |
 
 * Limits

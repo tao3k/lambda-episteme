@@ -1,0 +1,8 @@
+{
+  "resourceType": "Observation",
+  "id": "poo-flow-invalid",
+  "status": "final",
+  "code": {
+    "text": "not a MedicationRequest"
+  }
+}

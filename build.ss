@@ -14,16 +14,11 @@
 
 (def +lambda-episteme-public-entry-modules+
   '("interface.ss"
-    "modules/adr/interface.ss"
     "modules/decision-kind/interface.ss"
     "modules/diataxis/interface.ss"
-    "modules/gitops/interface.ss"
     "modules/healthcare/interface.ss"
     "modules/ontology/interface.ss"
-    "modules/sdlc/interface.ss"
-    "user-interface/scenarios/healthcare/profiles/regions/australia.ss"
-    "user-interface/init.ss"
-    "user-interface/config.ss"))
+    "user-interface/init.ss"))
 
 (asp-gerbil-scheme-package-spec!
  (lambda-episteme-package @ asp-gerbil-scheme-library-package-prototype)

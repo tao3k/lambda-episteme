@@ -1,19 +1,22 @@
 ;;; -*- Gerbil -*-
-;;; Final User Composition: provider + environment Profiles + SDLC Standard.
-(import :poo-flow/src/user-interface/config-discovery-syntax)
-(export github-gitops-sdlc)
+;;; SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+;;;
+;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
-(use-composition github-gitops-sdlc
-  (modules
-    (use-module funflow as github
-      (profile actions))
-    (use-module gitops as delivery
-      (profile dev)
-      (profile staging)
-      (profile production))
-    (use-module sdlc as sdlc
-      (profile nasa-7150-2d)))
+;;; Final User Composition. Profiles and Scenarios are discovered from the
+;;; sibling trees by the POO Flow-owned macro; no wrapper or import registry is
+;;; maintained here.
+(import :poo-flow/src/user-interface/config-discovery-syntax)
+
+(use-composition healthcare-australia
+  (use-module healthcare as care
+    (profile EvidenceProfile)
+    (profile PrivacyProfile)
+    (profile HealthcareBaseProfile)
+    (profile AustraliaHealthcareRegionProfile))
   (compose
-    (profile github actions)
-    (profiles delivery dev staging production)
-    (profile sdlc nasa-7150-2d)))
+    (profiles care
+      EvidenceProfile
+      PrivacyProfile
+      HealthcareBaseProfile
+      AustraliaHealthcareRegionProfile)))

@@ -1,8 +1,10 @@
-(import :poo-flow/lambda-episteme/modules/diataxis/types)
-(export (import: :poo-flow/lambda-episteme/modules/diataxis/types))
-(import :poo-flow/lambda-episteme/modules/diataxis/objects)
-(export (import: :poo-flow/lambda-episteme/modules/diataxis/objects))
-(import :poo-flow/lambda-episteme/modules/diataxis/funs)
-(export (import: :poo-flow/lambda-episteme/modules/diataxis/funs))
-(import :poo-flow/lambda-episteme/modules/diataxis/config)
-(export (import: :poo-flow/lambda-episteme/modules/diataxis/config))
+;;; -*- Gerbil -*-
+;;; SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+;;;
+;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
+
+(import "types.ss" "objects.ss" "funs.ss" "config.ss")
+(export (import: "types.ss")
+        (import: "objects.ss")
+        (import: "funs.ss")
+        (import: "config.ss"))

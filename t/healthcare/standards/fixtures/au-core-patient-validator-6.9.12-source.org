@@ -1,0 +1,52 @@
+#+title: AU Core Patient HL7 Validator 6.9.12 Evidence
+#+SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+#+SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
+
+* Fixed authority
+
+- Validator release: =hl7.fhir.validator-cli 6.9.12=
+- Validator JAR: =https://github.com/hapifhir/org.hl7.fhir.core/releases/download/6.9.12/validator_cli.jar=
+- Validator JAR SHA-256: =0e53ab1d1a6f1e35f505255c0b8ce10a35fcf27e6e96b503640f784cd07e5ad6=
+- FHIR release: =4.0.1=
+- Implementation Guide package: =hl7.fhir.au.core#1.0.0=
+- Profile: =http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient=
+- Terminology mode: =n/a=; terminology-dependent claims are outside this fixture.
+
+* Reproduction
+
+#+begin_src sh
+java -jar validator_cli.jar \
+  au-core-patient-valid.json \
+  au-core-patient-data-absent.json \
+  au-core-patient-invalid.json \
+  au-core-patient-xor-conflict.json \
+  -version 4.0.1 \
+  -ig hl7.fhir.au.core#1.0.0 \
+  -profile http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient \
+  -tx n/a \
+  -output au-core-patient-validator-6.9.12-operation-outcomes.json
+#+end_src
+
+The output is a FHIR collection Bundle.  Entries retain the command input
+order and each =entry.resource= is the Validator's unmodified
+=OperationOutcome=.  The normal test path only imports this fixed evidence; it
+does not download packages or execute Java.
+
+* SHA-256 receipt
+
+| Artifact | SHA-256 |
+|-
+| =au-core-patient-valid.json= | =afdab4cec26626d5db6590adbc53e7a26090a212a84fe5b13faf7031ee692869= |
+| =au-core-patient-data-absent.json= | =ab8235ce3b64830b3a0b42279c4549ae21401d2e96bf2abe7d81d3b78e1ad148= |
+| =au-core-patient-invalid.json= | =da8a800d54457032e5c0456e793b6c75077867a38a4331dd932fba53d39024cf= |
+| =au-core-patient-xor-conflict.json= | =33a94d7ed72c8bec194060918a1fa8fcb40146468ce0ee8718b307e8b04e41e1= |
+| =au-core-patient-validator-6.9.12-operation-outcomes.json= | =a152b8d0656bbf8d61559dae318922550471db4f6026a6884b460eca0cc1337c= |
+
+* Expected outcomes
+
+| Fixture | Validator outcome |
+|-
+| valid | valid; information and best-practice warning only |
+| data absent reason | valid; information and best-practice warning only |
+| incomplete identifier and name | invalid |
+| content plus data absent reason | invalid |

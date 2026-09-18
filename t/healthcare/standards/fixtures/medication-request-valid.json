@@ -1,0 +1,12 @@
+{
+  "resourceType": "MedicationRequest",
+  "id": "poo-flow-valid",
+  "status": "active",
+  "intent": "order",
+  "medicationCodeableConcept": {
+    "text": "amoxicillin"
+  },
+  "subject": {
+    "reference": "Patient/example"
+  }
+}

@@ -110,9 +110,7 @@ detail.
 #+begin_example
 modules/
   ontology/                  semantic mechanism
-  sdlc/                      lifecycle and standards mechanism
-  gitops/                    change/check/decision mechanism
-  adr/ diataxis/ decision-kind/
+  diataxis/ decision-kind/
 
 user-interface/
   init.ss                    selected Modules and feature flags
@@ -212,6 +210,13 @@ Sources follow the same scope model as Profiles:
 A Source is explicit authority metadata, not an implicit file scan.  Its scope
 and ownership remain visible in the resulting composition.
 
+Checked-in external bytes use POO Flow's shared Sources Lock Feature.  The
+editable =sources.ss= declares identity, path, canonical URI, exact version and
+representation; =source.lock.ss= is generated from those declarations and the
+actual bytes.  Domain loaders consume the generated lock and attach its
+verification receipt to the Standard artifact.  They do not repeat digest,
+size, path or URI constants.
+
 * Programming model
 
 The implementation uses the smallest native abstraction that matches the
@@ -285,9 +290,15 @@ Detailed contribution rules are in [[file:CONTRIBUTING.org][CONTRIBUTING.org]].
 * Build and test
 
 =gerbil.pkg= declares the native package identity
-=poo-flow/lambda-episteme= only.  Lambda Episteme has no =build.ss= and does not
-own a second PackageSpec.  Its =justfile= delegates Scheme work to POO Flow's
-official build and test adapters.
+=poo-flow/lambda-episteme=.  The sole =build.ss= is a declarative package entry
+derived from ASP's library PackageSpec prototype; it does not implement a
+compiler, scheduler, scanner or cache.  Its =justfile= delegates Scheme work to
+POO Flow's official build and test adapters.
+
+The mutable User Composition in =user-interface/config.ss= is not a production
+package root.  Consumers and the atomic User Interface lane compile it on
+demand, which keeps Case and Profile selection out of the reusable library
+closure.
 
 From this directory:
 
@@ -296,6 +307,7 @@ just build-scheme
 just test-scheme ontology
 just test-scheme-atomic ontology unit/ontology-test.ss
 just test-scheme-all
+just update-fhir-sources-lock
 #+end_src
 
 Use =test-scheme= for one module tree, =test-scheme-atomic= for one exact test
@@ -310,11 +322,9 @@ debugging and tracing are declarative ASP Testing Profiles around the native
 gxtest lifecycle.  Every =*-test.ss= is mapped to ASP's process-isolation
 Profile, so its heap limit applies to that file rather than a multi-file batch.
 The source-admission suite additionally uses ASP's serial-resource Profile and
-runs after the parallel lane.  Its scope is the imported native
-=t/sdlc/build-root.ss= graph already prepared by =gxtest=; it never scans the
-test directory, rebuilds a source catalog, or launches an outer closure process
-per file.  With =GERBIL_BUILD_VERBOSE=1=, the POO Flow Observability extension
-emits per-operation receipts and 15-second heartbeats for a stuck native batch.
+runs after the parallel lane. With =GERBIL_BUILD_VERBOSE=1=, the POO Flow
+Observability extension emits
+per-operation receipts and 15-second heartbeats for a stuck native batch.
 
 The parent checkout owns locked dependencies, =std/make= handoff and build
 parallelism.  =GERBIL_BUILD_CORES= is inherited by that build environment; this
@@ -327,10 +337,6 @@ obligations.  It does not authenticate a producer, execute an external service,
 certify regulatory compliance or authorize release by itself.  Those effects
 belong to explicitly configured host Providers and independently tested
 application boundaries.
-
-The SDLC module supports multiple Standards.  NASA NPR 7150.2D is one Standard
-Profile with a complete review surface, not the identity of SDLC and not an
-automatic certification claim.  See [[file:modules/sdlc/README.org][the SDLC ownership and qualification notes]].
 
 Historical RDF registries, SQL policies, Python alignment tests and Wendao
 command recipes remain migration inputs for legacy consumers.  New Scheme

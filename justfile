@@ -161,17 +161,20 @@ test: build-wendao test-python-align
 
 # Source-module lanes: consume installed POO Flow, never build a superproject.
 build-scheme:
-    cd '{{ self_root }}/..' && just build-contribute lambda-episteme
+    cd '{{ self_root }}/../..' && just build-contribute lambda-episteme
 
-test-scheme module="sdlc":
+test-scheme module="ontology":
     echo "[lambda-episteme-test] phase=module-selected module={{ module }}"
-    cd '{{ self_root }}/..' && just test-contribute lambda-episteme "{{ module }}"
+    cd '{{ self_root }}/../..' && just test-contribute lambda-episteme "{{ module }}"
 
-test-scheme-atomic module="sdlc" test_file="unit/nasa-certification-test.ss":
+test-scheme-atomic module="ontology" test_file="unit/ontology-test.ss":
     echo "[lambda-episteme-test] phase=file-selected module={{ module }} test={{ test_file }}"
-    cd '{{ self_root }}/..' && just test-contribute-atomic lambda-episteme "{{ module }}" "{{ test_file }}"
+    cd '{{ self_root }}/../..' && just test-contribute-atomic lambda-episteme "{{ module }}" "{{ test_file }}"
 
 test-scheme-all:
     echo "[lambda-episteme-test] phase=module-selected module=all"
-    cd '{{ self_root }}/..' && just build-contribute lambda-episteme
-    cd '{{ self_root }}/..' && GERBIL_PATH="$PWD/.gerbil/contributions/lambda-episteme/test" GERBIL_LOADPATH="$PWD/.gerbil/contributions/lambda-episteme/test/lib:$PWD/.gerbil/lib" gxi ./lambda-episteme/unit-tests.ss
+    cd '{{ self_root }}/../..' && just build-contribute lambda-episteme
+    cd '{{ self_root }}/../..' && GERBIL_PATH="$PWD/.gerbil/contributions/lambda-episteme/test" GERBIL_LOADPATH="$PWD/.gerbil/contributions/lambda-episteme/test/lib:$PWD/.gerbil/lib" env -u SDKROOT gxi ./packages/lambda-episteme/unit-tests.ss
+
+update-fhir-sources-lock:
+    cd '{{ self_root }}/../..' && GERBIL_BUILD_VERBOSE=1 GERBIL_PATH="$PWD/.gerbil/contributions/lambda-episteme/source-lock-tool" GERBIL_LOADPATH="$PWD/packages/lambda-episteme:$PWD/.gerbil/lib" timeout --foreground --signal=TERM --kill-after=3s 30s gerbil interactive packages/lambda-episteme/tools/update-fhir-sources-lock.ss packages/lambda-episteme

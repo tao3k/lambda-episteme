@@ -52,8 +52,8 @@
       imports: (list MissingCaseProfile)))
 
 (def broken-import-composition
-  (poo-flow-composition-object/profiles
-   'broken-import '() (list BrokenImportProfile) '()))
+  (poo-flow-scenario-case
+   'broken-import '() (list BrokenImportProfile) '() '()))
 
 (def ReverseScopeProfile
   (.o (:: @ EvidenceProfile)
@@ -62,11 +62,11 @@
       imports: (list HealingProfile)))
 
 (def reverse-scope-composition
-  (poo-flow-composition-object/profiles
+  (poo-flow-scenario-case
    'reverse-scope '()
    (list EvidenceProfile HealthcareBaseProfile HealingProfile
          ReverseScopeProfile)
-   '()))
+   '() '()))
 
 (def ConflictingProfile
   (.o (:: @ HealthcareBaseProfile)
@@ -77,11 +77,11 @@
       (list "lambda-episteme/ontology/healthcare/medication-safety")))
 
 (def conflicting-composition
-  (poo-flow-composition-object/profiles
+  (poo-flow-scenario-case
    'conflicting '()
    (list EvidenceProfile PrivacyProfile HealthcareBaseProfile
          MedicationSafetyProfile ConflictingProfile)
-   '()))
+   '() '()))
 
 (.def (UnmitigatedMedicationSafetyProfile @ MedicationSafetyProfile)
   (identity "lambda-episteme/ontology/healthcare/medication-safety/unmitigated")
@@ -99,11 +99,11 @@
           "evidence:medication-reconciliation-missing"))))))
 
 (def unmitigated-medication-composition
-  (poo-flow-composition-object/profiles
+  (poo-flow-scenario-case
    'unmitigated-medication '()
    (list EvidenceProfile PrivacyProfile HealthcareBaseProfile
          UnmitigatedMedicationSafetyProfile)
-   '()))
+   '() '()))
 
 (def cedar-test-digest
   (string-append "sha256:" (make-string 64 #\0)))
@@ -133,10 +133,10 @@
             projection-kind: 'healthcare-custom))))
 
 (def custom-projection-composition
-  (poo-flow-composition-object/profiles
+  (poo-flow-scenario-case
    'custom-projection '()
    (list EvidenceProfile HealthcareBaseProfile CustomProjectionProfile)
-   '()))
+   '() '()))
 
 (def StrictHealthcareScenario
   (.o (:: @ HealthcareScenario)
@@ -159,10 +159,10 @@
 (.set! CyclicProfileA imports (list CyclicProfileB))
 
 (def cyclic-composition
-  (poo-flow-composition-object/profiles
+  (poo-flow-scenario-case
    'cyclic '()
    (list EvidenceProfile HealthcareBaseProfile CyclicProfileA CyclicProfileB)
-   '()))
+   '() '()))
 
 (def BrokenSemanticVocabulary
   (ontology-vocabulary
@@ -179,10 +179,10 @@
       terms: (ontology-vocabulary-concept-identities BrokenSemanticVocabulary)))
 
 (def broken-semantic-composition
-  (poo-flow-composition-object/profiles
+  (poo-flow-scenario-case
    'broken-semantics '()
    (list EvidenceProfile HealthcareBaseProfile BrokenSemanticProfile)
-   '()))
+   '() '()))
 
 (def (test-ontology-case case-id-value scenario-value compositions-value
                          sources-value graph-value)
@@ -243,7 +243,7 @@
   (let (local-path (path-expand path "."))
     (if (file-exists? local-path)
       local-path
-      (path-expand path "lambda-episteme"))))
+      (path-expand path "packages/lambda-episteme"))))
 
 (def ontology-test
   (test-suite
@@ -281,7 +281,7 @@
    (test-case "one declarative Case slot closes named Profile compositions"
      (check (object? (.ref PostOperativeHealingCase '.use-composition)) => #t)
      (check (length post-operative-healing-compositions) => 3)
-     (check (map poo-flow-composition-name
+     (check (map poo-flow-scenario-case-name
                  post-operative-healing-compositions)
             => '(common healthcare medication))
      (check (ontology-case-composition-receipt?

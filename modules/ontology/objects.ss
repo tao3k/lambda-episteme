@@ -4,7 +4,8 @@
 
 (import (only-in :clan/poo/object .all-slots .o .ref object?)
         (only-in :clan/poo/mop .defgeneric)
-        (only-in :std/srfi/1 filter find)
+        (only-in :std/misc/hash hash-get hash-put!)
+        (only-in :std/srfi/1 filter)
         (only-in :poo-flow/src/graph/algorithms
                  poo-flow-graph-cycle-path)
         (only-in :poo-flow/src/graph/types
@@ -13,14 +14,16 @@
                  poo-flow-graph-edges poo-flow-graph-node-id
                  poo-flow-graph-node-payload poo-flow-graph-nodes)
         (only-in :poo-flow/src/module-system/profile-composition/interface
-                 poo-flow-composition-object/profiles)
+                 poo-flow-scenario-case)
         (only-in :poo-flow/src/modules/authorization/types
                  poo-flow-authorization-capability?)
         (only-in :poo-flow/src/modules/governance/objects
                  PooFlowGovernanceProfile.
                  poo-flow-governance-source
                  poo-flow-governance-threat-model)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/types
+        (only-in :poo-flow/src/utilities/functional
+                 poo-flow-filter-map)
+        (only-in "types.ss"
                  ontology-concept? ontology-profile? ontology-relation?
                  ontology-rule? ontology-query?
                  ontology-scenario? ontology-source? ontology-vocabulary?))
@@ -60,12 +63,13 @@
     (error "Case .use-composition must be a POO object" declarations))
   (map
    (lambda (composition-name)
-     (poo-flow-composition-object/profiles
+     (poo-flow-scenario-case
       composition-name
       '()
       (ontology-declaration-values
        (.ref declarations composition-name)
        (list '.use-composition composition-name))
+      '()
       '()))
    (.all-slots declarations)))
 
@@ -158,29 +162,34 @@
             .evaluate:
             (lambda (rule graph)
               (let ((nodes (poo-flow-graph-nodes graph))
-                    (edges (poo-flow-graph-edges graph)))
-                (filter values
-                        (map
-                         (lambda (node)
-                           (and
-                            (eq? (poo-flow-graph-node-payload node)
-                                 (.ref rule 'concept))
-                            (not
-                             (find
-                              (lambda (edge)
-                                (and
-                                 (eq? (poo-flow-graph-edge-kind edge)
-                                      (.ref rule 'relation))
-                                 (eq? (if (eq? (.ref rule 'position) 'source)
-                                        (poo-flow-graph-edge-from edge)
-                                        (poo-flow-graph-edge-to edge))
-                                      (poo-flow-graph-node-id node))))
-                              edges))
-                            (ontology-rule-diagnostic
-                             rule 'required-relation-missing
-                             (list 'graph (poo-flow-graph-node-id node))
-                             (.ref rule 'relation))))
-                         nodes))))
+                    (edges (poo-flow-graph-edges graph))
+                    (relation (.ref rule 'relation))
+                    (position (.ref rule 'position))
+                    (covered-node-ids (make-hash-table)))
+                ;; Build the selected relation/position index once.  The old
+                ;; node-by-node edge scan was O(V*E) for large Case graphs.
+                (for-each
+                 (lambda (edge)
+                   (when (eq? (poo-flow-graph-edge-kind edge) relation)
+                     (hash-put!
+                      covered-node-ids
+                      (if (eq? position 'source)
+                        (poo-flow-graph-edge-from edge)
+                        (poo-flow-graph-edge-to edge))
+                      #t)))
+                 edges)
+                (poo-flow-filter-map
+                 (lambda (node)
+                   (and
+                    (eq? (poo-flow-graph-node-payload node)
+                         (.ref rule 'concept))
+                    (not (hash-get covered-node-ids
+                                   (poo-flow-graph-node-id node)))
+                    (ontology-rule-diagnostic
+                     rule 'required-relation-missing
+                     (list 'graph (poo-flow-graph-node-id node))
+                     relation)))
+                 nodes)))
             .project:
             (lambda (rule)
               (.o kind: 'rule identity: (.ref rule 'identity)

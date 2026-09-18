@@ -2,7 +2,9 @@
 ;;;
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
-(import (only-in :clan/poo/object .def .o)
+(import (only-in :clan/poo/object .def .o .ref)
+        (only-in :poo-flow/lambda-episteme/modules/healthcare/interface
+                 HealthcareModule)
         (only-in :poo-flow/src/modules/governance/objects
                  poo-flow-governance-precondition
                  poo-flow-governance-threat)
@@ -16,6 +18,21 @@
                  SupportAtHomeProfile))
 
 (export AustraliaHealthcareRegionProfile)
+
+(def AustraliaHealthcareStandards
+  (.ref HealthcareModule 'standards))
+
+(def AustraliaHealthcareStandardEditions
+  (.ref AustraliaHealthcareStandards 'editions))
+
+(def AustraliaMedicationRequestStandardProfile
+  (.ref (.ref AustraliaHealthcareStandards 'profiles) 'medication-request))
+(def AustraliaLegacyInterfaceMigrationFeature
+  (.ref (.ref AustraliaHealthcareStandards 'features) 'migration))
+(def AustraliaLegacyInterfaceMigrationFixture
+  (.ref (.ref AustraliaLegacyInterfaceMigrationFeature 'fixtures) 'australia))
+(def AustraliaLegacyInterfaceMigration
+  (.ref AustraliaLegacyInterfaceMigrationFixture 'landscape))
 
 ;;; A Region owns jurisdictional evidence and compliance deltas.  The care
 ;;; journey and its semantic vocabulary remain reusable across jurisdictions.
@@ -65,6 +82,28 @@
        jurisdiction-code: 'AU
        primary-care-program: 'mymedicare
        home-support-program: 'support-at-home))
+  ;; Lambda owns Healthcare/FHIR meaning and binds exact Standard refs.  POO
+  ;; Flow owns only the domain-neutral Standards contracts and lazy machinery.
+  (standard-requirements
+   (list (.ref AustraliaHealthcareStandardEditions 'fhir-r4)
+         (.ref AustraliaHealthcareStandardEditions 'au-base)
+         (.ref AustraliaHealthcareStandardEditions 'au-core)))
+  (standard-mappings
+   (.o medication-order:
+       (.o domain-identity: "lambda-episteme/healthcare/medication-order"
+           standard-profile:
+           (.ref AustraliaMedicationRequestStandardProfile 'identity)
+           standard-edition: "hl7.fhir.r4.core@4.0.1")
+       legacy-patient-interface:
+       (.o domain-identity:
+           "lambda-episteme/healthcare/migration/legacy-patient"
+           source-interfaces:
+           (.ref AustraliaLegacyInterfaceMigration 'legacy-interfaces)
+           target-profile:
+           (.ref AustraliaLegacyInterfaceMigration 'target-profile)
+           ai-role: (.ref AustraliaLegacyInterfaceMigration 'ai-role)
+           authorization-owner:
+           (.ref AustraliaLegacyInterfaceMigration 'authorization-owner))))
   (.add-capability (.o))
   (.add-query (.o))
   (.assess-governance

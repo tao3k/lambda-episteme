@@ -13,10 +13,10 @@
                  poo-flow-graph-node-id poo-flow-graph-node-payload
                  poo-flow-graph-node-metadata poo-flow-graph-nodes)
         (only-in :poo-flow/src/module-system/profile-composition/interface
-                 poo-flow-composition?
-                 poo-flow-composition-name
-                 poo-flow-composition-object/profiles
-                 poo-flow-composition-profiles)
+                 poo-flow-scenario-case
+                 poo-flow-scenario-case?
+                 poo-flow-scenario-case-name
+                 poo-flow-scenario-case-profiles)
         (only-in :poo-flow/src/modules/temporal-causality/interface
                  poo-flow-causal-event?
                  poo-flow-causal-event-graph
@@ -25,10 +25,10 @@
                  poo-flow-structural-impact-analyze)
         (only-in :poo-flow/src/modules/governance/funs
                  poo-flow-governance-evaluate)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/types
+        (only-in "types.ss"
                  ontology-case? ontology-case-composition-receipt?
                  ontology-profile? ontology-source?)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/objects
+        (only-in "objects.ss"
                  ontology-profile-project ontology-rule-evaluate
                  ontology-scenario-admits-profile?))
 
@@ -141,7 +141,7 @@
            (add-edge! scenario-id case-id 'HAS_CASE 'declared)
            (for-each
             (lambda (composition)
-              (let* ((name (poo-flow-composition-name composition))
+              (let* ((name (poo-flow-scenario-case-name composition))
                      (composition-identity
                       (string-append
                        (ontology-reasoning-identity->string case-identity)
@@ -162,7 +162,7 @@
                     (ontology-reasoning-node-id
                      'profile (.ref profile 'identity))
                     'SELECTS_PROFILE 'declared))
-                 (poo-flow-composition-profiles composition))))
+                 (poo-flow-scenario-case-profiles composition))))
             (.ref receipt 'compositions))
            (for-each
             (lambda (profile)
@@ -613,8 +613,8 @@
              (.cc (.ref receipt 'case)
                   compositions:
                   (list
-                   (poo-flow-composition-object/profiles
-                    'ontology-profile-removal '() remaining '()))
+                   (poo-flow-scenario-case
+                    'ontology-profile-removal '() remaining '() '()))
                   sources: (.ref receipt 'sources)))))))))
 
 (def (ontology-compose-case case-value)
@@ -633,7 +633,7 @@
     (let* ((input-diagnostics
             (append
              (if (and (list? compositions) (pair? compositions)
-                      (every poo-flow-composition? compositions))
+                      (every poo-flow-scenario-case? compositions))
                '()
                (list (ontology-diagnostic
                       'invalid-case-compositions '(compositions)
@@ -655,7 +655,7 @@
                       '(trajectories) case-trajectories)))))
          (profile-values
           (if (null? input-diagnostics)
-            (append-map poo-flow-composition-profiles compositions)
+            (append-map poo-flow-scenario-case-profiles compositions)
             '())))
     (let-values (((profile-index selected-profiles index-diagnostics)
                   (ontology-index-profiles profile-values)))

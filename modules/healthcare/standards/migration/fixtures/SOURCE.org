@@ -1,0 +1,22 @@
+#+title: AU HL7v2 migration fixture
+
+# SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+# SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
+
+The synthetic =ADT^A08= 2.5.1 message represents the bounded legacy-interface
+migration Case. It contains no real patient data.
+
+The syntax owner is =gerbil-parser/languages/hl7/v2-2.5.1=. The root
+=check-healthcare-hl7v2-migration= qualification parses these exact bytes,
+requires a valid lossless ParseArtifact, projects the bounded PID patient
+subject, and binds these identities:
+
+| Evidence | Digest |
+|-
+| source snapshot | =sha256:483dca758f175709eff204968df4b8b566b76a6711065f64ff91d99fd013e1dc= |
+| grammar | =sha256:f340d1e7795086a914f05b050997e3402b70692af6a419f275d7e147a739ac29= |
+| parser projection receipt | =sha256:9a6a08960850873bd0707d2cfa9c5284a0e80317ec60bc53723fa07084b35a1f= |
+
+Lambda does not parse HL7v2. It admits the fixed parser projection into a POO
+subject and owns the FHIR mapping, conformance, human review and migration
+policy layers.

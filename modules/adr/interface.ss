@@ -1,8 +1,0 @@
-(import :poo-flow/lambda-episteme/modules/adr/types)
-(export (import: :poo-flow/lambda-episteme/modules/adr/types))
-(import :poo-flow/lambda-episteme/modules/adr/objects)
-(export (import: :poo-flow/lambda-episteme/modules/adr/objects))
-(import :poo-flow/lambda-episteme/modules/adr/funs)
-(export (import: :poo-flow/lambda-episteme/modules/adr/funs))
-(import :poo-flow/lambda-episteme/modules/adr/config)
-(export (import: :poo-flow/lambda-episteme/modules/adr/config))

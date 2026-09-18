@@ -11,5 +11,4 @@
    (release +manual-gate)
    (runtime +manifest-handoff)))
  :custom
- (gitops +open-gitops-v1)
- (sdlc +nasa-7150-2d))
+ (ontology))
