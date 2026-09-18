@@ -2,7 +2,6 @@
 ;;;
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
-(import :poo-flow/src/module-system/contribution/testing)
 (import :std/test
         (only-in :clan/poo/object .cc .def .o .ref .set! object?)
         (only-in :std/srfi/1 every find)
