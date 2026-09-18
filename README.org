@@ -110,7 +110,8 @@ detail.
 #+begin_example
 modules/
   ontology/                  semantic mechanism
-  diataxis/ decision-kind/
+  diataxis/                  knowledge-document classification
+  decision-kind/             decision-kind knowledge model
 
 user-interface/
   init.ss                    selected Modules and feature flags
@@ -337,6 +338,10 @@ obligations.  It does not authenticate a producer, execute an external service,
 certify regulatory compliance or authorize release by itself.  Those effects
 belong to explicitly configured host Providers and independently tested
 application boundaries.
+
+ADR, GitOps and software-lifecycle assurance are owned and maintained by
+Lambda Aitia.  Lambda Episteme does not retain compatibility modules, copied
+qualification receipts or a second namespace for those semantics.
 
 Historical RDF registries, SQL policies, Python alignment tests and Wendao
 command recipes remain migration inputs for legacy consumers.  New Scheme

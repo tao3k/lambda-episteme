@@ -38,8 +38,8 @@ The five roles divide ownership rather than naming five interchangeable source
 files:
 
 - =types.ss= defines boundary predicates and actual nominal data contracts.
-  =define-type= is appropriate for nominal boundary values; it must not
-  simulate a prototype or class hierarchy.
+  =define-type= is appropriate for a closed wire or runtime boundary value; it
+  must not simulate a prototype or class hierarchy.
 - =objects.ss= owns POO prototypes, declaration projections and default method
   slots.  A user Profile exports one =.def= and declares =.import=,
   =.add-concept=, =.add-relation=, =.add-source=, =.add-rule= and =.add-query=

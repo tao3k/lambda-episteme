@@ -3,8 +3,12 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .def .o .ref)
-        (only-in :poo-flow/lambda-episteme/modules/healthcare/interface
-                 HealthcareModule)
+        (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/fhir/config
+                 FHIRR4StandardRef
+                 AUBaseStandardRef
+                 AUCoreStandardRef)
+        (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/fhir/objects
+                 FHIRMedicationRequestStandardProfile)
         (only-in :poo-flow/src/modules/governance/objects
                  poo-flow-governance-precondition
                  poo-flow-governance-threat)
@@ -19,20 +23,13 @@
 
 (export AustraliaHealthcareRegionProfile)
 
-(def AustraliaHealthcareStandards
-  (.ref HealthcareModule 'standards))
-
 (def AustraliaHealthcareStandardEditions
-  (.ref AustraliaHealthcareStandards 'editions))
+  (.o fhir-r4: FHIRR4StandardRef
+      au-base: AUBaseStandardRef
+      au-core: AUCoreStandardRef))
 
 (def AustraliaMedicationRequestStandardProfile
-  (.ref (.ref AustraliaHealthcareStandards 'profiles) 'medication-request))
-(def AustraliaLegacyInterfaceMigrationFeature
-  (.ref (.ref AustraliaHealthcareStandards 'features) 'migration))
-(def AustraliaLegacyInterfaceMigrationFixture
-  (.ref (.ref AustraliaLegacyInterfaceMigrationFeature 'fixtures) 'australia))
-(def AustraliaLegacyInterfaceMigration
-  (.ref AustraliaLegacyInterfaceMigrationFixture 'landscape))
+  FHIRMedicationRequestStandardProfile)
 
 ;;; A Region owns jurisdictional evidence and compliance deltas.  The care
 ;;; journey and its semantic vocabulary remain reusable across jurisdictions.
@@ -93,17 +90,7 @@
        (.o domain-identity: "lambda-episteme/healthcare/medication-order"
            standard-profile:
            (.ref AustraliaMedicationRequestStandardProfile 'identity)
-           standard-edition: "hl7.fhir.r4.core@4.0.1")
-       legacy-patient-interface:
-       (.o domain-identity:
-           "lambda-episteme/healthcare/migration/legacy-patient"
-           source-interfaces:
-           (.ref AustraliaLegacyInterfaceMigration 'legacy-interfaces)
-           target-profile:
-           (.ref AustraliaLegacyInterfaceMigration 'target-profile)
-           ai-role: (.ref AustraliaLegacyInterfaceMigration 'ai-role)
-           authorization-owner:
-           (.ref AustraliaLegacyInterfaceMigration 'authorization-owner))))
+           standard-edition: "hl7.fhir.r4.core@4.0.1")))
   (.add-capability (.o))
   (.add-query (.o))
   (.assess-governance

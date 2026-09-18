@@ -1,0 +1,25 @@
+#+title: Lambda Episteme ownership cutover
+
+:PROPERTIES:
+:ID:         lambda-episteme-ownership-cutover
+:STATUS:     current
+:DATE:       2026-09-17
+:END:
+
+* Boundary
+
+Lambda Episteme owns vertical knowledge, ontology Profiles, Scenarios, Cases
+and their source qualification.  Its public module roots are =decision-kind=,
+=diataxis= and =ontology=.
+
+ADR, GitOps and software-lifecycle assurance moved to Lambda Aitia.  Their
+sources, tests, profiles, scenarios, tools and historical qualification
+receipts are not retained here under aliases or versioned compatibility
+namespaces.
+
+* Acceptance
+
+The cutover is accepted only when the public build, the three remaining module
+test lanes and the source-collection contract pass against a parent registry
+pinned to the same child revision.  A focused pass against a dirty or stale
+parent registry is diagnostic evidence only.

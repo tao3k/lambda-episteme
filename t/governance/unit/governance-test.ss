@@ -1,6 +1,8 @@
 (import :poo-flow/src/module-system/contribution/testing)
 (import :std/test
         :poo-flow/src/module-system/contribution/interface
+        (only-in :poo-flow/src/module-system/profile-composition/interface
+                 poo-flow-scenario-case-profiles)
         (only-in :poo-flow/src/module-system/declaration/interface
                  poo-flow-user-module-selection)
         :poo-flow/src/modules/governance/interface

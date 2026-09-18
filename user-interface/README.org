@@ -1,7 +1,22 @@
 #+title: Lambda Episteme User Interface
 
+:PROPERTIES:
+:ID:         lambda-episteme-user-interface
+:STATUS:     maintained
+:DATE:       2026-09-17
+:END:
+
 This directory contains only Episteme-owned knowledge profiles, scenarios and
-final compositions.  Its =init.ss= enables the functional workflow foundation
+final compositions. Its direct children have fixed responsibilities:
+
+| Path | Responsibility |
+|------+----------------|
+| =init.ss= | Module enablement only. |
+| =modules/= | User-owned modules not admitted as public contributions. |
+| =profiles/= | Reusable, inheritable POO Profile objects. |
+| =scenarios/= | Vertical boundaries, their Profiles and concrete Cases. |
+
+=init.ss= enables the functional workflow foundation
 and selected Modules.  It never defines a Profile, Scenario or Case.
 
 =config.ss= contains direct =use-composition= declarations.  The POO
@@ -14,3 +29,6 @@ applications may derive or replace it without changing module loading.
 The contribution does not own a second runner, compiler, scheduler, runtime
 authority, or effect executor. Profiles are declarative POO objects; scenarios
 prepare evidence and unresolved obligations but do not authorize effects.
+
+ADR, GitOps and software-lifecycle assurance live in Lambda Aitia. This tree
+does not provide compatibility namespaces for those modules.

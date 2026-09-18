@@ -32,13 +32,7 @@
                       "lambda-episteme/healthcare/medication-order")
         (check-equal? (.ref mapping 'standard-profile)
                       "http://hl7.org/fhir/StructureDefinition/MedicationRequest")))
-    (test-case "Profile declares legacy coexistence and reviewed FHIR migration"
-      (let* ((mapping
-              (.ref (.ref AustraliaHealthcareRegionProfile 'standard-mappings)
-                    'legacy-patient-interface))
-             (interfaces (.ref mapping 'source-interfaces)))
-        (check-equal? (length (.all-slots interfaces)) 3)
-        (check-equal? (.ref mapping 'target-profile)
-                      "http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient")
-        (check-equal? (.ref mapping 'ai-role) 'advisory-only)
-        (check-equal? (.ref mapping 'authorization-owner) 'human-reviewer)))))
+    (test-case "ordinary Region mapping does not duplicate Migration ownership"
+      (check-equal?
+       (.all-slots (.ref AustraliaHealthcareRegionProfile 'standard-mappings))
+       '(medication-order)))))
