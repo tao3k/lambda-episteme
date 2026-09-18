@@ -24,7 +24,8 @@
     "pyproject.toml"
     "uv.lock"
     "episteme.toml"
-    "wendao-legacy.toml"))
+    "wendao-legacy.toml"
+    "packages/proof"))
 
 (def ownership-boundary-test
   (test-suite

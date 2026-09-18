@@ -186,11 +186,11 @@
               ((.ref interface '.validate-governance) 'admit))
              (cutover
               ((.ref interface '.validate-governance) 'cutover))
-             (impact (.ref (.ref interface 'bindings) 'impact-contract)))
+             (proof (.ref (.ref interface 'bindings) 'proof-assurance)))
         (check-equal?
          (.ref interface 'required-slots)
-         '(authority-provider human-authorization formal-model refinement-proof
-           impact-contract conformance audit-receipt))
+         '(authority-provider human-authorization proof-assurance conformance
+           audit-receipt))
         (check-equal?
          (.ref interface 'optional-slots)
          '(documentation presentation-metadata reference-implementation
@@ -199,19 +199,16 @@
         (check-equal? (.ref cutover 'valid?) #f)
         (check-equal? (.ref cutover 'invalid-status-slots)
                       (.ref interface 'required-slots))
-        (check-equal? (.ref impact 'evidence-kind)
-                      'tla-to-lean-proof-impact)
-        (check-equal?
-         (.ref (.ref impact 'payload) 'upstream-source-digest)
-         (.ref AUHealthcareMigrationFormalModelEvidence 'source-digest))
-        (check-equal?
-         (.ref (.ref impact 'payload) 'downstream-source-digest)
-         (.ref AUHealthcareMigrationRefinementProofEvidence 'source-digest))
+        (check-equal? (.ref proof 'evidence-kind)
+                      'poo-flow-proof-assurance)
+        (check-equal? (.ref (.ref proof 'payload) 'current?) #t)
+        (check-equal? (.ref (.ref proof 'payload) 'admitted?) #t)
         (check-exception
          ((.ref interface '.write-governance)
-          (.cc impact 'payload
-               (.cc (.ref impact 'payload) 'upstream-source-digest
-                    (poo-flow-standard-digest 'stale-tla-model))))
+          (.cc proof 'payload
+               (.cc (.ref proof 'payload)
+                    'current? #f
+                    'admitted? #f)))
          true)))
     (test-case "reviewed AI proposal is admitted only after AU Core conformance"
       (call-with-values
@@ -242,7 +239,7 @@
                      (.ref
                       (.ref HealthcareStandardMigrationGovernanceInterface
                             'bindings)
-                      'impact-contract)
+                      'proof-assurance)
                      'content-digest)
                     handoff)))
              (check-equal?

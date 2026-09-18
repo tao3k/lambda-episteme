@@ -43,8 +43,10 @@ snapshot and interface for rollback.
 
 The Healthcare Migration Feature extends the core Standards Governance
 Interface rather than adding an independent registry.  Its mandatory Slots are
-=authority-provider=, =human-authorization=, =formal-model=,
-=refinement-proof=, =impact-contract=, =conformance= and =audit-receipt=.
+=authority-provider=, =human-authorization=, =proof-assurance=,
+=conformance= and =audit-receipt=. The Proof Module owns the TLA+/Lean
+artifact, receipt, refinement and change-impact subgraph behind the single
+mandatory =proof-assurance= binding.
 =documentation=, =presentation-metadata=, =reference-implementation= and
 =non-authoritative-analysis= are optional enrichment only.  The Agent may write
 either class only through =.write-governance=; undeclared Slots, stale TLA+

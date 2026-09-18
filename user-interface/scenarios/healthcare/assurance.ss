@@ -47,19 +47,19 @@
 (def +tla-config-content-id+
   "sha256:d53b08f84dfd34c9ec1e92ff14bf9bf62102e9506ff67dfd4833211705c37ab6")
 (def +lean-source-content-id+
-  "sha256:330577af4c2b839e13e3f67d4fa47f8b2f2e1422200870a70a1a02b54f575566")
+  "sha256:21f260d13227a4b47accaa45f0987f6e19f3821302efc962e2f203bfc36c629c")
 (def +lean-module+
-  "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement")
-(def +lean-library+ "PooFlowScenarioHealthcareProof")
+  "EpistemeProof.Healthcare.AIAssistedPrescriptionCausalityRefinement")
+(def +lean-library+ "EpistemeHealthcareProof")
 (def +lean-certifications+
-  '("PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.wrongAutoApprovalCannotBeAdmitted"
-    "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.wrongAdministrationCannotBeAdmitted"
-    "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.independentReviewCutExcludesWrongPath"
-    "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.alternativePrescriptionHasIndependentHumanParent"
-    "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.wrongPathSatisfiesTrajectoryContract"
-    "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.errorImpactSatisfiesTrajectoryContract"
-    "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.declaredErrorPathCannotBeAdmitted"
-    "PooFlowProof.Vertical.Healthcare.PrescriptionCausalityRefinement.declaredErrorImpactCannotBeAdmitted"))
+  '("EpistemeProof.Healthcare.AIAssistedPrescriptionCausalityRefinement.wrongAutoApprovalCannotBeAdmitted"
+    "EpistemeProof.Healthcare.AIAssistedPrescriptionCausalityRefinement.wrongAdministrationCannotBeAdmitted"
+    "EpistemeProof.Healthcare.AIAssistedPrescriptionCausalityRefinement.independentReviewCutExcludesWrongPath"
+    "EpistemeProof.Healthcare.AIAssistedPrescriptionCausalityRefinement.alternativePrescriptionHasIndependentHumanParent"
+    "EpistemeProof.Healthcare.AIAssistedPrescriptionCausalityRefinement.wrongPathSatisfiesTrajectoryContract"
+    "EpistemeProof.Healthcare.AIAssistedPrescriptionCausalityRefinement.errorImpactSatisfiesTrajectoryContract"
+    "EpistemeProof.Healthcare.AIAssistedPrescriptionCausalityRefinement.declaredErrorPathCannotBeAdmitted"
+    "EpistemeProof.Healthcare.AIAssistedPrescriptionCausalityRefinement.declaredErrorImpactCannotBeAdmitted"))
 
 (def +query-contracts+
   (list HealthcareCaseProfileRelationsQuery
@@ -72,10 +72,12 @@
 (def HealthcareCaseQualificationMetadata
   (.o kind: 'lambda-episteme.healthcare-case-qualification-metadata
       repository-root: "."
-      contributor-root: "lambda-episteme"
+      contributor-root: "."
       gql-queries: +query-contracts+
-      tla-source: "packages/proof/tla/HealthcareAIAssistedPrescriptionCausality.tla"
-      tla-config: "packages/proof/tla/HealthcareAIAssistedPrescriptionCausality.cfg"
+      tla-source:
+      "user-interface/scenarios/healthcare/cases/ai-assisted-antibiotic-prescription/proof/tla/HealthcareAIAssistedPrescriptionCausality.tla"
+      tla-config:
+      "user-interface/scenarios/healthcare/cases/ai-assisted-antibiotic-prescription/proof/tla/HealthcareAIAssistedPrescriptionCausality.cfg"
       ;; One deterministic TLC worker is part of this bounded qualification
       ;; profile; Gerbil build parallelism remains independently machine-sized.
       tlc-workers: 1
