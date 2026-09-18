@@ -1,6 +1,6 @@
 ;;; -*- Gerbil -*-
-;;; Test-only closure root.  Legacy executable exercises stay out of the
-;;; production contribution build and are compiled only for qualification.
+;;; Test-only closure root. Qualification-only fixtures stay out of the
+;;; production contribution build.
 
 (import :poo-flow/lambda-episteme/t/governance/build-root)
 

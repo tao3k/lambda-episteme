@@ -10,7 +10,7 @@
 
 Lambda Episteme owns vertical knowledge, ontology Profiles, Scenarios, Cases
 and their source qualification.  Its public module roots are =decision-kind=,
-=diataxis= and =ontology=.
+=diataxis=, =healthcare= and =ontology=.
 
 ADR, GitOps and software-lifecycle assurance moved to Lambda Aitia.  Their
 sources, tests, profiles, scenarios, tools and historical qualification
@@ -19,7 +19,13 @@ namespaces.
 
 * Acceptance
 
-The cutover is accepted only when the public build, the three remaining module
+The cutover is accepted only when the public build, the four remaining module
 test lanes and the source-collection contract pass against a parent registry
 pinned to the same child revision.  A focused pass against a dirty or stale
 parent registry is diagnostic evidence only.
+
+The canonical =just test= entry is the native Gerbil/ASP suite.  The former
+Wendao, RDF, SQL-policy and Python-alignment surfaces are absent rather than
+retained behind a compatibility lane.  ADR policy, Source, fixer and dedicated
+fixture ownership is also absent here; Lambda Aitia is the sole contributor
+owner for those semantics.

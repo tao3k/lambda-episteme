@@ -18,10 +18,10 @@ one to consume the module.
 * Source ownership
 
 Declare ontology and policy as POO objects and identify authoritative external
-assets explicitly. Preserve RDF/OWL and Org where they own the domain facts or
-rationale. If replacing a legacy SQL policy, design the graph semantics first:
-entity identity, relation ownership, snapshot scope and completeness matter more
-than translating SQL text into MATCH clauses.
+assets explicitly. Preserve Org where it owns rationale, but do not introduce a
+parallel RDF/OWL registry or SQL-policy execution model. Design graph semantics
+first: entity identity, relation ownership, snapshot scope and completeness
+belong in native Concepts, Relations and Rule objects.
 
 * Module checklist
 
@@ -50,5 +50,5 @@ owns discovery and execution via =:asp-gerbil-scheme/testing-api=.
 Lanes are =unit=, =source=, =user-interface= and =integration=. Optional source
 checks use =*-check.ss= and are invoked explicitly with their installed parser.
 Run the single =just test-scheme= entrypoint.
-Historical qualification receipts retain their original paths and commands;
-current test paths are the module-owned directories above.
+Current test paths are the module-owned directories above; removed framework
+fixtures and commands are not qualification evidence for the native modules.

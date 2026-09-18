@@ -11,7 +11,7 @@ does not implement a second source registry, compiler, scheduler or cache.
 
 * Current build evidence
 
-The native contribution build projects 42 targets through the ASP Build API and
+The native contribution build projects 43 targets through the ASP Build API and
 =std/make=. The source-collection qualification discovers exactly the four
 public module interfaces, verifies the official contribution expansion and
 checks that the selected ontology module resolves to the Episteme source owner.
@@ -32,11 +32,11 @@ with force builds, timestamp mutation, retries or a second scheduler.  Therefore
 single-invocation incremental convergence remains an upstream boundary rather
 than a completed optimization claim.
 
-The final stable warm build projected the same 42-target closure in 4.861
-seconds and emitted zero compile rows.
+The current isolated build projects the same 43-target closure.
 
-The complete Lambda Scheme suite discovered eleven test files, dispatched
-eleven parallel batches and completed every batch.  The focused Governance
+The complete Lambda Scheme suite discovers thirteen test files, dispatches
+twelve parallel batches and one performance-isolated serial batch, and
+completes every batch.  The focused Governance
 module test also completed in approximately 3.3 seconds and exercised both
 accepted module families and a rejected mismatched family through the POO
 Flow-owned config admission function.
@@ -70,8 +70,8 @@ qualification performed 19 checks from retained HL7v2 bytes through
 =gerbil-parser=, typed AI analysis, AU Core candidate validation, migration
 admission and Ontology composition; all passed.
 
-The contribution build projected 42 targets and completed its ASP/std-make
-projection in =4.520s=.  POO Flow's build then projected 157 targets in
+The current contribution build projects 43 targets through ASP/std-make.
+POO Flow's earlier build projected 157 targets in
 =24.108s= after adding the public config-discovery macro to =build.ss=.  The
 ordinary child User Interface config test subsequently passed from the
 installed macro and emitted a five-second heartbeat during its =9.283745s=

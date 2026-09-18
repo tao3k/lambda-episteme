@@ -1,0 +1,56 @@
+schema_version = 1
+source_id = "lambda-episteme/healthcare/synthetic-care-delivery"
+owner_profile = "lambda-episteme/ontology/healthcare/base"
+scenario = "healthcare"
+description = "Synthetic de-identified care-delivery inputs projected through the Healthcare Profile."
+
+[[concept_mappings]]
+input = "patients"
+concept = "Patient"
+identity_field = "patient_id"
+required_fields = ["patient_id", "source_system"]
+
+[[concept_mappings]]
+input = "providers"
+concept = "Provider"
+identity_field = "provider_id"
+required_fields = ["provider_id", "source_system"]
+
+[[concept_mappings]]
+input = "encounters"
+concept = "Encounter"
+identity_field = "encounter_id"
+required_fields = ["encounter_id", "patient_id", "provider_id", "source_system"]
+
+[[concept_mappings]]
+input = "conditions"
+concept = "Condition"
+identity_field = "condition_id"
+required_fields = ["condition_id", "patient_id", "source_system"]
+
+[[relation_mappings]]
+input = "encounters"
+relation = "HAS_PATIENT"
+domain = "Encounter"
+range = "Patient"
+domain_field = "encounter_id"
+range_field = "patient_id"
+required = true
+
+[[relation_mappings]]
+input = "encounters"
+relation = "HAS_PROVIDER"
+domain = "Encounter"
+range = "Provider"
+domain_field = "encounter_id"
+range_field = "provider_id"
+required = true
+
+[[relation_mappings]]
+input = "conditions"
+relation = "HAS_CONDITION"
+domain = "Encounter"
+range = "Condition"
+domain_field = "patient_id"
+range_field = "condition_id"
+required = false

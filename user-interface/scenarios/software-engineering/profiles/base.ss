@@ -38,7 +38,7 @@
    (.o architecture-decision-policy:
        (ontology-source
         "ontology/software-engineering/architecture-decision-policy"
-        "ontology/10_Software_Engineering/policies/architectural_decision_making.md"
+        "user-interface/scenarios/software-engineering/sources/architectural-decision-making.md"
         'markdown 'scenario 'software-engineering #f)))
   (.add-rule
    (.o architecture-dependency:
