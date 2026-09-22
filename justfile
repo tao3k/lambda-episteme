@@ -1,6 +1,7 @@
 set shell := ["bash", "-uc"]
 
 self_root := justfile_directory()
+poo_flow_root := env_var_or_default("POO_FLOW_ROOT", self_root + "/../..")
 gerbil_parser_root := env_var_or_default("GERBIL_PARSER_ROOT", "")
 
 default:
@@ -43,11 +44,12 @@ test-proof-cedar:
 # surface. std/make owns build concurrency and verbose compiler diagnostics.
 [group('build')]
 build: test
-    cd '{{ self_root }}' && GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" gerbil build
+    just build-scheme
 
+# Build the Scheme contribution through POO Flow's source-owned adapter.
 [group('build')]
 build-scheme:
-    cd '{{ self_root }}' && GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" gerbil build
+    cd '{{ poo_flow_root }}' && just build-contribute lambda-episteme
 
 [group('qualification')]
 qualify-healthcare-hl7v2:
