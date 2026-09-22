@@ -8,7 +8,7 @@
 (import (only-in :clan/poo/object .ref)
         (only-in :std/crypto/digest sha256)
         (only-in :std/misc/ports read-all-as-string)
-        (only-in :std/text/hex hex-encode)
+        (only-in :std/encoding/hex hex-encode)
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  ontology-query ontology-source))
 

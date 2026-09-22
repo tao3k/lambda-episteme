@@ -1,4 +1,3 @@
-(import :poo-flow/src/module-system/contribution/testing)
 ;;; Authoring qualification uses Gerbil's parser, not a query execution engine.
 (import :std/test :std/misc/ports
         (only-in :gerbil-parser/languages/gql/iso-39075-2024/parser

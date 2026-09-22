@@ -4,7 +4,7 @@
 
 (import :std/test
         (only-in :clan/poo/object .ref)
-        (only-in :std/srfi/1 filter)
+        :std/list/list
         (only-in :poo-flow/src/graph/types
                  poo-flow-graph-edge-kind poo-flow-graph-edges)
         :poo-flow/src/modules/temporal-causality/interface

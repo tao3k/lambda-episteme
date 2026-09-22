@@ -10,8 +10,8 @@
         (only-in :clan/poo/object .all-slots .cc .ref)
         (only-in :std/crypto/digest sha256)
         (only-in :std/misc/ports read-all-as-string)
-        (only-in :std/srfi/13 string-contains)
-        (only-in :std/text/hex hex-encode)
+        (only-in :gerbil/core string-contains)
+        (only-in :std/encoding/hex hex-encode)
         (only-in :poo-flow/src/modules/standards/interface
                  poo-flow-standard-digest)
         (only-in :poo-flow/src/modules/proof/interface
@@ -34,7 +34,8 @@
   (string-append
    "sha256:"
    (hex-encode
-    (sha256 (call-with-input-file path read-all-as-string)))))
+    (sha256
+     (string->utf8 (call-with-input-file path read-all-as-string))))))
 
 (def healthcare-standard-migration-proof-impact-test
   (test-suite

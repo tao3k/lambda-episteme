@@ -6,7 +6,7 @@
 ;;; crossing belongs to CLOS, while each Profile's own assessment remains the
 ;;; ordinary `.assess-governance` slot generic.
 (import (only-in :clan/poo/object .o .ref .slot?)
-        (only-in :std/srfi/1 filter)
+        :std/list/list
         :poo-flow/src/module-system/poo-clos/interface
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
                  AIClinicalDecisionSupportProfile)
