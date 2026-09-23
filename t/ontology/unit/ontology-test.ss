@@ -429,6 +429,36 @@
        (check (ontology-reasoning-query-property profile 'identity)
               => "lambda-episteme/ontology/healthcare/healing")))
 
+   (test-case "Healthcare property source rejects duplicate or uncovered facts"
+     (let* ((reasoning
+             (ontology-case-reasoning-graph
+              post-operative-healing-receipt))
+            (nodes (poo-flow-graph-nodes reasoning))
+            (edges (poo-flow-graph-edges reasoning))
+            (has-case (find (lambda (edge)
+                              (eq? (poo-flow-graph-edge-kind edge)
+                                   'HAS_CASE))
+                            edges)))
+       (check-exception
+        (healthcare-case-profile-property-source
+         (poo-flow-graph '(ontology-reasoning healthcare)
+                         (cons (car nodes) nodes) edges '()))
+        true)
+       (check-exception
+        (healthcare-case-profile-property-source
+         (poo-flow-graph '(ontology-reasoning healthcare)
+                         nodes (cons has-case edges) '()))
+        true)
+       (check-exception
+        (healthcare-case-profile-property-source
+         (poo-flow-graph
+          '(ontology-reasoning healthcare)
+          (cons (poo-flow-graph-node
+                 "profile:orphan" #f '((entity-kind . profile)))
+                nodes)
+          edges '()))
+        true)))
+
    (test-case "Case composition evaluates declared vertical Governance threats"
      (let* ((threats
              (.ref (.ref MedicationSafetyProfile 'threat-model) 'threats))

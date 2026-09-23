@@ -6,6 +6,7 @@
 ;;; Rust Runtime may later consume the parser's native FFI and these sources.
 ;;; This Scheme package neither links MRR nor invents a subprocess transport.
 (import (only-in :clan/poo/object .o .ref)
+        (only-in :gerbil/core hash-get hash-put!)
         (only-in :std/crypto/digest sha256)
         (only-in :std/misc/ports read-all-as-string)
         :std/list/list
@@ -104,6 +105,20 @@
   (def (relation edge)
     (.o source: (poo-flow-graph-edge-from edge)
         target: (poo-flow-graph-edge-to edge)))
+  (def (index values)
+    (let (table (make-hash-table))
+      (for-each (lambda (value) (hash-put! table value #t)) values)
+      table))
+  (def (unique-values? values)
+    (let (seen (make-hash-table))
+      (every (lambda (value)
+               (if (hash-get seen value)
+                 #f
+                 (begin (hash-put! seen value #t) #t)))
+             values)))
+  (def (covered? ids edges endpoint)
+    (let (covered-ids (index (map endpoint edges)))
+      (every (lambda (id) (hash-get covered-ids id)) ids)))
   (let* ((scenario-nodes (nodes-of 'scenario))
          (case-nodes (nodes-of 'case))
          (profile-nodes (nodes-of 'profile))
@@ -111,21 +126,39 @@
          (has-profile-edges (edges-of 'HAS_EFFECTIVE_PROFILE))
          (scenario-ids (map poo-flow-graph-node-id scenario-nodes))
          (case-ids (map poo-flow-graph-node-id case-nodes))
-         (profile-ids (map poo-flow-graph-node-id profile-nodes)))
+         (profile-ids (map poo-flow-graph-node-id profile-nodes))
+         (scenario-index (index scenario-ids))
+         (case-index (index case-ids))
+         (profile-index (index profile-ids))
+         (selected-edges (append has-case-edges has-profile-edges)))
     (unless (and (= (length scenario-nodes) 1)
+                 (pair? case-nodes)
+                 (pair? profile-nodes)
+                 (unique-values? (append scenario-ids case-ids profile-ids))
+                 (unique-values?
+                  (map (lambda (edge)
+                         (list (poo-flow-graph-edge-kind edge)
+                               (poo-flow-graph-edge-from edge)
+                               (poo-flow-graph-edge-to edge)))
+                       selected-edges))
                  (equal? (ontology-reasoning-query-property
                           (car scenario-nodes) 'identity)
                          "healthcare")
                  (every (lambda (edge)
-                          (and (member (poo-flow-graph-edge-from edge)
-                                       scenario-ids)
-                               (member (poo-flow-graph-edge-to edge) case-ids)))
+                          (and (hash-get scenario-index
+                                         (poo-flow-graph-edge-from edge))
+                               (hash-get case-index
+                                         (poo-flow-graph-edge-to edge))))
                         has-case-edges)
                  (every (lambda (edge)
-                          (and (member (poo-flow-graph-edge-from edge) case-ids)
-                               (member (poo-flow-graph-edge-to edge)
-                                       profile-ids)))
-                        has-profile-edges))
+                          (and (hash-get case-index
+                                         (poo-flow-graph-edge-from edge))
+                               (hash-get profile-index
+                                         (poo-flow-graph-edge-to edge))))
+                        has-profile-edges)
+                 (covered? case-ids has-case-edges poo-flow-graph-edge-to)
+                 (covered? profile-ids has-profile-edges
+                           poo-flow-graph-edge-to))
       (error "Healthcare property source is not a closed Case/Profile graph"
              graph))
     (.o kind: 'lambda-episteme.healthcare-case-profile-property-source
