@@ -3,8 +3,7 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .cc .o .ref object?)
-        (only-in :std/sort sort)
-        (only-in :std/srfi/1 append-map every filter find)
+        (only-in :std/list/list flatten1)
         (only-in :poo-flow/src/graph/types
                  poo-flow-graph poo-flow-graph-edge
                  poo-flow-graph-edge-from poo-flow-graph-edge-kind
@@ -37,9 +36,15 @@
         ontology-remove-case-profile
         ontology-case-reasoning-graph
         ontology-scenario-reasoning-graph
+        ontology-reasoning-query-property
         ontology-reasoning-impact
         ontology-case-diagnostic-codes
         ontology-evaluation-diagnostic-codes)
+
+;; V19 append-map reverses each multi-element result; flatten1 preserves the
+;; declaration order needed by Profile admission and receipt diagnostics.
+(def (ontology-concat-map proc values)
+  (flatten1 (map proc values)))
 
 (def (ontology-reasoning-identity->string identity)
   (cond
@@ -208,6 +213,21 @@
   (let (entry (assq 'entity-kind (poo-flow-graph-node-metadata node)))
     (and entry (cdr entry))))
 
+;;; The Healthcare GQL properties are domain values, not substrings of the
+;;; kind-prefixed graph transport ID. Keep this projection owned by Ontology.
+(def (ontology-reasoning-query-property node key)
+  (let (payload (poo-flow-graph-node-payload node))
+    (case (ontology-reasoning-node-entity-kind node)
+      ((scenario profile)
+       (unless (eq? key 'identity)
+         (error "unsupported reasoning query property" key))
+       (ontology-reasoning-identity->string (.ref payload 'identity)))
+      ((case)
+       (unless (eq? key 'id)
+         (error "unsupported reasoning query property" key))
+       (ontology-reasoning-identity->string (.ref payload 'case-id)))
+      (else (error "unsupported reasoning query entity" node)))))
+
 ;;; Impact is a reverse dependency view, not a second user-maintained relation.
 ;;; Its evidence is the complete dependency cone rooted at the changed node.
 (def (ontology-reasoning-impact graph target-id)
@@ -286,7 +306,7 @@
     (values index (reverse ordered) (reverse diagnostics))))
 
 (def (ontology-profile-import-diagnostics profile index)
-  (append-map
+  (ontology-concat-map
    (lambda (imported)
      (let* ((identity (.ref imported 'identity))
             (selected (hash-get index identity))
@@ -327,7 +347,7 @@
    (.ref profile 'imports)))
 
 (def (ontology-profile-source-diagnostics profile)
-  (append-map
+  (ontology-concat-map
    (lambda (source)
      (let ((profile-scope (.ref profile 'profile-scope))
            (source-scope (.ref source 'source-scope)))
@@ -358,7 +378,7 @@
    (.ref profile 'source-assets)))
 
 (def (ontology-profile-conflict-diagnostics profile index)
-  (append-map
+  (ontology-concat-map
    (lambda (identity)
      (if (hash-get index identity)
        (list
@@ -500,7 +520,7 @@
     (values (reverse ordered) (reverse diagnostics))))
 
 (def (ontology-case-source-diagnostics case-id scenario sources)
-  (append-map
+  (ontology-concat-map
    (lambda (source)
      (cond
       ((not (ontology-source? source))
@@ -601,9 +621,9 @@
           (ontology-rejected-removal-receipt
            receipt
            'profile-removal-blocked
-           (sort
-            (map (lambda (profile) (.ref profile 'identity)) blockers)
-            string<?))
+           (list-sort
+            string<?
+            (map (lambda (profile) (.ref profile 'identity)) blockers)))
           (let ((remaining
                  (filter
                   (lambda (profile)
@@ -655,7 +675,7 @@
                       '(trajectories) case-trajectories)))))
          (profile-values
           (if (null? input-diagnostics)
-            (append-map poo-flow-scenario-case-profiles compositions)
+            (ontology-concat-map poo-flow-scenario-case-profiles compositions)
             '())))
     (let-values (((profile-index selected-profiles index-diagnostics)
                   (ontology-index-profiles profile-values)))
@@ -665,7 +685,7 @@
                 (ontology-semantic-environment profiles))
                (profile-diagnostics
                 (append
-                 (append-map
+                 (ontology-concat-map
                   (lambda (profile)
                     (append
                      (if (ontology-scenario-admits-profile?
@@ -699,7 +719,7 @@
                        case-trajectories))
                 '()))
              (trajectory-diagnostics
-              (append-map
+              (ontology-concat-map
                (lambda (assessment)
                  (if (.ref assessment 'accepted?)
                    '()
@@ -721,7 +741,7 @@
                      profiles)
                 '()))
              (governance-diagnostics
-              (append-map
+              (ontology-concat-map
                (lambda (assessment)
                  (if (.ref assessment 'handoff-ready?)
                    '()
@@ -857,7 +877,7 @@
          (rule-diagnostics
           (if (and (null? composition-diagnostics)
                    (null? graph-diagnostics))
-            (append-map
+            (ontology-concat-map
              (lambda (rule) (ontology-rule-evaluate rule rule graph))
              (.ref environment 'rules))
             '()))

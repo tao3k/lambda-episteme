@@ -13,19 +13,19 @@ test: test-scheme-all test-proof-impact test-proof
 
 [group('test')]
 test-scheme-all:
-    cd '{{ self_root }}' && GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 180s gerbil test -v ./profiled-unit-tests.ss
+    cd '{{ self_root }}' && GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 180s gerbil test -v 3 ./profiled-unit-tests.ss
 
 [group('test')]
 test-scheme module="ontology":
-    cd '{{ self_root }}' && GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v "t/{{ module }}/build-root.ss"
+    cd '{{ self_root }}' && GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v 3 "t/{{ module }}/build-root.ss"
 
 [group('test')]
 test-scheme-atomic test_file:
-    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='{{ test_file }}' GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v ./selected-test.ss
+    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='{{ test_file }}' GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v 3 ./selected-test.ss
 
 [group('test')]
 test-proof-impact:
-    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='t/qualification/healthcare-standard-migration-assurance/impact-test.ss' GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v ./selected-test.ss
+    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='t/qualification/healthcare-standard-migration-assurance/impact-test.ss' GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v 3 ./selected-test.ss
 
 [group('test')]
 test-proof:
@@ -52,16 +52,16 @@ build-scheme:
 [group('qualification')]
 qualify-healthcare-hl7v2:
     test -n '{{ gerbil_parser_root }}'
-    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='t/qualification/healthcare-hl7v2-migration/parser-receipt-test.ss' GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="{{ gerbil_parser_root }}:$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v ./selected-test.ss
+    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='t/qualification/healthcare-hl7v2-migration/parser-receipt-test.ss' GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="{{ gerbil_parser_root }}:$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v 3 ./selected-test.ss
 
 [group('qualification')]
 qualify-healthcare-fhirpath:
     test -n '{{ gerbil_parser_root }}'
-    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='t/qualification/healthcare-fhirpath-syntax/parser-receipt-test.ss' GERBIL_BUILD_VERBOSE=1 GERBIL_PARSER_DIR='{{ gerbil_parser_root }}' GERBIL_LOADPATH="{{ gerbil_parser_root }}:$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v ./selected-test.ss
+    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='t/qualification/healthcare-fhirpath-syntax/parser-receipt-test.ss' GERBIL_BUILD_VERBOSE=1 GERBIL_PARSER_DIR='{{ gerbil_parser_root }}' GERBIL_LOADPATH="{{ gerbil_parser_root }}:$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 60s gerbil test -v 3 ./selected-test.ss
 
 [group('qualification')]
 qualify-healthcare-fhir-reference-validator:
-    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='t/qualification/healthcare-fhir-reference-validator/replay-test.ss' GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=5s 120s gerbil test -v ./selected-test.ss
+    cd '{{ self_root }}' && LAMBDA_EPISTEME_TEST_PATH='t/qualification/healthcare-fhir-reference-validator/replay-test.ss' GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=5s 120s gerbil test -v 3 ./selected-test.ss
 
 [group('maintenance')]
 update-fhir-sources-lock:

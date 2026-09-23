@@ -5,9 +5,7 @@
 ;;; AOT control-plane wrapper around Gerbil's native test command. ASP still
 ;;; projects POO Profiles and gxtest owns loading and executing every suite.
 
-(import (only-in :std/srfi/1 filter)
-        (only-in :std/srfi/13 string-contains string-prefix? string-suffix?)
-        (only-in :asp-gerbil-scheme/testing-api
+(import (only-in :asp-gerbil-scheme/testing-api
                  testing-interface-run-test-files!)
         (only-in :asp-gerbil-scheme/testing-runner-api
                  testing-interface-test-files)

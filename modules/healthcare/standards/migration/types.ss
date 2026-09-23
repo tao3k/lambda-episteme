@@ -6,7 +6,6 @@
 ;;; Lambda Healthcare boundary: typed, inert legacy-to-modern migration values.
 (import (only-in :clan/poo/object .all-slots .ref .slot? object?)
         (only-in :clan/poo/mop define-type Type. element?)
-        (only-in :std/srfi/1 every)
         (only-in :poo-flow/src/modules/standards/types
                  poo-flow-standard-digest?
                  poo-flow-standard-failure?

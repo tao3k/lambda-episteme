@@ -6,7 +6,6 @@
 ;;; Lambda Healthcare boundary: bounded, inert FHIR constraint values.
 (import (only-in :clan/poo/object .ref .slot? object?)
         (only-in :clan/poo/mop define-type Type. element?)
-        (only-in :std/srfi/1 every)
         (only-in :poo-flow/src/modules/standards/types
                  poo-flow-standard-digest?
                  poo-flow-standard-text?))

@@ -6,16 +6,12 @@
 ;;; External qualification only: replay the pinned HL7 FHIR Validator and
 ;;; compare the decoded JSON evidence.  Normal Lambda tests remain inert.
 (import :std/test
-        (only-in :gerbil/gambit getenv)
         (only-in :std/crypto/digest sha256)
         (only-in :std/misc/ports read-all-as-u8vector)
         (only-in :std/misc/process run-process)
-        (only-in :std/text/hex hex-encode)
-        (only-in :std/text/json
-                 read-json-array-as-vector?
-                 read-json-key-as-symbol?
-                 read-json-object-as-walist?
-                 string->json-object))
+        (only-in :std/encoding/hex hex-encode)
+        (only-in :std/encoding/json
+                 make-JSONReadOptions string->json))
 
 (export healthcare-fhir-reference-validator-replay-test)
 
@@ -35,10 +31,11 @@
    (sha256 (call-with-input-file path read-all-as-u8vector))))
 
 (def (read-json path)
-  (parameterize ((read-json-key-as-symbol? #f)
-                 (read-json-object-as-walist? #f)
-                 (read-json-array-as-vector? #f))
-    (string->json-object (read-file-string path))))
+  (string->json
+   (read-file-string path)
+   (make-JSONReadOptions key-as-symbol: #f
+                         array-as-vector: #f
+                         object-as-hash: #t)))
 
 (def (canonical-json value)
   (cond

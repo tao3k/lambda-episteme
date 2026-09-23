@@ -7,12 +7,9 @@
 ;;; is admitted by the generated lock before JSON parsing or conformance.
 (import (only-in :clan/poo/object .ref)
         (only-in :std/misc/ports read-file-u8vector)
-        (only-in :std/srfi/1 append-map)
-        (only-in :std/text/json
-                 bytes->json-object
-                 read-json-array-as-vector?
-                 read-json-key-as-symbol?
-                 read-json-object-as-walist?)
+        (only-in :std/list/list flatten1)
+        (only-in :std/encoding/json
+                 u8vector->json make-JSONReadOptions)
         (only-in :poo-flow/src/feature-system/source-lock-feature
                  require-source-lock-payload
                  sources-lock-ref)
@@ -63,10 +60,11 @@
 (def (poo-flow-fhir-decode-json-source source)
   (unless (u8vector? source)
     (error "invalid fixed FHIR JSON source" source))
-  (parameterize ((read-json-key-as-symbol? #f)
-                 (read-json-object-as-walist? #f)
-                 (read-json-array-as-vector? #f))
-    (bytes->json-object source)))
+  (u8vector->json
+   source
+   (make-JSONReadOptions key-as-symbol: #f
+                         array-as-vector: #f
+                         object-as-hash: #t)))
 
 (def (poo-flow-fhir-parse-json-package-manifest
       source expected-name expected-version expected-canonical)
@@ -126,7 +124,7 @@
           (poo-flow-fhir-json-ref decoded "differential" #f))
          (elements
           (poo-flow-fhir-json-ref differential "element" '())))
-    (append-map
-     (lambda (element)
-       (poo-flow-fhir-json-ref element "constraint" '()))
-     elements)))
+    (flatten1
+     (map (lambda (element)
+            (poo-flow-fhir-json-ref element "constraint" '()))
+          elements))))

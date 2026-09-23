@@ -4,8 +4,7 @@
 
 (import (only-in :clan/poo/object .all-slots .o .ref object?)
         (only-in :clan/poo/mop .defgeneric)
-        (only-in :std/misc/hash hash-get hash-put!)
-        (only-in :std/srfi/1 filter)
+        (only-in :std/hash/misc hash-get hash-put!)
         (only-in :poo-flow/src/graph/algorithms
                  poo-flow-graph-cycle-path)
         (only-in :poo-flow/src/graph/types

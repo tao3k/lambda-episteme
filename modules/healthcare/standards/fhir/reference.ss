@@ -6,12 +6,8 @@
 ;;; Lambda Healthcare boundary: import an executed HL7 Validator OperationOutcome as
 ;;; immutable reference evidence.  This module never downloads or launches the
 ;;; validator and never treats unavailable output as a successful comparison.
-(import (only-in :std/text/json
-                 read-json-array-as-vector?
-                 read-json-key-as-symbol?
-                 read-json-object-as-walist?
-                 string->json-object)
-        (only-in :std/srfi/13 string-prefix?)
+(import (only-in :std/encoding/json
+                 make-JSONReadOptions string->json)
         (only-in :poo-flow/src/modules/standards/funs
                  poo-flow-standard-digest
                  poo-flow-standard-make-reference-observation))
@@ -85,10 +81,11 @@
           (resolve-fhir-reference-output-path output-path))
          (raw-output (read-file-string resolved-output-path))
          (decoded
-          (parameterize ((read-json-key-as-symbol? #f)
-                         (read-json-object-as-walist? #f)
-                         (read-json-array-as-vector? #f))
-            (string->json-object raw-output)))
+          (string->json
+           raw-output
+           (make-JSONReadOptions key-as-symbol: #f
+                                 array-as-vector: #f
+                                 object-as-hash: #t)))
          (operation-outcome
           (reference-output-operation-outcome
            decoded output-path entry-index))

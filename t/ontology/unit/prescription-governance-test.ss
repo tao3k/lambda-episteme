@@ -4,9 +4,9 @@
 
 (import :std/test
         (only-in :clan/poo/object .cc .o .ref)
-        (only-in :clan/poo/mop element?)
-        (only-in :clan/poo/io json-string<- <-json-string)
-        (only-in :std/srfi/1 find)
+        (only-in :clan/poo/mop element? <-json)
+        (only-in :clan/poo/io json-string<-)
+        (only-in :std/encoding/json string->json make-JSONReadOptions)
         :poo-flow/src/modules/governance/interface
         :poo-flow/src/modules/temporal-causality/interface
         :poo-flow/src/modules/authorization/providers/cedar/interface
@@ -173,8 +173,16 @@
                root)))
             (json-value
              (json-string<- HealthcarePharmacologyEvidence evidence))
+            ;; The typed POO reader takes hash objects; V19's JSON default is
+            ;; WAList, so select the representation at this interchange edge.
             (roundtrip
-             (<-json-string HealthcarePharmacologyEvidence json-value)))
+             (<-json
+              HealthcarePharmacologyEvidence
+              (string->json
+               json-value
+               (make-JSONReadOptions key-as-symbol: #f
+                                     array-as-vector: #f
+                                     object-as-hash: #t)))))
        (check (element? HealthcarePharmacologyEvidence evidence) => #t)
        (check (.ref evidence 'identity)
               => "healthcare/pharmacology/warfarin-tmp-smx-label-evidence/v1")

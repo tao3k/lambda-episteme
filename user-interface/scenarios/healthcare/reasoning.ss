@@ -8,7 +8,7 @@
 (import (only-in :clan/poo/object .ref)
         (only-in :std/crypto/digest sha256)
         (only-in :std/misc/ports read-all-as-string)
-        (only-in :std/text/hex hex-encode)
+        (only-in :std/encoding/hex hex-encode)
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  ontology-query ontology-source))
 
@@ -20,7 +20,7 @@
         healthcare-query-source-path)
 
 (def (digest text)
-  (string-append "sha256:" (hex-encode (sha256 text))))
+  (string-append "sha256:" (hex-encode (sha256 (string->utf8 text)))))
 
 (def CaseProfileRelationsSource
   (ontology-source

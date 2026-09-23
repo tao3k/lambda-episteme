@@ -5,7 +5,6 @@
 
 (import :std/test
         (only-in :clan/poo/object .all-slots .ref)
-        (only-in :std/srfi/1 every)
         (only-in :poo-flow/src/modules/standards/interface
                  poo-flow-standard-edition-ref?)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/regions/australia

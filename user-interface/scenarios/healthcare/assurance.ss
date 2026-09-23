@@ -7,8 +7,7 @@
 ;;; declared GQL is non-authoritative analysis input for a later MRR Runtime.
 (import (only-in :clan/poo/object .o .ref .slot? object?)
         (only-in :std/crypto/digest sha256)
-        (only-in :std/srfi/1 every find)
-        (only-in :std/text/hex hex-encode)
+        (only-in :std/encoding/hex hex-encode)
         (only-in :poo-flow/src/modules/temporal-causality/interface
                  poo-flow-causal-cut poo-flow-causal-event-graph
                  poo-flow-causal-trajectory-assessment-digest
@@ -131,7 +130,8 @@
   (string-append
    "sha256:"
    (hex-encode
-    (sha256 (call-with-output-string (lambda (port) (write value port)))))))
+    (sha256 (string->utf8
+             (call-with-output-string (lambda (port) (write value port))))))))
 
 (def (healthcare-tlc-model-receipt generated distinct left depth)
   (.o kind: 'lambda-episteme.healthcare-tlc-model-receipt

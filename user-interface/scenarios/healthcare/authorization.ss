@@ -8,9 +8,8 @@
 (import (only-in :clan/poo/object .cc .o .ref .slot? object?)
         (only-in :std/crypto/digest sha256)
         (only-in :std/misc/ports read-all-as-string)
-        (only-in :std/srfi/1 every find)
-        (only-in :std/text/hex hex-encode)
-        (only-in :std/text/json json-object->string)
+        (only-in :std/encoding/hex hex-encode)
+        (only-in :std/encoding/json json->string)
         (only-in :poo-flow/src/graph/types
                  poo-flow-graph-edge-from poo-flow-graph-edge-kind
                  poo-flow-graph-edge-to poo-flow-graph-edges
@@ -95,7 +94,8 @@
   (string-append
    "sha256:"
    (hex-encode
-    (sha256 (call-with-output-string (lambda (port) (write datum port)))))))
+    (sha256 (string->utf8
+             (call-with-output-string (lambda (port) (write datum port))))))))
 
 (def (healthcare-profile-origin-digest receipt root)
   (unless (ontology-case-composition-receipt? receipt)
@@ -184,7 +184,7 @@
           (cons "parents" '#())))
 
 (def (healthcare-entities authorization)
-  (json-object->string
+  (json->string
    (vector
     (entity "Healthcare::Provider" (.ref authorization 'provider) (record))
     (entity "Healthcare::Patient" (.ref authorization 'patient) (record))

@@ -3,7 +3,6 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .all-slots .ref .slot? object?)
-        (only-in :std/srfi/1 every)
         (only-in :poo-flow/src/graph/types poo-flow-graph?)
         (only-in :poo-flow/src/modules/authorization/types
                  poo-flow-authorization-capability?)

@@ -6,7 +6,6 @@
 (import :std/test
         (only-in :std/misc/ports read-all-as-string)
         (only-in :std/misc/path path-expand)
-        (only-in :std/srfi/1 filter-map)
         (only-in :clan/poo/object .ref)
         (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/fhir/config
                  FHIRValidationCapabilities)
