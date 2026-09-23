@@ -7,7 +7,7 @@
 ;;; FHIRPath, slicing, remote reference or terminology-expansion support.
 (import (only-in :clan/poo/object .ref)
         (only-in :clan/poo/mop .defmethod-bundle)
-        (only-in :std/srfi/1 any count every)
+        :std/list/list
         :poo-flow/src/module-system/poo-clos/interface
         (only-in :poo-flow/src/modules/standards/objects
                  poo-flow-standard-conformance-receipt
@@ -78,7 +78,8 @@
 (def (fhir-choice-present-count subject path fields)
   (let-values (((present? parent) (fhir-path-ref subject path)))
     (if present?
-      (count (lambda (field) (fhir-key-entry parent field)) fields)
+      (length
+       (filter (lambda (field) (fhir-key-entry parent field)) fields))
       0)))
 
 (def (fhir-au-core-patient-collection-xor-dar?

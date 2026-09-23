@@ -5,7 +5,7 @@
 
 (import :std/test
         (only-in :std/error Error?)
-        (only-in :std/srfi/1 filter)
+        :std/list/list
         (only-in :clan/poo/object .o .ref .slot?)
         (only-in :poo-flow/src/feature-system/source-lock-feature
                  require-source-lock-payload)

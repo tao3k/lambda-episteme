@@ -7,8 +7,8 @@
 ;;; declared GQL is non-authoritative analysis input for a later MRR Runtime.
 (import (only-in :clan/poo/object .o .ref .slot? object?)
         (only-in :std/crypto/digest sha256)
-        (only-in :std/srfi/1 every find)
-        (only-in :std/text/hex hex-encode)
+        :std/list/list
+        (only-in :std/encoding/hex hex-encode)
         (only-in :poo-flow/src/modules/temporal-causality/interface
                  poo-flow-causal-cut poo-flow-causal-event-graph
                  poo-flow-causal-trajectory-assessment-digest

@@ -2,10 +2,9 @@
 ;;;
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
-(import :poo-flow/src/module-system/contribution/testing)
 (import :std/test
         (only-in :clan/poo/object .cc .def .o .ref .set! object?)
-        (only-in :std/srfi/1 every find)
+        :std/list/list
         (only-in :poo-flow/src/graph/types
                  poo-flow-graph poo-flow-graph-edge poo-flow-graph-node
                  poo-flow-graph-edge-kind poo-flow-graph-edges

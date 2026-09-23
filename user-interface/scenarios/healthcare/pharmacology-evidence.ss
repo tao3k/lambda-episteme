@@ -4,11 +4,7 @@
 
 ;;; The JSON file is an interchange representation.  These gerbil-poo Types
 ;;; own validation and the inherited `.json<-` / `.<-json` round trip.
-(import (only-in :std/text/json
-                 read-json
-                 read-json-array-as-vector?
-                 read-json-key-as-symbol?
-                 read-json-object-as-walist?)
+(import (only-in :std/encoding/json JSONReadOptions read-json)
         (only-in :clan/poo/mop Class. define-type <-json)
         (only-in :clan/poo/brace @method)
         (only-in :clan/poo/type List String))
@@ -16,6 +12,11 @@
 (export HealthcareDrugInteractionFact
         HealthcarePharmacologyEvidence
         healthcare-pharmacology-evidence-read-file)
+
+(def +healthcare-pharmacology-json-read-options+
+  (JSONReadOptions key-as-symbol: #f
+                   array-as-vector: #f
+                   object-as-hash: #t))
 
 (define-type (HealthcareDrugInteractionFact @ Class.)
   slots: =>.+
@@ -34,9 +35,9 @@
    facts: {type: (List HealthcareDrugInteractionFact)}})
 
 (def (healthcare-pharmacology-evidence-read-file path)
-  (parameterize ((read-json-key-as-symbol? #f)
-                 (read-json-object-as-walist? #f)
-                 (read-json-array-as-vector? #f))
-    (<-json
-     HealthcarePharmacologyEvidence
-     (call-with-input-file path read-json))))
+  (<-json
+   HealthcarePharmacologyEvidence
+   (call-with-input-file
+    path
+    (lambda (port)
+      (read-json port +healthcare-pharmacology-json-read-options+)))))

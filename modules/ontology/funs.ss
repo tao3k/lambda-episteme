@@ -3,8 +3,7 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .cc .o .ref object?)
-        (only-in :std/sort sort)
-        (only-in :std/srfi/1 append-map every filter find)
+        :std/list/list
         (only-in :poo-flow/src/graph/types
                  poo-flow-graph poo-flow-graph-edge
                  poo-flow-graph-edge-from poo-flow-graph-edge-kind
@@ -286,7 +285,7 @@
     (values index (reverse ordered) (reverse diagnostics))))
 
 (def (ontology-profile-import-diagnostics profile index)
-  (append-map
+  (concatenate (map
    (lambda (imported)
      (let* ((identity (.ref imported 'identity))
             (selected (hash-get index identity))
@@ -324,10 +323,10 @@
             (list 'profiles (.ref profile 'identity) 'imports identity)
             (.ref imported 'scenario))))
          (else '())))))
-   (.ref profile 'imports)))
+   (.ref profile 'imports))))
 
 (def (ontology-profile-source-diagnostics profile)
-  (append-map
+  (concatenate (map
    (lambda (source)
      (let ((profile-scope (.ref profile 'profile-scope))
            (source-scope (.ref source 'source-scope)))
@@ -355,10 +354,10 @@
            (list 'profiles (.ref profile 'identity) 'sources)
            (.ref source 'identity))))
         (else '()))))
-   (.ref profile 'source-assets)))
+   (.ref profile 'source-assets))))
 
 (def (ontology-profile-conflict-diagnostics profile index)
-  (append-map
+  (concatenate (map
    (lambda (identity)
      (if (hash-get index identity)
        (list
@@ -367,7 +366,7 @@
          (list 'profiles (.ref profile 'identity) 'conflicts identity)
          identity))
        '()))
-   (.ref profile 'conflicts)))
+   (.ref profile 'conflicts))))
 
 ;;; The semantic closure is indexed once per Case.  This is the native POO
 ;;; replacement for reparsing RDF graphs: every declaration and reference is
@@ -500,7 +499,7 @@
     (values (reverse ordered) (reverse diagnostics))))
 
 (def (ontology-case-source-diagnostics case-id scenario sources)
-  (append-map
+  (concatenate (map
    (lambda (source)
      (cond
       ((not (ontology-source? source))
@@ -521,7 +520,7 @@
          (list 'cases case-id 'sources)
          (.ref source 'identity))))
       (else '())))
-   sources))
+   sources)))
 
 (def (ontology-profile-projection profile)
   (ontology-profile-project profile profile))
@@ -601,9 +600,9 @@
           (ontology-rejected-removal-receipt
            receipt
            'profile-removal-blocked
-           (sort
-            (map (lambda (profile) (.ref profile 'identity)) blockers)
-            string<?))
+           (list-sort
+            string<?
+            (map (lambda (profile) (.ref profile 'identity)) blockers)))
           (let ((remaining
                  (filter
                   (lambda (profile)
@@ -655,7 +654,8 @@
                       '(trajectories) case-trajectories)))))
          (profile-values
           (if (null? input-diagnostics)
-            (append-map poo-flow-scenario-case-profiles compositions)
+            (concatenate
+             (map poo-flow-scenario-case-profiles compositions))
             '())))
     (let-values (((profile-index selected-profiles index-diagnostics)
                   (ontology-index-profiles profile-values)))
@@ -665,7 +665,7 @@
                 (ontology-semantic-environment profiles))
                (profile-diagnostics
                 (append
-                 (append-map
+                 (concatenate (map
                   (lambda (profile)
                     (append
                      (if (ontology-scenario-admits-profile?
@@ -679,7 +679,7 @@
                      (ontology-profile-import-diagnostics profile profile-index)
                      (ontology-profile-source-diagnostics profile)
                      (ontology-profile-conflict-diagnostics profile profile-index)))
-                  profiles)
+                  profiles))
                  cycle-diagnostics
                  (.ref semantic-environment 'diagnostics)))
              (source-diagnostics
@@ -699,7 +699,7 @@
                        case-trajectories))
                 '()))
              (trajectory-diagnostics
-              (append-map
+              (concatenate (map
                (lambda (assessment)
                  (if (.ref assessment 'accepted?)
                    '()
@@ -709,7 +709,7 @@
                      (list 'cases case-id 'trajectories
                            (.ref assessment 'contract-identity))
                      (.ref assessment 'diagnostics)))))
-               trajectory-assessments))
+               trajectory-assessments)))
              (pre-governance-diagnostics
               (append input-diagnostics index-diagnostics
                       profile-diagnostics source-diagnostics
@@ -721,7 +721,7 @@
                      profiles)
                 '()))
              (governance-diagnostics
-              (append-map
+              (concatenate (map
                (lambda (assessment)
                  (if (.ref assessment 'handoff-ready?)
                    '()
@@ -731,7 +731,7 @@
                      (list 'cases case-id 'governance
                            (.ref assessment 'profile-identity))
                      (.ref assessment 'unresolved-threats)))))
-               governance-assessments))
+               governance-assessments)))
              (diagnostics
               (append pre-governance-diagnostics governance-diagnostics))
              (accepted? (null? diagnostics))
@@ -857,9 +857,9 @@
          (rule-diagnostics
           (if (and (null? composition-diagnostics)
                    (null? graph-diagnostics))
-            (append-map
+            (concatenate (map
              (lambda (rule) (ontology-rule-evaluate rule rule graph))
-             (.ref environment 'rules))
+             (.ref environment 'rules)))
             '()))
          (diagnostics
           (append composition-diagnostics graph-diagnostics rule-diagnostics))

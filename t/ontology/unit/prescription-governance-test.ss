@@ -6,7 +6,7 @@
         (only-in :clan/poo/object .cc .o .ref)
         (only-in :clan/poo/mop element?)
         (only-in :clan/poo/io json-string<- <-json-string)
-        (only-in :std/srfi/1 find)
+        :std/list/list
         :poo-flow/src/modules/governance/interface
         :poo-flow/src/modules/temporal-causality/interface
         :poo-flow/src/modules/authorization/providers/cedar/interface

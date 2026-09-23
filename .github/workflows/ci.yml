@@ -1,0 +1,117 @@
+# SPDX-FileCopyrightText: 2026 tao3k team and Contributors
+# SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
+
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lean-proof:
+    name: Healthcare proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout Lambda Episteme
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Restore Lean cache
+        id: lean-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .ci/home/.elan
+            proof/lean/.lake
+          key: lambda-episteme-lean-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('proof/lean/lean-toolchain', 'proof/lean/lakefile.lean', 'proof/lean/lake-manifest.json') }}
+
+      - name: Install project-local Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          export HOME="$GITHUB_WORKSPACE/.ci/home"
+          export ELAN_HOME="$HOME/.elan"
+          mkdir -p "$HOME"
+          if [ ! -x "$ELAN_HOME/bin/lake" ]; then
+            curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+              | sh -s -- -y --default-toolchain none
+          fi
+          echo "HOME=$HOME" >> "$GITHUB_ENV"
+          echo "ELAN_HOME=$ELAN_HOME" >> "$GITHUB_ENV"
+          echo "$ELAN_HOME/bin" >> "$GITHUB_PATH"
+
+      - name: Build healthcare proof library
+        working-directory: proof/lean
+        run: lake build EpistemeHealthcareProof
+
+      - name: Save Lean cache
+        if: steps.lean-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .ci/home/.elan
+            proof/lean/.lake
+          key: lambda-episteme-lean-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('proof/lean/lean-toolchain', 'proof/lean/lakefile.lean', 'proof/lean/lake-manifest.json') }}
+
+  scheme-runtime:
+    name: Scheme healthcare standards
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GERBIL_BUILD_CORES: 12
+      POO_FLOW_ROOT: ${{ github.workspace }}/poo-flow
+    steps:
+      - name: Checkout pinned POO Flow mechanism library
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: tao3k/poo-flow
+          ref: 2d8c1b420c085403fc800cc0753b189f160f17a2
+          path: poo-flow
+          submodules: false
+
+      - name: Checkout Lambda Episteme under packages
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          path: poo-flow/packages/lambda-episteme
+
+      - name: Install Just
+        uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # v3
+
+      - name: Set up Bazel
+        uses: bazel-contrib/setup-bazel@c5acdfb288317d0b5c0bbd7a396a3dc868bb0f86 # 0.19.0
+        with:
+          bazelisk-cache: true
+          cache-save: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+          cache-version: 1
+          disk-cache: lambda-episteme-${{ runner.os }}-gerbil-release-v1
+          repository-cache: true
+
+      - name: Resolve immutable Gerbil release and module graph
+        working-directory: poo-flow
+        run: bazelisk mod deps --lockfile_mode=error
+
+      - name: Install declared Gerbil package dependencies
+        working-directory: poo-flow
+        run: bazelisk run @local_gerbil//:install_dependencies
+
+      - name: Build POO Flow mechanism library
+        working-directory: poo-flow
+        run: bazelisk run @local_gerbil//:native_scheme_env -- bash -lc 'cd "$BUILD_WORKSPACE_DIRECTORY" && just build'
+
+      - name: Run native Scheme tests
+        working-directory: poo-flow
+        run: bazelisk run @local_gerbil//:native_scheme_env -- bash -lc 'cd "$BUILD_WORKSPACE_DIRECTORY/packages/lambda-episteme" && just test-scheme-all'
+
+      - name: Build Lambda Episteme
+        working-directory: poo-flow
+        run: bazelisk run @local_gerbil//:native_scheme_env -- bash -lc 'cd "$BUILD_WORKSPACE_DIRECTORY/packages/lambda-episteme" && just build-scheme'
