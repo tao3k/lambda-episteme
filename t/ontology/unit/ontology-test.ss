@@ -19,6 +19,9 @@
         :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
         :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/scenario
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/reasoning
+                 HealthcareCaseProfileRelationsQuery
+                 healthcare-case-profile-property-source)
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/healing
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
@@ -327,6 +330,45 @@
        (check (.ref impact 'temporal-impact-assessed?) => #f)
        (check (.ref impact 'release-authorized?) => #f)
        (check (.ref impact 'runtime-executed?) => #f)))
+
+   (test-case "Healthcare property source follows the accepted POO Case graph"
+     (let* ((reasoning
+             (ontology-case-reasoning-graph
+              post-operative-healing-receipt))
+            (source (healthcare-case-profile-property-source reasoning)))
+       (let* ((scenarios (.ref source 'scenarios))
+              (cases (.ref source 'cases))
+              (profiles (.ref source 'profiles))
+              (has-cases (.ref source 'has-cases))
+              (has-profiles (.ref source 'has-effective-profiles)))
+         (check (.ref source 'kind)
+                => 'lambda-episteme.healthcare-case-profile-property-source)
+         (check (eq? (.ref source 'query)
+                     HealthcareCaseProfileRelationsQuery)
+                => #t)
+         (check (map (lambda (row) (.ref row 'value)) scenarios)
+                => '("healthcare"))
+         (check (map (lambda (row) (.ref row 'value)) cases)
+                => '("post-operative-healing"))
+         (check (length profiles) => 5)
+         (check (length has-cases) => 1)
+         (check (length has-profiles) => 5)
+         (check (.ref (car has-cases) 'source)
+                => (.ref (car scenarios) 'entity-id))
+         (check (.ref (car has-cases) 'target)
+                => (.ref (car cases) 'entity-id))
+         (check-exception
+          (healthcare-case-profile-property-source
+           (poo-flow-graph
+            '(ontology-reasoning healthcare)
+            (poo-flow-graph-nodes reasoning)
+            (cons (poo-flow-graph-edge
+                   (.ref (car cases) 'entity-id)
+                   (.ref (car scenarios) 'entity-id)
+                   'HAS_CASE)
+                  (poo-flow-graph-edges reasoning))
+            '()))
+          true))))
 
    (test-case "Healthcare GQL properties come from accepted POO values"
      (let* ((reasoning
