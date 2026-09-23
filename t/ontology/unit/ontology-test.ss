@@ -9,6 +9,7 @@
                  poo-flow-graph poo-flow-graph-edge poo-flow-graph-node
                  poo-flow-graph-edge-kind poo-flow-graph-edges
                  poo-flow-graph-node-metadata poo-flow-graph-nodes
+                 poo-flow-graph-node-id
                  poo-flow-graph?)
         :poo-flow/src/module-system/contribution/interface
         :poo-flow/src/module-system/profile-composition/interface
@@ -326,6 +327,33 @@
        (check (.ref impact 'temporal-impact-assessed?) => #f)
        (check (.ref impact 'release-authorized?) => #f)
        (check (.ref impact 'runtime-executed?) => #f)))
+
+   (test-case "Healthcare GQL properties come from accepted POO values"
+     (let* ((reasoning
+             (ontology-case-reasoning-graph
+              post-operative-healing-receipt))
+            (nodes (poo-flow-graph-nodes reasoning))
+            (scenario
+             (find (lambda (node)
+                     (equal? (poo-flow-graph-node-id node)
+                             "scenario:healthcare"))
+                   nodes))
+            (case-node
+             (find (lambda (node)
+                     (equal? (poo-flow-graph-node-id node)
+                             "case:post-operative-healing"))
+                   nodes))
+            (profile
+             (find (lambda (node)
+                     (equal? (poo-flow-graph-node-id node)
+                             "profile:lambda-episteme/ontology/healthcare/healing"))
+                   nodes)))
+       (check (ontology-reasoning-query-property scenario 'identity)
+              => "healthcare")
+       (check (ontology-reasoning-query-property case-node 'id)
+              => "post-operative-healing")
+       (check (ontology-reasoning-query-property profile 'identity)
+              => "lambda-episteme/ontology/healthcare/healing")))
 
    (test-case "Case composition evaluates declared vertical Governance threats"
      (let* ((threats

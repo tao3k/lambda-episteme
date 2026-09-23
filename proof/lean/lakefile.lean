@@ -13,7 +13,7 @@ core. The exact revision prevents a parent checkout or sibling worktree from
 silently changing the theorem base. -/
 require «poo-flow-proof» from git
   "https://github.com/tao3k/poo-flow.git"
-  @ "848fd3d056c28491795bec8b8c896783e6fcd8a5"
+  @ "da492eea00a7dab502cfb4c7586edefbba96bbec"
   / "packages/proof/lean"
 
 @[default_target]

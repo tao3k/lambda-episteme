@@ -20,7 +20,7 @@
         healthcare-query-source-path)
 
 (def (digest text)
-  (string-append "sha256:" (hex-encode (sha256 text))))
+  (string-append "sha256:" (hex-encode (sha256 (string->utf8 text)))))
 
 (def CaseProfileRelationsSource
   (ontology-source

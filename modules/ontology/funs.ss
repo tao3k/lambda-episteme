@@ -36,6 +36,7 @@
         ontology-remove-case-profile
         ontology-case-reasoning-graph
         ontology-scenario-reasoning-graph
+        ontology-reasoning-query-property
         ontology-reasoning-impact
         ontology-case-diagnostic-codes
         ontology-evaluation-diagnostic-codes)
@@ -206,6 +207,20 @@
 (def (ontology-reasoning-node-entity-kind node)
   (let (entry (assq 'entity-kind (poo-flow-graph-node-metadata node)))
     (and entry (cdr entry))))
+
+;;; Expose domain properties from admitted POO values, not transport node IDs.
+(def (ontology-reasoning-query-property node key)
+  (let (payload (poo-flow-graph-node-payload node))
+    (case (ontology-reasoning-node-entity-kind node)
+      ((scenario profile)
+       (unless (eq? key 'identity)
+         (error "unsupported reasoning query property" key))
+       (ontology-reasoning-identity->string (.ref payload 'identity)))
+      ((case)
+       (unless (eq? key 'id)
+         (error "unsupported reasoning query property" key))
+       (ontology-reasoning-identity->string (.ref payload 'case-id)))
+      (else (error "unsupported reasoning query entity" node)))))
 
 ;;; Impact is a reverse dependency view, not a second user-maintained relation.
 ;;; Its evidence is the complete dependency cone rooted at the changed node.
