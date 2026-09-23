@@ -41,8 +41,8 @@ files:
   =define-type= is appropriate for a closed wire or runtime boundary value; it
   must not simulate a prototype or class hierarchy.
 - =objects.ss= owns POO prototypes, declaration projections and default method
-  slots.  A user Profile exports one =.def= and declares =.import=,
-  =.add-concept=, =.add-relation=, =.add-source=, =.add-rule= and =.add-query=
+  slots.  A user Profile exports one =.def= and declares =profile-imports=,
+  =concept-declarations=, =relation-declarations=, =source-declarations=, =rule-declarations= and =query-declarations=
   as named POO slots.  The framework derives =imports=, =ontology=,
   =source-assets=, =terms=, =rules= and =queries= for existing algorithms.
   Behavior intrinsic to one Profile or Scenario uses =.defgeneric= slot
@@ -54,8 +54,8 @@ files:
 - =interface.ss= is the sole public re-export boundary.
 
 A Case is a POO configuration object passed to a pure composition function.
-Its user-facing file exports one Case declaration only: =.use-composition= owns
-named Profile groups, =.add-source= owns named Case-local Sources, and =graph=
+Its user-facing file exports one Case declaration only: =profile-selection= owns
+named Profile groups, =source-declarations= owns named Case-local Sources, and =graph=
 owns the declarative topology.  Native composition sequences, source sequences,
 admission receipts and evaluations are framework-derived values; users do not
 maintain parallel bindings for them.  CLOS
@@ -72,8 +72,8 @@ preserves that protocol.  A kind-tagged Profile, Scenario or Case does not pass
 that test merely because a specialized printer would look convenient.
 
 Ontology terms, relations, imports and policies are owned by POO Profile slots.
-Case topology derives the POO Flow =graph= prototype directly: =.add-node= and
-=.add-edge= are named POO object slots, not raw lists, RDF triples or a second
+Case topology derives the POO Flow =graph= prototype directly: =node-declarations= and
+=edge-declarations= are named POO object slots, not raw lists, RDF triples or a second
 Graph builder.  The core Graph owns the lazy projection consumed by its existing
 algorithms.
 RDF is not a native-module dependency or a parallel semantic authority. Where

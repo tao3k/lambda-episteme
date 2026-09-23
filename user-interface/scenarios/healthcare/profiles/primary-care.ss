@@ -24,11 +24,11 @@
 (.def (PrimaryCareProfile self HealthcareBaseProfile)
   (identity "lambda-episteme/ontology/healthcare/primary-care")
   (name 'primary-care)
-  (.import
+  (profile-imports =>.+
    (.o healthcare: HealthcareBaseProfile
        evidence: EvidenceProfile
        privacy: PrivacyProfile))
-  (.add-concept
+  (concept-declarations =>.+
    (.o general-practice:
        (ontology-concept 'GeneralPractice '(BaseEntity) '(registered))
        general-practitioner:
@@ -44,7 +44,7 @@
        health-information-consent:
        (ontology-concept
         'HealthInformationConsent '(Evidence) '(purpose-limited))))
-  (.add-relation
+  (relation-declarations =>.+
    (.o registered-with:
        (ontology-relation
         'REGISTERED_WITH 'Patient 'GeneralPractice '(voluntary))
@@ -71,9 +71,9 @@
        (ontology-relation
         'CONSENT_FOR
         'HealthInformationConsent 'Patient '(purpose-limited))))
-  (.add-source (.o))
-  (.add-rule (.o))
-  (.add-threat
+  (source-declarations =>.+ (.o))
+  (rule-declarations =>.+ (.o))
+  (threat-declarations =>.+
    (.o registration-without-dual-consent:
        (poo-flow-governance-threat
         "healthcare/primary-care/threat/unconsented-registration"
@@ -116,13 +116,13 @@
        preferred-gp: 'eligible-provider
        urgent-care: 'separate-escalation
        disclosure: 'purpose-limited))
-  (.add-capability
+  (capability-declarations =>.+
    (.o schedule-primary-care:
        (poo-flow-authorization-capability
         "healthcare/primary-care/capability/schedule-appointment"
         "Healthcare::Action::\"schedulePrimaryCareAppointment\""
         4301 'ordinary)))
-  (.add-query (.o))
+  (query-declarations =>.+ (.o))
   (.assess-governance
    (lambda (context)
      (healthcare-contextual-governance-assessment

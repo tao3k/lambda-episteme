@@ -13,13 +13,13 @@
 (.def (PrivacyProfile @ OntologyProfile)
   (identity "lambda-episteme/ontology/privacy")
   (name 'privacy)
-  (.import (.o evidence: EvidenceProfile))
-  (.add-concept
+  (profile-imports =>.+ (.o evidence: EvidenceProfile))
+  (concept-declarations =>.+
    (.o classification: (ontology-concept 'Classification '(BaseEntity) '())
        authorization: (ontology-concept 'Authorization '(Evidence) '())
        redaction:
        (ontology-concept 'Redaction '(Action) '(source-preserving))))
-  (.add-relation
+  (relation-declarations =>.+
    (.o classified-as:
        (ontology-relation 'CLASSIFIED_AS 'BaseEntity 'Classification '())
        authorized-by:
@@ -29,4 +29,4 @@
         'REDACTED_BY 'Evidence 'Redaction '(source-preserving))))
   (policies (.o disclosure: 'explicit-authorization
                 redaction: 'source-preserving))
-  (.add-query (.o)))
+  (query-declarations =>.+ (.o)))

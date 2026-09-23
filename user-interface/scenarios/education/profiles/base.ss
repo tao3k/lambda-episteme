@@ -18,14 +18,14 @@
   (name 'education-base)
   (profile-scope 'scenario)
   (scenario 'education)
-  (.import (.o evidence: EvidenceProfile privacy: PrivacyProfile))
-  (.add-concept
+  (profile-imports =>.+ (.o evidence: EvidenceProfile privacy: PrivacyProfile))
+  (concept-declarations =>.+
    (.o learner: (ontology-concept 'Learner '(Actor) '(purpose-limited))
        instructor: (ontology-concept 'Instructor '(Actor) '())
        course: (ontology-concept 'Course '(BaseEntity) '())
        department: (ontology-concept 'Department '(BaseEntity) '())
        enrollment: (ontology-concept 'Enrollment '(Action) '(context-required))))
-  (.add-relation
+  (relation-declarations =>.+
    (.o enrolls-in: (ontology-relation 'enrollsIn 'Learner 'Enrollment '())
        for-course:
        (ontology-relation 'forCourse 'Enrollment 'Course '(required))
@@ -33,11 +33,11 @@
        offered-by: (ontology-relation 'offeredBy 'Course 'Department '())))
   (policies (.o enrollment-context: 'required
                 learner-data: 'purpose-limited))
-  (.add-rule
+  (rule-declarations =>.+
    (.o enrollment-learner:
        (ontology-required-relation-rule
         'enrollment-must-link-learner 'Enrollment 'enrollsIn 'target)
        enrollment-course:
        (ontology-required-relation-rule
         'enrollment-must-link-course 'Enrollment 'forCourse 'source)))
-  (.add-query (.o)))
+  (query-declarations =>.+ (.o)))

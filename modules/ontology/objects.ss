@@ -60,7 +60,7 @@
 
 (def (ontology-case-composition-values declarations)
   (unless (object? declarations)
-    (error "Case .use-composition must be a POO object" declarations))
+    (error "Case profile-selection must be a POO object" declarations))
   (map
    (lambda (composition-name)
      (poo-flow-scenario-case
@@ -68,30 +68,34 @@
       '()
       (ontology-declaration-values
        (.ref declarations composition-name)
-       (list '.use-composition composition-name))
+       (list 'profile-selection composition-name))
       '()
       '()))
    (.all-slots declarations)))
 
-;; User-facing Cases are pure POO configuration objects.  The dotted slots are
-;; the only declarations maintained by the user; native composition and source
-;; sequences are derived lazily for the framework-owned evaluator.
+;; User-facing Cases are pure POO configuration objects.  Noun-valued
+;; declaration slots compose through native slot algebra; list projections are
+;; derived lazily for the framework-owned evaluator.
 (def OntologyCase
   (.o kind: 'lambda-episteme.ontology-case
       case-id: #f
       scenario: #f
-      .use-composition: (.o)
-      .add-source: (.o)
-      .add-authorization: (.o)
-      .add-event: (.o)
-      .add-trajectory: (.o)
-      compositions: (ontology-case-composition-values .use-composition)
-      sources: (ontology-declaration-values .add-source '.add-source)
+      (profile-selection ? (.o))
+      (source-declarations ? (.o))
+      (authorization-declarations ? (.o))
+      (event-declarations ? (.o))
+      (trajectory-declarations ? (.o))
+      compositions: (ontology-case-composition-values profile-selection)
+      sources:
+      (ontology-declaration-values source-declarations 'source-declarations)
       authorizations:
-      (ontology-declaration-values .add-authorization '.add-authorization)
-      events: (ontology-declaration-values .add-event '.add-event)
+      (ontology-declaration-values
+       authorization-declarations 'authorization-declarations)
+      events:
+      (ontology-declaration-values event-declarations 'event-declarations)
       trajectories:
-      (ontology-declaration-values .add-trajectory '.add-trajectory)
+      (ontology-declaration-values
+       trajectory-declarations 'trajectory-declarations)
       graph: #f))
 
 (def (ontology-rule-diagnostic rule-value code-value path-value detail-value)
@@ -279,34 +283,43 @@
       name: 'ontology
       profile-scope: 'common
       scenario: #f
-      .import: (.o)
-      .add-concept: (.o)
-      .add-relation: (.o)
-      .add-source: (.o)
-      .add-rule: (.o)
-      .add-query: (.o)
-      .add-conflict: (.o)
-      .add-threat: (.o)
-      .add-capability: (.o)
-      imports: (ontology-declaration-values .import '.import)
+      (profile-imports ? (.o))
+      (concept-declarations ? (.o))
+      (relation-declarations ? (.o))
+      (source-declarations ? (.o))
+      (rule-declarations ? (.o))
+      (query-declarations ? (.o))
+      (conflict-declarations ? (.o))
+      (threat-declarations ? (.o))
+      (capability-declarations ? (.o))
+      imports:
+      (ontology-declaration-values profile-imports 'profile-imports)
       ontology:
       (ontology-vocabulary
-       (ontology-declaration-values .add-concept '.add-concept)
-       (ontology-declaration-values .add-relation '.add-relation))
+       (ontology-declaration-values concept-declarations
+                                    'concept-declarations)
+       (ontology-declaration-values relation-declarations
+                                    'relation-declarations))
       policies: (.o source-binding: 'explicit
                     source-scope: 'non-reversing
                     runtime-mutation: 'forbidden)
-      source-assets: (ontology-declaration-values .add-source '.add-source)
+      source-assets:
+      (ontology-declaration-values source-declarations 'source-declarations)
       capabilities:
-      (ontology-declaration-values .add-capability '.add-capability)
+      (ontology-declaration-values capability-declarations
+                                   'capability-declarations)
       terms: (ontology-vocabulary-concept-identities ontology)
-      rules: (ontology-declaration-values .add-rule '.add-rule)
-      queries: (ontology-declaration-values .add-query '.add-query)
-      conflicts: (ontology-declaration-values .add-conflict '.add-conflict)
+      rules: (ontology-declaration-values rule-declarations
+                                          'rule-declarations)
+      queries: (ontology-declaration-values query-declarations
+                                            'query-declarations)
+      conflicts: (ontology-declaration-values conflict-declarations
+                                              'conflict-declarations)
       threat-model:
       (poo-flow-governance-threat-model
        (string-append identity "/threat-model")
-       (ontology-declaration-values .add-threat '.add-threat))
+       (ontology-declaration-values threat-declarations
+                                    'threat-declarations))
       .project:
       (lambda (profile)
         (.o identity: (.ref profile 'identity)

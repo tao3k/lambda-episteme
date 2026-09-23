@@ -26,12 +26,12 @@
 (.def (PharmacologySafetyProfile self MedicationSafetyProfile)
   (identity "lambda-episteme/ontology/healthcare/pharmacology-safety")
   (name 'pharmacology-safety)
-  (.import
+  (profile-imports =>.+
    (.o healthcare: HealthcareBaseProfile
        evidence: EvidenceProfile
        privacy: PrivacyProfile
        medication: MedicationSafetyProfile))
-  (.add-concept
+  (concept-declarations =>.+
    (.o active-therapy:
        (ontology-concept 'ActiveTherapy '(BaseEntity) '(patient-bound))
        interaction-evidence:
@@ -41,7 +41,7 @@
        (ontology-concept 'MonitoringPlan '(Action) '(review-required))
        patient-risk-factor:
        (ontology-concept 'PatientRiskFactor '(Evidence) '(patient-bound))))
-  (.add-relation
+  (relation-declarations =>.+
    (.o has-active-therapy:
        (ontology-relation
         'HAS_ACTIVE_THERAPY 'Patient 'ActiveTherapy '(required))
@@ -61,14 +61,14 @@
        requires-monitoring:
        (ontology-relation
         'REQUIRES_MONITORING 'MedicationOrder 'MonitoringPlan '())))
-  (.add-source
+  (source-declarations =>.+
    (.o warfarin-antibiotic-label-evidence:
        (ontology-source
         "healthcare/pharmacology/warfarin-tmp-smx-label-evidence"
         "user-interface/scenarios/healthcare/sources/warfarin-tmp-smx-label-evidence.json"
         'json 'scenario 'healthcare #f)))
-  (.add-rule (.o))
-  (.add-threat
+  (rule-declarations =>.+ (.o))
+  (threat-declarations =>.+
    (.o incomplete-medication-context:
        (poo-flow-governance-threat
         "healthcare/pharmacology/threat/incomplete-medication-context"
@@ -105,8 +105,8 @@
        interaction-review: 'required-before-commit
        pharmacology-uncertainty: 'explicit
        evidence-type: HealthcarePharmacologyEvidence))
-  (.add-capability (.o))
-  (.add-query (.o))
+  (capability-declarations =>.+ (.o))
+  (query-declarations =>.+ (.o))
   (.assess-governance
    (lambda (context)
      (healthcare-contextual-governance-assessment

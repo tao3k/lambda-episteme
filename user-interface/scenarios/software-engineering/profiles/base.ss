@@ -17,15 +17,15 @@
   (name 'software-engineering-base)
   (profile-scope 'scenario)
   (scenario 'software-engineering)
-  (.import (.o evidence: EvidenceProfile))
-  (.add-concept
+  (profile-imports =>.+ (.o evidence: EvidenceProfile))
+  (concept-declarations =>.+
    (.o software-component:
        (ontology-concept 'SoftwareComponent '(BaseEntity) '())
        decision-record:
        (ontology-concept 'DecisionRecord '(Evidence) '(decision-status))
        implementation-artifact:
        (ontology-concept 'ImplementationArtifact '(BaseEntity) '())))
-  (.add-relation
+  (relation-declarations =>.+
    (.o implements-decision:
        (ontology-relation
         'implementsDecision 'ImplementationArtifact 'DecisionRecord
@@ -34,13 +34,13 @@
        (ontology-relation 'ownsArtifact 'Actor 'ImplementationArtifact '())))
   (policies (.o dependency-graph: 'acyclic
                 implementation-decision-link: 'required))
-  (.add-source
+  (source-declarations =>.+
    (.o architecture-decision-policy:
        (ontology-source
         "ontology/software-engineering/architecture-decision-policy"
         "user-interface/scenarios/software-engineering/sources/architectural-decision-making.md"
         'markdown 'scenario 'software-engineering #f)))
-  (.add-rule
+  (rule-declarations =>.+
    (.o architecture-dependency:
        (ontology-acyclic-relation-rule
         'architecture-dependency-dag 'dependsOn)
@@ -48,4 +48,4 @@
        (ontology-required-relation-rule
         'implementation-must-link-decision
         'ImplementationArtifact 'implementsDecision 'source)))
-  (.add-query (.o)))
+  (query-declarations =>.+ (.o)))

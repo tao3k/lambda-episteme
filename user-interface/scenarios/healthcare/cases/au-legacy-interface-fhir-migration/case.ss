@@ -60,7 +60,7 @@
   (cedar-human-authorization-required? #t)
   (rollback-source-snapshot-retained? #t)
 
-  (.use-composition
+  (profile-selection =>.+
    (.o common:
        (.o evidence: EvidenceProfile
            privacy: PrivacyProfile)
@@ -73,7 +73,7 @@
   (graph
    (.o (:: @ Graph)
        graph-id: 'au-legacy-interface-fhir-migration
-       .add-node:
+       node-declarations:
        (.o legacy-interface:
            (poo-flow-graph-node 'legacy-interface 'HL7v2Interface)
            parser-receipt:
@@ -106,7 +106,7 @@
            phased-cutover-readiness:
            (poo-flow-graph-node 'phased-cutover-readiness
                                 'CutoverReadiness))
-       .add-edge:
+       edge-declarations:
        (.o parser-reads-legacy:
            (poo-flow-graph-edge
             'legacy-interface 'parser-receipt 'PARSED_WITH_EVIDENCE)

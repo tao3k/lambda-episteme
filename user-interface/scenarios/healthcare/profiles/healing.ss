@@ -15,21 +15,21 @@
 (.def (HealingProfile @ HealthcareBaseProfile)
   (identity "lambda-episteme/ontology/healthcare/healing")
   (name 'healing)
-  (.import (.o healthcare: HealthcareBaseProfile evidence: EvidenceProfile))
-  (.add-concept
+  (profile-imports =>.+ (.o healthcare: HealthcareBaseProfile evidence: EvidenceProfile))
+  (concept-declarations =>.+
    (.o healing-episode:
        (ontology-concept 'HealingEpisode '(Encounter) '(time-bound))
        recovery-milestone:
        (ontology-concept 'RecoveryMilestone '(Evidence) '())))
-  (.add-relation
+  (relation-declarations =>.+
    (.o recovers-from:
        (ontology-relation 'RECOVERS_FROM 'HealingEpisode 'Condition '())
        reaches-milestone:
        (ontology-relation
         'REACHES_MILESTONE 'HealingEpisode 'RecoveryMilestone
         '(evidence-required))))
-  (.add-source (.o))
-  (.add-rule (.o))
+  (source-declarations =>.+ (.o))
+  (rule-declarations =>.+ (.o))
   (policies (.o observation: 'time-bound
                 outcome: 'evidence-required))
-  (.add-query (.o)))
+  (query-declarations =>.+ (.o)))

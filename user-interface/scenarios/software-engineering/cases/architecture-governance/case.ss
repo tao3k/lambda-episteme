@@ -21,14 +21,14 @@
 (.def (ArchitectureGovernanceCase @ OntologyCase)
   (case-id 'architecture-governance)
   (scenario SoftwareEngineeringScenario)
-  (.use-composition
+  (profile-selection =>.+
    (.o software-engineering:
        (.o evidence: EvidenceProfile
            base: SoftwareEngineeringBaseProfile)))
   (graph
    (.o (:: @ Graph)
        graph-id: 'architecture-governance
-       .add-node:
+       node-declarations:
        (.o component-api:
            (poo-flow-graph-node 'component-api 'SoftwareComponent)
            component-domain:
@@ -38,7 +38,7 @@
            implementation-1:
            (poo-flow-graph-node
             'implementation-1 'ImplementationArtifact))
-       .add-edge:
+       edge-declarations:
        (.o api-depends-on-domain:
            (poo-flow-graph-edge 'component-api 'component-domain 'dependsOn)
            implementation-links-decision:

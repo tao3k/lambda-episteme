@@ -36,12 +36,12 @@
 (.def (AustraliaHealthcareRegionProfile self SupportAtHomeProfile)
   (identity "lambda-episteme/ontology/healthcare/regions/australia")
   (name 'australia)
-  (.import
+  (profile-imports =>.+
    (.o primary-care: PrimaryCareProfile
        support-at-home: SupportAtHomeProfile))
-  (.add-concept (.o))
-  (.add-relation (.o))
-  (.add-source
+  (concept-declarations =>.+ (.o))
+  (relation-declarations =>.+ (.o))
+  (source-declarations =>.+
    (.o primary-care-authority:
        (ontology-source
         "healthcare/regions/australia/primary-care/authority-evidence"
@@ -52,8 +52,8 @@
         "healthcare/regions/australia/support-at-home/authority-evidence"
         "user-interface/scenarios/healthcare/sources/regions/australia/support-at-home-authority.json"
         'json 'scenario 'healthcare #f)))
-  (.add-rule (.o))
-  (.add-threat
+  (rule-declarations =>.+ (.o))
+  (threat-declarations =>.+
    (.o primary-care-program-drift:
        (poo-flow-governance-threat
         "healthcare/regions/australia/threat/primary-care-program-drift"
@@ -91,8 +91,8 @@
            standard-profile:
            (.ref AustraliaMedicationRequestStandardProfile 'identity)
            standard-edition: "hl7.fhir.r4.core@4.0.1")))
-  (.add-capability (.o))
-  (.add-query (.o))
+  (capability-declarations =>.+ (.o))
+  (query-declarations =>.+ (.o))
   (.assess-governance
    (lambda (context)
      (healthcare-contextual-governance-assessment

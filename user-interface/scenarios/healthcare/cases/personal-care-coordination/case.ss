@@ -47,7 +47,7 @@
   (regional-primary-care-program-verified? #t)
   (regional-home-support-program-verified? #t)
 
-  (.use-composition
+  (profile-selection =>.+
    (.o common:
        (.o evidence: EvidenceProfile
            privacy: PrivacyProfile)
@@ -59,7 +59,7 @@
        regions:
        (.o australia: AustraliaHealthcareRegionProfile)))
 
-  (.add-event
+  (event-declarations =>.+
    (.o care-request:
        (healthcare-clinical-event
         "person-1" "personal-care-request-1" 'care-request 1
@@ -129,7 +129,7 @@
         'care-outcome 10 "outcome/independent-living"
         '("first-home-care-visit-1") 'hypothesized #f)))
 
-  (.add-trajectory
+  (trajectory-declarations =>.+
    (.o personal-care:
        (poo-flow-causal-trajectory-contract
         "healthcare/personal-care/continuous-care-trajectory"
@@ -151,7 +151,7 @@
   (graph
    (.o (:: @ Graph)
        graph-id: 'personal-care-coordination
-       .add-node:
+       node-declarations:
        (.o person-1: (poo-flow-graph-node 'person-1 'Patient)
            practice-1: (poo-flow-graph-node 'practice-1 'GeneralPractice)
            gp-1: (poo-flow-graph-node 'gp-1 'GeneralPractitioner)
@@ -174,7 +174,7 @@
            provider-1:
            (poo-flow-graph-node 'provider-1 'HomeSupportProvider)
            service-1: (poo-flow-graph-node 'service-1 'HomeSupportService))
-       .add-edge:
+       edge-declarations:
        (.o patient-registration:
            (poo-flow-graph-edge 'person-1 'practice-1 'REGISTERED_WITH)
            patient-preferred-gp:
