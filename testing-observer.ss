@@ -5,7 +5,10 @@
 ;;; AOT control-plane wrapper around Gerbil's native test command. ASP still
 ;;; projects POO Profiles and gxtest owns loading and executing every suite.
 
-(import (only-in :asp-gerbil-scheme/testing-api
+(import :std/list/list
+        (only-in :gerbil/core string-contains string-prefix? string-suffix?)
+        (only-in :std/string/misc string-trim-prefix)
+        (only-in :asp-gerbil-scheme/testing-api
                  testing-interface-run-test-files!)
         (only-in :asp-gerbil-scheme/testing-runner-api
                  testing-interface-test-files)
@@ -31,34 +34,38 @@
   (force-output))
 
 (def (lambda-episteme-selected-test-files test-path)
-  (let (test-files
-        (if (and (string-suffix? ".ss" test-path)
-                 (file-exists? test-path))
-          (list test-path)
+  (let* ((normalized-test-path (string-trim-prefix "./" test-path))
+         (test-files
+        (if (and (string-suffix? ".ss" normalized-test-path)
+                 (file-exists? normalized-test-path))
+          (list normalized-test-path)
           (let* ((package-local?
-                  (or (equal? test-path "t")
-                      (string-prefix? "t/" test-path)))
+                  (or (equal? normalized-test-path "t")
+                      (string-prefix? "t/" normalized-test-path)))
                  (test-boundary
                   (and (not package-local?)
-                       (string-contains test-path "/t/"))))
-            (unless (or package-local? test-boundary)
+                       (string-contains normalized-test-path "/t/"))))
+            (unless (or package-local? (fixnum? test-boundary))
               (error "Lambda Episteme test directory is outside a package t/ tree"
-                     test-path))
+                     normalized-test-path))
             (let* ((package-root
                     (if package-local?
                       "."
-                      (substring test-path 0 test-boundary)))
+                      (if (fixnum? test-boundary)
+                        (substring normalized-test-path 0 test-boundary)
+                        (error "Lambda Episteme test boundary is not an index"
+                               normalized-test-path))))
                    (directory-prefix
                     (string-append
                      (if package-local? "./" "")
-                     test-path
-                     (if (string-suffix? "/" test-path) "" "/"))))
+                     normalized-test-path
+                     (if (string-suffix? "/" normalized-test-path) "" "/"))))
               (filter
                (lambda (path) (string-prefix? directory-prefix path))
                (testing-interface-test-files
                 +lambda-episteme-testing-interface+
-                test-path
-                pkgdir: package-root))))))
+                normalized-test-path
+                pkgdir: package-root)))))))
     (when (null? test-files)
       (error "no Lambda Episteme test files selected" test-path))
     test-files))

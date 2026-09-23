@@ -6,6 +6,7 @@
 ;;; The parser receipt proves syntax ownership upstream.  This module maps an
 ;;; already-normalized healthcare subject; it does not parse HL7v2 or CDA.
 (import (only-in :clan/poo/object .o .ref object?)
+        :std/list/list
         (only-in :poo-flow/src/modules/standards/types
                  poo-flow-standard-conformance-receipt?
                  poo-flow-standard-governance-interface?

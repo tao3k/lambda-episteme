@@ -6,6 +6,7 @@
 ;;; Lambda Healthcare owns these exact bounded pack identities; these
 ;;; are not claims that the complete upstream implementation guides are copied.
 (import (only-in :clan/poo/object .o .ref)
+        :std/list/list
         (only-in :poo-flow/src/modules/standards/types
                  +poo-flow-standard-validation-provider-kind+
                  poo-flow-standard-artifact?)

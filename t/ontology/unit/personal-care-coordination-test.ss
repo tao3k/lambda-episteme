@@ -4,6 +4,7 @@
 
 (import :std/test
         (only-in :clan/poo/object .cc .ref)
+        :std/list/list
         (only-in :poo-flow/src/module-system/profile-composition/interface
                  poo-flow-scenario-case-name)
         :poo-flow/src/modules/temporal-causality/interface

@@ -61,6 +61,9 @@
    "user-interface"
    lambda-episteme-module-load-path))
 
+(def lambda-episteme-contribution-load-path
+  (make-poo-flow-contribution-module-load-path 'lambda-episteme "."))
+
 (def lambda-episteme-source-collection-test
   (test-suite "Lambda module source collection and unified POO load path"
     (composition-root-test-case "poo-flow-load-modules discovers public module interfaces"
@@ -109,12 +112,12 @@
            "./modules/healthcare/interface.ss"
            "./modules/ontology/interface.ss"))))
 
-    (composition-root-test-case "a selected contributor collection exposes its modules"
+    (composition-root-test-case "the contribution identity expands its checked-out modules"
       (let* ((selection
               (caar (poo-flow-modules! :custom (lambda-episteme))))
              (sources
               (poo-flow-module-selection-source-refs
-               lambda-episteme-module-load-path
+               lambda-episteme-contribution-load-path
                selection)))
         (check-equal? (length sources) 4)
         (check-equal?
@@ -127,12 +130,12 @@
            "modules/healthcare/interface.ss"
            "modules/ontology/interface.ss"))))
 
-    (composition-root-test-case "a selected module key resolves one contributed module"
+    (composition-root-test-case "a module name resolves one contributed module"
       (let* ((selection (caar (poo-flow-modules! :custom (ontology))))
              (source
               (car
                (poo-flow-module-selection-source-refs
-                lambda-episteme-module-load-path selection))))
+                lambda-episteme-contribution-load-path selection))))
         (check-equal? (metadata-ref source 'source-collection)
                       'lambda-episteme)
         (check-equal? (poo-flow-module-source-ref-value source)
@@ -161,7 +164,7 @@
                  lambda-user-module-bundles))))
              (source
               (car (poo-flow-module-selection-source-refs
-                    lambda-episteme-module-load-path selection))))
+                    lambda-episteme-contribution-load-path selection))))
         (check-equal? (metadata-ref source 'source-collection) 'lambda-episteme)
         (check-equal? (metadata-ref source 'source-owner) 'contributor)
         (check-equal? (poo-flow-module-source-ref-value source)
@@ -176,7 +179,7 @@
                'user-first
                (cons user-source
                      (poo-flow-module-load-path-collections
-                      lambda-episteme-module-load-path))))
+                      lambda-episteme-contribution-load-path))))
              (selection
               (car
                (reverse

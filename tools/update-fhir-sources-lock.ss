@@ -5,7 +5,7 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .ref)
-        (only-in :std/misc/path path-expand)
+        (only-in :gerbil/core path-expand)
         (only-in :std/misc/ports read-file-u8vector)
         (only-in :poo-flow/src/feature-system/source-lock-feature
                  sources-lock-freeze

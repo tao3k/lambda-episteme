@@ -8,6 +8,7 @@
 (import (only-in :clan/poo/object .cc .o .ref .slot? object?)
         (only-in :std/crypto/digest sha256)
         (only-in :std/misc/ports read-all-as-string)
+        :std/list/list
         (only-in :std/encoding/hex hex-encode)
         (only-in :std/encoding/json json->string)
         (only-in :poo-flow/src/graph/types
@@ -94,8 +95,9 @@
   (string-append
    "sha256:"
    (hex-encode
-    (sha256 (string->utf8
-             (call-with-output-string (lambda (port) (write datum port))))))))
+    (sha256
+     (string->utf8
+      (call-with-output-string (lambda (port) (write datum port))))))))
 
 (def (healthcare-profile-origin-digest receipt root)
   (unless (ontology-case-composition-receipt? receipt)
@@ -204,8 +206,8 @@
 
 (def (source-by-identity profiles identity)
   (find (lambda (source) (equal? (.ref source 'identity) identity))
-        (apply append (map (lambda (profile) (.ref profile 'source-assets))
-                           profiles))))
+        (concatenate
+         (map (lambda (profile) (.ref profile 'source-assets)) profiles))))
 
 (def (source-text root profiles identity expected-language)
   (let (source (source-by-identity profiles identity))

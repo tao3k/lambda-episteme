@@ -4,6 +4,7 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .ref)
+        :std/list/list
         (only-in :std/test check-equal? test-case test-suite)
         (only-in :asp-gerbil-scheme/benchmark-api
                  benchmark-fixture-contract-pass?

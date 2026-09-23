@@ -4,6 +4,7 @@
 
 (import :std/test
         (only-in :clan/poo/object .cc .def .o .ref .set! object?)
+        :std/list/list
         (only-in :poo-flow/src/graph/types
                  poo-flow-graph poo-flow-graph-edge poo-flow-graph-node
                  poo-flow-graph-edge-kind poo-flow-graph-edges
