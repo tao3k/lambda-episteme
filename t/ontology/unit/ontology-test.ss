@@ -3,7 +3,8 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import :std/test
-        (only-in :clan/poo/object .cc .def .o .ref .set! object?)
+        (only-in :clan/poo/object
+                 .all-slots .cc .def .o .ref .set! .slot? object?)
         :std/list/list
         (only-in :poo-flow/src/graph/types
                  poo-flow-graph poo-flow-graph-edge poo-flow-graph-node
@@ -25,6 +26,7 @@
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/healing
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
+        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/post-operative-healing/case
         :poo-flow/lambda-episteme/user-interface/scenarios/software-engineering/profiles/base
@@ -89,7 +91,7 @@
 (.def (UnmitigatedMedicationSafetyProfile @ MedicationSafetyProfile)
   (identity "lambda-episteme/ontology/healthcare/medication-safety/unmitigated")
   (name 'medication-safety-unmitigated)
-  (.add-threat
+  (threat-declarations =>.+
    (.o contraindication-evidence-drift:
        (poo-flow-governance-threat
         "healthcare/medication/threat/contraindication-evidence-drift"
@@ -268,21 +270,51 @@
      (check (ontology-profile? MedicationSafetyProfile) => #t)
      (check (.ref EvidenceProfile 'profile-scope) => 'common)
      (check (.ref HealingProfile 'scenario) => 'healthcare)
-     (check (object? (.ref HealthcareBaseProfile '.import)) => #t)
-     (check (object? (.ref HealthcareBaseProfile '.add-concept)) => #t)
-     (check (object? (.ref HealthcareBaseProfile '.add-relation)) => #t)
-     (check (object? (.ref HealthcareBaseProfile '.add-source)) => #t)
-     (check (object? (.ref HealthcareBaseProfile '.add-rule)) => #t)
-     (check (object? (.ref HealthcareBaseProfile '.add-query)) => #t)
-     (check (object? (.ref HealthcareBaseProfile '.add-threat)) => #t)
-     (check (map (lambda (profile) (.ref profile 'identity))
-                 (.ref MedicationSafetyProfile 'imports))
-            => (list "lambda-episteme/ontology/healthcare/base"
-                     "lambda-episteme/ontology/evidence"
+     (check (object? (.ref HealthcareBaseProfile 'profile-imports)) => #t)
+     (check (object? (.ref HealthcareBaseProfile 'concept-declarations)) => #t)
+     (check (object? (.ref HealthcareBaseProfile 'relation-declarations)) => #t)
+     (check (object? (.ref HealthcareBaseProfile 'source-declarations)) => #t)
+     (check (object? (.ref HealthcareBaseProfile 'rule-declarations)) => #t)
+     (check (object? (.ref HealthcareBaseProfile 'query-declarations)) => #t)
+     (check (object? (.ref HealthcareBaseProfile 'threat-declarations)) => #t)
+     (check (list-sort
+             string<?
+             (map (lambda (profile) (.ref profile 'identity))
+                  (.ref MedicationSafetyProfile 'imports)))
+            => (list "lambda-episteme/ontology/evidence"
+                     "lambda-episteme/ontology/healthcare/base"
                      "lambda-episteme/ontology/privacy")))
 
+   (test-case "native slot algebra is the only declaration surface"
+     (let ((base-concepts
+            (.ref HealthcareBaseProfile 'concept-declarations))
+           (ai-concepts
+            (.ref AIClinicalDecisionSupportProfile 'concept-declarations))
+           (graph-value (.ref PostOperativeHealingCase 'graph)))
+       (check (.slot? HealthcareBaseProfile 'concept-declarations) => #t)
+       (check (.slot? HealthcareBaseProfile
+                      (string->symbol ".add-concept"))
+              => #f)
+       (check (.slot? PostOperativeHealingCase 'profile-selection) => #t)
+       (check (.slot? PostOperativeHealingCase
+                      (string->symbol ".use-composition"))
+              => #f)
+       (check (.slot? graph-value 'node-declarations) => #t)
+       (check (.slot? graph-value (string->symbol ".add-node")) => #f)
+       ;; =>.+ retains inherited named declarations without mutating the
+       ;; parent object, and adds only the derived Profile's declarations.
+       (check (.slot? base-concepts 'patient) => #t)
+       (check (.slot? base-concepts 'ai-recommendation) => #f)
+       (check (.slot? ai-concepts 'patient) => #t)
+       (check (.slot? ai-concepts 'ai-recommendation) => #t)
+       (check (.ref (.ref ai-concepts 'patient) 'identity)
+              => (.ref (.ref base-concepts 'patient) 'identity))
+       (check (> (length (.all-slots ai-concepts))
+                 (length (.all-slots base-concepts)))
+              => #t)))
+
    (test-case "one declarative Case slot closes named Profile compositions"
-     (check (object? (.ref PostOperativeHealingCase '.use-composition)) => #t)
+     (check (object? (.ref PostOperativeHealingCase 'profile-selection)) => #t)
      (check (length post-operative-healing-compositions) => 3)
      (check (map poo-flow-scenario-case-name
                  post-operative-healing-compositions)

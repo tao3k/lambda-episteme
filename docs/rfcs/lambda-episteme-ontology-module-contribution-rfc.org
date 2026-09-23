@@ -102,7 +102,7 @@ The current slice implements POO Concept, Relation and executable Rule
 declarations, Profile/Scenario/Case composition, one-pass identity indexes,
 closed parent and relation-endpoint diagnostics, and deterministic POO
 projection.  Each Case declares its domain topology by deriving the POO Flow
-Graph prototype: =.add-node= and =.add-edge= are named POO object slots, while
+Graph prototype: =node-declarations= and =edge-declarations= are named POO object slots, while
 the core Graph lazily exposes the sequence required by existing algorithms.
 Provider cross-dispatch and Lean proofs remain separate milestones; symbolic
 constraint labels are not evidence that those milestones are complete.
@@ -210,8 +210,8 @@ Ontology-specific Profile slots and validation record:
 - maturity, deprecation and replacement metadata.
 
 The user-facing representation is one inherited POO declaration per file.
-=.import=, =.add-concept=, =.add-relation=, =.add-source=, =.add-rule= and
-=.add-query= are named object slots.  The native list-shaped values consumed by
+=profile-imports=, =concept-declarations=, =relation-declarations=, =source-declarations=, =rule-declarations= and
+=query-declarations= are named object slots.  The native list-shaped values consumed by
 closure and evaluation are framework projections; the user does not maintain a
 separate Vocabulary, Rule list, Source list or terms list beside the Profile.
 
@@ -265,16 +265,16 @@ Illustrative POO shape:
 (.def (HealingProfile @ HealthcareBaseProfile)
   (identity "lambda-episteme/ontology/healthcare/healing")
   (name 'healing)
-  (.import (.o healthcare: HealthcareBaseProfile evidence: EvidenceProfile))
-  (.add-concept
+  (profile-imports =>.+ (.o healthcare: HealthcareBaseProfile evidence: EvidenceProfile))
+  (concept-declarations =>.+
    (.o healing-episode: HealingEpisode
        recovery-milestone: RecoveryMilestone))
-  (.add-relation
+  (relation-declarations =>.+
    (.o recovers-from: RecoversFrom
        reaches-milestone: ReachesMilestone))
-  (.add-source (.o))
-  (.add-rule (.o))
-  (.add-query (.o healing-progress: 'healing-progress)))
+  (source-declarations =>.+ (.o))
+  (rule-declarations =>.+ (.o))
+  (query-declarations =>.+ (.o healing-progress: 'healing-progress)))
 #+end_src
 
 These slots inherit and replace ordinary gerbil-poo slots.  They do not define
@@ -302,9 +302,9 @@ graph through it a second time causes duplicate dispatch semantics. A Case binds
 - expected diagnostics and evidence;
 - report-only runtime handoff expectations.
 
-A Case exposes one =.use-composition= POO slot. Its named child slots are
+A Case exposes one =profile-selection= POO slot. Its named child slots are
 bounded composition groups, and every group contains named Profile slots.
-=.add-source= uses the same shape for Case-local Sources. Ontology derives the
+=source-declarations= uses the same shape for Case-local Sources. Ontology derives the
 native composition and source sequences from those declarations, indexes their
 selected Profiles once, orders the Profile dependency graph, applies Profile
 slot behavior, and returns one admission/projection receipt. It does not
@@ -316,16 +316,16 @@ For example, the intended shape is:
 (.def (PostOperativeHealingCase @ OntologyCase)
   (case-id 'post-operative-healing)
   (scenario HealthcareScenario)
-  (.use-composition
+  (profile-selection =>.+
    (.o common: (.o evidence: EvidenceProfile privacy: PrivacyProfile)
        healthcare: (.o base: HealthcareBaseProfile healing: HealingProfile)
        medication: (.o safety: MedicationSafetyProfile)))
-  (.add-source (.o))
+  (source-declarations =>.+ (.o))
   (graph
    (.o (:: @ Graph)
        graph-id: 'post-operative-healing
-       .add-node: (.o patient: PatientNode episode: HealingEpisodeNode)
-       .add-edge: (.o episode-patient: EpisodePatientEdge)))))
+       node-declarations: (.o patient: PatientNode episode: HealingEpisodeNode)
+       edge-declarations: (.o episode-patient: EpisodePatientEdge)))))
 #+end_src
 
 The Case file exports only =PostOperativeHealingCase=. The composition values,
@@ -547,7 +547,7 @@ Acceptance requires:
 - exactly one Ontology contribution module;
 - top-level Profiles are Common Profiles built from explicit imports;
 - Scenario-local Profiles remain scoped to their Scenario;
-- Cases use one =.use-composition= object with named groups of named Profiles;
+- Cases use one =profile-selection= object with named groups of named Profiles;
 - Common Sources and Case-local Sources have explicit, non-reversing scope;
 - public API is POO-native and reuses existing Profile composition;
 - no parallel Profile or Case abstraction;
@@ -561,11 +561,11 @@ Acceptance requires:
 
 1. Scenario base Profiles are imported explicitly by Scenario Profiles or
    selected explicitly by Cases; there is no implicit injection.
-2. Ontology Cases declare named Profile groups in =.use-composition=; the
+2. Ontology Cases declare named Profile groups in =profile-selection=; the
    framework projects existing native composition values and produces an
    Ontology admission/projection receipt; they do not define a parallel Case
    class or re-compose Profile prototypes through feature-system Domain Case.
-3. A Case file exports one Case declaration. =.use-composition=, =.add-source=
+3. A Case file exports one Case declaration. =profile-selection=, =source-declarations=
    and =graph= are its user-maintained configuration slots; derived sequences,
    receipts and evaluations are not user-interface definitions.
 4. Common Sources live at Ontology scope, while each Case may own distinct

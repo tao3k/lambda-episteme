@@ -16,8 +16,8 @@
   (name 'manufacturing-base)
   (profile-scope 'scenario)
   (scenario 'manufacturing)
-  (.import (.o evidence: EvidenceProfile))
-  (.add-concept
+  (profile-imports =>.+ (.o evidence: EvidenceProfile))
+  (concept-declarations =>.+
    (.o machine: (ontology-concept 'Machine '(BaseEntity) '())
        sensor: (ontology-concept 'Sensor '(BaseEntity) '())
        work-order:
@@ -25,18 +25,18 @@
        part: (ontology-concept 'Part '(BaseEntity) '())
        quality-inspection:
        (ontology-concept 'QualityInspection '(Action) '(evidence-required))))
-  (.add-relation
+  (relation-declarations =>.+
    (.o monitored-by: (ontology-relation 'monitoredBy 'Machine 'Sensor '())
        executes-work-order:
        (ontology-relation 'executesWorkOrder 'Machine 'WorkOrder '(required))
        consumes-part: (ontology-relation 'consumesPart 'WorkOrder 'Part '())))
   (policies (.o work-order-context: 'required
                 quality-evidence: 'source-bound))
-  (.add-rule
+  (rule-declarations =>.+
    (.o work-order-machine:
        (ontology-required-relation-rule
         'work-order-must-link-machine 'WorkOrder 'executesWorkOrder 'target)
        work-order-part:
        (ontology-required-relation-rule
         'work-order-must-consume-part 'WorkOrder 'consumesPart 'source)))
-  (.add-query (.o)))
+  (query-declarations =>.+ (.o)))

@@ -24,11 +24,11 @@
 (.def (MedicationSafetyProfile self HealthcareBaseProfile)
   (identity "lambda-episteme/ontology/healthcare/medication-safety")
   (name 'medication-safety)
-  (.import
+  (profile-imports =>.+
    (.o healthcare: HealthcareBaseProfile
        evidence: EvidenceProfile
        privacy: PrivacyProfile))
-  (.add-concept
+  (concept-declarations =>.+
    (.o medication: (ontology-concept 'Medication '(BaseEntity) '())
        administration:
        (ontology-concept 'Administration '(Action) '(review-required))
@@ -36,7 +36,7 @@
        (ontology-concept 'MedicationOrder '(Action) '(review-required))
        contraindication:
        (ontology-concept 'Contraindication '(Evidence) '())))
-  (.add-relation
+  (relation-declarations =>.+
    (.o administered-to:
        (ontology-relation
         'ADMINISTERED_TO 'Administration 'Patient '(review-required))
@@ -47,7 +47,7 @@
        (ontology-relation 'ORDER_FOR_PATIENT 'MedicationOrder 'Patient '(required))
        assigned-provider:
        (ontology-relation 'ASSIGNED_PROVIDER 'MedicationOrder 'Provider '(required))))
-  (.add-source
+  (source-declarations =>.+
    (.o cedar-medication-policy:
        (ontology-source
         "healthcare/medication/authorization/policy"
@@ -63,8 +63,8 @@
         "healthcare/medication/authorization/schema"
         "user-interface/scenarios/healthcare/authorization/schema.json"
         'json 'scenario 'healthcare #f)))
-  (.add-rule (.o))
-  (.add-threat
+  (rule-declarations =>.+ (.o))
+  (threat-declarations =>.+
    (.o contraindication-evidence-drift:
        (poo-flow-governance-threat
         "healthcare/medication/threat/contraindication-evidence-drift"
@@ -79,14 +79,14 @@
         '("medication reconciliation bound to encounter evidence"))))
   (policies (.o medication-change: 'review-required
                 disclosure: 'minimum-necessary))
-  (.add-capability
+  (capability-declarations =>.+
    (.o administer-medication:
        (poo-flow-authorization-capability
         "healthcare/medication/capability/administer"
         "Healthcare::Action::\"administerMedication\""
         4101
         'elevated)))
-  (.add-query (.o))
+  (query-declarations =>.+ (.o))
   (.assess-governance
    (lambda (context)
      (healthcare-contextual-governance-assessment

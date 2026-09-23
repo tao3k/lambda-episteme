@@ -11,14 +11,14 @@
 (.def (EvidenceProfile @ OntologyProfile)
   (identity "lambda-episteme/ontology/evidence")
   (name 'evidence)
-  (.add-concept
+  (concept-declarations =>.+
    (.o base-entity: (ontology-concept 'BaseEntity '() '())
        actor: (ontology-concept 'Actor '(BaseEntity) '())
        action: (ontology-concept 'Action '(BaseEntity) '())
        evidence:
        (ontology-concept 'Evidence '(BaseEntity) '(provenance-required))
        lifespan: (ontology-concept 'Lifespan '(BaseEntity) '(ordered-time))))
-  (.add-relation
+  (relation-declarations =>.+
    (.o depends-on:
        (ontology-relation 'dependsOn 'BaseEntity 'BaseEntity '(acyclic))
        part-of: (ontology-relation 'partOf 'BaseEntity 'BaseEntity '())
@@ -34,4 +34,4 @@
         'supersedes 'BaseEntity 'BaseEntity '(irreflexive))))
   (policies (.o source-binding: 'digest-required
                 missing-evidence: 'unknown))
-  (.add-query (.o)))
+  (query-declarations =>.+ (.o)))

@@ -2,7 +2,7 @@
 ;;;
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
-(import (only-in :clan/poo/object .cc .o .ref object?)
+(import (only-in :clan/poo/object .alist/sort .cc .o .ref object?)
         :std/list/list
         (only-in :poo-flow/src/graph/types
                  poo-flow-graph poo-flow-graph-edge
@@ -29,6 +29,7 @@
                  ontology-profile? ontology-source?)
         (only-in "objects.ss"
                  ontology-profile-project ontology-rule-evaluate
+                 ontology-semantic-project
                  ontology-scenario-admits-profile?))
 
 (export ontology-compose-case
@@ -386,6 +387,14 @@
 ;;; The semantic closure is indexed once per Case.  This is the native POO
 ;;; replacement for reparsing RDF graphs: every declaration and reference is
 ;;; admitted with O(1) expected lookup after the two identity indexes exist.
+(def (ontology-semantic-equivalent? left right)
+  ;; =>.+ can lazily re-evaluate an inherited declaration, so object identity
+  ;; is not semantic identity. Compare the stable method projection instead;
+  ;; a conflicting declaration with the same identity remains a hard failure.
+  (equal?
+   (.alist/sort (ontology-semantic-project left left))
+   (.alist/sort (ontology-semantic-project right right))))
+
 (def (ontology-semantic-environment profiles)
   (let ((concept-index (make-hash-table))
         (relation-index (make-hash-table))
@@ -397,44 +406,52 @@
        (let (vocabulary (.ref profile 'ontology))
          (for-each
           (lambda (concept)
-            (let ((identity (.ref concept 'identity)))
-              (if (hash-get concept-index identity)
+            (let* ((identity (.ref concept 'identity))
+                   (existing (hash-get concept-index identity)))
+              (cond
+               ((not existing)
+                (hash-put! concept-index identity concept))
+               ((not (ontology-semantic-equivalent? existing concept))
                 (set! diagnostics
                       (cons (ontology-diagnostic
                              'duplicate-concept-identity
                              (list 'profiles (.ref profile 'identity)
                                    'ontology 'concepts identity)
                              identity)
-                            diagnostics))
-                (hash-put! concept-index identity concept))))
+                            diagnostics))))))
           (.ref vocabulary 'concepts))
          (for-each
           (lambda (relation)
-            (let ((identity (.ref relation 'identity)))
-              (if (hash-get relation-index identity)
+            (let* ((identity (.ref relation 'identity))
+                   (existing (hash-get relation-index identity)))
+              (cond
+               ((not existing)
+                (hash-put! relation-index identity relation))
+               ((not (ontology-semantic-equivalent? existing relation))
                 (set! diagnostics
                       (cons (ontology-diagnostic
                              'duplicate-relation-identity
                              (list 'profiles (.ref profile 'identity)
                                    'ontology 'relations identity)
                              identity)
-                            diagnostics))
-                (hash-put! relation-index identity relation))))
+                            diagnostics))))))
           (.ref vocabulary 'relations))
          (for-each
           (lambda (rule)
-            (let (identity (.ref rule 'identity))
-              (if (hash-get rule-index identity)
+            (let* ((identity (.ref rule 'identity))
+                   (existing (hash-get rule-index identity)))
+              (cond
+               ((not existing)
+                (hash-put! rule-index identity rule)
+                (set! rules (cons rule rules)))
+               ((not (ontology-semantic-equivalent? existing rule))
                 (set! diagnostics
                       (cons (ontology-diagnostic
                              'duplicate-rule-identity
                              (list 'profiles (.ref profile 'identity)
                                    'rules identity)
                              identity)
-                            diagnostics))
-                (begin
-                  (hash-put! rule-index identity rule)
-                  (set! rules (cons rule rules))))))
+                            diagnostics))))))
           (.ref profile 'rules))))
      profiles)
     (for-each

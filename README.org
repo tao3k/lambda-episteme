@@ -47,14 +47,14 @@ it meaning.  Lambda therefore declares Healthcare, finance, manufacturing or
 other domain threats through the POO Flow Governance slots; it does not create
 a second generic Governance module.  For example, the Healthcare medication
 safety Profile declares a critical contraindication-evidence threat through
-=.add-threat=.  That slot is projected to the core =ThreatModel= automatically,
+=threat-declarations=.  That slot is projected to the core =ThreatModel= automatically,
 and every selected Profile is assessed while its Case composition receipt is
 built.
 
 #+begin_src scheme
 (.def (MedicationSafetyProfile @ HealthcareBaseProfile)
   ;; ontology declarations omitted
-  (.add-threat
+  (threat-declarations =>.+
    (.o contraindication-evidence-drift:
        (poo-flow-governance-threat
         "healthcare/medication/threat/contraindication-evidence-drift"
@@ -151,36 +151,36 @@ A Profile inherits an existing prototype and declares only its additions:
 (.def (HealingProfile @ HealthcareBaseProfile)
   (identity "lambda-episteme/ontology/healthcare/healing")
   (name 'healing)
-  (.import (.o healthcare: HealthcareBaseProfile
+  (profile-imports =>.+ (.o healthcare: HealthcareBaseProfile
                evidence: EvidenceProfile))
-  (.add-concept
+  (concept-declarations =>.+
    (.o healing-episode:
        (ontology-concept 'HealingEpisode '(Encounter) '(time-bound))))
-  (.add-relation
+  (relation-declarations =>.+
    (.o recovers-from:
        (ontology-relation
         'RECOVERS_FROM 'HealingEpisode 'Condition '())))
-  (.add-source (.o))
-  (.add-rule (.o))
-  (.add-query (.o healing-progress: 'healing-progress)))
+  (source-declarations =>.+ (.o))
+  (rule-declarations =>.+ (.o))
+  (query-declarations =>.+ (.o healing-progress: 'healing-progress)))
 #+end_src
 
 Top-level =user-interface/profiles/= contains reusable common Profiles.
 =user-interface/scenarios/<vertical>/profiles/= contains Profiles owned by one
-vertical Scenario.  Inheritance and =.import= composition make reuse explicit;
+vertical Scenario.  Inheritance and =profile-imports= composition make reuse explicit;
 filesystem placement alone never activates a Profile.
 
 ** Case
 
-A Case is one POO declaration.  It selects Profiles with =.use-composition=,
-adds Case-local Sources with =.add-source= when needed, and declares graph
-topology through the Graph prototype's =.add-node= and =.add-edge= slots:
+A Case is one POO declaration.  It selects Profiles with =profile-selection=,
+adds Case-local Sources with =source-declarations= when needed, and declares graph
+topology through the Graph prototype's =node-declarations= and =edge-declarations= slots:
 
 #+begin_src scheme
 (.def (TransactionPostingCase @ OntologyCase)
   (case-id 'transaction-posting)
   (scenario CommercialFinanceScenario)
-  (.use-composition
+  (profile-selection =>.+
    (.o commercial-finance:
        (.o evidence: EvidenceProfile
            privacy: PrivacyProfile
@@ -188,13 +188,13 @@ topology through the Graph prototype's =.add-node= and =.add-edge= slots:
   (graph
    (.o (:: @ Graph)
        graph-id: 'transaction-posting
-       .add-node:
+       node-declarations:
        (.o customer-1:
            (poo-flow-graph-node 'customer-1 'Customer))
-       .add-edge: (.o))))
+       edge-declarations: (.o))))
 #+end_src
 
-=.add-node= and =.add-edge= are real POO slots, not lists disguised as a graph
+=node-declarations= and =edge-declarations= are real POO slots, not lists disguised as a graph
 DSL.  The Graph owner derives the projections used by algorithms.  Likewise,
 the framework derives composition sequences, source sequences, indexes,
 admission results and evaluations; Case authors do not duplicate those values
@@ -204,7 +204,7 @@ as sibling =def= bindings.
 
 Sources follow the same scope model as Profiles:
 
-- a reusable Profile may declare common Sources in =.add-source=;
+- a reusable Profile may declare common Sources in =source-declarations=;
 - a Scenario Profile may declare vertical Sources;
 - a Case may add Sources that apply only to that concrete situation.
 

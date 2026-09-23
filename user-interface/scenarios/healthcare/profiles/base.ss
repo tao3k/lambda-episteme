@@ -16,14 +16,14 @@
   (name 'healthcare-base)
   (profile-scope 'scenario)
   (scenario 'healthcare)
-  (.import (.o evidence: EvidenceProfile))
-  (.add-concept
+  (profile-imports =>.+ (.o evidence: EvidenceProfile))
+  (concept-declarations =>.+
    (.o patient: (ontology-concept 'Patient '(Actor) '(purpose-limited))
        provider: (ontology-concept 'Provider '(Actor) '())
        encounter:
        (ontology-concept 'Encounter '(Action) '(clinical-context-required))
        condition: (ontology-concept 'Condition '(BaseEntity) '())))
-  (.add-relation
+  (relation-declarations =>.+
    (.o has-patient:
        (ontology-relation 'HAS_PATIENT 'Encounter 'Patient '(required))
        has-provider:
@@ -32,17 +32,17 @@
        (ontology-relation 'HAS_CONDITION 'Encounter 'Condition '())))
   (policies (.o clinical-status: 'source-bound
                 incomplete-scope: 'unknown))
-  (.add-source
+  (source-declarations =>.+
    (.o care-delivery-mapping:
        (ontology-source
         "ontology/healthcare/synthetic-care-delivery-mapping"
         "user-interface/scenarios/healthcare/sources/synthetic-care-delivery.toml"
         'toml 'scenario 'healthcare #f)))
-  (.add-rule
+  (rule-declarations =>.+
    (.o encounter-patient:
        (ontology-required-relation-rule
         'encounter-must-link-patient 'Encounter 'HAS_PATIENT 'source)
        encounter-provider:
        (ontology-required-relation-rule
         'encounter-must-link-provider 'Encounter 'HAS_PROVIDER 'source)))
-  (.add-query (.o)))
+  (query-declarations =>.+ (.o)))

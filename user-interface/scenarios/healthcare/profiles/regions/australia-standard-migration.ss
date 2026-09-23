@@ -36,13 +36,13 @@
 (.def (AustraliaHealthcareStandardMigrationProfile self HealthcareBaseProfile)
   (identity "lambda-episteme/ontology/healthcare/regions/australia/standard-migration")
   (name 'australia-standard-migration)
-  (.import
+  (profile-imports =>.+
    (.o healthcare: HealthcareBaseProfile
        evidence: EvidenceProfile
        privacy: PrivacyProfile))
-  (.add-concept (.o))
-  (.add-relation (.o))
-  (.add-source
+  (concept-declarations =>.+ (.o))
+  (relation-declarations =>.+ (.o))
+  (source-declarations =>.+
    (.o cedar-human-authorization:
        (ontology-source
         "healthcare/standard-migration/authorization/policy"
@@ -73,8 +73,8 @@
         "healthcare/standard-migration/authorization/cedar-lean-spec"
         "proof/lean/EpistemeProof/Healthcare/StandardMigrationCedarAuthorization.lean"
         'lean 'scenario 'healthcare #f)))
-  (.add-rule (.o))
-  (.add-threat
+  (rule-declarations =>.+ (.o))
+  (threat-declarations =>.+
    (.o parser-evidence-unbound:
        (poo-flow-governance-threat
         "healthcare/regions/australia/migration/threat/parser-evidence-unbound"
@@ -145,8 +145,8 @@
          (.ref AustraliaMigrationStandardEditions 'au-base)
          (.ref AustraliaMigrationStandardEditions 'au-core)))
   (migration-fixture AustraliaMigrationFixture)
-  (.add-capability (.o))
-  (.add-query (.o))
+  (capability-declarations =>.+ (.o))
+  (query-declarations =>.+ (.o))
   (.assess-governance
    (lambda (context)
      (healthcare-contextual-governance-assessment

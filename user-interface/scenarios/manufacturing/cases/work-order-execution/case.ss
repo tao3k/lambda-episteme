@@ -21,18 +21,18 @@
 (.def (WorkOrderExecutionCase @ OntologyCase)
   (case-id 'work-order-execution)
   (scenario ManufacturingScenario)
-  (.use-composition
+  (profile-selection =>.+
    (.o manufacturing:
        (.o evidence: EvidenceProfile
            base: ManufacturingBaseProfile)))
   (graph
    (.o (:: @ Graph)
        graph-id: 'work-order-execution
-       .add-node:
+       node-declarations:
        (.o machine-1: (poo-flow-graph-node 'machine-1 'Machine)
            work-order-1: (poo-flow-graph-node 'work-order-1 'WorkOrder)
            part-1: (poo-flow-graph-node 'part-1 'Part))
-       .add-edge:
+       edge-declarations:
        (.o machine-executes-work-order:
            (poo-flow-graph-edge
             'machine-1 'work-order-1 'executesWorkOrder)

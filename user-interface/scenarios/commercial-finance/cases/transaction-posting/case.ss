@@ -23,7 +23,7 @@
 (.def (TransactionPostingCase @ OntologyCase)
   (case-id 'transaction-posting)
   (scenario CommercialFinanceScenario)
-  (.use-composition
+  (profile-selection =>.+
    (.o commercial-finance:
        (.o evidence: EvidenceProfile
            privacy: PrivacyProfile
@@ -31,12 +31,12 @@
   (graph
    (.o (:: @ Graph)
        graph-id: 'transaction-posting
-       .add-node:
+       node-declarations:
        (.o customer-1: (poo-flow-graph-node 'customer-1 'Customer)
            account-1: (poo-flow-graph-node 'account-1 'FinancialAccount)
            transaction-1:
            (poo-flow-graph-node 'transaction-1 'Transaction))
-       .add-edge:
+       edge-declarations:
        (.o customer-owns-account:
            (poo-flow-graph-edge 'customer-1 'account-1 'ownsAccount)
            account-posts-transaction:

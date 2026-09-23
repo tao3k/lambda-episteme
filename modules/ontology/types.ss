@@ -116,9 +116,10 @@
   (and (poo-flow-governance-profile? value)
        (ontology-has-slots?
         value
-        '(name profile-scope scenario .import .add-concept .add-relation
-               .add-source .add-rule .add-query .add-conflict .add-threat
-               .add-capability imports ontology terms rules queries conflicts
+        '(name profile-scope scenario profile-imports concept-declarations
+               relation-declarations source-declarations rule-declarations
+               query-declarations conflict-declarations threat-declarations
+               capability-declarations imports ontology terms rules queries conflicts
                capabilities))
        (symbol? (.ref value 'name))
        (memq (.ref value 'profile-scope) '(common scenario))
@@ -126,15 +127,15 @@
          (not (.ref value 'scenario))
          (symbol? (.ref value 'scenario)))
        (every object?
-              (list (.ref value '.import)
-                    (.ref value '.add-concept)
-                    (.ref value '.add-relation)
-                    (.ref value '.add-source)
-                    (.ref value '.add-rule)
-                    (.ref value '.add-query)
-                    (.ref value '.add-conflict)
-                    (.ref value '.add-threat)
-                    (.ref value '.add-capability)))
+              (list (.ref value 'profile-imports)
+                    (.ref value 'concept-declarations)
+                    (.ref value 'relation-declarations)
+                    (.ref value 'source-declarations)
+                    (.ref value 'rule-declarations)
+                    (.ref value 'query-declarations)
+                    (.ref value 'conflict-declarations)
+                    (.ref value 'threat-declarations)
+                    (.ref value 'capability-declarations)))
        (list? (.ref value 'imports))
        (ontology-vocabulary? (.ref value 'ontology))
        (equal? (.ref value 'terms)
@@ -143,8 +144,9 @@
        (every ontology-source? (.ref value 'source-assets))
        (every poo-flow-authorization-capability? (.ref value 'capabilities))
        (every poo-flow-governance-threat?
-              (map (lambda (slot) (.ref (.ref value '.add-threat) slot))
-                   (.all-slots (.ref value '.add-threat))))
+              (map (lambda (slot)
+                     (.ref (.ref value 'threat-declarations) slot))
+                   (.all-slots (.ref value 'threat-declarations))))
        (every ontology-rule? (.ref value 'rules))
        (list? (.ref value 'terms))
        (list? (.ref value 'rules))
@@ -171,17 +173,18 @@
 (def (ontology-case? value)
   (and (ontology-has-slots?
         value
-        '(kind case-id scenario .use-composition .add-source .add-authorization
-               .add-event .add-trajectory compositions sources authorizations
+        '(kind case-id scenario profile-selection source-declarations
+               authorization-declarations event-declarations
+               trajectory-declarations compositions sources authorizations
                events trajectories graph))
        (eq? (.ref value 'kind) 'lambda-episteme.ontology-case)
        (symbol? (.ref value 'case-id))
        (ontology-scenario? (.ref value 'scenario))
-       (object? (.ref value '.use-composition))
-       (object? (.ref value '.add-source))
-       (object? (.ref value '.add-authorization))
-       (object? (.ref value '.add-event))
-       (object? (.ref value '.add-trajectory))
+       (object? (.ref value 'profile-selection))
+       (object? (.ref value 'source-declarations))
+       (object? (.ref value 'authorization-declarations))
+       (object? (.ref value 'event-declarations))
+       (object? (.ref value 'trajectory-declarations))
        (list? (.ref value 'compositions))
        (pair? (.ref value 'compositions))
        (list? (.ref value 'sources))

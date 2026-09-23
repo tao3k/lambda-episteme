@@ -26,12 +26,12 @@
 (.def (SupportAtHomeProfile self PrimaryCareProfile)
   (identity "lambda-episteme/ontology/healthcare/support-at-home")
   (name 'support-at-home)
-  (.import
+  (profile-imports =>.+
    (.o healthcare: HealthcareBaseProfile
        evidence: EvidenceProfile
        privacy: PrivacyProfile
        primary-care: PrimaryCareProfile))
-  (.add-concept
+  (concept-declarations =>.+
    (.o care-needs-assessment:
        (ontology-concept
         'CareNeedsAssessment '(Action) '(decision-reviewable))
@@ -45,7 +45,7 @@
        (ontology-concept 'HomeSupportService '(Action) '(plan-authorized))
        referral-credential:
        (ontology-concept 'CareReferralCredential '(Evidence) '(revocable))))
-  (.add-relation
+  (relation-declarations =>.+
    (.o referral-requests-assessment:
        (ontology-relation
         'REQUESTS_ASSESSMENT 'ClinicalReferral 'CareNeedsAssessment '(required))
@@ -69,9 +69,9 @@
        (ontology-relation
         'REFERRAL_CREDENTIAL_FOR
         'CareReferralCredential 'SupportPlan '(required))))
-  (.add-source (.o))
-  (.add-rule (.o))
-  (.add-threat
+  (source-declarations =>.+ (.o))
+  (rule-declarations =>.+ (.o))
+  (threat-declarations =>.+
    (.o service-before-assessment:
        (poo-flow-governance-threat
         "healthcare/support-at-home/threat/assessment-bypass"
@@ -113,13 +113,13 @@
        support-plan: 'service-authority
        referral-credential: 'provider-scoped
        provider-choice: 'consumer-controlled))
-  (.add-capability
+  (capability-declarations =>.+
    (.o accept-support-at-home-referral:
        (poo-flow-authorization-capability
         "healthcare/support-at-home/capability/accept-referral"
         "Healthcare::Action::\"acceptHomeSupportReferral\""
         4302 'elevated)))
-  (.add-query (.o))
+  (query-declarations =>.+ (.o))
   (.assess-governance
    (lambda (context)
      (healthcare-contextual-governance-assessment

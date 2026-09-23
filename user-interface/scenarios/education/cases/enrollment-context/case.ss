@@ -23,7 +23,7 @@
 (.def (EnrollmentContextCase @ OntologyCase)
   (case-id 'enrollment-context)
   (scenario EducationScenario)
-  (.use-composition
+  (profile-selection =>.+
    (.o education:
        (.o evidence: EvidenceProfile
            privacy: PrivacyProfile
@@ -31,12 +31,12 @@
   (graph
    (.o (:: @ Graph)
        graph-id: 'enrollment-context
-       .add-node:
+       node-declarations:
        (.o learner-1: (poo-flow-graph-node 'learner-1 'Learner)
            course-1: (poo-flow-graph-node 'course-1 'Course)
            enrollment-1:
            (poo-flow-graph-node 'enrollment-1 'Enrollment))
-       .add-edge:
+       edge-declarations:
        (.o learner-enrollment:
            (poo-flow-graph-edge 'learner-1 'enrollment-1 'enrollsIn)
            enrollment-course:

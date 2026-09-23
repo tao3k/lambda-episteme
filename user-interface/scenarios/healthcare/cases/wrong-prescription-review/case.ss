@@ -30,7 +30,7 @@
   (case-id 'wrong-prescription-review)
   (scenario HealthcareScenario)
   (medication-reconciliation-observed? #t)
-  (.use-composition
+  (profile-selection =>.+
    (.o common:
        (.o evidence: EvidenceProfile
            privacy: PrivacyProfile)
@@ -38,12 +38,12 @@
        (.o base: HealthcareBaseProfile)
        medication:
        (.o medication-safety: MedicationSafetyProfile)))
-  (.add-authorization
+  (authorization-declarations =>.+
    (.o revoked-medication-administration:
        (healthcare-medication-administration
         "provider-1" "patient-1" "encounter-1" "medication-order-1"
         #t #t)))
-  (.add-event
+  (event-declarations =>.+
    (.o prescription:
        (healthcare-clinical-event
         "patient-1" "prescription-1/rev1" 'prescription 1
@@ -79,14 +79,14 @@
   (graph
    (.o (:: @ Graph)
        graph-id: 'wrong-prescription-review
-       .add-node:
+       node-declarations:
        (.o patient-1: (poo-flow-graph-node 'patient-1 'Patient)
            provider-1: (poo-flow-graph-node 'provider-1 'Provider)
            encounter-1: (poo-flow-graph-node 'encounter-1 'Encounter)
            condition-1: (poo-flow-graph-node 'condition-1 'Condition)
            medication-order-1:
            (poo-flow-graph-node 'medication-order-1 'MedicationOrder))
-       .add-edge:
+       edge-declarations:
        (.o encounter-patient:
            (poo-flow-graph-edge 'encounter-1 'patient-1 'HAS_PATIENT)
            encounter-provider:

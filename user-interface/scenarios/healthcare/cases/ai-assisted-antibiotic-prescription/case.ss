@@ -45,7 +45,7 @@
   (interaction-review-observed? #t)
   (monitoring-plan-observed? #t)
 
-  (.use-composition
+  (profile-selection =>.+
    (.o common:
        (.o evidence: EvidenceProfile
            privacy: PrivacyProfile)
@@ -58,13 +58,13 @@
        (.o clinical-decision-support: AIClinicalDecisionSupportProfile)))
 
   ;; Only the clinician-selected alternative order reaches the Cedar handoff.
-  (.add-authorization
+  (authorization-declarations =>.+
    (.o alternative-order-administration:
        (healthcare-medication-administration
         "clinician-1" "patient-1" "encounter-1" "alternative-order-1"
         #t #f)))
 
-  (.add-event
+  (event-declarations =>.+
    (.o care-request:
        (healthcare-clinical-event
         "patient-1" "care-request-1" 'care-request 1
@@ -125,7 +125,7 @@
         'pharmacology-risk 7 "risk/prolonged-prothrombin-time"
         '("wrong-tmp-smx-administration-1") 'hypothesized #f)))
 
-  (.add-trajectory
+  (trajectory-declarations =>.+
    (.o prescription-safety:
        (poo-flow-causal-trajectory-contract
         "healthcare/prescription/ai-assisted-safety-trajectory"
@@ -144,7 +144,7 @@
   (graph
    (.o (:: @ Graph)
        graph-id: 'ai-assisted-antibiotic-prescription
-       .add-node:
+       node-declarations:
        (.o patient-1: (poo-flow-graph-node 'patient-1 'Patient)
            clinician-1: (poo-flow-graph-node 'clinician-1 'Provider)
            encounter-1: (poo-flow-graph-node 'encounter-1 'Encounter)
@@ -172,7 +172,7 @@
            (poo-flow-graph-node 'ai-recommendation-1 'AIRecommendation)
            clinical-review-1:
            (poo-flow-graph-node 'clinical-review-1 'ClinicalReview))
-       .add-edge:
+       edge-declarations:
        (.o encounter-patient:
            (poo-flow-graph-edge 'encounter-1 'patient-1 'HAS_PATIENT)
            encounter-provider:

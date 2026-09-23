@@ -18,8 +18,8 @@
   (name 'commercial-finance-base)
   (profile-scope 'scenario)
   (scenario 'commercial-finance)
-  (.import (.o evidence: EvidenceProfile privacy: PrivacyProfile))
-  (.add-concept
+  (profile-imports =>.+ (.o evidence: EvidenceProfile privacy: PrivacyProfile))
+  (concept-declarations =>.+
    (.o customer: (ontology-concept 'Customer '(Actor) '(purpose-limited))
        financial-account:
        (ontology-concept 'FinancialAccount '(BaseEntity) '())
@@ -27,7 +27,7 @@
        (ontology-concept 'Transaction '(Action) '(balanced-posting))
        loan: (ontology-concept 'Loan '(BaseEntity) '())
        collateral: (ontology-concept 'Collateral '(BaseEntity) '())))
-  (.add-relation
+  (relation-declarations =>.+
    (.o owns-account:
        (ontology-relation 'ownsAccount 'Customer 'FinancialAccount '())
        posts-transaction:
@@ -36,9 +36,9 @@
        secured-by: (ontology-relation 'securedBy 'Loan 'Collateral '())))
   (policies (.o account-posting: 'required
                 customer-data: 'purpose-limited))
-  (.add-rule
+  (rule-declarations =>.+
    (.o transaction-posting:
        (ontology-required-relation-rule
         'transaction-must-post-to-account
         'Transaction 'postsTransaction 'target)))
-  (.add-query (.o)))
+  (query-declarations =>.+ (.o)))

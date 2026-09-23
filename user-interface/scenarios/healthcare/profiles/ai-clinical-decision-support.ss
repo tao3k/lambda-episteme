@@ -30,11 +30,11 @@
 (.def (AIClinicalDecisionSupportProfile self HealthcareBaseProfile)
   (identity "lambda-episteme/ontology/healthcare/ai-clinical-decision-support")
   (name 'ai-clinical-decision-support)
-  (.import
+  (profile-imports =>.+
    (.o healthcare: HealthcareBaseProfile
        evidence: EvidenceProfile
        privacy: PrivacyProfile))
-  (.add-concept
+  (concept-declarations =>.+
    (.o clinical-decision-support-system:
        (ontology-concept
         'ClinicalDecisionSupportSystem '(Actor) '(advisory-only))
@@ -46,7 +46,7 @@
         'ClinicalReview '(Action) '(independent-review))
        decision-basis:
        (ontology-concept 'DecisionBasis '(Evidence) '(reviewable))))
-  (.add-relation
+  (relation-declarations =>.+
    (.o generates-recommendation:
        (ontology-relation
         'GENERATES_RECOMMENDATION
@@ -64,7 +64,7 @@
        records-clinical-review:
        (ontology-relation
         'RECORDS_CLINICAL_REVIEW 'Provider 'ClinicalReview '())))
-  (.add-source
+  (source-declarations =>.+
    (.o ai-clinical-governance-evidence:
        (ontology-source
         "healthcare/ai-cds/governance-evidence"
@@ -73,8 +73,8 @@
        case-profile-relations: CaseProfileRelationsSource
        profile-impact: ProfileImpactSource
        prescription-causal-trajectory: PrescriptionCausalTrajectorySource))
-  (.add-rule (.o))
-  (.add-threat
+  (rule-declarations =>.+ (.o))
+  (threat-declarations =>.+
    (.o autonomous-prescription:
        (poo-flow-governance-threat
         "healthcare/ai-cds/threat/autonomous-prescription"
@@ -110,14 +110,14 @@
        independent-review: 'required
        explanation: 'patient-specific
        authority: 'none))
-  (.add-capability
+  (capability-declarations =>.+
    (.o recommend-medication:
        (poo-flow-authorization-capability
         "healthcare/ai-cds/capability/recommend-medication"
         "Healthcare::Action::\"recommendMedication\""
         4201
         'ordinary)))
-  (.add-query
+  (query-declarations =>.+
    (.o case-profile-relations: HealthcareCaseProfileRelationsQuery
        profile-impact: HealthcareProfileImpactQuery
        prescription-causal-trajectory:
