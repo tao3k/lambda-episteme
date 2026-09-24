@@ -95,9 +95,11 @@ The exact AI-assisted prescription qualification declares its GQL, TLA+, TLC
 receipt and Lean receipt/proof identities in one POO
 =HealthcareCaseQualificationMetadata= object.  Just invokes the independent
 capabilities but does not reconstruct those semantics with path environment
-variables.  GQL execution is intentionally outside this safety closure: a
-future MRR Rust library consumes gerbil-parser's native FFI and must publish its
-own execution receipt.
+variables.  GQL execution is intentionally outside this safety closure.  The
+MRR Rust library consumes gerbil-parser's native FFI and owns physical result
+admission; its pending POO Flow adapter must project that admitted result into
+the versioned Runtime v0 Query execution candidate before Scheme can bind it as
+evidence.
 
 No step collapses into the next.  A Lambda Case does not grant authority, a
 TLC run is not a Lean theorem, a Lean theorem is not a current Cedar decision,

@@ -15,6 +15,12 @@
         :poo-flow/src/module-system/contribution/interface
         :poo-flow/src/module-system/profile-composition/interface
         :poo-flow/src/modules/governance/interface
+        (only-in :poo-flow/src/modules/query/objects
+                 poo-flow-query-execution-candidate)
+        (only-in :poo-flow/src/modules/query/contracts
+                 poo-flow-query-source-content-identity)
+        (only-in :poo-flow/src/modules/query/types
+                 poo-flow-source-query-receipt?)
         :poo-flow/src/modules/authorization/providers/cedar/interface
         :poo-flow/lambda-episteme/modules/ontology/interface
         :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
@@ -22,6 +28,7 @@
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/scenario
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/reasoning
                  HealthcareCaseProfileRelationsQuery
+                 healthcare-bind-mrr-query-candidate
                  healthcare-case-profile-property-source)
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/healing
@@ -401,6 +408,35 @@
                   (poo-flow-graph-edges reasoning))
             '()))
           true))))
+
+   (test-case "Healthcare Case binds MRR evidence to its admitted Query"
+     (let* ((reasoning
+             (ontology-case-reasoning-graph
+              post-operative-healing-receipt))
+            (query HealthcareCaseProfileRelationsQuery)
+            (candidate
+             (poo-flow-query-execution-candidate
+              'mrr
+              (.ref query 'identity)
+              (.ref query 'version)
+              (.ref query 'semantic-revision)
+              (poo-flow-query-source-content-identity query)
+              'gerbil-parser
+              "sha256:healthcare-case-profile-provenance-v1"
+              "sha256:healthcare-case-profile-result-v1"
+              5
+              #t))
+            (receipt
+             (healthcare-bind-mrr-query-candidate
+              query reasoning candidate)))
+       (check (poo-flow-source-query-receipt? receipt) => #t)
+       (check (.ref receipt 'admitted?) => #t)
+       (check (.ref receipt 'diagnostics) => '())
+       (check (.ref receipt 'query-identity)
+              => 'healthcare-case-profile-relations)
+       (check (.ref receipt 'result-contract-identity)
+              => 'healthcare/case-profile-relations-result)
+       (check (.ref receipt 'action-authority?) => #f)))
 
    (test-case "Healthcare GQL properties come from accepted POO values"
      (let* ((reasoning

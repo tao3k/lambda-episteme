@@ -20,10 +20,18 @@
         (only-in :poo-flow/src/modules/query/objects
                  PooFlowGqlQueryLanguage.
                  PooFlowGqlQueryProgram.
-                 PooFlowQueryNode. PooFlowQueryStep. PooFlowQueryPath.
-                 PooFlowQueryProperty. PooFlowQueryLiteral.
-                 PooFlowQueryEquals. PooFlowQueryProjection.
-                 poo-flow-query-result-contract)
+                 GqlQueryNode. GqlQueryStep. GqlQueryPath.
+                 GqlQueryProperty. GqlQueryLiteral.
+                 GqlQueryEquals. GqlQueryProjection.
+                 poo-flow-query-result-contract
+                 poo-flow-query-element-space)
+        (only-in :poo-flow/src/modules/query/funs
+                 poo-flow-query-admit)
+        (only-in :poo-flow/src/modules/query/contracts
+                 poo-flow-query-source-content-identity
+                 poo-flow-query-bind-execution-receipt)
+        (only-in :poo-flow/src/modules/query/providers/mrr/interface
+                 MrrGqlQueryProvider)
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  OntologyQuery. ontology-source
                  ontology-reasoning-query-property))
@@ -36,6 +44,8 @@
         HealthcareProfileImpactQuery
         HealthcarePrescriptionCausalTrajectoryQuery
         healthcare-query-source-path
+        healthcare-query-element-space
+        healthcare-bind-mrr-query-candidate
         healthcare-case-profile-property-source)
 
 (def (digest text)
@@ -66,100 +76,100 @@
   (.o (:: @ PooFlowGqlQueryProgram.)
       identity: 'healthcare-case-profile-relations-program
       match:
-      (.o (:: @ PooFlowQueryPath.)
-          start: (.o (:: @ PooFlowQueryNode.) binding: 's label: 'Scenario)
+      (.o (:: @ GqlQueryPath.)
+          start: (.o (:: @ GqlQueryNode.) binding: 's label: 'Scenario)
           next:
-          (.o (:: @ PooFlowQueryStep.) relation: 'HAS_CASE
-              target: (.o (:: @ PooFlowQueryNode.) binding: 'c label: 'Case)
+          (.o (:: @ GqlQueryStep.) relation: 'HAS_CASE
+              target: (.o (:: @ GqlQueryNode.) binding: 'c label: 'Case)
               next:
-              (.o (:: @ PooFlowQueryStep.) relation: 'HAS_EFFECTIVE_PROFILE
+              (.o (:: @ GqlQueryStep.) relation: 'HAS_EFFECTIVE_PROFILE
                   target:
-                  (.o (:: @ PooFlowQueryNode.) binding: 'p label: 'Profile))))
+                  (.o (:: @ GqlQueryNode.) binding: 'p label: 'Profile))))
       where:
-      (.o (:: @ PooFlowQueryEquals.)
-          left: (.o (:: @ PooFlowQueryProperty.) binding: 's property: 'identity)
+      (.o (:: @ GqlQueryEquals.)
+          left: (.o (:: @ GqlQueryProperty.) binding: 's property: 'identity)
           right:
-          (.o (:: @ PooFlowQueryLiteral.)
+          (.o (:: @ GqlQueryLiteral.)
               literal-kind: 'string value: "healthcare"))
       project:
-      (.o (:: @ PooFlowQueryProjection.)
+      (.o (:: @ GqlQueryProjection.)
           expression:
-          (.o (:: @ PooFlowQueryProperty.) binding: 's property: 'identity)
+          (.o (:: @ GqlQueryProperty.) binding: 's property: 'identity)
           next:
-          (.o (:: @ PooFlowQueryProjection.)
+          (.o (:: @ GqlQueryProjection.)
               expression:
-              (.o (:: @ PooFlowQueryProperty.) binding: 'c property: 'id)
+              (.o (:: @ GqlQueryProperty.) binding: 'c property: 'id)
               next:
-              (.o (:: @ PooFlowQueryProjection.)
+              (.o (:: @ GqlQueryProjection.)
                   expression:
-                  (.o (:: @ PooFlowQueryProperty.)
+                  (.o (:: @ GqlQueryProperty.)
                       binding: 'p property: 'identity))))))
 
 (def ProfileImpactProgram
   (.o (:: @ PooFlowGqlQueryProgram.)
       identity: 'healthcare-profile-impact-program
       match:
-      (.o (:: @ PooFlowQueryPath.)
-          start: (.o (:: @ PooFlowQueryNode.) binding: 'c label: 'Case)
+      (.o (:: @ GqlQueryPath.)
+          start: (.o (:: @ GqlQueryNode.) binding: 'c label: 'Case)
           next:
-          (.o (:: @ PooFlowQueryStep.) relation: 'HAS_EFFECTIVE_PROFILE
-              target: (.o (:: @ PooFlowQueryNode.) binding: 'p label: 'Profile)
+          (.o (:: @ GqlQueryStep.) relation: 'HAS_EFFECTIVE_PROFILE
+              target: (.o (:: @ GqlQueryNode.) binding: 'p label: 'Profile)
               next:
-              (.o (:: @ PooFlowQueryStep.) relation: 'DECLARES_SOURCE
+              (.o (:: @ GqlQueryStep.) relation: 'DECLARES_SOURCE
                   target:
-                  (.o (:: @ PooFlowQueryNode.) binding: 'src label: 'Source))))
+                  (.o (:: @ GqlQueryNode.) binding: 'src label: 'Source))))
       where:
-      (.o (:: @ PooFlowQueryEquals.)
+      (.o (:: @ GqlQueryEquals.)
           left:
-          (.o (:: @ PooFlowQueryProperty.) binding: 'src property: 'identity)
+          (.o (:: @ GqlQueryProperty.) binding: 'src property: 'identity)
           right:
-          (.o (:: @ PooFlowQueryLiteral.) literal-kind: 'string
+          (.o (:: @ GqlQueryLiteral.) literal-kind: 'string
               value: "healthcare/medication/authorization/policy"))
       project:
-      (.o (:: @ PooFlowQueryProjection.)
-          expression: (.o (:: @ PooFlowQueryProperty.) binding: 'c property: 'id)
+      (.o (:: @ GqlQueryProjection.)
+          expression: (.o (:: @ GqlQueryProperty.) binding: 'c property: 'id)
           next:
-          (.o (:: @ PooFlowQueryProjection.)
+          (.o (:: @ GqlQueryProjection.)
               expression:
-              (.o (:: @ PooFlowQueryProperty.) binding: 'p property: 'identity)
+              (.o (:: @ GqlQueryProperty.) binding: 'p property: 'identity)
               next:
-              (.o (:: @ PooFlowQueryProjection.)
+              (.o (:: @ GqlQueryProjection.)
                   expression:
-                  (.o (:: @ PooFlowQueryProperty.)
+                  (.o (:: @ GqlQueryProperty.)
                       binding: 'src property: 'identity))))))
 
 (def PrescriptionCausalTrajectoryProgram
   (.o (:: @ PooFlowGqlQueryProgram.)
       identity: 'healthcare-prescription-causal-trajectory-program
       match:
-      (.o (:: @ PooFlowQueryPath.)
+      (.o (:: @ GqlQueryPath.)
           start:
-          (.o (:: @ PooFlowQueryNode.) binding: 'prescription label: 'CausalEvent)
+          (.o (:: @ GqlQueryNode.) binding: 'prescription label: 'CausalEvent)
           next:
-          (.o (:: @ PooFlowQueryStep.) relation: 'CAUSAL_PARENT
+          (.o (:: @ GqlQueryStep.) relation: 'CAUSAL_PARENT
               target:
-              (.o (:: @ PooFlowQueryNode.) binding: 'event label: 'CausalEvent)))
+              (.o (:: @ GqlQueryNode.) binding: 'event label: 'CausalEvent)))
       where:
-      (.o (:: @ PooFlowQueryEquals.)
+      (.o (:: @ GqlQueryEquals.)
           left:
-          (.o (:: @ PooFlowQueryProperty.)
+          (.o (:: @ GqlQueryProperty.)
               binding: 'prescription property: 'identity)
           right:
-          (.o (:: @ PooFlowQueryLiteral.) literal-kind: 'string
+          (.o (:: @ GqlQueryLiteral.) literal-kind: 'string
               value: "ai-tmp-smx-recommendation-1"))
       project:
-      (.o (:: @ PooFlowQueryProjection.)
+      (.o (:: @ GqlQueryProjection.)
           expression:
-          (.o (:: @ PooFlowQueryProperty.)
+          (.o (:: @ GqlQueryProperty.)
               binding: 'prescription property: 'identity)
           next:
-          (.o (:: @ PooFlowQueryProjection.)
+          (.o (:: @ GqlQueryProjection.)
               expression:
-              (.o (:: @ PooFlowQueryProperty.) binding: 'event property: 'identity)
+              (.o (:: @ GqlQueryProperty.) binding: 'event property: 'identity)
               next:
-              (.o (:: @ PooFlowQueryProjection.)
+              (.o (:: @ GqlQueryProjection.)
                   expression:
-                  (.o (:: @ PooFlowQueryProperty.)
+                  (.o (:: @ GqlQueryProperty.)
                       binding: 'event property: 'modality))))))
 
 (def HealthcareCaseProfileRelationsQuery
@@ -173,7 +183,8 @@
       program: CaseProfileRelationsProgram
       result-bound: 4096
       completeness-requirement: 'complete
-      evidence-requirements: '(source-content-id provenance-root result-digest)
+      evidence-requirements:
+      '(source-content-identity provenance-root result-digest)
       visibility-request: 'organization
       result-contract:
       (poo-flow-query-result-contract
@@ -195,7 +206,8 @@
       program: ProfileImpactProgram
       result-bound: 4096
       completeness-requirement: 'complete
-      evidence-requirements: '(source-content-id provenance-root result-digest)
+      evidence-requirements:
+      '(source-content-identity provenance-root result-digest)
       visibility-request: 'organization
       result-contract:
       (poo-flow-query-result-contract
@@ -217,7 +229,8 @@
       program: PrescriptionCausalTrajectoryProgram
       result-bound: 4096
       completeness-requirement: 'complete
-      evidence-requirements: '(source-content-id provenance-root result-digest)
+      evidence-requirements:
+      '(source-content-identity provenance-root result-digest)
       visibility-request: 'organization
       result-contract:
       (poo-flow-query-result-contract
@@ -236,6 +249,24 @@
       (error "GQL source changed without MRR query admission"
              (.ref query 'identity) actual))
     path))
+
+;;; The accepted ontology graph is the immutable ElementSpace snapshot used by
+;;; Query admission.  MRR execution remains outside this package; this helper
+;;; only binds a typed runtime candidate back to the originating Query.
+(def (healthcare-query-element-space query graph)
+  (unless (poo-flow-graph? graph)
+    (error "Healthcare Query admission requires an ontology graph" graph))
+  (poo-flow-query-element-space
+   (.ref query 'element-space-identity)
+   (.ref query 'semantic-revision)
+   (map poo-flow-graph-node-id (poo-flow-graph-nodes graph))
+   #t))
+
+(def (healthcare-bind-mrr-query-candidate query graph candidate)
+  (let* ((space (healthcare-query-element-space query graph))
+         (admission (poo-flow-query-admit query space)))
+    (poo-flow-query-bind-execution-receipt
+     MrrGqlQueryProvider query admission candidate)))
 
 ;;; Project the accepted POO reasoning graph into source-owned property rows.
 ;;; This is not an MRR catalog or a physical snapshot: MRR owns type identity
