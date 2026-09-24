@@ -237,12 +237,15 @@ evaluation are the executable authority today.
 =HAS_CASE= and =HAS_EFFECTIVE_PROFILE= property rows from that accepted graph.
 It takes property values from the original POO payloads, checks relation
 endpoints, and retains the exact content-bound GQL query object.  It does not
-mint MRR type IDs, Arrow batches, CIDs, or a result-admission receipt.  The MRR
-Data property worker can consume the query after a runtime materializes and
-restores a verified snapshot; that runtime handoff is not yet an executable
-Lambda acceptance gate.  The explicit =just check-healthcare-gql= gate reads the Sources enumerated by
-=HealthcareCaseQualificationMetadata=; Lambda's native test tree never takes a
-reverse dependency on gerbil-parser.
+mint MRR type IDs, Arrow batches, CIDs, or a result-admission receipt.  POO
+Flow's Runtime v0 boundary now validates and round-trips the typed
+=PooFlowQueryExecutionCandidate= produced after execution, but it neither runs
+MRR nor fabricates its receipt.  The MRR Data property worker can consume the
+query after a runtime materializes and restores a verified snapshot; its Rust
+adapter from MRR result admission to that versioned candidate remains the open
+executable handoff.  The explicit =just check-healthcare-gql= gate reads the
+Sources enumerated by =HealthcareCaseQualificationMetadata=; Lambda's native
+test tree never takes a reverse dependency on gerbil-parser.
 
 Structural dependency is only the first Impact dimension.  It answers which
 Cases depend on a changed Profile or Source, but it does not claim that a drug
