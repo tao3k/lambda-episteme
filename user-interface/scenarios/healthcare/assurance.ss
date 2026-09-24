@@ -120,7 +120,7 @@
 
 (def (query-contract-canonical query)
   (list (.ref query 'identity)
-        (.ref query 'revision)
+        (.ref query 'version)
         (.ref query 'expected-source-content-id)
         (.ref query 'graph-kind)))
 

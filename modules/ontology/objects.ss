@@ -21,6 +21,7 @@
                  PooFlowGovernanceProfile.
                  poo-flow-governance-source
                  poo-flow-governance-threat-model)
+        (only-in :poo-flow/src/modules/query/objects PooFlowQuery.)
         (only-in :poo-flow/src/utilities/functional
                  poo-flow-filter-map)
         (only-in "types.ss"
@@ -32,7 +33,7 @@
         ontology-vocabulary-concept-identities ontology-semantic-project
         ontology-required-relation-rule ontology-acyclic-relation-rule
         ontology-rule-evaluate
-        ontology-query
+        OntologyQuery.
         ontology-source OntologyProfile ontology-profile-project
         OntologyScenario ontology-scenario-admits-profile?
         OntologyCase)
@@ -97,6 +98,14 @@
       (ontology-declaration-values
        trajectory-declarations 'trajectory-declarations)
       graph: #f))
+
+;;; Ontology refines only source-projection facts.  The Query's language,
+;;; semantic revision, bounds, visibility and authority remain core-owned.
+(def OntologyQuery.
+  (.o (:: @ PooFlowQuery.)
+      source: #f
+      expected-source-content-id: #f
+      graph-kind: #f))
 
 (def (ontology-rule-diagnostic rule-value code-value path-value detail-value)
   (.o kind: 'lambda-episteme.ontology-rule-diagnostic
@@ -248,19 +257,6 @@
             case-id: case-id-value))
     (unless (ontology-source? value)
       (error "invalid ontology source" identity-value))
-    value))
-
-(def (ontology-query identity-value revision-value source-value
-                     expected-source-content-id-value graph-kind-value)
-  (let (value
-        (.o kind: 'lambda-episteme.ontology-query
-            identity: identity-value
-            revision: revision-value
-            source: source-value
-            expected-source-content-id: expected-source-content-id-value
-            graph-kind: graph-kind-value))
-    (unless (ontology-query? value)
-      (error "invalid ontology query" identity-value))
     value))
 
 (def OntologyScenario

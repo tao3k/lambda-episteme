@@ -17,12 +17,21 @@
                  poo-flow-graph-node-id poo-flow-graph-node-metadata
                  poo-flow-graph-edge-from poo-flow-graph-edge-to
                  poo-flow-graph-edge-kind)
+        (only-in :poo-flow/src/modules/query/objects
+                 PooFlowGqlQueryLanguage.
+                 PooFlowGqlQueryProgram.
+                 PooFlowQueryNode. PooFlowQueryStep. PooFlowQueryPath.
+                 PooFlowQueryProperty. PooFlowQueryLiteral.
+                 PooFlowQueryEquals. PooFlowQueryProjection.
+                 poo-flow-query-result-contract)
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
-                 ontology-query ontology-source
+                 OntologyQuery. ontology-source
                  ontology-reasoning-query-property))
 
 (export CaseProfileRelationsSource ProfileImpactSource
         PrescriptionCausalTrajectorySource
+        CaseProfileRelationsProgram ProfileImpactProgram
+        PrescriptionCausalTrajectoryProgram
         HealthcareCaseProfileRelationsQuery
         HealthcareProfileImpactQuery
         HealthcarePrescriptionCausalTrajectoryQuery
@@ -50,26 +59,174 @@
    "user-interface/scenarios/healthcare/reasoning/prescription-causal-trajectory.gql"
    'gql 'scenario 'healthcare #f))
 
+;;; These are GQL semantic programs authored as inheritable POO objects.
+;;; POO Flow projects them deterministically; gerbil-parser independently
+;;; validates the resulting standard GQL source at the qualification boundary.
+(def CaseProfileRelationsProgram
+  (.o (:: @ PooFlowGqlQueryProgram.)
+      identity: 'healthcare-case-profile-relations-program
+      match:
+      (.o (:: @ PooFlowQueryPath.)
+          start: (.o (:: @ PooFlowQueryNode.) binding: 's label: 'Scenario)
+          next:
+          (.o (:: @ PooFlowQueryStep.) relation: 'HAS_CASE
+              target: (.o (:: @ PooFlowQueryNode.) binding: 'c label: 'Case)
+              next:
+              (.o (:: @ PooFlowQueryStep.) relation: 'HAS_EFFECTIVE_PROFILE
+                  target:
+                  (.o (:: @ PooFlowQueryNode.) binding: 'p label: 'Profile))))
+      where:
+      (.o (:: @ PooFlowQueryEquals.)
+          left: (.o (:: @ PooFlowQueryProperty.) binding: 's property: 'identity)
+          right:
+          (.o (:: @ PooFlowQueryLiteral.)
+              literal-kind: 'string value: "healthcare"))
+      project:
+      (.o (:: @ PooFlowQueryProjection.)
+          expression:
+          (.o (:: @ PooFlowQueryProperty.) binding: 's property: 'identity)
+          next:
+          (.o (:: @ PooFlowQueryProjection.)
+              expression:
+              (.o (:: @ PooFlowQueryProperty.) binding: 'c property: 'id)
+              next:
+              (.o (:: @ PooFlowQueryProjection.)
+                  expression:
+                  (.o (:: @ PooFlowQueryProperty.)
+                      binding: 'p property: 'identity))))))
+
+(def ProfileImpactProgram
+  (.o (:: @ PooFlowGqlQueryProgram.)
+      identity: 'healthcare-profile-impact-program
+      match:
+      (.o (:: @ PooFlowQueryPath.)
+          start: (.o (:: @ PooFlowQueryNode.) binding: 'c label: 'Case)
+          next:
+          (.o (:: @ PooFlowQueryStep.) relation: 'HAS_EFFECTIVE_PROFILE
+              target: (.o (:: @ PooFlowQueryNode.) binding: 'p label: 'Profile)
+              next:
+              (.o (:: @ PooFlowQueryStep.) relation: 'DECLARES_SOURCE
+                  target:
+                  (.o (:: @ PooFlowQueryNode.) binding: 'src label: 'Source))))
+      where:
+      (.o (:: @ PooFlowQueryEquals.)
+          left:
+          (.o (:: @ PooFlowQueryProperty.) binding: 'src property: 'identity)
+          right:
+          (.o (:: @ PooFlowQueryLiteral.) literal-kind: 'string
+              value: "healthcare/medication/authorization/policy"))
+      project:
+      (.o (:: @ PooFlowQueryProjection.)
+          expression: (.o (:: @ PooFlowQueryProperty.) binding: 'c property: 'id)
+          next:
+          (.o (:: @ PooFlowQueryProjection.)
+              expression:
+              (.o (:: @ PooFlowQueryProperty.) binding: 'p property: 'identity)
+              next:
+              (.o (:: @ PooFlowQueryProjection.)
+                  expression:
+                  (.o (:: @ PooFlowQueryProperty.)
+                      binding: 'src property: 'identity))))))
+
+(def PrescriptionCausalTrajectoryProgram
+  (.o (:: @ PooFlowGqlQueryProgram.)
+      identity: 'healthcare-prescription-causal-trajectory-program
+      match:
+      (.o (:: @ PooFlowQueryPath.)
+          start:
+          (.o (:: @ PooFlowQueryNode.) binding: 'prescription label: 'CausalEvent)
+          next:
+          (.o (:: @ PooFlowQueryStep.) relation: 'CAUSAL_PARENT
+              target:
+              (.o (:: @ PooFlowQueryNode.) binding: 'event label: 'CausalEvent)))
+      where:
+      (.o (:: @ PooFlowQueryEquals.)
+          left:
+          (.o (:: @ PooFlowQueryProperty.)
+              binding: 'prescription property: 'identity)
+          right:
+          (.o (:: @ PooFlowQueryLiteral.) literal-kind: 'string
+              value: "ai-tmp-smx-recommendation-1"))
+      project:
+      (.o (:: @ PooFlowQueryProjection.)
+          expression:
+          (.o (:: @ PooFlowQueryProperty.)
+              binding: 'prescription property: 'identity)
+          next:
+          (.o (:: @ PooFlowQueryProjection.)
+              expression:
+              (.o (:: @ PooFlowQueryProperty.) binding: 'event property: 'identity)
+              next:
+              (.o (:: @ PooFlowQueryProjection.)
+                  expression:
+                  (.o (:: @ PooFlowQueryProperty.)
+                      binding: 'event property: 'modality))))))
+
 (def HealthcareCaseProfileRelationsQuery
-  (ontology-query
-   'healthcare-case-profile-relations "1"
-   CaseProfileRelationsSource
-   "sha256:7a3a88a9ebd24cd738d426c0def633247d1a0fc13e9e37cca13bb23e90ba0c63"
-   'ontology-reasoning))
+  (.o (:: @ OntologyQuery.)
+      identity: 'healthcare-case-profile-relations
+      version: "1"
+      semantic-revision:
+      "sha256:7a3a88a9ebd24cd738d426c0def633247d1a0fc13e9e37cca13bb23e90ba0c63"
+      element-space-identity: 'healthcare/ontology-reasoning
+      language: PooFlowGqlQueryLanguage.
+      program: CaseProfileRelationsProgram
+      result-bound: 4096
+      completeness-requirement: 'complete
+      evidence-requirements: '(source-content-id provenance-root result-digest)
+      visibility-request: 'organization
+      result-contract:
+      (poo-flow-query-result-contract
+       'healthcare/case-profile-relations-result 'relation-row
+       '(source target relation) 4096)
+      source: CaseProfileRelationsSource
+      expected-source-content-id:
+      "sha256:7a3a88a9ebd24cd738d426c0def633247d1a0fc13e9e37cca13bb23e90ba0c63"
+      graph-kind: 'ontology-reasoning))
 
 (def HealthcareProfileImpactQuery
-  (ontology-query
-   'healthcare-profile-impact "1"
-   ProfileImpactSource
-   "sha256:0b9d8aa59e93dc771235284e0b6bf3a11479f55b10877f60cfb4bcfb8566dbc9"
-   'ontology-reasoning))
+  (.o (:: @ OntologyQuery.)
+      identity: 'healthcare-profile-impact
+      version: "1"
+      semantic-revision:
+      "sha256:0b9d8aa59e93dc771235284e0b6bf3a11479f55b10877f60cfb4bcfb8566dbc9"
+      element-space-identity: 'healthcare/ontology-reasoning
+      language: PooFlowGqlQueryLanguage.
+      program: ProfileImpactProgram
+      result-bound: 4096
+      completeness-requirement: 'complete
+      evidence-requirements: '(source-content-id provenance-root result-digest)
+      visibility-request: 'organization
+      result-contract:
+      (poo-flow-query-result-contract
+       'healthcare/profile-impact-result 'impact-row
+       '(profile affected-case trajectory) 4096)
+      source: ProfileImpactSource
+      expected-source-content-id:
+      "sha256:0b9d8aa59e93dc771235284e0b6bf3a11479f55b10877f60cfb4bcfb8566dbc9"
+      graph-kind: 'ontology-reasoning))
 
 (def HealthcarePrescriptionCausalTrajectoryQuery
-  (ontology-query
-   'healthcare-prescription-causal-trajectory "1"
-   PrescriptionCausalTrajectorySource
-   "sha256:0a67578de657faeaf683830eee701b43e67419997ae58b03b49f86732626f8f1"
-   'ontology-reasoning))
+  (.o (:: @ OntologyQuery.)
+      identity: 'healthcare-prescription-causal-trajectory
+      version: "1"
+      semantic-revision:
+      "sha256:0a67578de657faeaf683830eee701b43e67419997ae58b03b49f86732626f8f1"
+      element-space-identity: 'healthcare/ontology-reasoning
+      language: PooFlowGqlQueryLanguage.
+      program: PrescriptionCausalTrajectoryProgram
+      result-bound: 4096
+      completeness-requirement: 'complete
+      evidence-requirements: '(source-content-id provenance-root result-digest)
+      visibility-request: 'organization
+      result-contract:
+      (poo-flow-query-result-contract
+       'healthcare/prescription-causal-trajectory-result 'trajectory-row
+       '(event modality predecessor impact) 4096)
+      source: PrescriptionCausalTrajectorySource
+      expected-source-content-id:
+      "sha256:0a67578de657faeaf683830eee701b43e67419997ae58b03b49f86732626f8f1"
+      graph-kind: 'ontology-reasoning))
 
 (def (healthcare-query-source-path query root)
   (let* ((source (.ref query 'source))

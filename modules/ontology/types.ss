@@ -16,7 +16,9 @@
                  poo-flow-governance-assessment?
                  poo-flow-governance-profile?
                  poo-flow-governance-source?
-                 poo-flow-governance-threat?))
+                 poo-flow-governance-threat?)
+        (only-in :poo-flow/src/modules/query/types
+                 poo-flow-query?))
 
 (export ontology-concept?
         ontology-relation?
@@ -65,12 +67,10 @@
        (procedure? (.ref value '.project))))
 
 (def (ontology-query? value)
-  (and (ontology-has-slots?
-        value '(kind identity revision source expected-source-content-id
+  (and (poo-flow-query? value)
+       (ontology-has-slots?
+        value '(kind identity version source expected-source-content-id
                      graph-kind))
-       (eq? (.ref value 'kind) 'lambda-episteme.ontology-query)
-       (symbol? (.ref value 'identity))
-       (string? (.ref value 'revision))
        (ontology-source? (.ref value 'source))
        (string? (.ref value 'expected-source-content-id))
        (memq (.ref value 'graph-kind)
