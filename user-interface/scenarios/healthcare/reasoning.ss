@@ -23,7 +23,15 @@
                  GqlQueryNode. GqlQueryStep. GqlQueryPath.
                  GqlQueryProperty. GqlQueryLiteral.
                  GqlQueryEquals. GqlQueryProjection.
-                 poo-flow-query-result-contract)
+                 poo-flow-query-result-contract
+                 poo-flow-query-element-space)
+        (only-in :poo-flow/src/modules/query/funs
+                 poo-flow-query-admit)
+        (only-in :poo-flow/src/modules/query/contracts
+                 poo-flow-query-source-content-identity
+                 poo-flow-query-bind-execution-receipt)
+        (only-in :poo-flow/src/modules/query/providers/mrr/interface
+                 MrrGqlQueryProvider)
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  OntologyQuery. ontology-source
                  ontology-reasoning-query-property))
@@ -36,6 +44,8 @@
         HealthcareProfileImpactQuery
         HealthcarePrescriptionCausalTrajectoryQuery
         healthcare-query-source-path
+        healthcare-query-element-space
+        healthcare-bind-mrr-query-candidate
         healthcare-case-profile-property-source)
 
 (def (digest text)
@@ -173,7 +183,8 @@
       program: CaseProfileRelationsProgram
       result-bound: 4096
       completeness-requirement: 'complete
-      evidence-requirements: '(source-content-id provenance-root result-digest)
+      evidence-requirements:
+      '(source-content-identity provenance-root result-digest)
       visibility-request: 'organization
       result-contract:
       (poo-flow-query-result-contract
@@ -195,7 +206,8 @@
       program: ProfileImpactProgram
       result-bound: 4096
       completeness-requirement: 'complete
-      evidence-requirements: '(source-content-id provenance-root result-digest)
+      evidence-requirements:
+      '(source-content-identity provenance-root result-digest)
       visibility-request: 'organization
       result-contract:
       (poo-flow-query-result-contract
@@ -217,7 +229,8 @@
       program: PrescriptionCausalTrajectoryProgram
       result-bound: 4096
       completeness-requirement: 'complete
-      evidence-requirements: '(source-content-id provenance-root result-digest)
+      evidence-requirements:
+      '(source-content-identity provenance-root result-digest)
       visibility-request: 'organization
       result-contract:
       (poo-flow-query-result-contract
@@ -236,6 +249,24 @@
       (error "GQL source changed without MRR query admission"
              (.ref query 'identity) actual))
     path))
+
+;;; The accepted ontology graph is the immutable ElementSpace snapshot used by
+;;; Query admission.  MRR execution remains outside this package; this helper
+;;; only binds a typed runtime candidate back to the originating Query.
+(def (healthcare-query-element-space query graph)
+  (unless (poo-flow-graph? graph)
+    (error "Healthcare Query admission requires an ontology graph" graph))
+  (poo-flow-query-element-space
+   (.ref query 'element-space-identity)
+   (.ref query 'semantic-revision)
+   (map poo-flow-graph-node-id (poo-flow-graph-nodes graph))
+   #t))
+
+(def (healthcare-bind-mrr-query-candidate query graph candidate)
+  (let* ((space (healthcare-query-element-space query graph))
+         (admission (poo-flow-query-admit query space)))
+    (poo-flow-query-bind-execution-receipt
+     MrrGqlQueryProvider query admission candidate)))
 
 ;;; Project the accepted POO reasoning graph into source-owned property rows.
 ;;; This is not an MRR catalog or a physical snapshot: MRR owns type identity
