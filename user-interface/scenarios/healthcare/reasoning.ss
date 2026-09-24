@@ -20,9 +20,9 @@
         (only-in :poo-flow/src/modules/query/objects
                  PooFlowGqlQueryLanguage.
                  PooFlowGqlQueryProgram.
-                 GqlQueryNode. GqlQueryStep. GqlQueryPath.
-                 GqlQueryProperty. GqlQueryLiteral.
-                 GqlQueryEquals. GqlQueryProjection.
+                 PooFlowQueryNode. PooFlowQueryStep. PooFlowQueryPath.
+                 PooFlowQueryProperty. PooFlowQueryLiteral.
+                 PooFlowQueryEquals. PooFlowQueryProjection.
                  poo-flow-query-result-contract)
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  OntologyQuery. ontology-source
@@ -66,100 +66,100 @@
   (.o (:: @ PooFlowGqlQueryProgram.)
       identity: 'healthcare-case-profile-relations-program
       match:
-      (.o (:: @ GqlQueryPath.)
-          start: (.o (:: @ GqlQueryNode.) binding: 's label: 'Scenario)
+      (.o (:: @ PooFlowQueryPath.)
+          start: (.o (:: @ PooFlowQueryNode.) binding: 's label: 'Scenario)
           next:
-          (.o (:: @ GqlQueryStep.) relation: 'HAS_CASE
-              target: (.o (:: @ GqlQueryNode.) binding: 'c label: 'Case)
+          (.o (:: @ PooFlowQueryStep.) relation: 'HAS_CASE
+              target: (.o (:: @ PooFlowQueryNode.) binding: 'c label: 'Case)
               next:
-              (.o (:: @ GqlQueryStep.) relation: 'HAS_EFFECTIVE_PROFILE
+              (.o (:: @ PooFlowQueryStep.) relation: 'HAS_EFFECTIVE_PROFILE
                   target:
-                  (.o (:: @ GqlQueryNode.) binding: 'p label: 'Profile))))
+                  (.o (:: @ PooFlowQueryNode.) binding: 'p label: 'Profile))))
       where:
-      (.o (:: @ GqlQueryEquals.)
-          left: (.o (:: @ GqlQueryProperty.) binding: 's property: 'identity)
+      (.o (:: @ PooFlowQueryEquals.)
+          left: (.o (:: @ PooFlowQueryProperty.) binding: 's property: 'identity)
           right:
-          (.o (:: @ GqlQueryLiteral.)
+          (.o (:: @ PooFlowQueryLiteral.)
               literal-kind: 'string value: "healthcare"))
       project:
-      (.o (:: @ GqlQueryProjection.)
+      (.o (:: @ PooFlowQueryProjection.)
           expression:
-          (.o (:: @ GqlQueryProperty.) binding: 's property: 'identity)
+          (.o (:: @ PooFlowQueryProperty.) binding: 's property: 'identity)
           next:
-          (.o (:: @ GqlQueryProjection.)
+          (.o (:: @ PooFlowQueryProjection.)
               expression:
-              (.o (:: @ GqlQueryProperty.) binding: 'c property: 'id)
+              (.o (:: @ PooFlowQueryProperty.) binding: 'c property: 'id)
               next:
-              (.o (:: @ GqlQueryProjection.)
+              (.o (:: @ PooFlowQueryProjection.)
                   expression:
-                  (.o (:: @ GqlQueryProperty.)
+                  (.o (:: @ PooFlowQueryProperty.)
                       binding: 'p property: 'identity))))))
 
 (def ProfileImpactProgram
   (.o (:: @ PooFlowGqlQueryProgram.)
       identity: 'healthcare-profile-impact-program
       match:
-      (.o (:: @ GqlQueryPath.)
-          start: (.o (:: @ GqlQueryNode.) binding: 'c label: 'Case)
+      (.o (:: @ PooFlowQueryPath.)
+          start: (.o (:: @ PooFlowQueryNode.) binding: 'c label: 'Case)
           next:
-          (.o (:: @ GqlQueryStep.) relation: 'HAS_EFFECTIVE_PROFILE
-              target: (.o (:: @ GqlQueryNode.) binding: 'p label: 'Profile)
+          (.o (:: @ PooFlowQueryStep.) relation: 'HAS_EFFECTIVE_PROFILE
+              target: (.o (:: @ PooFlowQueryNode.) binding: 'p label: 'Profile)
               next:
-              (.o (:: @ GqlQueryStep.) relation: 'DECLARES_SOURCE
+              (.o (:: @ PooFlowQueryStep.) relation: 'DECLARES_SOURCE
                   target:
-                  (.o (:: @ GqlQueryNode.) binding: 'src label: 'Source))))
+                  (.o (:: @ PooFlowQueryNode.) binding: 'src label: 'Source))))
       where:
-      (.o (:: @ GqlQueryEquals.)
+      (.o (:: @ PooFlowQueryEquals.)
           left:
-          (.o (:: @ GqlQueryProperty.) binding: 'src property: 'identity)
+          (.o (:: @ PooFlowQueryProperty.) binding: 'src property: 'identity)
           right:
-          (.o (:: @ GqlQueryLiteral.) literal-kind: 'string
+          (.o (:: @ PooFlowQueryLiteral.) literal-kind: 'string
               value: "healthcare/medication/authorization/policy"))
       project:
-      (.o (:: @ GqlQueryProjection.)
-          expression: (.o (:: @ GqlQueryProperty.) binding: 'c property: 'id)
+      (.o (:: @ PooFlowQueryProjection.)
+          expression: (.o (:: @ PooFlowQueryProperty.) binding: 'c property: 'id)
           next:
-          (.o (:: @ GqlQueryProjection.)
+          (.o (:: @ PooFlowQueryProjection.)
               expression:
-              (.o (:: @ GqlQueryProperty.) binding: 'p property: 'identity)
+              (.o (:: @ PooFlowQueryProperty.) binding: 'p property: 'identity)
               next:
-              (.o (:: @ GqlQueryProjection.)
+              (.o (:: @ PooFlowQueryProjection.)
                   expression:
-                  (.o (:: @ GqlQueryProperty.)
+                  (.o (:: @ PooFlowQueryProperty.)
                       binding: 'src property: 'identity))))))
 
 (def PrescriptionCausalTrajectoryProgram
   (.o (:: @ PooFlowGqlQueryProgram.)
       identity: 'healthcare-prescription-causal-trajectory-program
       match:
-      (.o (:: @ GqlQueryPath.)
+      (.o (:: @ PooFlowQueryPath.)
           start:
-          (.o (:: @ GqlQueryNode.) binding: 'prescription label: 'CausalEvent)
+          (.o (:: @ PooFlowQueryNode.) binding: 'prescription label: 'CausalEvent)
           next:
-          (.o (:: @ GqlQueryStep.) relation: 'CAUSAL_PARENT
+          (.o (:: @ PooFlowQueryStep.) relation: 'CAUSAL_PARENT
               target:
-              (.o (:: @ GqlQueryNode.) binding: 'event label: 'CausalEvent)))
+              (.o (:: @ PooFlowQueryNode.) binding: 'event label: 'CausalEvent)))
       where:
-      (.o (:: @ GqlQueryEquals.)
+      (.o (:: @ PooFlowQueryEquals.)
           left:
-          (.o (:: @ GqlQueryProperty.)
+          (.o (:: @ PooFlowQueryProperty.)
               binding: 'prescription property: 'identity)
           right:
-          (.o (:: @ GqlQueryLiteral.) literal-kind: 'string
+          (.o (:: @ PooFlowQueryLiteral.) literal-kind: 'string
               value: "ai-tmp-smx-recommendation-1"))
       project:
-      (.o (:: @ GqlQueryProjection.)
+      (.o (:: @ PooFlowQueryProjection.)
           expression:
-          (.o (:: @ GqlQueryProperty.)
+          (.o (:: @ PooFlowQueryProperty.)
               binding: 'prescription property: 'identity)
           next:
-          (.o (:: @ GqlQueryProjection.)
+          (.o (:: @ PooFlowQueryProjection.)
               expression:
-              (.o (:: @ GqlQueryProperty.) binding: 'event property: 'identity)
+              (.o (:: @ PooFlowQueryProperty.) binding: 'event property: 'identity)
               next:
-              (.o (:: @ GqlQueryProjection.)
+              (.o (:: @ PooFlowQueryProjection.)
                   expression:
-                  (.o (:: @ GqlQueryProperty.)
+                  (.o (:: @ PooFlowQueryProperty.)
                       binding: 'event property: 'modality))))))
 
 (def HealthcareCaseProfileRelationsQuery
