@@ -5,8 +5,8 @@
 
 ;;; Final User Composition. The root imports exactly the POO values it composes;
 ;;; no filesystem scanner or implicit re-export widens this boundary.
-(import (only-in :poo-flow/src/module-system/profile-composition/use-syntax
-                 use-composition)
+(import (only-in :poo-flow/src/module-system/profile-composition/interface
+                 compose profiles user-composition)
         (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
         (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
@@ -18,16 +18,9 @@
 
 (export healthcare-australia)
 
-(def healthcare-australia
-  (use-composition healthcare-australia
-    (use-module healthcare as care
-      (profile EvidenceProfile)
-      (profile PrivacyProfile)
-      (profile HealthcareBaseProfile)
-      (profile AustraliaHealthcareRegionProfile))
-    (compose
-      (profiles care
-        EvidenceProfile
-        PrivacyProfile
-        HealthcareBaseProfile
-        AustraliaHealthcareRegionProfile))))
+(user-composition healthcare-australia
+  (compose profiles
+    EvidenceProfile
+    PrivacyProfile
+    HealthcareBaseProfile
+    AustraliaHealthcareRegionProfile))
