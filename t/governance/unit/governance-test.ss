@@ -1,6 +1,7 @@
 (import :std/test
         :poo-flow/src/module-system/contribution/interface
         (only-in :poo-flow/src/module-system/profile-composition/interface
+                 compose profiles
                  poo-flow-scenario-case-profiles)
         (only-in :poo-flow/src/module-system/declaration/interface
                  poo-flow-user-module-selection)
@@ -14,11 +15,8 @@
                     (.o (:: @ (.ref (.ref DiataxisProfile 'policies) 'document-kind))
                         severity: 'error))))
 (def project-diaclass (diataxis-contribution ProjectDiataxisProfile))
-(def project-composition
-  (use-composition project-composition
-    (use-module governance as policy
-      (profile project-diaclass) (profile decision-kind-module))
-    (compose (profiles policy project-diaclass decision-kind-module))))
+(user-composition project-composition
+  (compose profiles project-diaclass decision-kind-module))
 
 (export governance-test)
 (def governance-test
