@@ -14,6 +14,15 @@ Profiles solve reuse and controlled change: evidence, privacy, care-context,
 healing and medication-safety meaning can evolve independently, while each
 Case receipt records the exact effective closure it admitted.
 
+For the AI-assisted antibiotic prescription, the ordinary =case.ss= is the
+selection and observation surface: it chooses Profiles and records the
+reviewed clinical state.  The adjacent maintained =objects.ss= supplies a
+native POO Case prototype with the default Cedar declaration, event and
+trajectory slots, and relation graph.  Derivation uses ordinary POO slot
+inheritance and override; there is no Case-specific evaluator or patch DSL.
+The executable prescription Governance test checks both inherited slots and
+the accepted/counterfactual admission paths.
+
 * AI-assisted legacy Standard migration
 
 The demand-loaded =au-legacy-interface-fhir-migration= Case implements one

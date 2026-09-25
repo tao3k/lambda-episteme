@@ -53,6 +53,18 @@
   (test-suite
    "AI-assisted prescription Governance Case"
 
+   (test-case "default Case inherits maintained native graph and event slots"
+     (check (.ref (.ref AIAssistedAntibioticPrescriptionCase 'graph)
+                  'graph-id)
+            => 'ai-assisted-antibiotic-prescription)
+     (check (.ref (.ref (.ref AIAssistedAntibioticPrescriptionCase
+                              'event-declarations)
+                        'care-request)
+                  'identity)
+            => "care-request-1")
+     (check (.ref AIAssistedAntibioticPrescriptionCase 'case-id)
+            => 'ai-assisted-antibiotic-prescription))
+
    (test-case "Scenario Profiles admit the independently reviewed prescription"
      (let* ((receipt admitted-receipt)
             (evaluation (ontology-evaluate-case receipt))
