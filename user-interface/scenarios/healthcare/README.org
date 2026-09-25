@@ -23,6 +23,12 @@ inheritance and override; there is no Case-specific evaluator or patch DSL.
 The executable prescription Governance test checks both inherited slots and
 the accepted/counterfactual admission paths.
 
+The common Healthcare =base.ss= follows the same boundary: its ordinary
+Profile chooses identity and policy values, while =base/objects.ss= maintains
+the inherited concepts, relations, source and rule defaults.  This Profile
+has no captured =self= governance method to rebind, so its inherited behavior
+and downstream Medication Safety/Pharmacology Profiles remain unchanged.
+
 * AI-assisted legacy Standard migration
 
 The demand-loaded =au-legacy-interface-fhir-migration= Case implements one
@@ -81,9 +87,13 @@ The =post-operative-healing= Case currently selects three named compositions:
 - =healthcare=: the Healthcare base vocabulary and healing semantics;
 - =medication=: medication-safety Sources, Threat and Capability.
 
-Case authors maintain only =profile-selection=, =source-declarations=,
-=authorization-declarations=, =event-declarations=, =node-declarations= and =edge-declarations= declarations.  They do not
-maintain reverse Profile indexes, Scenario Case registries or Impact lists.
+The maintained post-operative Case still declares Sources, authorizations,
+events and graph nodes/edges directly.  That is a Case-component maintenance
+surface, not the default authoring burden for every Case.  In migrated Cases,
+ordinary authors select =profile-selection= and record observed evidence;
+the inherited POO prototype owns the larger default declarations.  Neither
+layer maintains reverse Profile indexes, Scenario Case registries or Impact
+lists.
 
 * Personal care and healthy ageing across Regions
 
@@ -103,10 +113,11 @@ The Case composes those Profiles with the common Evidence, Privacy and
 Healthcare base Profiles, then selects =regions/australia= as a declarative
 Region Profile.  Like selecting an AWS Region, replacing this Profile changes
 the authority Sources and regional compliance deltas without copying the care
-journey.  The UI is only the declarative POO surface:
+journey.  Its current maintained Case uses POO slots:
 =profile-selection= selects semantics, Case slots attest the evidence state,
-=event-declarations= declares the causal trajectory, and =node-declarations= / =edge-declarations=
-declare the enterprise relation graph.  A later =regions/canada= or
+and =event-declarations= plus =node-declarations= / =edge-declarations=
+declare the causal trajectory and enterprise relation graph.  These larger
+declarations are not the default ordinary authoring surface.  A later =regions/canada= or
 =regions/new-zealand= Profile can reuse the same Case and care Profiles.
 
 #+begin_src mermaid
