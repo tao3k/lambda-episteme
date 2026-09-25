@@ -31,6 +31,8 @@
                  healthcare-bind-mrr-query-candidate
                  healthcare-case-profile-property-source)
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base/objects
+                 HealthcareBaseProfilePrototype)
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/healing
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
@@ -291,6 +293,23 @@
             => (list "lambda-episteme/ontology/evidence"
                      "lambda-episteme/ontology/healthcare/base"
                      "lambda-episteme/ontology/privacy")))
+
+   (test-case "Healthcare base Profile inherits maintained native declarations"
+     (check (.ref HealthcareBaseProfile 'identity)
+            => "lambda-episteme/ontology/healthcare/base")
+     (check (.ref HealthcareBaseProfile 'profile-scope) => 'scenario)
+     (check (.ref (.ref HealthcareBaseProfile 'concept-declarations)
+                  'patient)
+            ? ontology-concept?)
+     (check (.ref (.ref (.ref HealthcareBaseProfile 'concept-declarations)
+                        'patient)
+                  'identity)
+            => (.ref (.ref (.ref HealthcareBaseProfilePrototype
+                                  'concept-declarations)
+                            'patient)
+                      'identity))
+     (check (.ref (.ref HealthcareBaseProfile 'policies) 'clinical-status)
+            => 'source-bound))
 
    (test-case "native slot algebra is the only declaration surface"
      (let ((base-concepts

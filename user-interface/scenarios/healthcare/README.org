@@ -23,6 +23,12 @@ inheritance and override; there is no Case-specific evaluator or patch DSL.
 The executable prescription Governance test checks both inherited slots and
 the accepted/counterfactual admission paths.
 
+The common Healthcare =base.ss= follows the same boundary: its ordinary
+Profile chooses identity and policy values, while =base/objects.ss= maintains
+the inherited concepts, relations, source and rule defaults.  This Profile
+has no captured =self= governance method to rebind, so its inherited behavior
+and downstream Medication Safety/Pharmacology Profiles remain unchanged.
+
 * AI-assisted legacy Standard migration
 
 The demand-loaded =au-legacy-interface-fhir-migration= Case implements one
