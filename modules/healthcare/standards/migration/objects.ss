@@ -5,7 +5,7 @@
 
 (import (only-in :clan/poo/object .all-slots .o .ref)
         (only-in :clan/poo/mop validate)
-        (only-in :poo-flow/src/modules/standards/funs
+        (only-in :poo-flow/modules/standards/funs
                  poo-flow-standard-digest)
         "types.ss")
 

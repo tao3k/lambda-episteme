@@ -16,12 +16,12 @@
                  poo-flow-graph-edge-to poo-flow-graph-edges
                  poo-flow-graph-node-id poo-flow-graph-node-payload
                  poo-flow-graph-nodes)
-        (only-in :poo-flow/src/modules/authorization/types
+        (only-in :poo-flow/modules/authorization/types
                  poo-flow-authorization-capability?)
-        (only-in :poo-flow/src/modules/authorization/contracts
+        (only-in :poo-flow/modules/authorization/contracts
                  poo-flow-authorization-capability-contract
                  poo-flow-authorization-capabilities-digest)
-        (only-in :poo-flow/src/modules/authorization/providers/cedar/interface
+        (only-in :poo-flow/modules/authorization/providers/cedar/interface
                  CedarAuthorizationProvider
                  poo-flow-cedar-authorization-request
                  poo-flow-cedar-authority-context?

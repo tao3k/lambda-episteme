@@ -7,7 +7,7 @@
 (import (only-in :clan/poo/object .all-slots .ref .slot? object?)
         (only-in :clan/poo/mop define-type Type. element?)
         :std/list/list
-        (only-in :poo-flow/src/modules/standards/types
+        (only-in :poo-flow/modules/standards/types
                  poo-flow-standard-digest?
                  poo-flow-standard-failure?
                  poo-flow-standard-text?))

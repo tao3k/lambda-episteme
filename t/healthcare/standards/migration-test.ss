@@ -5,8 +5,8 @@
 
 (import :std/test
         (only-in :clan/poo/object .all-slots .cc .ref)
-        :poo-flow/src/modules/standards/interface
-        (only-in :poo-flow/src/modules/authorization/providers/cedar/interface
+        :poo-flow/modules/standards/interface
+        (only-in :poo-flow/modules/authorization/providers/cedar/interface
                  poo-flow-cedar-authorization-request?
                  poo-flow-cedar-decision
                  poo-flow-cedar-runtime-handoff)

@@ -15,13 +15,13 @@
                  poo-flow-graph-node-payload poo-flow-graph-nodes)
         (only-in :poo-flow/src/module-system/profile-composition/interface
                  poo-flow-scenario-case)
-        (only-in :poo-flow/src/modules/authorization/types
+        (only-in :poo-flow/modules/authorization/types
                  poo-flow-authorization-capability?)
-        (only-in :poo-flow/src/modules/governance/objects
+        (only-in :poo-flow/modules/governance/objects
                  PooFlowGovernanceProfile.
                  poo-flow-governance-source
                  poo-flow-governance-threat-model)
-        (only-in :poo-flow/src/modules/query/objects PooFlowQuery.)
+        (only-in :poo-flow/modules/query/objects PooFlowQuery.)
         (only-in :poo-flow/src/utilities/functional
                  poo-flow-filter-map)
         (only-in "types.ss"

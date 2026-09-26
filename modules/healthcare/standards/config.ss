@@ -6,7 +6,7 @@
 ;;; Lambda Healthcare composes the generic Standards Lego stud with its FHIR
 ;;; family, exact editions, catalog and Provider.  Core owns none of these.
 (import (only-in :clan/poo/object .o)
-        (only-in :poo-flow/src/modules/standards/config
+        (only-in :poo-flow/modules/standards/config
                  poo-flow-standard-default-budget
                  poo-flow-standards-module)
         (only-in "fhir/config.ss"

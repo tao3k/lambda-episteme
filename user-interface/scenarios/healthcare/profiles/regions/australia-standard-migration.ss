@@ -4,7 +4,7 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .def .o .ref)
-        (only-in :poo-flow/src/modules/governance/objects
+        (only-in :poo-flow/modules/governance/objects
                  poo-flow-governance-precondition
                  poo-flow-governance-threat)
         (only-in :poo-flow/lambda-episteme/modules/healthcare/interface

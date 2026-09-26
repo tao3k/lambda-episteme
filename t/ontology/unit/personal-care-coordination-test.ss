@@ -7,7 +7,7 @@
         :std/list/list
         (only-in :poo-flow/src/module-system/profile-composition/interface
                  poo-flow-scenario-case-name)
-        :poo-flow/src/modules/temporal-causality/interface
+        :poo-flow/modules/temporal-causality/interface
         :poo-flow/lambda-episteme/modules/ontology/interface
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/personal-care-coordination/case)
 

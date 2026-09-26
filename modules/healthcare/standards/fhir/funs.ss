@@ -8,13 +8,13 @@
 (import (only-in :clan/poo/object .ref)
         (only-in :clan/poo/mop .defmethod-bundle)
         :std/list/list
-        :poo-flow/src/module-system/poo-clos/interface
-        (only-in :poo-flow/src/modules/standards/objects
+        :core/poo-clos/interface
+        (only-in :poo-flow/modules/standards/objects
                  poo-flow-standard-conformance-receipt
                  poo-flow-standard-failure)
-        (only-in :poo-flow/src/modules/standards/funs
+        (only-in :poo-flow/modules/standards/funs
                  poo-flow-standard-digest)
-        (only-in :poo-flow/src/modules/standards/types
+        (only-in :poo-flow/modules/standards/types
                  poo-flow-standard-validation-closure?)
         (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/objects
                  HealthcareStandardValidationProtocol

@@ -7,7 +7,7 @@
         :std/list/list
         (only-in :poo-flow/src/graph/types
                  poo-flow-graph-edge-kind poo-flow-graph-edges)
-        :poo-flow/src/modules/temporal-causality/interface
+        :poo-flow/modules/temporal-causality/interface
         :poo-flow/lambda-episteme/modules/ontology/interface
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/wrong-prescription-review/case)
 

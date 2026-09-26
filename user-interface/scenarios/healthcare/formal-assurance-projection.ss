@@ -6,8 +6,8 @@
 ;;; axes. Their crossing is CLOS multi-dispatch; the trajectory itself remains
 ;;; one POO slot contract owned by the Case.
 (import (only-in :clan/poo/object .o .ref)
-        :poo-flow/src/module-system/poo-clos/interface
-        (only-in :poo-flow/src/modules/temporal-causality/interface
+        :core/poo-clos/interface
+        (only-in :poo-flow/modules/temporal-causality/interface
                  poo-flow-causal-trajectory-assessment-digest)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
                  AIClinicalDecisionSupportProfile))

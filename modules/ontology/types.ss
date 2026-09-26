@@ -5,19 +5,19 @@
 (import (only-in :clan/poo/object .all-slots .ref .slot? object?)
         :std/list/list
         (only-in :poo-flow/src/graph/types poo-flow-graph?)
-        (only-in :poo-flow/src/modules/authorization/types
+        (only-in :poo-flow/modules/authorization/types
                  poo-flow-authorization-capability?)
-        (only-in :poo-flow/src/modules/temporal-causality/types
+        (only-in :poo-flow/modules/temporal-causality/types
                  poo-flow-causal-event?
                  poo-flow-causal-trajectory-contract?
                  poo-flow-causal-trajectory-assessment?
                  poo-flow-structural-impact-receipt?)
-        (only-in :poo-flow/src/modules/governance/types
+        (only-in :poo-flow/modules/governance/types
                  poo-flow-governance-assessment?
                  poo-flow-governance-profile?
                  poo-flow-governance-source?
                  poo-flow-governance-threat?)
-        (only-in :poo-flow/src/modules/query/types
+        (only-in :poo-flow/modules/query/types
                  poo-flow-query?))
 
 (export ontology-concept?

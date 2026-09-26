@@ -7,10 +7,10 @@
 ;;; are not claims that the complete upstream implementation guides are copied.
 (import (only-in :clan/poo/object .o .ref)
         :std/list/list
-        (only-in :poo-flow/src/modules/standards/types
+        (only-in :poo-flow/modules/standards/types
                  +poo-flow-standard-validation-provider-kind+
                  poo-flow-standard-artifact?)
-        (only-in :poo-flow/src/modules/standards/objects
+        (only-in :poo-flow/modules/standards/objects
                  poo-flow-standard-artifact
                  poo-flow-standard-artifact-ref
                  poo-flow-standard-artifact-source

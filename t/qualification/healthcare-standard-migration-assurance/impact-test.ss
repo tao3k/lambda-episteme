@@ -12,9 +12,9 @@
         (only-in :std/misc/ports read-all-as-string)
         (only-in :gerbil/core string-contains)
         (only-in :std/encoding/hex hex-encode)
-        (only-in :poo-flow/src/modules/standards/interface
+        (only-in :poo-flow/modules/standards/interface
                  poo-flow-standard-digest)
-        (only-in :poo-flow/src/modules/proof/interface
+        (only-in :poo-flow/modules/proof/interface
                  poo-flow-proof-assurance)
         (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/migration/interface
                  AUHealthcareMigrationFormalModelEvidence

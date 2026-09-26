@@ -75,9 +75,9 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           repository: tao3k/poo-flow
-          ref: a0b005ed4951313b5fd9d2e5111cd6707345781a
+          ref: 1ac136e97206780f59918f9ada2c6b4b2da452a7
           path: poo-flow
-          submodules: false
+          submodules: true
 
       - name: Checkout Lambda Episteme under packages
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0

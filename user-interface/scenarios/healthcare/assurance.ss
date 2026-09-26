@@ -9,7 +9,7 @@
         (only-in :std/crypto/digest sha256)
         :std/list/list
         (only-in :std/encoding/hex hex-encode)
-        (only-in :poo-flow/src/modules/temporal-causality/interface
+        (only-in :poo-flow/modules/temporal-causality/interface
                  poo-flow-causal-cut poo-flow-causal-event-graph
                  poo-flow-causal-trajectory-assessment-digest
                  poo-flow-causal-trajectory-assessment?

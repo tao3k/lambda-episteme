@@ -6,7 +6,7 @@
                  poo-flow-user-module-selection?
                  poo-flow-user-module-selection-flags
                  poo-flow-user-module-selection-key)
-        (only-in :poo-flow/src/modules/governance/funs
+        (only-in :poo-flow/modules/governance/funs
                  poo-flow-governance-contribution)
         (only-in "objects.ss"
                  OntologyProfile))

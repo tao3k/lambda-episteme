@@ -14,14 +14,14 @@
                  poo-flow-graph?)
         :poo-flow/src/module-system/contribution/interface
         :poo-flow/src/module-system/profile-composition/interface
-        :poo-flow/src/modules/governance/interface
-        (only-in :poo-flow/src/modules/query/objects
+        :poo-flow/modules/governance/interface
+        (only-in :poo-flow/modules/query/objects
                  poo-flow-query-execution-candidate)
-        (only-in :poo-flow/src/modules/query/contracts
+        (only-in :poo-flow/modules/query/contracts
                  poo-flow-query-source-content-identity)
-        (only-in :poo-flow/src/modules/query/types
+        (only-in :poo-flow/modules/query/types
                  poo-flow-source-query-receipt?)
-        :poo-flow/src/modules/authorization/providers/cedar/interface
+        :poo-flow/modules/authorization/providers/cedar/interface
         :poo-flow/lambda-episteme/modules/ontology/interface
         :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
         :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy

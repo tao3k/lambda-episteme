@@ -4,7 +4,7 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .o)
-        (only-in :poo-flow/src/modules/governance/objects
+        (only-in :poo-flow/modules/governance/objects
                  PooFlowGovernanceProfile.
                  poo-flow-governance-source))
 (export DecisionKindProfile)

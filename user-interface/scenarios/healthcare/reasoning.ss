@@ -17,7 +17,7 @@
                  poo-flow-graph-node-id poo-flow-graph-node-metadata
                  poo-flow-graph-edge-from poo-flow-graph-edge-to
                  poo-flow-graph-edge-kind)
-        (only-in :poo-flow/src/modules/query/objects
+        (only-in :poo-flow/modules/query/objects
                  PooFlowGqlQueryLanguage.
                  PooFlowGqlQueryProgram.
                  GqlQueryNode. GqlQueryStep. GqlQueryPath.
@@ -25,12 +25,12 @@
                  GqlQueryEquals. GqlQueryProjection.
                  poo-flow-query-result-contract
                  poo-flow-query-element-space)
-        (only-in :poo-flow/src/modules/query/funs
+        (only-in :poo-flow/modules/query/funs
                  poo-flow-query-admit)
-        (only-in :poo-flow/src/modules/query/contracts
+        (only-in :poo-flow/modules/query/contracts
                  poo-flow-query-source-content-identity
                  poo-flow-query-bind-execution-receipt)
-        (only-in :poo-flow/src/modules/query/providers/mrr/interface
+        (only-in :poo-flow/modules/query/providers/mrr/interface
                  MrrGqlQueryProvider)
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  OntologyQuery. ontology-source

@@ -16,13 +16,13 @@
                  poo-flow-scenario-case?
                  poo-flow-scenario-case-name
                  poo-flow-scenario-case-profiles)
-        (only-in :poo-flow/src/modules/temporal-causality/interface
+        (only-in :poo-flow/modules/temporal-causality/interface
                  poo-flow-causal-event?
                  poo-flow-causal-event-graph
                  poo-flow-causal-trajectory-assess
                  poo-flow-causal-trajectory-contract?
                  poo-flow-structural-impact-analyze)
-        (only-in :poo-flow/src/modules/governance/funs
+        (only-in :poo-flow/modules/governance/funs
                  poo-flow-governance-evaluate)
         (only-in "types.ss"
                  ontology-case? ontology-case-composition-receipt?

@@ -7,11 +7,11 @@
 ;;; already-normalized healthcare subject; it does not parse HL7v2 or CDA.
 (import (only-in :clan/poo/object .o .ref object?)
         :std/list/list
-        (only-in :poo-flow/src/modules/standards/types
+        (only-in :poo-flow/modules/standards/types
                  poo-flow-standard-conformance-receipt?
                  poo-flow-standard-governance-interface?
                  poo-flow-standard-validation-closure?)
-        (only-in :poo-flow/src/modules/standards/funs
+        (only-in :poo-flow/modules/standards/funs
                  poo-flow-standard-digest)
         "types.ss"
         "objects.ss")
