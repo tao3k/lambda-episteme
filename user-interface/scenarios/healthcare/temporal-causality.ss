@@ -3,7 +3,7 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 ;;; Healthcare owns the clinical provenance defaults; Cases only declare facts.
-(import (only-in :poo-flow/src/modules/temporal-causality/interface
+(import (only-in :poo-flow/modules/temporal-causality/interface
                  poo-flow-causal-event poo-flow-temporal-observation))
 
 (export healthcare-clinical-event)

@@ -12,7 +12,7 @@
                  poo-flow-graph-nodes)
         (only-in :poo-flow/src/module-system/profile-composition/interface
                  poo-flow-scenario-case-name)
-        (only-in :poo-flow/src/modules/standards/interface
+        (only-in :poo-flow/modules/standards/interface
                  poo-flow-standard-governance-interface?)
         :poo-flow/lambda-episteme/modules/healthcare/standards/migration/interface
         :poo-flow/lambda-episteme/modules/ontology/interface

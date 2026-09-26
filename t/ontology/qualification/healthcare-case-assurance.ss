@@ -7,7 +7,7 @@
 ;;; MRR remains a downstream Rust library consumer of the parser-owned FFI.
 (import :std/test
         (only-in :clan/poo/object .o .ref)
-        (only-in :poo-flow/src/modules/authorization/providers/cedar/interface
+        (only-in :poo-flow/modules/authorization/providers/cedar/interface
                  poo-flow-cedar-authorization-request->runtime
                  poo-flow-cedar-authority-context
                  poo-flow-cedar-authority-snapshot->runtime

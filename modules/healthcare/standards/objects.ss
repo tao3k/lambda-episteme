@@ -5,7 +5,7 @@
 
 ;;; Healthcare Provider and Standard Profile are independently extensible axes.
 ;;; Their crossing is therefore owned by a Lambda-local CLOS generic.
-(import :poo-flow/src/module-system/poo-clos/interface)
+(import :core/poo-clos/interface)
 
 (export HealthcareStandardValidationExecutor
         HealthcareStandardValidationProtocol

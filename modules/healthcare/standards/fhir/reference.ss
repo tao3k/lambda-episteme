@@ -8,7 +8,7 @@
 ;;; validator and never treats unavailable output as a successful comparison.
 (import (only-in :std/encoding/json JSONReadOptions string->json)
         (only-in :gerbil/core string-prefix?)
-        (only-in :poo-flow/src/modules/standards/funs
+        (only-in :poo-flow/modules/standards/funs
                  poo-flow-standard-digest
                  poo-flow-standard-make-reference-observation))
 

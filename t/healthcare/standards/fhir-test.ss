@@ -9,7 +9,7 @@
         (only-in :clan/poo/object .o .ref .slot?)
         (only-in :poo-flow/src/feature-system/source-lock-feature
                  require-source-lock-payload)
-        :poo-flow/src/modules/standards/interface
+        :poo-flow/modules/standards/interface
         (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/fhir/reference
                  poo-flow-fhir-reference-observation-from-bundle)
         :poo-flow/lambda-episteme/modules/healthcare/interface)

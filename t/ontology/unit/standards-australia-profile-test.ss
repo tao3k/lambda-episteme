@@ -6,7 +6,7 @@
 (import :std/test
         (only-in :clan/poo/object .all-slots .ref)
         :std/list/list
-        (only-in :poo-flow/src/modules/standards/interface
+        (only-in :poo-flow/modules/standards/interface
                  poo-flow-standard-edition-ref?)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/regions/australia
                  AustraliaHealthcareRegionProfile))

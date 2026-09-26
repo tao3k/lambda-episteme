@@ -3,7 +3,7 @@
 ;;;
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
-(import (only-in :poo-flow/src/modules/governance/funs
+(import (only-in :poo-flow/modules/governance/funs
                  poo-flow-governance-module-contribution)
         "objects.ss")
 (export diataxis-contribution diataxis-module)

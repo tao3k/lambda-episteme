@@ -4,22 +4,22 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .cc .o .ref .slot?)
-        (only-in :poo-flow/src/modules/standards/config
+        (only-in :poo-flow/modules/standards/config
                  PooFlowStandardMigrationGovernanceInterface.)
-        (only-in :poo-flow/src/modules/standards/objects
+        (only-in :poo-flow/modules/standards/objects
                  poo-flow-standard-feature-module
                  poo-flow-standard-governance-binding
                  poo-flow-standard-governance-interface)
-        (only-in :poo-flow/src/modules/standards/funs
+        (only-in :poo-flow/modules/standards/funs
                  poo-flow-standard-digest)
-        (only-in :poo-flow/src/modules/proof/interface
+        (only-in :poo-flow/modules/proof/interface
                  poo-flow-proof-artifact
                  poo-flow-proof-receipt
                  poo-flow-proof-impact-binding
                  poo-flow-proof-refinement-binding
                  poo-flow-proof-assurance
                  poo-flow-proof-assurance?)
-        (only-in :poo-flow/src/modules/authorization/providers/cedar/config
+        (only-in :poo-flow/modules/authorization/providers/cedar/config
                  CedarAuthorizationProvider)
         (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/fhir/objects
                  FHIRAUCorePatientStandardProfile)

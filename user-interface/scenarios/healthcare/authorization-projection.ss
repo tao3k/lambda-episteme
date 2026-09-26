@@ -7,7 +7,7 @@
 ;;; ordinary `.assess-governance` slot generic.
 (import (only-in :clan/poo/object .o .ref .slot?)
         :std/list/list
-        :poo-flow/src/module-system/poo-clos/interface
+        :core/poo-clos/interface
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
                  AIClinicalDecisionSupportProfile)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety

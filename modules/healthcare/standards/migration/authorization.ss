@@ -7,13 +7,13 @@
 ;;; policy execution; this module owns the exact reviewer/action/resource
 ;;; projection and the admitted governance Binding returned to an Agent.
 (import (only-in :clan/poo/object .o .ref)
-        (only-in :poo-flow/src/modules/authorization/providers/cedar/interface
+        (only-in :poo-flow/modules/authorization/providers/cedar/interface
                  CedarAuthorizationProvider
                  poo-flow-cedar-authorization-request
                  poo-flow-cedar-authorization-request?
                  poo-flow-cedar-decision-permit?
                  poo-flow-cedar-runtime-handoff?)
-        (only-in :poo-flow/src/modules/standards/interface
+        (only-in :poo-flow/modules/standards/interface
                  poo-flow-standard-digest
                  poo-flow-standard-governance-binding)
         "types.ss")

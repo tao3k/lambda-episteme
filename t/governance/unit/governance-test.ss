@@ -5,7 +5,7 @@
                  poo-flow-scenario-case-profiles)
         (only-in :poo-flow/src/module-system/declaration/interface
                  poo-flow-user-module-selection)
-        :poo-flow/src/modules/governance/interface
+        :poo-flow/modules/governance/interface
         :poo-flow/lambda-episteme/modules/diataxis/interface
         :poo-flow/lambda-episteme/modules/decision-kind/interface)
 (def ProjectDiataxisProfile

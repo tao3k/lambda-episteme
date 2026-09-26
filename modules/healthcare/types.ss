@@ -5,7 +5,7 @@
 
 (import (only-in :clan/poo/object .ref .slot? object?)
         (only-in :clan/poo/mop define-type Type. element?)
-        (only-in :poo-flow/src/modules/standards/types
+        (only-in :poo-flow/modules/standards/types
                  poo-flow-standards-module?))
 
 (export +lambda-healthcare-module-kind+

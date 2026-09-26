@@ -9,7 +9,7 @@
          (graph Graph))
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  OntologyCase)
-        (only-in :poo-flow/src/modules/temporal-causality/interface
+        (only-in :poo-flow/modules/temporal-causality/interface
                  poo-flow-causal-trajectory-contract)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization
                  healthcare-medication-administration)

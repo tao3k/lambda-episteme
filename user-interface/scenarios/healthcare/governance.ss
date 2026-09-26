@@ -5,7 +5,7 @@
 ;;; Scenario-local policy helper: Profiles name required Case evidence while the
 ;;; POO Flow Governance core remains the sole assessment/receipt owner.
 (import (only-in :clan/poo/object .ref .slot?)
-        (only-in :poo-flow/src/modules/governance/objects
+        (only-in :poo-flow/modules/governance/objects
                  poo-flow-governance-assessment-value
                  poo-flow-governance-threat-blocking?))
 

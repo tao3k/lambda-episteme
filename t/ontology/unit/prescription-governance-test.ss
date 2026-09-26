@@ -8,9 +8,9 @@
         (only-in :clan/poo/io json-string<-)
         (only-in :std/encoding/json string->json make-JSONReadOptions)
         :std/list/list
-        :poo-flow/src/modules/governance/interface
-        :poo-flow/src/modules/temporal-causality/interface
-        :poo-flow/src/modules/authorization/providers/cedar/interface
+        :poo-flow/modules/governance/interface
+        :poo-flow/modules/temporal-causality/interface
+        :poo-flow/modules/authorization/providers/cedar/interface
         :poo-flow/lambda-episteme/modules/ontology/interface
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization
         :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization-projection

@@ -5,8 +5,8 @@
 
 (import (only-in :clan/poo/object .o)
         (only-in :clan/poo/mop validate)
-        :poo-flow/src/module-system/poo-clos/interface
-        (only-in :poo-flow/src/modules/standards/objects
+        :core/poo-clos/interface
+        (only-in :poo-flow/modules/standards/objects
                  poo-flow-standard-constraint-profile)
         (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/objects
                  HealthcareStandardValidationExecutor)
