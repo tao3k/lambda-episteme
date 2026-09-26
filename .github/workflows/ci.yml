@@ -84,6 +84,10 @@ jobs:
         with:
           path: poo-flow/packages/lambda-episteme
 
+      - name: Check out POO Flow Core source owner
+        working-directory: poo-flow
+        run: git submodule update --init core
+
       - name: Install Just
         uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # v3
 
