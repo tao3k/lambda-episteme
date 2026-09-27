@@ -24,7 +24,8 @@
   (case-id 'vehicle-ota-treatment-handoff)
   (scenario VehicleScenario)
   (assessment-reference
-   (.o source: "ASRG/openXSAM"
+   (.o source: "example-tara"
+       exchange-model: "ASRG/openXSAM"
        work-product-id: "EXAMPLE-TARA-OTA-001"
        revision: "example-1"
        approval-reference: #f))

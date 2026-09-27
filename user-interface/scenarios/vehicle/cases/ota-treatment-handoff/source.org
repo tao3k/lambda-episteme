@@ -8,7 +8,8 @@ Ontology Case. It is not an approved assessment or a production policy.
 
 | Field | Example value |
 |-------+---------------|
-| Source format | ASRG/openXSAM reference |
+| Source ID | example-tara |
+| Exchange-model reference | ASRG/openXSAM |
 | Work product | EXAMPLE-TARA-OTA-001 |
 | Revision | example-1 |
 | Approval reference | absent |

@@ -24,6 +24,17 @@ each goal to have an assessment origin and a policy candidate. It also requires
 each policy candidate to name its release target. A Case selects these POO
 profiles and supplies the graph; no TARA export parser is required.
 
+After an accepted graph evaluation, ~vehicle-tara-reference-candidate~
+projects the five fields of Cedar-POO's ~TaraReference~: ~source~,
+~workProductId~, ~revision~, ~approvalRef~, and ~treatmentGoal~. The synthetic
+Case has no approval, so ~approvalRef~ is empty and
+~approval-reference-present?~ is false. ~external-approval-verified?~ remains
+false even if a reference is later supplied. ~publication~ remains false until an
+independent publisher supplies a Cedar treatment publication. The projection
+is a candidate handoff, not an authorization decision.
+~vehicle-tara-reference-json~ serializes precisely those five fields as a
+transport artifact for a downstream adapter. It carries no approval verdict.
+
 * Authority boundary
 
 Ontology composition and graph evaluation check the declared structure. The
