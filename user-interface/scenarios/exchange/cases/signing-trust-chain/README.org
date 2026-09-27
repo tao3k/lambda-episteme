@@ -1,18 +1,58 @@
 #+TITLE: Exchange Signing Trust Chain
 
+* Case layout
+
+This directory owns the vertical incident comparison. =reasoning.ss= and
+=hypotheses.ss= hold bounded Ascent candidate rules, =query.ss= holds the GQL
+selection contracts, =simulation.ss= holds synthetic POO revisions, and
+[[file:proof/tla/SigningIntentBoundary.tla][proof/tla/SigningIntentBoundary.tla]] holds the pre-signing threat model.
+The paired Lean-POO Exchange/Signing Case owns its Lean implementation and
+generated =SigningPolicies/*.cedar= files. Each artifact stays with its
+owning Case; the source links below join the two cases without copying
+policy bodies or treating a model as incident evidence.
+
 * Public observations
 
 [[https://www.bitget.com/support/articles/12560603896024][Bitget's incident notice]] says unauthorized transfers were detected on 24
 September 2026 from some exchange hot and warm wallets; it says cold wallets
 were unaffected. A [[https://www.bitget.com/zh-CN/support/articles/12560603896108][later update]] revised the loss estimate to about USD 387.5
-million without reporting a second theft. These notices do not establish the
-complete intrusion path. [[https://www.coindesk.com/markets/2026/09/25/bitget-s-usd351-million-hack-happened-via-spoofed-transfers-not-private-keys-ceo-gray-chen-says][Reporting of the CEO's preliminary account]] describes
+million without reporting a second theft. Bitget says it identified and
+remediated the underlying vulnerability, but the linked notices do not
+disclose the entry point, internal message path, or signer ingress records.
+[[https://www.coindesk.com/markets/2026/09/25/bitget-s-usd351-million-hack-happened-via-spoofed-transfers-not-private-keys-ceo-gray-chen-says][Reporting of the CEO's preliminary account]] describes
 spoofed transaction data rather than private-key theft. That account remains
 a reported explanation until a technical report supports its details.
+[[https://www.elliptic.co/insights/bitget-attack-pushes-suspected-north-korea-crypto-heists-over-1-billion-in-2026/][Elliptic's independent tracing]] labels receiving addresses and later fund
+movement; those on-chain observations constrain the outflow and aftermath,
+not the internal request, approval, or signer ingress path.
 
 [[https://www.bybit.com/en/press/post/bybit-confirms-security-integrity-amid-safe-wallet-incident-no-compromise-in-infrastructure-blt9986889e919da8d2][Bybit's Safe incident statement]] concerns a separate signing-interface
 compromise. This Case compares mechanisms; it never transfers an observation
 from Bybit into Bitget's factual record.
+
+* Structural risk scope
+
+The shared risk is *instruction contamination before a valid signature*:
+the signing authority may receive bytes that differ from the transaction
+authorized by the legitimate decision makers. A cryptographic signature can
+then be valid while the transfer is unauthorized. This risk is defined by the
+trust boundary, not by a particular wallet product or intrusion route.
+
+| Incident or model | Entry surface | What is established here | What remains a hypothesis |
+|-------------------+---------------+--------------------------+---------------------------|
+| Bybit 2025 | Human signing interface | Bybit reports a compromised Safe developer account and deceptive signing interface. | The generic model does not reconstruct every production control. |
+| Bitget 2026 | Exchange hot/warm-wallet pipeline | Bitget reports unauthorized outflow; the CEO's preliminary backend explanation is reported separately. | Record mutation, API replay, queue injection, destination mapping, exact signer ingress. |
+| Shared threat model | Candidate transaction before signing | Either entry class can be represented as a candidate that lacks an independently bound intent or display witness. | No particular candidate path is thereby proven to have occurred. |
+
+The defensive cut is an independently authenticated, signer-side binding of
+decoded transaction bytes to user intent, risk approval, ledger reservation,
+display confirmation where applicable, wallet epoch, and a one-use nonce.
+Cedar evaluates the bound request; the Host checks provenance and applies
+the signing effect. The [[file:proof/tla/SigningIntentBoundary.tla][TLA+ model]] examines the temporal cut,
+[[file:hypotheses.ss][Ascent]] compares possible ingress explanations, and
+[[https://github.com/tao3k/cedar-poo-spec/tree/feat/cedar-evaluation-adapter/Examples/Enterprise/Exchange/Signing][Lean-POO/Cedar]] replays policy revisions and a symbolic signing Host.
+Their outputs have separate authority: a candidate route cannot authorize
+a transfer, and a Cedar permit cannot authenticate a witness producer.
 
 * Candidate routes and missing evidence
 
@@ -94,6 +134,68 @@ queue was interrupted. The interface branch uses the same terminal node to
 compare mechanisms; that graph join must not be read as evidence that the
 Bybit interface compromise occurred at Bitget.
 
+* Competing ingress hypotheses
+
+[[file:hypotheses.ss][The hypothesis Case]] uses Ascent rules to join admitted and provisional
+signals with five candidate mechanisms. The [[file:query.ss][GQL signal query]] is a
+language-owned AST selecting signal identity, evidence source, and admission
+status. Its test verifies Query admission but does not execute GQL. MRR and
+the Host must bind an actual, complete query receipt before supplying any
+independently authenticated signal to Ascent. The public transfer notice
+supports every candidate equally; it does not identify the ingress route.
+
+| Candidate mechanism | Assumed attacker control | Distinguishing signal to seek | Independent challenge | Signing boundary that cuts it |
+|---------------------+--------------------------+-------------------------------+-----------------------+------------------------------|
+| Withdrawal record mutation | Write to a withdrawal record before signing | Record without matching authenticated user intent | Exact earlier user intent receipt | Intent owner attests the decoded bytes |
+| Internal API replay | Invoke or replay a signer request | Duplicate request identity or nonce | One-use request ledger | Atomic one-use signer gate |
+| Queue injection | Submit a message outside the authorized producer path | Orphan message in signer-owned ingress log | Verified producer chain | Signer verifies admission and producer receipt |
+| Address-map substitution | Change destination mapping during construction | User destination differs from signer-decoded destination | Independently matched destination | Signer decodes and binds exact bytes |
+| Interface substitution | Change what a human approver sees | Trusted display differs from signed bytes | Trusted rendering matches bytes | Independent display and byte comparison |
+
+The three backend variants above also have separate candidate topologies in
+[[file:simulation.ss][the replay]]. These are adversary-capability models, not claims about
+Bitget's implementation. An observation from a backend-controlled log is
+provisional even if it matches a prediction. A separately admitted signer
+record can narrow the queue hypothesis; a contradictory producer record must
+remain visible. Neither a single matching signal nor a path in the graph
+confirms an intrusion mechanism. The atomic tests demonstrate all three
+outcomes without promoting a hypothesis to a fact or permit.
+
+* Pre-signing temporal threat model
+
+[[file:proof/tla/SigningIntentBoundary.tla][SigningIntentBoundary.tla]] lifts the two known structural entry classes
+above any single wallet implementation. The model has a prepared candidate,
+independent intent/risk/ledger witnesses, a signer-side display comparison,
+a one-use nonce, a freeze flag, a symbolic signing step, and a symbolic
+broadcast step. Backend compromise makes a candidate acceptable to the weak
+pipeline without independent witnesses; interface compromise makes the
+display disagree with the bytes. =WeakSign= relies on the pipeline's
+candidate flag; =BoundSign= requires the independent witnesses and exact
+display match.
+
+#+begin_src mermaid
+stateDiagram-v2
+  [*] --> Prepared: legitimate or synthetic entry
+  Prepared --> Signed: WeakSign on candidate flag
+  Prepared --> Signed: BoundSign on independent witnesses
+  Signed --> Broadcast: no freeze
+  Prepared --> Frozen: emergency freeze
+  Signed --> Frozen: emergency freeze before broadcast
+#+end_src
+
+| TLA+ predicate | Intended meaning | Executable companion |
+|----------------+------------------+----------------------|
+| =NoUnboundSign= | A signed candidate has independent witnesses and a matching signer display. | Lean Host rejects the shared-source attempt. |
+| =NoUnboundBroadcast= | Broadcast never follows an unbound signature. | Lean weak Host exposes a violating synthetic effect. |
+| =SignedNonceConsumed= | Signing consumes one request nonce. | Lean Host rejects the second use. |
+
+=AttackSpec= permits =WeakSign= and therefore has a candidate path that
+violates the first two predicates. =DefendedSpec= substitutes =BoundSign=.
+The atomic Gerbil test checks parser-owned syntax, source identity, and exact
+roundtrip. It does *not* run TLC or prove temporal invariants. The separate
+Lean replay proves only its finite symbolic Host cases; no machine-checked
+TLA+/Lean refinement is claimed.
+
 * Authorization boundary
 
 The [[https://github.com/tao3k/cedar-poo-spec/tree/feat/cedar-evaluation-adapter/Examples/Enterprise/Exchange/Signing][Lean-POO Exchange example]] composes intent, risk, ledger, signer,
@@ -106,7 +208,11 @@ pass a policy; the example includes this counterexample. Ascent candidates
 guide investigation and freeze scope but never become =permit= facts.
 The Lean/Cedar replay then tests independent controls, common-source claim
 contamination, incident freeze, and premature removal of the freeze. It
-replays authorization decisions only; no wallet transaction is executed.
+also models an abstract signer Host: if it accepts Cedar =Allow= while trusting
+backend-supplied claims, the attacker bytes reach a modeled signing effect;
+requiring separately authenticated intent, risk, ledger, and display
+witnesses blocks the same attempt. The model signs no real bytes and submits
+no wallet transaction.
 
 * Scenario boundary
 

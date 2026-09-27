@@ -17,6 +17,9 @@
         ExchangeSigningCandidateTransfer.
         ExchangeSigningQueueInterrupted.
         ExchangeSigningInterfaceSubstitution.
+        ExchangeSigningApiReplay.
+        ExchangeSigningQueueProducer.
+        ExchangeSigningAddressMap.
         exchange-signing-attack-stages
         exchange-signing-evaluate-stage)
 
@@ -71,6 +74,30 @@
         (display signer synthetic-displayed-bytes-mismatch)
         (signer transfer synthetic-signing-effect))))
 
+(def ExchangeSigningApiReplay.
+  (.o (:: @ ExchangeSigningNotice.)
+      surfaces: '((internal-api))
+      proposed-edges:
+      '((internal-api signer synthetic-replayed-request)
+        (signer transfer synthetic-signing-effect))))
+
+(def ExchangeSigningQueueProducer.
+  (.o (:: @ ExchangeSigningNotice.)
+      surfaces: '((queue-producer))
+      proposed-edges:
+      '((queue-producer queue synthetic-message-injection)
+        (queue signer synthetic-signer-ingress)
+        (signer transfer synthetic-signing-effect))))
+
+(def ExchangeSigningAddressMap.
+  (.o (:: @ ExchangeSigningNotice.)
+      surfaces: '((address-map))
+      proposed-edges:
+      '((address-map payload synthetic-destination-rewrite)
+        (payload queue synthetic-queue-delivery)
+        (queue signer synthetic-signer-ingress)
+        (signer transfer synthetic-signing-effect))))
+
 (def (stage stage-id case-value)
   (.o kind: 'lambda-episteme.exchange.signing-stage
       identity: stage-id
@@ -84,7 +111,10 @@
    (stage 'signer-ingress ExchangeSigningSignerIngress.)
    (stage 'candidate-transfer ExchangeSigningCandidateTransfer.)
    (stage 'queue-interrupted ExchangeSigningQueueInterrupted.)
-   (stage 'interface-substitution ExchangeSigningInterfaceSubstitution.)))
+   (stage 'interface-substitution ExchangeSigningInterfaceSubstitution.)
+   (stage 'api-replay ExchangeSigningApiReplay.)
+   (stage 'queue-producer-injection ExchangeSigningQueueProducer.)
+   (stage 'address-map-substitution ExchangeSigningAddressMap.)))
 
 (def (exchange-signing-evaluate-stage stage-value)
   (exchange-signing-route-candidates (.ref stage-value 'route-case)))

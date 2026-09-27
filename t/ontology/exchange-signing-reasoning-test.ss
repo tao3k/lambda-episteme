@@ -85,7 +85,8 @@
        (map (lambda (stage) (.ref stage 'identity))
             (exchange-signing-attack-stages))
        '(public-notice record-substitution queue-injection signer-ingress
-         candidate-transfer queue-interrupted interface-substitution)))
+         candidate-transfer queue-interrupted interface-substitution
+         api-replay queue-producer-injection address-map-substitution)))
     (poo-flow-test-case "public notice alone does not establish a backend route"
       (let (result
             (exchange-signing-evaluate-stage
@@ -113,4 +114,25 @@
         (check-equal? (.ref result 'possible-candidates)
                       '((interface outflow)))
         (check-equal? (.ref result 'observed-candidates) '())
-        (check-equal? (.ref result 'action-authority?) #f)))))
+        (check-equal? (.ref result 'action-authority?) #f)))
+    (poo-flow-test-case "API replay is a distinct candidate entry"
+      (let (result
+            (exchange-signing-evaluate-stage
+             (list-ref (exchange-signing-attack-stages) 7)))
+        (check-equal? (.ref result 'possible-candidates)
+                      '((internal-api outflow)))
+        (check-equal? (.ref result 'observed-candidates) '())))
+    (poo-flow-test-case "queue injection is a distinct candidate entry"
+      (let (result
+            (exchange-signing-evaluate-stage
+             (list-ref (exchange-signing-attack-stages) 8)))
+        (check-equal? (.ref result 'possible-candidates)
+                      '((queue-producer outflow)))
+        (check-equal? (.ref result 'observed-candidates) '())))
+    (poo-flow-test-case "destination mapping is a distinct candidate entry"
+      (let (result
+            (exchange-signing-evaluate-stage
+             (list-ref (exchange-signing-attack-stages) 9)))
+        (check-equal? (.ref result 'possible-candidates)
+                      '((address-map outflow)))
+        (check-equal? (.ref result 'observed-candidates) '())))))
