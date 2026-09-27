@@ -2,8 +2,19 @@
 ;;; SPDX-FileCopyrightText: 2026 tao3k team and Contributors
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
-(import (only-in :std/test test-suite test-case check-equal?)
+(import (only-in :std/test test-suite check-equal?)
         (only-in :clan/poo/object .o .ref)
+        (only-in :core/observability/testing-case poo-flow-test-case)
+        (only-in :gerbil-parser/languages/gql/iso-39075-2024/query-syntax
+                 gql-query-program?)
+        (only-in :poo-flow/modules/query/gql poo-flow-query->gql)
+        (only-in :poo-flow/modules/query/contracts
+                 poo-flow-query-source-content-identity)
+        (only-in :poo-flow/modules/query/objects
+                 poo-flow-query-element-space)
+        (only-in :poo-flow/modules/query/funs poo-flow-query-admit)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/query
+                 ExchangeSigningEdgeQuery ExchangeSigningEdgeSource)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/reasoning
                  ExchangeSigningRouteCase.
                  exchange-signing-route-candidates))
@@ -15,7 +26,27 @@
 
 (def exchange-signing-reasoning-test
   (test-suite "Exchange signing-chain hypotheses"
-    (test-case "proposed backend links yield a possible, not observed route"
+    (poo-flow-test-case "language-owned GQL AST projects and admits the selected element space"
+      (let* ((source (poo-flow-query->gql ExchangeSigningEdgeQuery))
+             (space
+              (poo-flow-query-element-space
+               'exchange/signing-chain
+               (.ref ExchangeSigningEdgeQuery 'semantic-revision)
+               '(backend payload signer transfer outflow)
+               #t))
+             (admission (poo-flow-query-admit ExchangeSigningEdgeQuery space)))
+        (check-equal? source ExchangeSigningEdgeSource)
+        (check-equal?
+         source
+         "MATCH (source:SigningEvent)-[:CANDIDATE_NEXT]->(target:SigningEvent)\nRETURN source.identity, target.identity, target.evidenceSource, target.status\n")
+        (check-equal?
+         (poo-flow-query-source-content-identity ExchangeSigningEdgeQuery)
+         (.ref ExchangeSigningEdgeQuery 'semantic-revision))
+        (check-equal?
+         (gql-query-program? (.ref ExchangeSigningEdgeQuery 'program)) #t)
+        (check-equal? (.ref admission 'accepted?) #t)
+        (check-equal? (.ref admission 'runtime-executed?) #f)))
+    (poo-flow-test-case "proposed backend links yield a possible, not observed route"
       (let* ((case-value
               (.o (:: @ ExchangeSigningRouteCase.)
                   observed-edges:
@@ -33,7 +64,7 @@
         (check-equal? (.ref result 'observed-candidates) '())
         (check-equal? (.ref result 'admitted?) #f)
         (check-equal? (.ref result 'action-authority?) #f)))
-    (test-case "missing queue link removes the proposed backend route"
+    (poo-flow-test-case "missing queue link removes the proposed backend route"
       (let* ((case-value
               (.o (:: @ ExchangeSigningRouteCase.)
                   observed-edges:

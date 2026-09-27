@@ -32,8 +32,12 @@ flowchart LR
 The dotted links are candidate mechanisms, not established Bitget attack
 steps. A bounded Ascent closure can show whether the Case's supplied edges
 contain a route from a suspected surface to the transfer. The output is
-explicitly non-authoritative. GQL can select observed event links and source metadata
-from an admitted ontology graph. Neither graph reachability nor a GQL path
+explicitly non-authoritative. The [[file:query.ss][GQL query contract]] constructs a
+language-owned AST for selecting event links and source metadata from an
+admitted ontology graph. The atomic test checks its projection and Query
+admission; it does not execute GQL or bind query results. MRR and the Host
+must perform those steps with admitted evidence before the selected links
+can become observed Case facts. Neither graph reachability nor a GQL path
 proves that a route happened.
 
 The Scheme Ascent kernel and its rule qualifications are maintained by
@@ -57,7 +61,8 @@ artifact has been recovered from either incident. Independent signer ingress,
 approval display capture, chain transaction bytes, and timestamped source
 identities are needed before a forensic conclusion.
 
-The [[file:../../../../../t/ontology/exchange-signing-reasoning-test.ss][atomic Case test]] uses a Bitget notice as one observed transfer link and
+The [[file:../../../../../t/ontology/exchange-signing-reasoning-test.ss][atomic Case test]] runs under the POO Flow Observability test boundary. It
+uses a Bitget notice as one observed transfer link and
 marks the backend, queue, and signer links as proposed. Ascent derives a
 possible backend-to-outflow route but no fully observed route. Removing the
 queue link removes the possible route. These expectations test the model's
