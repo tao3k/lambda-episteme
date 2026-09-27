@@ -35,6 +35,7 @@
                '(unauthorized-outflow withdrawal-without-intent
                  duplicate-request-id orphan-queue-message
                  destination-mismatch display-byte-mismatch
+                 observed-admin-effect complete-transfer-only-signing-ledger
                  authenticated-intent-exact one-use-request-record
                  verified-producer-chain independently-matched-destination
                  trusted-rendering-match)
@@ -55,7 +56,7 @@
       (let (result
             (exchange-signing-compare-hypotheses
              ExchangeSigningPublicEvidence.))
-        (check-equal? (length (.ref result 'support)) 5)
+        (check-equal? (length (.ref result 'support)) 6)
         (check-equal? (.ref result 'specific-support) '())
         (check-equal? (.ref result 'challenged) '())
         (check-equal? (.ref result 'hypothesis-confirmed?) #f)))
@@ -82,6 +83,18 @@
          '((queue-injection orphan-queue-message independent-signer-log)))
         (check-equal? (.ref result 'hypothesis-confirmed?) #f)
         (check-equal? (.ref result 'action-authority?) #f)))
+    (poo-flow-test-case "an observed admin effect narrows operation, not ingress"
+      (let* ((case-value
+              (.o (:: @ ExchangeSigningPublicEvidence.)
+                  admitted-signals:
+                  '((unauthorized-outflow bitget-public-notice)
+                    (observed-admin-effect independent-chain-receipt))))
+             (result (exchange-signing-compare-hypotheses case-value)))
+        (check-equal?
+         (contains? (.ref result 'specific-support)
+                    '(admin-change-path observed-admin-effect
+                      independent-chain-receipt)) #t)
+        (check-equal? (.ref result 'hypothesis-confirmed?) #f)))
     (poo-flow-test-case "contradictory independent observations remain visible"
       (let* ((case-value
               (.o (:: @ ExchangeSigningPublicEvidence.)

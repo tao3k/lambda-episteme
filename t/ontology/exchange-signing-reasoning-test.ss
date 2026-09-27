@@ -35,7 +35,7 @@
               (poo-flow-query-element-space
                'exchange/signing-chain
                (.ref ExchangeSigningEdgeQuery 'semantic-revision)
-               '(backend payload signer transfer outflow)
+               '(backend payload signer chain-transfer admin-change wallet-control outflow)
                #t))
              (admission (poo-flow-query-admit ExchangeSigningEdgeQuery space)))
         (check-equal? source ExchangeSigningEdgeSource)
@@ -86,7 +86,8 @@
             (exchange-signing-attack-stages))
        '(public-notice record-substitution queue-injection signer-ingress
          candidate-transfer queue-interrupted interface-substitution
-         api-replay queue-producer-injection address-map-substitution)))
+         api-replay queue-producer-injection address-map-substitution
+         backend-admin-change)))
     (poo-flow-test-case "public notice alone does not establish a backend route"
       (let (result
             (exchange-signing-evaluate-stage
@@ -112,7 +113,7 @@
             (exchange-signing-evaluate-stage
              (list-ref (exchange-signing-attack-stages) 6)))
         (check-equal? (.ref result 'possible-candidates)
-                      '((interface outflow)))
+                      '((interface bybit-outflow)))
         (check-equal? (.ref result 'observed-candidates) '())
         (check-equal? (.ref result 'action-authority?) #f)))
     (poo-flow-test-case "API replay is a distinct candidate entry"
@@ -129,6 +130,14 @@
         (check-equal? (.ref result 'possible-candidates)
                       '((queue-producer outflow)))
         (check-equal? (.ref result 'observed-candidates) '())))
+    (poo-flow-test-case "an admin-change hypothesis also reaches Bitget's public outflow"
+      (let (result
+            (exchange-signing-evaluate-stage
+             (list-ref (exchange-signing-attack-stages) 10)))
+        (check-equal? (.ref result 'possible-candidates)
+                      '((backend outflow)))
+        (check-equal? (.ref result 'observed-candidates) '())
+        (check-equal? (.ref result 'action-authority?) #f)))
     (poo-flow-test-case "destination mapping is a distinct candidate entry"
       (let (result
             (exchange-signing-evaluate-stage

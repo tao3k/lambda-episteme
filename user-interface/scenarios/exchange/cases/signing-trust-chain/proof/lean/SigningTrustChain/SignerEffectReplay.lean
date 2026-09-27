@@ -1,7 +1,7 @@
 import SigningTrustChain.SigningBoundary
 
 /-!
-An abstract signer Host. A `SignedTransfer` records that the modeled signer
+An abstract signer Host. A `SignedInstruction` records that the modeled signer
 would sign these exact symbolic bytes; it is not a cryptographic signature or
 an on-chain transaction. The upstream incident's internal path is unknown.
 -/
@@ -23,6 +23,7 @@ structure Witness where
 structure Attempt where
   candidateBytesId : String
   actualUserIntentBytesId : String
+  actualUserIntentOperation : String := "transfer"
   facts : Facts
   intent : Witness
   risk : Witness
@@ -36,8 +37,9 @@ structure HostState where
   frozen : Bool := false
   deriving Repr
 
-structure SignedTransfer where
+structure SignedInstruction where
   bytesId : String
+  operation : String
   nonce : Nat
   deriving Repr
 
@@ -52,22 +54,24 @@ def independentBinding (state : HostState) (attempt : Attempt) : Bool :=
   attempt.facts.nonceFresh && attempt.facts.walletEpoch == state.walletEpoch
 
 def release (requireIndependent : Bool) (root : String)
-    (state : HostState) (attempt : Attempt) : HostState × Option SignedTransfer :=
+    (state : HostState) (attempt : Attempt) : HostState × Option SignedInstruction :=
   if authorized root hotWallet attempt.facts &&
       !state.frozen &&
       (!requireIndependent || independentBinding state attempt) &&
       !(state.consumedNonces.contains attempt.nonce) then
     ({ consumedNonces := attempt.nonce :: state.consumedNonces },
-      some ⟨attempt.candidateBytesId, attempt.nonce⟩)
+      some ⟨attempt.candidateBytesId, attempt.facts.candidateOperation,
+        attempt.nonce⟩)
   else (state, none)
 
-def wouldSign (releaseResult : HostState × Option SignedTransfer) : Bool :=
+def wouldSign (releaseResult : HostState × Option SignedInstruction) : Bool :=
   releaseResult.2.isSome
 
 def unauthorizedSigningEffect (attempt : Attempt)
-    (releaseResult : HostState × Option SignedTransfer) : Bool :=
+    (releaseResult : HostState × Option SignedInstruction) : Bool :=
   wouldSign releaseResult &&
-  attempt.candidateBytesId != attempt.actualUserIntentBytesId
+  (attempt.candidateBytesId != attempt.actualUserIntentBytesId ||
+    attempt.facts.candidateOperation != attempt.actualUserIntentOperation)
 
 def backendWitness (bytesId : String) : Witness :=
   ⟨.backend, bytesId, true⟩

@@ -147,16 +147,27 @@ claims as independent owners does not pass the modeled Host if their
 authentication checks fail. A signer-local freeze also stops a request while
 the older =Integrated= policy root still returns =Allow=, representing a
 circuit breaker independent of policy publication latency.
-=SignedTransfer= is a symbolic
+=SignedInstruction= is a symbolic
 effect record; this is not a cryptographic signature, live broadcast, or a
 proof of the actual Bitget signer architecture. Witness authentication and
 an atomic signer effect remain deployment obligations.
 
-The [[file:../tla/README.org][TLA+ threat model]] places backend and interface contamination
-before the signer. Its =NoUnboundSign= and =SignedNonceConsumed= predicates
-correspond to the finite Lean Host checks above. Gerbil validates its source
-through the parser-owned TLA+ syntax interface; TLC and a formal refinement
-between that temporal model and Lean remain open.
+[[file:SigningTrustChain/IncidentReplay.lean][IncidentReplay.lean]] adds two finite synthetic effect paths. Four candidate
+direct ingress routes can produce the same public outflow after a weak Host
+signs a contaminated transfer; the bound Host blocks before signing. A
+separate interface path signs an =admin-change= operation, changes wallet
+control, and permits a later drain. Freezing the signer after that control
+change does not revoke the already granted control, while freezing before
+the administrative signature blocks it. A distinct backend-admin candidate
+can produce the same public outflow; that observation alone cannot identify
+which ingress occurred. USD 75,000 and USD 120,000 are synthetic fixture
+values, not incident loss estimates.
+
+The [[file:../tla/README.org][TLA+ threat model]] expresses the same kinds of temporal boundary. Its
+=NoUnboundSign=, =NoUnauthorizedEffect=, and =SignedNonceConsumed= predicates
+are related to finite Lean Host checks, but no formal refinement is claimed.
+Gerbil checks the TLA+ source through the native parser. Neither the parser
+nor the finite Lean theorems establish a deployed wallet's behavior.
 
 | Root | Live Cedar bodies | New or changed source body against its parent |
 |------+-------------------+-----------------------------------------------|

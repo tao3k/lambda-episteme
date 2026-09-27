@@ -27,19 +27,23 @@
         (address-map-substitution unauthorized-outflow)
         (address-map-substitution destination-mismatch)
         (interface-substitution unauthorized-outflow)
-        (interface-substitution display-byte-mismatch))
+        (interface-substitution display-byte-mismatch)
+        (admin-change-path unauthorized-outflow)
+        (admin-change-path observed-admin-effect))
       discriminators:
       '((withdrawal-without-intent)
         (duplicate-request-id)
         (orphan-queue-message)
         (destination-mismatch)
-        (display-byte-mismatch))
+        (display-byte-mismatch)
+        (observed-admin-effect))
       challenges:
       '((record-mutation authenticated-intent-exact)
         (api-replay one-use-request-record)
         (queue-injection verified-producer-chain)
         (address-map-substitution independently-matched-destination)
-        (interface-substitution trusted-rendering-match))))
+        (interface-substitution trusted-rendering-match)
+        (admin-change-path complete-transfer-only-signing-ledger))))
 
 (def ExchangeSigningPublicEvidence.
   (.o (:: @ ExchangeSigningHypothesisCase.)

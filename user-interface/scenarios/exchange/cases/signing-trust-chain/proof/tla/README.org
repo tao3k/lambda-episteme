@@ -1,13 +1,23 @@
 #+TITLE: Exchange Signing Temporal Threat Model
 
-[[file:SigningIntentBoundary.tla][SigningIntentBoundary.tla]] models candidate preparation, backend or signing-interface
-instruction contamination, an independently bound signing transition, a
-one-use nonce, freeze, and symbolic broadcast. The weak transition admits a
-candidate without independent intent, risk, ledger, and display witnesses;
-the bound transition requires all four.
+[[file:SigningIntentBoundary.tla][SigningIntentBoundary.tla]] models a finite signing trust boundary. Candidate
+preparation, signing, a direct transfer or administrative control change,
+subsequent drain, independent observation, freeze, and recovery are separate
+transitions. Four synthetic direct ingress routes and two administrative
+routes share terminal outflow shapes without establishing an incident entry
+point.
 
-This is a pre-signing threat model for the structural risk shared by the
-separately reported Bybit and Bitget incidents. It does not assert that a
-particular Bitget ingress mechanism occurred. The atomic Gerbil check covers
-parser-owned syntax and exact source roundtrip. TLC model checking and a
-formal refinement to the [[file:../cedar/README.org][published Cedar policies]] are not yet claimed.
+=WeakSign= accepts apparently valid pipeline claims. =BoundSign= requires
+independent intent, risk, ledger, and display witnesses; matching bytes and
+operation; and a fresh nonce. =DefendedSpec= uses the latter. The attack specs
+show how weak signing can reach direct or indirect outflow. In particular,
+=FrozenAdminSpec= permits a drain after control has changed even if the signer
+is subsequently frozen. A freeze before the signature prevents that modeled
+control change.
+
+The native Scheme TLA+ parser owns syntax and source roundtrip checking. The
+finite executable companion is [[file:../lean/SigningTrustChain/IncidentReplay.lean][Lean's incident replay]], which also calls the Case's Cedar
+decision through its symbolic signing Host. Parser acceptance does not prove
+temporal invariants. The Lean replay proves its named finite cases, not a
+formal refinement of this TLA+ module or the behavior of a deployed wallet.
+No Java dependency is required by the Case workflow.
