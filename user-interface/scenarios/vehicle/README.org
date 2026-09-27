@@ -1,0 +1,41 @@
+#+TITLE: Vehicle Ontology Scenario
+
+* Purpose
+
+The Vehicle Scenario composes a reusable vehicle vocabulary with an optional
+TARA treatment handoff profile. Its first Case, [[file:cases/ota-treatment-handoff/source.org][OTA treatment handoff]],
+selects one external assessment reference and links a treatment goal to a
+policy candidate and a software release. The input values are synthetic.
+
+* Composition
+
+#+begin_src mermaid
+flowchart LR
+  TARA[External TARA work product] --> REF[Selected assessment reference]
+  REF --> GOAL[Treatment goal]
+  GOAL --> CANDIDATE[Policy candidate]
+  CANDIDATE --> RELEASE[OTA software release]
+  CANDIDATE -. independent review and publication .-> CEDAR[Cedar runtime policy]
+#+end_src
+
+~VehicleBaseProfile~ names the fleet and release concepts.
+~VehicleTaraTreatmentProfile~ adds the treatment handoff relations and requires
+each goal to have an assessment origin and a policy candidate. It also requires
+each policy candidate to name its release target. A Case selects these POO
+profiles and supplies the graph; no TARA export parser is required.
+
+* Authority boundary
+
+Ontology composition and graph evaluation check the declared structure. The
+Case has no TARA approval reference, and an accepted evaluation does not approve
+the assessment, authorize policy publication, execute Cedar, or establish OTA
+safety. A downstream integration must bind an approved work product revision to
+the candidate, publish the resulting policy through its own authority, and
+observe actual vehicle behavior.
+
+* Source context
+
+[[https://github.com/ASRG/openXSAM][ASRG/openXSAM]] is a public automotive security assessment exchange model.
+It motivates a compact reference to an external assessment. This Case does not
+claim that openXSAM defines a universal TARA output or that the synthetic work
+product above came from an actual assessment.

@@ -1,0 +1,20 @@
+#+TITLE: Example OTA Treatment Handoff Input
+#+PROPERTY: header-args :eval never
+
+* Scope
+
+This is a synthetic, selected TARA work-product reference for exercising the
+Ontology Case. It is not an approved assessment or a production policy.
+
+| Field | Example value |
+|-------+---------------|
+| Source format | ASRG/openXSAM reference |
+| Work product | EXAMPLE-TARA-OTA-001 |
+| Revision | example-1 |
+| Approval reference | absent |
+| Treatment goal | EXAMPLE-OTA-ROLLBACK-GOAL |
+| Target | Vehicle OTA software release |
+
+The selected treatment goal asks for a policy candidate that can gate an OTA
+release. Approval of the source work product, publication of a Cedar policy,
+and execution against vehicle observations belong to downstream authorities.
