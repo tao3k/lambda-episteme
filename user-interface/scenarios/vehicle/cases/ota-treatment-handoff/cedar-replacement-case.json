@@ -1,0 +1,179 @@
+{
+  "bootstrap": {
+    "schema_id": "poo-flow.cedar-authority-snapshot.v1",
+    "producer": "poo-flow.scheme-control",
+    "source": "modules/authorization/providers/cedar/objects.ss",
+    "object_kind": "cedar-authority-snapshot",
+    "provenance": {
+      "composition_identity": "vehicle-ota-treatment-handoff",
+      "profile_identities": [
+        "lambda-episteme/ontology/vehicle/tara-treatment"
+      ],
+      "profile_origin_digest": "sha256:0101010101010101010101010101010101010101010101010101010101010101",
+      "governance_assessment_digest": "sha256:0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a",
+      "subject_snapshot_digest": "sha256:0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+      "governance_admitted": true,
+      "certification_names": [
+        "PooFlowProof.Runtime.CedarNative",
+        "PooFlowProof.Runtime.CedarRuntimeHost"
+      ]
+    },
+    "authority_id": "vehicle.replacement.example.authority",
+    "runtime_context_id": "vehicle.replacement.example.runtime",
+    "runtime_generation": 1,
+    "bundle_epoch": 1,
+    "runtime_bundle_digest": "sha256:0202020202020202020202020202020202020202020202020202020202020202",
+    "profile_bundle_digest": "sha256:0303030303030303030303030303030303030303030303030303030303030303",
+    "independent_bundle_digest": "sha256:0404040404040404040404040404040404040404040404040404040404040404",
+    "capability_contract_digest": "sha256:0505050505050505050505050505050505050505050505050505050505050505",
+    "policy_revision": 1,
+    "revocation_epoch": 0,
+    "schema_json": "{\"\":{\"entityTypes\":{\"Supplier\":{},\"DirectorService\":{},\"PrimaryECU\":{},\"ImageTarget\":{\"shape\":{\"type\":\"Record\",\"attributes\":{\"retiredSupplier\":{\"type\":\"Boolean\"},\"compatible\":{\"type\":\"Boolean\"}}}}},\"actions\":{\"publish-image\":{\"appliesTo\":{\"principalTypes\":[\"Supplier\"],\"resourceTypes\":[\"ImageTarget\"],\"context\":{\"type\":\"Record\",\"attributes\":{\"delegationValid\":{\"type\":\"Boolean\"},\"metadataAuthenticated\":{\"type\":\"Boolean\"},\"snapshotRetainsRevocation\":{\"type\":\"Boolean\"},\"manifestSignatureValid\":{\"type\":\"Boolean\"}}}}},\"assign-target\":{\"appliesTo\":{\"principalTypes\":[\"DirectorService\"],\"resourceTypes\":[\"ImageTarget\"],\"context\":{\"type\":\"Record\",\"attributes\":{\"delegationValid\":{\"type\":\"Boolean\"},\"metadataAuthenticated\":{\"type\":\"Boolean\"},\"snapshotRetainsRevocation\":{\"type\":\"Boolean\"},\"manifestSignatureValid\":{\"type\":\"Boolean\"}}}}},\"submit-manifest\":{\"appliesTo\":{\"principalTypes\":[\"PrimaryECU\"],\"resourceTypes\":[\"ImageTarget\"],\"context\":{\"type\":\"Record\",\"attributes\":{\"delegationValid\":{\"type\":\"Boolean\"},\"metadataAuthenticated\":{\"type\":\"Boolean\"},\"snapshotRetainsRevocation\":{\"type\":\"Boolean\"},\"manifestSignatureValid\":{\"type\":\"Boolean\"}}}}}}}}",
+    "policies": [],
+    "entities_json": "[{\"uid\":{\"type\":\"ImageTarget\",\"id\":\"retired-image\"},\"attrs\":{\"retiredSupplier\":true,\"compatible\":true},\"parents\":[]},{\"uid\":{\"type\":\"ImageTarget\",\"id\":\"replacement-image\"},\"attrs\":{\"retiredSupplier\":false,\"compatible\":true},\"parents\":[]},{\"uid\":{\"type\":\"ImageTarget\",\"id\":\"incompatible-replacement\"},\"attrs\":{\"retiredSupplier\":false,\"compatible\":false},\"parents\":[]}]",
+    "capabilities": [
+      {
+        "action": "Action::\"publish-image\"",
+        "event_kind": 8101,
+        "source_admission_required": false
+      },
+      {
+        "action": "Action::\"assign-target\"",
+        "event_kind": 8102,
+        "source_admission_required": false
+      },
+      {
+        "action": "Action::\"submit-manifest\"",
+        "event_kind": 8103,
+        "source_admission_required": false
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "replacement-supplier-publish",
+      "expected_status": "authorized",
+      "proposal": {
+        "schema_id": "poo-flow.cedar-authorization-request.v1",
+        "principal": "Supplier::\"replacement-tier-1\"",
+        "action": "Action::\"publish-image\"",
+        "resource": "ImageTarget::\"replacement-image\"",
+        "context": {
+          "delegationValid": true,
+          "metadataAuthenticated": true,
+          "snapshotRetainsRevocation": true,
+          "manifestSignatureValid": true
+        },
+        "intent_digest": "sha256:0606060606060606060606060606060606060606060606060606060606060606",
+        "handoff": {
+          "sequence": 1,
+          "payload_hex": "76656869636c65206d616e6966657374206578616d706c65",
+          "semantic_root": "sha256:0707070707070707070707070707070707070707070707070707070707070707",
+          "before_execution_root": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+          "after_execution_root": "sha256:0808080808080808080808080808080808080808080808080808080808080808",
+          "observation_digest": "sha256:0909090909090909090909090909090909090909090909090909090909090909"
+        }
+      }
+    },
+    {
+      "name": "retired-supplier-cannot-publish",
+      "expected_status": "denied",
+      "proposal": {
+        "schema_id": "poo-flow.cedar-authorization-request.v1",
+        "principal": "Supplier::\"retired-tier-1\"",
+        "action": "Action::\"publish-image\"",
+        "resource": "ImageTarget::\"retired-image\"",
+        "context": {
+          "delegationValid": true,
+          "metadataAuthenticated": true,
+          "snapshotRetainsRevocation": true,
+          "manifestSignatureValid": true
+        },
+        "intent_digest": "sha256:0606060606060606060606060606060606060606060606060606060606060606",
+        "handoff": {
+          "sequence": 2,
+          "payload_hex": "76656869636c65206d616e6966657374206578616d706c65",
+          "semantic_root": "sha256:0707070707070707070707070707070707070707070707070707070707070707",
+          "before_execution_root": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+          "after_execution_root": "sha256:0808080808080808080808080808080808080808080808080808080808080808",
+          "observation_digest": "sha256:0909090909090909090909090909090909090909090909090909090909090909"
+        }
+      }
+    },
+    {
+      "name": "director-assigns-replacement",
+      "expected_status": "authorized",
+      "proposal": {
+        "schema_id": "poo-flow.cedar-authorization-request.v1",
+        "principal": "DirectorService::\"oem-director\"",
+        "action": "Action::\"assign-target\"",
+        "resource": "ImageTarget::\"replacement-image\"",
+        "context": {
+          "delegationValid": true,
+          "metadataAuthenticated": true,
+          "snapshotRetainsRevocation": true,
+          "manifestSignatureValid": true
+        },
+        "intent_digest": "sha256:0606060606060606060606060606060606060606060606060606060606060606",
+        "handoff": {
+          "sequence": 3,
+          "payload_hex": "76656869636c65206d616e6966657374206578616d706c65",
+          "semantic_root": "sha256:0707070707070707070707070707070707070707070707070707070707070707",
+          "before_execution_root": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+          "after_execution_root": "sha256:0808080808080808080808080808080808080808080808080808080808080808",
+          "observation_digest": "sha256:0909090909090909090909090909090909090909090909090909090909090909"
+        }
+      }
+    },
+    {
+      "name": "director-without-snapshot-revocation",
+      "expected_status": "denied",
+      "proposal": {
+        "schema_id": "poo-flow.cedar-authorization-request.v1",
+        "principal": "DirectorService::\"oem-director\"",
+        "action": "Action::\"assign-target\"",
+        "resource": "ImageTarget::\"replacement-image\"",
+        "context": {
+          "delegationValid": true,
+          "metadataAuthenticated": true,
+          "snapshotRetainsRevocation": false,
+          "manifestSignatureValid": true
+        },
+        "intent_digest": "sha256:0606060606060606060606060606060606060606060606060606060606060606",
+        "handoff": {
+          "sequence": 4,
+          "payload_hex": "76656869636c65206d616e6966657374206578616d706c65",
+          "semantic_root": "sha256:0707070707070707070707070707070707070707070707070707070707070707",
+          "before_execution_root": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+          "after_execution_root": "sha256:0808080808080808080808080808080808080808080808080808080808080808",
+          "observation_digest": "sha256:0909090909090909090909090909090909090909090909090909090909090909"
+        }
+      }
+    },
+    {
+      "name": "primary-manifest",
+      "expected_status": "authorized",
+      "proposal": {
+        "schema_id": "poo-flow.cedar-authorization-request.v1",
+        "principal": "PrimaryECU::\"vehicle-primary\"",
+        "action": "Action::\"submit-manifest\"",
+        "resource": "ImageTarget::\"replacement-image\"",
+        "context": {
+          "delegationValid": true,
+          "metadataAuthenticated": true,
+          "snapshotRetainsRevocation": true,
+          "manifestSignatureValid": true
+        },
+        "intent_digest": "sha256:0606060606060606060606060606060606060606060606060606060606060606",
+        "handoff": {
+          "sequence": 5,
+          "payload_hex": "76656869636c65206d616e6966657374206578616d706c65",
+          "semantic_root": "sha256:0707070707070707070707070707070707070707070707070707070707070707",
+          "before_execution_root": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+          "after_execution_root": "sha256:0808080808080808080808080808080808080808080808080808080808080808",
+          "observation_digest": "sha256:0909090909090909090909090909090909090909090909090909090909090909"
+        }
+      }
+    }
+  ]
+}

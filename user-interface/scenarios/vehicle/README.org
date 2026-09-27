@@ -1,0 +1,92 @@
+#+TITLE: Vehicle Ontology Scenario
+
+* Purpose
+
+The Vehicle Scenario composes a reusable vehicle vocabulary with an optional
+TARA treatment handoff profile. Its first Case, [[file:cases/ota-treatment-handoff/source.org][OTA treatment handoff]],
+selects one external assessment reference and links a treatment goal to a
+policy candidate and a software release. The input values are synthetic.
+
+* Composition
+
+#+begin_src mermaid
+flowchart LR
+  TARA[External TARA work product] --> REF[Selected assessment reference]
+  REF --> GOAL[Treatment goal]
+  GOAL --> CANDIDATE[Policy candidate]
+  CANDIDATE --> RELEASE[OTA software release]
+  CANDIDATE -. independent review and publication .-> CEDAR[Cedar runtime policy]
+#+end_src
+
+~VehicleBaseProfile~ names the fleet and release concepts.
+~VehicleTaraTreatmentProfile~ adds the treatment handoff relations and requires
+each goal to have an assessment origin and a policy candidate. It also requires
+each policy candidate to name its release target. A Case selects these POO
+profiles and supplies the graph; no TARA export parser is required.
+
+After an accepted graph evaluation, ~vehicle-tara-reference-candidate~
+projects the selected reference fields: ~source~,
+~workProductId~, ~revision~, ~approvalRef~, and ~treatmentGoal~. The synthetic
+Case has no approval, so ~approvalRef~ is empty and
+~approval-reference-present?~ is false. ~external-approval-verified?~ remains
+false even if a reference is later supplied. ~publication~ remains false until an
+independent publisher supplies a Cedar treatment publication. The projection
+is a candidate handoff, not an authorization decision.
+
+~vehicle-cedar-treatment-candidate~ reads a supplied ~.cedar~ file exported by
+Lean-POO through Rust by calling POO Flow's generic Scheme
+~poo-flow-cedar-policy-file~ helper. The file may contain multiple static
+Cedar policies, which the native binding expands at admission.
+The caller supplies the exported file and its policy identity. Lambda does not
+copy or regenerate Cedar policy text. The candidate has no publication and no
+runtime execution; the application host must verify the TARA approval and
+submit the policy through POO Flow's Cedar authority binding.
+
+For a local handoff check, set ~LEAN_POO_CEDAR_FILE~ to one exported ~.cedar~
+artifact and run the Vehicle atomic test. The check reads that exact file and
+compares its text with the POO Flow Cedar policy value; the Rust exporter must
+separately confirm the file matches its manifest. No generated artifact is
+copied into this Scenario.
+
+The current local qualification uses the exported Uptane =Retired= revision.
+Its remaining policy permits a signed Primary ECU version manifest and denies
+an unsigned one. This is one authorization component of supplier retirement;
+it does not itself verify Snapshot rollback protection, perform an OTA update,
+or establish that the synthetic TARA treatment goal is satisfied.
+
+The data-only [[file:cases/ota-treatment-handoff/cedar-case.json][Cedar case manifest]] can be replayed with POO Flow's
+generic =test-cedar-case= command and the same Lean-POO exported =retired.cedar=
+file. It checks signed and unsigned manifest requests in one Host run, with
+Rust and Lean witnesses. Its =governance_admitted=true= value is synthetic test
+input; the unapproved TARA reference in this Scenario cannot publish a policy.
+The [[file:cases/ota-treatment-handoff/cedar-replacement-case.json][replacement manifest]] uses the exported =replacement.cedar= file with
+three policies. Five atomic requests cover the replacement supplier, retired
+supplier, Director assignment, Snapshot revocation evidence, and Primary ECU
+manifest. Both manifests are data files; the POO Flow CLI contains no Vehicle
+branch or copied Cedar policy text.
+
+| Uptane revision | Case manifest | Exported Cedar file | Policies | Host requests |
+|-----------------+---------------+---------------------+----------+---------------|
+| =Retired= | =cedar-case.json= | =retired.cedar= | 1 | 2 |
+| =Replacement= | =cedar-replacement-case.json= | =replacement.cedar= | 3 | 5 |
+
+Each manifest declares the schema for its paired complete policy set. Passing
+the replacement file with the retired manifest fails Cedar validation before
+authorization because the latter schema omits the Supplier and Director entity
+types and their actions. That failure is expected and must not be bypassed.
+
+* Authority boundary
+
+Ontology composition and graph evaluation check the declared structure. The
+Case has no TARA approval reference, and an accepted evaluation does not approve
+the assessment, authorize policy publication, execute Cedar, or establish OTA
+safety. A downstream integration must bind an approved work product revision to
+the candidate, publish the resulting policy through its own authority, and
+observe actual vehicle behavior.
+
+* Source context
+
+[[https://github.com/ASRG/openXSAM][ASRG/openXSAM]] is a public automotive security assessment exchange model.
+It motivates a compact reference to an external assessment. This Case does not
+claim that openXSAM defines a universal TARA output or that the synthetic work
+product above came from an actual assessment.
