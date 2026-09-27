@@ -15,9 +15,28 @@ show how weak signing can reach direct or indirect outflow. In particular,
 is subsequently frozen. A freeze before the signature prevents that modeled
 control change.
 
-The native Scheme TLA+ parser owns syntax and source roundtrip checking. The
-finite executable companion is [[file:../lean/SigningTrustChain/IncidentReplay.lean][Lean's incident replay]], which also calls the Case's Cedar
-decision through its symbolic signing Host. Parser acceptance does not prove
-temporal invariants. The Lean replay proves its named finite cases, not a
-formal refinement of this TLA+ module or the behavior of a deployed wallet.
-No Java dependency is required by the Case workflow.
+[[file:check-tla.ss][The Case qualification]] calls =gerbil-parser='s public qualification API. It
+first requires native Scheme syntax acceptance and exact source roundtrip,
+then invokes the official TLC model checker on the same source and six
+configuration files. =Defended.cfg= checks seven invariants over its complete
+finite state graph. The five attack configurations require TLC to report
+=NoUnauthorizedEffect= violations with their expected transition names:
+
+| Configuration | Expected path |
+|---------------+---------------|
+| [[file:DirectAttack.cfg][DirectAttack.cfg]] | Weak signing, then a direct transfer |
+| [[file:AdminAttack.cfg][AdminAttack.cfg]] | Administrative signature, control change, then drain |
+| [[file:InterfaceAttack.cfg][InterfaceAttack.cfg]] | Interface substitution before administrative signature and drain |
+| [[file:FrozenAdmin.cfg][FrozenAdmin.cfg]] | Control change, signer freeze, then drain |
+| [[file:RecoveredDirect.cfg][RecoveredDirect.cfg]] | Freeze, premature recovery, then direct transfer |
+
+From the Case directory, =just check-tla= runs this atomic gate. It needs the
+Gerbil parser package and the official =tlc= executable on =PATH=. TLC uses a
+JVM at runtime; the Case contains no Java source or FFI. The TLA+ source does
+not =EXTENDS TLC= because it calls no operators from that standard module.
+That declaration is separate from running the model checker.
+
+[[file:../lean/SigningTrustChain/IncidentReplay.lean][Lean's incident replay]] calls the Case's Cedar decision through its symbolic
+signing Host. TLC exhausts only the finite configurations above. Lean proves
+its named finite replay cases. Neither result is a formal TLA+/Lean refinement
+or evidence about the behavior of a deployed wallet.

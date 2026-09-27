@@ -225,15 +225,19 @@ stateDiagram-v2
 | =ReceiptRequiresEffect= | Independent observation follows an effect. | Lean replay records effect before observation. |
 | =ControlRequiresAdminSignature= | Wallet control follows a signed admin instruction. | Lean replay separates sign and control change. |
 
-=DirectAttackSpec=, =AdminAttackSpec=, =InterfaceAttackSpec=, and
-=FrozenAdminSpec= expose distinct possible paths through =WeakSign=.
+=DirectAttackSpec=, =AdminAttackSpec=, =InterfaceAttackSpec=,
+=FrozenAdminSpec=, and =RecoveredDirectSpec= expose distinct possible paths
+through =WeakSign=.
 =DefendedSpec= uses =BoundSign=. The freeze after an administrative effect
 cannot revoke control already applied; the model allows a later drain even
 while the signer is frozen. This is a model counterexample to relying on a
-signer-local freeze alone after the control change. The Scheme TLA+ parser
-checks source syntax and roundtrip. The Lean companion proves the listed
-finite replay cases. Neither parser acceptance nor those finite proofs is a
-machine-checked proof of all TLA+ behaviors or of a deployed wallet.
+signer-local freeze alone after the control change. [[file:proof/tla/README.org][The atomic qualification]]
+requires Scheme parser acceptance and official TLC completion for the
+defended finite state graph; five attack configurations must yield the
+expected invariant violation and transition sequence. The Lean companion
+proves the listed finite replay cases. These results cover their bounded
+models, not every possible deployed wallet behavior or a formal refinement
+between TLA+ and Lean.
 
 * Authorization boundary
 

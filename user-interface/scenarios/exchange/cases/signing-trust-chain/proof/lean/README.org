@@ -166,8 +166,9 @@ values, not incident loss estimates.
 The [[file:../tla/README.org][TLA+ threat model]] expresses the same kinds of temporal boundary. Its
 =NoUnboundSign=, =NoUnauthorizedEffect=, and =SignedNonceConsumed= predicates
 are related to finite Lean Host checks, but no formal refinement is claimed.
-Gerbil checks the TLA+ source through the native parser. Neither the parser
-nor the finite Lean theorems establish a deployed wallet's behavior.
+The Case's [[file:../tla/README.org][TLA+ qualification]] combines Gerbil's native parser with official
+TLC checks over six finite configurations. No formal TLA+/Lean refinement is
+claimed, and neither finite model establishes a deployed wallet's behavior.
 
 | Root | Live Cedar bodies | New or changed source body against its parent |
 |------+-------------------+-----------------------------------------------|

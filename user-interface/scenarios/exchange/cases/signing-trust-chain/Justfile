@@ -28,6 +28,11 @@ check-runtime: check-lean
 
 check: check-cedar check-runtime
 
+# The native parser and official TLC are independent parts of this gate.
+# Supply a Gerbil parser package and `tlc` on PATH through the caller's env.
+check-tla:
+    cd '{{ case_root }}/proof/tla' && gxi ./check-tla.ss
+
 # POO Flow reads generated Cedar artifacts; it does not compile Lean.
 inspect-poo-flow revision="integrated": check-cedar
     test -n '{{ poo_flow_root }}'

@@ -19,7 +19,7 @@ vars == << phase, entry, operation, bytesMatch, operationMatch, claimsAppearVali
 
 Phases == {"Start", "Prepared", "Signed", "Controlled", "Outflow"}
 DirectEntries == {"backend-record", "internal-api", "queue-producer", "address-map"}
-Entries == {"none", "legitimate", "backend-admin", "interface-admin"} \cup DirectEntries
+Entries == {"none", "legitimate", "backend-admin", "interface-admin", "backend-record", "internal-api", "queue-producer", "address-map"}
 Operations == {"none", "transfer", "admin-change"}
 PolicyRoots == {"Integrated", "Incident", "Recovered"}
 IndependentWitnesses == intentIndependent /\ riskIndependent /\ ledgerIndependent /\ displayTrusted
