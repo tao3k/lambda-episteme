@@ -46,6 +46,23 @@ compares its text with the POO Flow Cedar policy value; the Rust exporter must
 separately confirm the file matches its manifest. No generated artifact is
 copied into this Scenario.
 
+The current local qualification uses the exported Uptane =Retired= revision.
+Its remaining policy permits a signed Primary ECU version manifest and denies
+an unsigned one. This is one authorization component of supplier retirement;
+it does not itself verify Snapshot rollback protection, perform an OTA update,
+or establish that the synthetic TARA treatment goal is satisfied.
+
+The data-only [[file:cases/ota-treatment-handoff/cedar-case.json][Cedar case manifest]] can be replayed with POO Flow's
+generic =test-cedar-case= command and the same Lean-POO exported =retired.cedar=
+file. It checks signed and unsigned manifest requests in one Host run, with
+Rust and Lean witnesses. Its =governance_admitted=true= value is synthetic test
+input; the unapproved TARA reference in this Scenario cannot publish a policy.
+The [[file:cases/ota-treatment-handoff/cedar-replacement-case.json][replacement manifest]] uses the exported =replacement.cedar= file with
+three policies. Five atomic requests cover the replacement supplier, retired
+supplier, Director assignment, Snapshot revocation evidence, and Primary ECU
+manifest. Both manifests are data files; the POO Flow CLI contains no Vehicle
+branch or copied Cedar policy text.
+
 * Authority boundary
 
 Ontology composition and graph evaluation check the declared structure. The

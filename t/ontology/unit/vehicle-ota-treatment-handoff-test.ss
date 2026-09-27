@@ -47,7 +47,7 @@
        (check-equal? (.ref tara 'revision) "example-1")
        (check-equal? (.ref tara 'approvalRef) "")
        (check-equal? (.ref tara 'treatmentGoal)
-                     "EXAMPLE-OTA-ROLLBACK-GOAL")
+                     "EXAMPLE-OTA-MANIFEST-INTAKE-GOAL")
        (check-equal? (.ref candidate 'approval-reference-present?) #f)
        (check-equal? (.ref candidate 'external-approval-verified?) #f)
        (check-equal? (.ref candidate 'publication) #f)

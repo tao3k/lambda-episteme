@@ -29,7 +29,7 @@
        work-product-id: "EXAMPLE-TARA-OTA-001"
        revision: "example-1"
        approval-reference: #f))
-  (treatment-goal-id "EXAMPLE-OTA-ROLLBACK-GOAL")
+  (treatment-goal-id "EXAMPLE-OTA-MANIFEST-INTAKE-GOAL")
   (profile-selection =>.+
    (.o vehicle:
        (.o evidence: EvidenceProfile

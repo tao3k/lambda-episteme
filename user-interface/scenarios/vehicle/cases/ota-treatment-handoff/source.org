@@ -13,9 +13,13 @@ Ontology Case. It is not an approved assessment or a production policy.
 | Work product | EXAMPLE-TARA-OTA-001 |
 | Revision | example-1 |
 | Approval reference | absent |
-| Treatment goal | EXAMPLE-OTA-ROLLBACK-GOAL |
+| Treatment goal | EXAMPLE-OTA-MANIFEST-INTAKE-GOAL |
 | Target | Vehicle OTA software release |
 
-The selected treatment goal asks for a policy candidate that can gate an OTA
-release. Approval of the source work product, publication of a Cedar policy,
+The selected treatment goal asks for a policy candidate covering Primary ECU
+version-manifest intake during OTA supplier retirement. Approval of the source
+work product, publication of a Cedar policy,
 and execution against vehicle observations belong to downstream authorities.
+The local exported-policy qualification uses only the Uptane =Retired= revision's
+signed Primary ECU manifest rule; it does not claim a completed rollback
+protection or fleet update treatment.
