@@ -34,7 +34,9 @@ independent publisher supplies a Cedar treatment publication. The projection
 is a candidate handoff, not an authorization decision.
 
 ~vehicle-cedar-treatment-candidate~ reads a supplied ~.cedar~ file exported by
-Lean-POO through Rust and constructs the existing POO Flow Cedar policy value.
+Lean-POO through Rust by calling POO Flow's generic Scheme
+~poo-flow-cedar-policy-file~ helper. The file may contain multiple static
+Cedar policies, which the native binding expands at admission.
 The caller supplies the exported file and its policy identity. Lambda does not
 copy or regenerate Cedar policy text. The candidate has no publication and no
 runtime execution; the application host must verify the TARA approval and

@@ -3,9 +3,8 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .o .ref)
-        (only-in :std/misc/ports read-all-as-string)
         (only-in :poo-flow/modules/authorization/providers/cedar/interface
-                 poo-flow-cedar-policy)
+                 poo-flow-cedar-policy-file)
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  ontology-case-evaluation-receipt?))
 
@@ -42,16 +41,8 @@
 ;; and the application host own parsing, approval, publication and effects.
 (def (vehicle-cedar-treatment-candidate evaluation identity path)
   (let (tara (vehicle-tara-reference-candidate evaluation))
-    (unless (and (string? path)
-                 (>= (string-length path) 6)
-                 (string=? (substring path (- (string-length path) 6)
-                                      (string-length path))
-                           ".cedar"))
-      (error "Vehicle treatment requires an exported .cedar file" path))
     (let (policy
-          (poo-flow-cedar-policy
-           identity
-           (call-with-input-file path read-all-as-string)))
+          (poo-flow-cedar-policy-file identity path))
       (.o kind: 'lambda-episteme.vehicle-cedar-treatment-candidate
           tara: tara
           cedar-policy: policy
