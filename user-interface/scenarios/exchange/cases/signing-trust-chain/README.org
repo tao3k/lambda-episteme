@@ -1,0 +1,75 @@
+#+TITLE: Exchange Signing Trust Chain
+
+* Public observations
+
+[[https://www.bitget.com/support/articles/12560603896024][Bitget's incident notice]] says unauthorized transfers were detected on 24
+September 2026 from some exchange hot and warm wallets; it says cold wallets
+were unaffected. A [[https://www.bitget.com/zh-CN/support/articles/12560603896108][later update]] revised the loss estimate to about USD 387.5
+million without reporting a second theft. These notices do not establish the
+complete intrusion path. [[https://www.coindesk.com/markets/2026/09/25/bitget-s-usd351-million-hack-happened-via-spoofed-transfers-not-private-keys-ceo-gray-chen-says][Reporting of the CEO's preliminary account]] describes
+spoofed transaction data rather than private-key theft. That account remains
+a reported explanation until a technical report supports its details.
+
+[[https://www.bybit.com/en/press/post/bybit-confirms-security-integrity-amid-safe-wallet-incident-no-compromise-in-infrastructure-blt9986889e919da8d2][Bybit's Safe incident statement]] concerns a separate signing-interface
+compromise. This Case compares mechanisms; it never transfers an observation
+from Bybit into Bitget's factual record.
+
+* Candidate routes and missing evidence
+
+#+begin_src mermaid
+flowchart LR
+  B[Backend transaction source] -. provisional report .-> T[Payload]
+  T -. synthetic link .-> S[Signer]
+  I[Signing interface] -. separate Bybit disclosure .-> D[Displayed payload]
+  D -. synthetic link .-> S
+  S --> X[Unauthorized transfer]
+  X --> O[Independent chain observation]
+  T --> H[Signer Host exact-byte check]
+  H --> C[Cedar decision]
+  C --> S
+#+end_src
+
+The dotted links are candidate mechanisms, not established Bitget attack
+steps. A bounded Ascent closure can show whether an admitted set of edges
+contains a route from a suspected surface to the transfer. POO Flow PR #34
+exposes this as a POO route-candidate object; its output is explicitly
+non-authoritative. GQL can select observed event links and source metadata
+from an admitted ontology graph. Neither graph reachability nor a GQL path
+proves that a route happened.
+
+The Scheme Ascent kernel and its rule qualifications are maintained by
+[[https://github.com/tao3k/gerbil-ascent][gerbil-ascent]]. POO Flow pins that package and exposes the bounded candidate
+API. MRR owns semantic source identity, lineage, and admission; this Scenario
+does not install another evaluator or assert an MRR admission receipt.
+
+| Discriminator | Backend substitution | Interface substitution |
+|---------------+----------------------+------------------------|
+| Payload before signer ingress differs from user intent | Supports this route | Does not distinguish alone |
+| Signed bytes differ from independently captured displayed bytes | Possible downstream symptom | Supports this route |
+| Signer accepted a request without an independent intent attestation | Exposes shared trust boundary | Exposes shared trust boundary |
+| Complete signer ingress log absent | Route remains uncertain | Route remains uncertain |
+| All matching records originate from the same backend | Correlated, weak support | Correlated, weak support |
+
+These are *tests to discriminate hypotheses*. They do not claim that any listed
+artifact has been recovered from either incident. Independent signer ingress,
+approval display capture, chain transaction bytes, and timestamped source
+identities are needed before a forensic conclusion.
+
+* Authorization boundary
+
+The [[https://github.com/tao3k/cedar-poo-spec/tree/feat/cedar-evaluation-adapter/Examples/Enterprise/Exchange/Signing][Lean-POO Exchange example]] composes intent, risk, ledger, signer,
+incident freeze, and recovery policies and exports complete =.cedar= files
+through Rust. Cedar evaluates an admitted request. The signer Host must bind
+the exact payload bytes, chain, destination, amount, nonce, wallet epoch, and
+independent attestations to that request, then apply an atomic effect gate.
+If all claims come from one compromised backend, matching fields can still
+pass a policy; the example includes this counterexample. Ascent candidates
+guide investigation and freeze scope but never become =permit= facts.
+
+* Scenario boundary
+
+This directory carries the incident-specific source ledger and hypothesis
+matrix. It contains no keys, live exchange transactions, or copied Cedar
+policy text. A downstream deployment must ingest its own admitted records,
+check source independence, and replay the exported Cedar policy set through
+the POO Flow Host before any signer effect.
