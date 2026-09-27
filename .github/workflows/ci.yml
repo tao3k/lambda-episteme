@@ -63,6 +63,54 @@ jobs:
             proof/lean/.lake
           key: lambda-episteme-lean-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('proof/lean/lean-toolchain', 'proof/lean/lakefile.lean', 'proof/lean/lake-manifest.json') }}
 
+  exchange-signing-proof:
+    name: Exchange signing Lean and Cedar
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout Lambda Episteme
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Restore Exchange Lean cache
+        id: exchange-lean-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .ci/home/.elan
+            user-interface/scenarios/exchange/cases/signing-trust-chain/proof/lean/.lake
+          key: lambda-exchange-lean-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('user-interface/scenarios/exchange/cases/signing-trust-chain/proof/lean/lean-toolchain', 'user-interface/scenarios/exchange/cases/signing-trust-chain/proof/lean/lakefile.toml', 'user-interface/scenarios/exchange/cases/signing-trust-chain/proof/lean/lake-manifest.json') }}
+
+      - name: Install project-local Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          export HOME="$GITHUB_WORKSPACE/.ci/home"
+          export ELAN_HOME="$HOME/.elan"
+          mkdir -p "$HOME"
+          if [ ! -x "$ELAN_HOME/bin/lake" ]; then
+            curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+              | sh -s -- -y --default-toolchain none
+          fi
+          echo "HOME=$HOME" >> "$GITHUB_ENV"
+          echo "ELAN_HOME=$ELAN_HOME" >> "$GITHUB_ENV"
+          echo "$ELAN_HOME/bin" >> "$GITHUB_PATH"
+
+      - name: Install Just
+        uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # v3
+
+      - name: Check Exchange signing Case
+        working-directory: user-interface/scenarios/exchange/cases/signing-trust-chain
+        run: just check
+
+      - name: Save Exchange Lean cache
+        if: steps.exchange-lean-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .ci/home/.elan
+            user-interface/scenarios/exchange/cases/signing-trust-chain/proof/lean/.lake
+          key: lambda-exchange-lean-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('user-interface/scenarios/exchange/cases/signing-trust-chain/proof/lean/lean-toolchain', 'user-interface/scenarios/exchange/cases/signing-trust-chain/proof/lean/lakefile.toml', 'user-interface/scenarios/exchange/cases/signing-trust-chain/proof/lean/lake-manifest.json') }}
+
   scheme-runtime:
     name: Scheme healthcare standards
     runs-on: ubuntu-latest

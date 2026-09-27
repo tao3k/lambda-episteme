@@ -1,0 +1,13 @@
+#+TITLE: Exchange Signing Temporal Threat Model
+
+[[file:SigningIntentBoundary.tla][SigningIntentBoundary.tla]] models candidate preparation, backend or signing-interface
+instruction contamination, an independently bound signing transition, a
+one-use nonce, freeze, and symbolic broadcast. The weak transition admits a
+candidate without independent intent, risk, ledger, and display witnesses;
+the bound transition requires all four.
+
+This is a pre-signing threat model for the structural risk shared by the
+separately reported Bybit and Bitget incidents. It does not assert that a
+particular Bitget ingress mechanism occurred. The atomic Gerbil check covers
+parser-owned syntax and exact source roundtrip. TLC model checking and a
+formal refinement to the [[file:../cedar/README.org][published Cedar policies]] are not yet claimed.

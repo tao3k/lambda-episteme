@@ -1,0 +1,34 @@
+set shell := ["sh", "-eu", "-c"]
+
+case_root := justfile_directory()
+lean_root := case_root + "/proof/lean"
+cedar_root := case_root + "/proof/cedar"
+bridge := lean_root + "/.lake/packages/CedarPooSpec/rust/Cargo.toml"
+poo_flow_root := env_var_or_default("POO_FLOW_ROOT", "")
+
+# The Case owns the Lean source, the generated Cedar revisions, and replay.
+check-lean:
+    cd '{{ lean_root }}' && lake build SigningTrustChain
+
+manifest kind="plain": check-lean
+    cd '{{ lean_root }}' && lake env lean -M 2048 -T 10000000 --run Manifest.lean '{{ kind }}'
+
+publish: check-lean
+    cd '{{ lean_root }}' && mkdir -p .lake/build && lake env lean -M 2048 -T 10000000 --run Manifest.lean plain > .lake/build/signing-manifest.json
+    cargo run --locked --quiet --features cedar-runtime --manifest-path '{{ bridge }}' -- emit '{{ cedar_root }}' < '{{ lean_root }}/.lake/build/signing-manifest.json'
+
+check-cedar: check-lean
+    cd '{{ lean_root }}' && mkdir -p .lake/build && lake env lean -M 2048 -T 10000000 --run Manifest.lean plain > .lake/build/signing-manifest.json
+    cargo run --locked --quiet --features cedar-runtime --manifest-path '{{ bridge }}' -- check-artifacts '{{ cedar_root }}' < '{{ lean_root }}/.lake/build/signing-manifest.json'
+
+check-runtime: check-lean
+    cd '{{ lean_root }}' && lake env lean -M 2048 -T 10000000 --run Manifest.lean validated > .lake/build/signing-validated.json
+    cargo run --locked --quiet --features cedar-runtime --manifest-path '{{ bridge }}' -- replay-validated-receipts < '{{ lean_root }}/.lake/build/signing-validated.json' > '{{ lean_root }}/.lake/build/signing-receipts.json'
+    jq -e 'length == 21 and all(.[]; .replay.error_policy_ids == [] and .replay.error_free_allow == (.replay.decision == "allow"))' '{{ lean_root }}/.lake/build/signing-receipts.json' > /dev/null
+
+check: check-cedar check-runtime
+
+# POO Flow reads generated Cedar artifacts; it does not compile Lean.
+inspect-poo-flow revision="integrated": check-cedar
+    test -n '{{ poo_flow_root }}'
+    just --justfile '{{ poo_flow_root }}/Justfile' inspect-cedar-file '{{ cedar_root }}/{{ revision }}.cedar'
