@@ -70,12 +70,13 @@ jobs:
     env:
       GERBIL_BUILD_CORES: 12
       POO_FLOW_ROOT: ${{ github.workspace }}/poo-flow
+      GERBIL_LOADPATH: ${{ github.workspace }}/poo-flow/packages/gerbil-ascent:${{ github.workspace }}/poo-flow/core
     steps:
       - name: Checkout pinned POO Flow mechanism library
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           repository: tao3k/poo-flow
-          ref: 34bb5fbfd29d63d6b98ffb9a61d891e9930aa3d3
+          ref: b6724d9be292b5be808951bafbb5d4de9b6254a9
           path: poo-flow
           submodules: true
 

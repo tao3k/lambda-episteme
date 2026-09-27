@@ -30,17 +30,19 @@ flowchart LR
 #+end_src
 
 The dotted links are candidate mechanisms, not established Bitget attack
-steps. A bounded Ascent closure can show whether an admitted set of edges
-contains a route from a suspected surface to the transfer. POO Flow PR #34
-exposes this as a POO route-candidate object; its output is explicitly
-non-authoritative. GQL can select observed event links and source metadata
+steps. A bounded Ascent closure can show whether the Case's supplied edges
+contain a route from a suspected surface to the transfer. The output is
+explicitly non-authoritative. GQL can select observed event links and source metadata
 from an admitted ontology graph. Neither graph reachability nor a GQL path
 proves that a route happened.
 
 The Scheme Ascent kernel and its rule qualifications are maintained by
-[[https://github.com/tao3k/gerbil-ascent][gerbil-ascent]]. POO Flow pins that package and exposes the bounded candidate
-API. MRR owns semantic source identity, lineage, and admission; this Scenario
-does not install another evaluator or assert an MRR admission receipt.
+[[https://github.com/tao3k/gerbil-ascent][gerbil-ascent]]. POO Flow PR #34 pins that package. The
+[[file:reasoning.ss][Exchange Case rules]] use Ascent to compute both possible routes (observed and
+proposed links) and routes supported only by observed links. The Lambda
+package declares no Ascent dependency of its own; its CI consumes the pinned
+POO Flow checkout. MRR owns semantic source identity, lineage, and admission;
+this Scenario does not assert an MRR admission receipt.
 
 | Discriminator | Backend substitution | Interface substitution |
 |---------------+----------------------+------------------------|
@@ -54,6 +56,12 @@ These are *tests to discriminate hypotheses*. They do not claim that any listed
 artifact has been recovered from either incident. Independent signer ingress,
 approval display capture, chain transaction bytes, and timestamped source
 identities are needed before a forensic conclusion.
+
+The [[file:../../../../../t/ontology/exchange-signing-reasoning-test.ss][atomic Case test]] uses a Bitget notice as one observed transfer link and
+marks the backend, queue, and signer links as proposed. Ascent derives a
+possible backend-to-outflow route but no fully observed route. Removing the
+queue link removes the possible route. These expectations test the model's
+epistemic separation, not Bitget's actual intrusion path.
 
 * Authorization boundary
 
