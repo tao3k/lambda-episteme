@@ -50,8 +50,8 @@
             (let* ((intent (car pending))
                    (matches
                     (filter (lambda (signed)
-                              (and (eq? (car intent) (car signed))
-                                   (not (eq? (cadr intent) (cadr signed)))))
+                              (and (equal? (car intent) (car signed))
+                                   (not (equal? (cadr intent) (cadr signed)))))
                             signatures)))
               (loop (cdr pending)
                     (append result
