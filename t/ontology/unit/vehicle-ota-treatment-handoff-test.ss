@@ -5,16 +5,18 @@
 
 (import :std/test
         (only-in :clan/poo/object .o .ref)
-        (only-in :gerbil/core hash-get)
-        (only-in :std/encoding/json string->json make-JSONReadOptions)
+        (only-in :std/misc/ports read-all-as-string)
         (only-in :poo-flow/src/graph/types
                  poo-flow-graph poo-flow-graph-edge-kind
                  poo-flow-graph-edges poo-flow-graph-nodes)
+        (only-in :poo-flow/modules/authorization/providers/cedar/interface
+                 poo-flow-cedar-policy?)
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  ontology-compose-case ontology-evaluate-case
                  ontology-evaluation-diagnostic-codes)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/vehicle/handoff
-                 vehicle-tara-reference-candidate vehicle-tara-reference-json)
+                 vehicle-tara-reference-candidate
+                 vehicle-cedar-treatment-candidate)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/vehicle/cases/ota-treatment-handoff/case
                  VehicleOtaTreatmentHandoffCase))
 
@@ -49,19 +51,27 @@
        (check-equal? (.ref candidate 'approval-reference-present?) #f)
        (check-equal? (.ref candidate 'external-approval-verified?) #f)
        (check-equal? (.ref candidate 'publication) #f)
-       (let (json
-             (string->json
-              (vehicle-tara-reference-json candidate)
-              (make-JSONReadOptions key-as-symbol: #f
-                                    array-as-vector: #f
-                                    object-as-hash: #t)))
-         (check-equal? (hash-get json "source") "example-tara")
-         (check-equal? (hash-get json "workProductId")
-                       "EXAMPLE-TARA-OTA-001")
-         (check-equal? (hash-get json "revision") "example-1")
-         (check-equal? (hash-get json "approvalRef") "")
-         (check-equal? (hash-get json "treatmentGoal")
-                       "EXAMPLE-OTA-ROLLBACK-GOAL"))))
+       (check-exception
+        (vehicle-cedar-treatment-candidate
+         evaluation "vehicle-ota-treatment"
+         "user-interface/scenarios/vehicle/cases/ota-treatment-handoff/source.org")
+        true)))
+
+   (test-case "a generated Cedar file enters the existing Provider"
+     (let (path (getenv "LEAN_POO_CEDAR_FILE" #f))
+       (when path
+         (let* ((evaluation
+                 (ontology-evaluate-case
+                  (ontology-compose-case VehicleOtaTreatmentHandoffCase)))
+                (candidate
+                 (vehicle-cedar-treatment-candidate
+                  evaluation "vehicle-ota-treatment" path))
+                (policy (.ref candidate 'cedar-policy)))
+           (check-equal? (poo-flow-cedar-policy? policy) #t)
+           (check-equal? (.ref policy 'source)
+                         (call-with-input-file path read-all-as-string))
+           (check-equal? (.ref candidate 'publication) #f)
+           (check-equal? (.ref candidate 'runtime-executed?) #f)))))
 
    (test-case "a treatment goal without policy is rejected"
      (let* ((original (.ref VehicleOtaTreatmentHandoffCase 'graph))

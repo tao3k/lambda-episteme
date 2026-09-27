@@ -3,16 +3,17 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .o .ref)
-        (only-in :gerbil/core hash-put!)
-        (only-in :std/encoding/json json->string)
+        (only-in :std/misc/ports read-all-as-string)
+        (only-in :poo-flow/modules/authorization/providers/cedar/interface
+                 poo-flow-cedar-policy)
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  ontology-case-evaluation-receipt?))
 
-(export vehicle-tara-reference-candidate vehicle-tara-reference-json)
+(export vehicle-tara-reference-candidate
+        vehicle-cedar-treatment-candidate)
 
-;; Project the five fields consumed by Cedar-POO's TaraReference. An empty
-;; approvalRef records a missing external approval; this function cannot
-;; authorize a policy publication or verify the TARA work product.
+;; Project a selected TARA reference for review. An empty approvalRef records
+;; a missing external approval; this function cannot authorize publication.
 (def (vehicle-tara-reference-candidate evaluation)
   (unless (and (ontology-case-evaluation-receipt? evaluation)
                (.ref evaluation 'accepted?))
@@ -36,16 +37,23 @@
           external-approval-verified?: #f
           publication: #f))))
 
-;; JSON is a boundary artifact for downstream consumers. The POO candidate
-;; remains the Lambda-owned semantic value; only TaraReference fields cross.
-(def (vehicle-tara-reference-json candidate)
-  (unless (eq? (.ref candidate 'kind)
-               'lambda-episteme.vehicle-tara-reference-candidate)
-    (error "invalid Vehicle TARA reference candidate" candidate))
-  (let* ((tara (.ref candidate 'tara))
-         (payload (make-hash-table)))
-    (for-each
-     (lambda (field)
-       (hash-put! payload (symbol->string field) (.ref tara field)))
-     '(source workProductId revision approvalRef treatmentGoal))
-    (json->string payload)))
+;; Read one Lean-POO/Rust exported Cedar file through the existing POO Flow
+;; Provider value. This constructs a candidate; the native Cedar authority
+;; and the application host own parsing, approval, publication and effects.
+(def (vehicle-cedar-treatment-candidate evaluation identity path)
+  (let (tara (vehicle-tara-reference-candidate evaluation))
+    (unless (and (string? path)
+                 (>= (string-length path) 6)
+                 (string=? (substring path (- (string-length path) 6)
+                                      (string-length path))
+                           ".cedar"))
+      (error "Vehicle treatment requires an exported .cedar file" path))
+    (let (policy
+          (poo-flow-cedar-policy
+           identity
+           (call-with-input-file path read-all-as-string)))
+      (.o kind: 'lambda-episteme.vehicle-cedar-treatment-candidate
+          tara: tara
+          cedar-policy: policy
+          publication: #f
+          runtime-executed?: #f))))

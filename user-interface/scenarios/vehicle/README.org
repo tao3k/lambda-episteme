@@ -25,15 +25,26 @@ each policy candidate to name its release target. A Case selects these POO
 profiles and supplies the graph; no TARA export parser is required.
 
 After an accepted graph evaluation, ~vehicle-tara-reference-candidate~
-projects the five fields of Cedar-POO's ~TaraReference~: ~source~,
+projects the selected reference fields: ~source~,
 ~workProductId~, ~revision~, ~approvalRef~, and ~treatmentGoal~. The synthetic
 Case has no approval, so ~approvalRef~ is empty and
 ~approval-reference-present?~ is false. ~external-approval-verified?~ remains
 false even if a reference is later supplied. ~publication~ remains false until an
 independent publisher supplies a Cedar treatment publication. The projection
 is a candidate handoff, not an authorization decision.
-~vehicle-tara-reference-json~ serializes precisely those five fields as a
-transport artifact for a downstream adapter. It carries no approval verdict.
+
+~vehicle-cedar-treatment-candidate~ reads a supplied ~.cedar~ file exported by
+Lean-POO through Rust and constructs the existing POO Flow Cedar policy value.
+The caller supplies the exported file and its policy identity. Lambda does not
+copy or regenerate Cedar policy text. The candidate has no publication and no
+runtime execution; the application host must verify the TARA approval and
+submit the policy through POO Flow's Cedar authority binding.
+
+For a local handoff check, set ~LEAN_POO_CEDAR_FILE~ to one exported ~.cedar~
+artifact and run the Vehicle atomic test. The check reads that exact file and
+compares its text with the POO Flow Cedar policy value; the Rust exporter must
+separately confirm the file matches its manifest. No generated artifact is
+copied into this Scenario.
 
 * Authority boundary
 
