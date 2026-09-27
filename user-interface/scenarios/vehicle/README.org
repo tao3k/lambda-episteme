@@ -65,6 +65,16 @@ supplier, Director assignment, Snapshot revocation evidence, and Primary ECU
 manifest. Both manifests are data files; the POO Flow CLI contains no Vehicle
 branch or copied Cedar policy text.
 
+| Uptane revision | Case manifest | Exported Cedar file | Policies | Host requests |
+|-----------------+---------------+---------------------+----------+---------------|
+| =Retired= | =cedar-case.json= | =retired.cedar= | 1 | 2 |
+| =Replacement= | =cedar-replacement-case.json= | =replacement.cedar= | 3 | 5 |
+
+Each manifest declares the schema for its paired complete policy set. Passing
+the replacement file with the retired manifest fails Cedar validation before
+authorization because the latter schema omits the Supplier and Director entity
+types and their actions. That failure is expected and must not be bypassed.
+
 * Authority boundary
 
 Ontology composition and graph evaluation check the declared structure. The
