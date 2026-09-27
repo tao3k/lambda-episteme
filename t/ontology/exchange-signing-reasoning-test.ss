@@ -17,7 +17,10 @@
                  ExchangeSigningEdgeQuery ExchangeSigningEdgeSource)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/reasoning
                  ExchangeSigningRouteCase.
-                 exchange-signing-route-candidates))
+                 exchange-signing-route-candidates)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/simulation
+                 exchange-signing-attack-stages
+                 exchange-signing-evaluate-stage))
 
 (export exchange-signing-reasoning-test)
 
@@ -76,4 +79,38 @@
                   targets: '((outflow))))
              (result (exchange-signing-route-candidates case-value)))
         (check-equal? (.ref result 'possible-candidates) '())
-        (check-equal? (.ref result 'observed-candidates) '())))))
+        (check-equal? (.ref result 'observed-candidates) '())))
+    (poo-flow-test-case "attack stages stay declarative before inference"
+      (check-equal?
+       (map (lambda (stage) (.ref stage 'identity))
+            (exchange-signing-attack-stages))
+       '(public-notice record-substitution queue-injection signer-ingress
+         candidate-transfer queue-interrupted interface-substitution)))
+    (poo-flow-test-case "public notice alone does not establish a backend route"
+      (let (result
+            (exchange-signing-evaluate-stage
+             (car (exchange-signing-attack-stages))))
+        (check-equal? (.ref result 'possible-candidates) '())
+        (check-equal? (.ref result 'observed-candidates) '())))
+    (poo-flow-test-case "synthetic backend chain remains a candidate only"
+      (let (result
+            (exchange-signing-evaluate-stage
+             (list-ref (exchange-signing-attack-stages) 4)))
+        (check-equal? (.ref result 'possible-candidates)
+                      '((backend outflow)))
+        (check-equal? (.ref result 'observed-candidates) '())
+        (check-equal? (.ref result 'action-authority?) #f)))
+    (poo-flow-test-case "cutting the synthetic queue link removes backend reachability"
+      (let (result
+            (exchange-signing-evaluate-stage
+             (list-ref (exchange-signing-attack-stages) 5)))
+        (check-equal? (.ref result 'possible-candidates) '())
+        (check-equal? (.ref result 'observed-candidates) '())))
+    (poo-flow-test-case "interface substitution is a distinct candidate entry"
+      (let (result
+            (exchange-signing-evaluate-stage
+             (list-ref (exchange-signing-attack-stages) 6)))
+        (check-equal? (.ref result 'possible-candidates)
+                      '((interface outflow)))
+        (check-equal? (.ref result 'observed-candidates) '())
+        (check-equal? (.ref result 'action-authority?) #f)))))

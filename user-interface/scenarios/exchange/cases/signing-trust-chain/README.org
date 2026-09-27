@@ -68,6 +68,32 @@ possible backend-to-outflow route but no fully observed route. Removing the
 queue link removes the possible route. These expectations test the model's
 epistemic separation, not Bitget's actual intrusion path.
 
+* Synthetic attack-chain replay
+
+[[file:simulation.ss][The replay]] represents successive snapshots as POO extensions of one
+observed terminal transfer. The backend branch adds a substituted payload,
+queue message, signer ingress, and signing effect. An alternative interface
+branch represents the same signer-intent boundary through a changed display.
+It is inspired by the separately disclosed Bybit incident; it is not a
+Bitget observation. Each stage is evaluated separately through the bounded
+Ascent API, so one failed or expensive stage cannot silently turn a
+candidate route into an admitted fact.
+
+| Snapshot | Publicly observed link | Added synthetic links | Ascent candidate |
+|----------+------------------------+-----------------------+------------------|
+| Public notice | Unauthorized transfer | None | None |
+| Record substitution | Same terminal link | Backend to payload | None |
+| Queue injection | Same terminal link | Payload to queue | None |
+| Signer ingress | Same terminal link | Queue to signer | None |
+| Candidate transfer | Same terminal link | Signer to transfer | Backend to outflow, proposed only |
+| Queue interrupted | Same terminal link | Queue input removed | None |
+| Interface substitution | Same terminal link | Interface to display to signer to transfer | Interface to outflow, proposed only |
+
+The queue cut is a structural counterfactual, not evidence that an actual
+queue was interrupted. The interface branch uses the same terminal node to
+compare mechanisms; that graph join must not be read as evidence that the
+Bybit interface compromise occurred at Bitget.
+
 * Authorization boundary
 
 The [[https://github.com/tao3k/cedar-poo-spec/tree/feat/cedar-evaluation-adapter/Examples/Enterprise/Exchange/Signing][Lean-POO Exchange example]] composes intent, risk, ledger, signer,
@@ -78,6 +104,9 @@ independent attestations to that request, then apply an atomic effect gate.
 If all claims come from one compromised backend, matching fields can still
 pass a policy; the example includes this counterexample. Ascent candidates
 guide investigation and freeze scope but never become =permit= facts.
+The Lean/Cedar replay then tests independent controls, common-source claim
+contamination, incident freeze, and premature removal of the freeze. It
+replays authorization decisions only; no wallet transaction is executed.
 
 * Scenario boundary
 
