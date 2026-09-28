@@ -307,7 +307,11 @@ per composition. It reports public observed edges separately from synthetic
 proposed edges, Ascent possible and observed routes, published family fit,
 the attack Profile's required independent observations, and which of those
 remain missing. A supplied observation marked =provisional= remains visible
-but does not close a missing independent witness. The TLA+ checker writes a
+but does not close a missing independent witness. Caller-supplied =admitted=
+rows enter Ascent's independent signal relation, so a signer-ledger support
+row or challenge changes the conditional ranking. The receipt still marks
+input provenance unverified until a Host or MRR admission step establishes it.
+The TLA+ checker writes a
 local qualification receipt only after the native parser and all ten TLC
 checks succeed; =just check-chain= joins each route's counterexample entry
 state and transition names with its causal assessment. The report-time cut

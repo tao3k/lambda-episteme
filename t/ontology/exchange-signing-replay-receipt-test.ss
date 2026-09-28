@@ -50,6 +50,23 @@
                       '((api-replay 2 6) (queue-injection 2 6)
                         (record-mutation 1 6)
                         (address-map-substitution 1 6)))
+        (let (ledger-evidence
+              (exchange-signing-replay-observability
+               exchange-signing-record-mutation
+               '((duplicate-request-id signer-ledger admitted)) qualified))
+          (check-equal?
+           (.ref ledger-evidence 'ingress-relative-support-shares)
+           '((api-replay 8 12) (queue-injection 2 12)
+             (record-mutation 1 12) (address-map-substitution 1 12)))
+          (check-equal? (.ref ledger-evidence 'input-provenance-verified?) #f))
+        (let (ledger-challenge
+              (exchange-signing-replay-observability
+               exchange-signing-record-mutation
+               '((one-use-request-record signer-ledger admitted)) qualified))
+          (check-equal?
+           (.ref ledger-challenge 'ingress-relative-support-shares)
+           '((queue-injection 2 4) (record-mutation 1 4)
+             (address-map-substitution 1 4) (api-replay 0 4))))
         (let (without-api
               (exchange-signing-replay-observability
                exchange-signing-record-mutation '()

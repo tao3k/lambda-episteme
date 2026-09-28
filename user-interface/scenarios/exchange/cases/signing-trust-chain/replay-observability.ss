@@ -110,22 +110,29 @@
                       direct-profiles))
          (qualified-routes (map car bindings-value))
          (chain (exchange-signing-plan-chain ExchangeSigningReportedChain.))
+         (independent-rows
+          (map (lambda (row) (list (car row) (cadr row)))
+               (filter (lambda (row) (eq? (caddr row) 'admitted))
+                       observations)))
+         (ingress-case-value
+          (.o (:: @ ExchangeSigningPublicIngress.)
+              independent-signals: independent-rows))
          (ingress
           (and (memq (.ref profile 'identity)
                      '(record-mutation api-replay queue-injection
                        address-map-substitution))
                (pair? qualified-routes)
                (exchange-signing-compare-ingress
-                ExchangeSigningPublicIngress. qualified-routes)))
+                ingress-case-value qualified-routes)))
          (neutral-ingress
           (and ingress
                (exchange-signing-compare-ingress
-                (.o (:: @ ExchangeSigningPublicIngress.)
+                (.o (:: @ ingress-case-value)
                     model-factors:
                     (filter
                      (lambda (row)
                        (not (eq? (cadr row) 'fixed-round-gas-limits)))
-                     (.ref ExchangeSigningPublicIngress. 'model-factors)))
+                     (.ref ingress-case-value 'model-factors)))
                 qualified-routes)))
          (qualification
           (assoc (.ref profile 'tla-config) qualifications))
@@ -153,6 +160,8 @@
         possible-candidates: (.ref routes 'possible-candidates)
         observed-candidates: (.ref routes 'observed-candidates)
         supplied-observations: observations
+        caller-declared-independent-signals: independent-rows
+        input-provenance-verified?: #f
         missing-independent-observations: missing
         public-family-preference: (.ref chain 'preferred-family)
         public-family-screen-preliminary?: #t
