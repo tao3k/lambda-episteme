@@ -54,22 +54,29 @@ entry point in Bitget's separate incident.
 [[file:simulation.ss][The Bybit reference Case]] retains source-labelled on-chain and reported
 effects, while its interface-to-signer link remains proposed. Ascent no
 longer presents an observed end-to-end interface route. The separate
-[[file:bybit-reconstruction.ss][reverse reconstruction]] joins source-labelled claims rather than taking
-the desired causal chain as an observed input. NCC distinguishes a changed
+[[file:bybit-inference.ss][Bybit reverse inference]] declares source-labelled POO claims,
+steps, and competing hypotheses for POO Flow's generic =ReverseInference=
+module. The engine joins those claims rather than taking the desired causal
+chain as an observed input. NCC distinguishes a changed
 wallet signing request from
 the transaction later proposed to Safe's gateway; its account of exactly
 what each signer saw on screen is an inference, not a direct display witness.
 The Bitget candidate Cases have no observed end-to-end ingress route;
 reference evidence is never copied into their observation relation.
 
-* Bybit reverse reconstruction
+* Bybit reverse inference
 
-The reverse Case begins with the published outflow and asks which mechanism
-steps the remaining source-labelled evidence can support. An Ascent rule
-joins the required claims for each reverse step. Reachability is derived
-only after those joins, so an outflow observation alone yields no attack
-route. This is a bounded explanatory model, not a reconstruction of the
-historical signer screens or an attribution engine.
+The reverse Case begins with the published outflow and asks which candidate
+explanations the remaining source-labelled evidence can support. Its POO
+slots declare three hypotheses: interface substitution, the reported
+upstream developer-machine compromise, and signer-key compromise. The
+generic engine runs the Case's Scheme GQL claim selection and Ascent joins.
+Reachability is derived only after those joins, so an outflow observation
+alone yields no attack route. The interface hypothesis is supported by the
+supplied reference evidence; signer-key compromise remains =needs-evidence=.
+That status does not exclude key compromise in history. This is a bounded
+explanatory model, not a reconstruction of the historical signer screens or
+an attribution engine.
 
 | Claim supplied to the Case | Source and basis | Reverse step it can support |
 |----------------------------+------------------+-----------------------------|
@@ -92,12 +99,15 @@ flowchart RL
   J -. unresolved .-> W[Each signer trusted display]
 #+end_src
 
-The [[file:../../../../../t/ontology/exchange-signing-bybit-reconstruction-test.ss][atomic reconstruction check]] removes each of the implementation rewrite,
+The [[file:../../../../../t/ontology/exchange-signing-bybit-inference-test.ss][atomic inference check]] removes each of the implementation rewrite,
 delegatecall, valid signatures, JavaScript target value, and field
 substitution claims in turn. Every removal breaks the complete mechanism
 route; removing the reported developer compromise leaves the mechanism
 route but breaks the upstream compromise link. Replacing the JavaScript
-target with a different address also breaks the route. These are dependency checks,
+target with a different address makes the relevant hypothesis =conflicted=.
+Adding an additional conflicting target leaves an apparent matching pair,
+but the hypothesis still reports =conflicted=; the unrelated key-compromise
+hypothesis remains =needs-evidence=. These are dependency checks,
 not evidence authenticity checks. The receipt always leaves initial machine
 access, each signer's trusted display, and an independent signing-intent
 receipt unresolved. The TLA+ interface branch qualifies the abstract

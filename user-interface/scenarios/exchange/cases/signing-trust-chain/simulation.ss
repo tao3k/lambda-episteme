@@ -85,7 +85,7 @@
 ;;; A separate reference for the documented Bybit mechanism. The interface
 ;;; to signer link is an explanation from code analysis, not an independently
 ;;; witnessed historical edge. The evidence-driven reverse Case is in
-;;; bybit-reconstruction.ss. Nothing here enters Bitget's ingress comparison.
+;;; bybit-inference.ss. Nothing here enters Bitget's ingress comparison.
 (def ExchangeSigningBybitReference.
   (.o (:: @ ExchangeSigningRouteCase.)
       operation-kind: 'delegatecall

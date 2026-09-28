@@ -9,14 +9,16 @@
 (import (only-in :clan/poo/object .o .ref .slot? object?)
         (only-in :poo-flow/src/scenario/accessors
                  poo-flow-scenario-case-profiles)
+        (only-in :poo-flow/modules/reverse-inference/interface
+                 poo-flow-inference-hypothesis-result)
         (only-in "chain.ss"
                  ExchangeSigningReportedChain.
                  exchange-signing-plan-chain)
         (only-in "reasoning.ss" exchange-signing-route-candidates)
         (only-in "simulation.ss" ExchangeSigningBybitReference.)
-        (only-in "bybit-reconstruction.ss"
+        (only-in "bybit-inference.ss"
                  ExchangeSigningBybitEvidence.
-                 exchange-signing-reconstruct-bybit)
+                 exchange-signing-reverse-infer-bybit)
         (only-in "causal.ss" exchange-signing-causal-trajectory)
         (only-in "flow-profiles.ss"
                  ExchangeSigningRecordMutationProfile.
@@ -93,7 +95,9 @@
 (def (exchange-signing-replay-observability composition
                                             (observations '())
                                             (qualifications '())
-                                            (signal-nodes #f))
+                                            (signal-nodes #f)
+                                            (bybit-evidence
+                                             ExchangeSigningBybitEvidence.))
   (unless (and (list? observations)
                (andmap observation-row? observations))
     (error "observations require (signal source admitted|provisional) rows"
@@ -108,7 +112,7 @@
          (reference-routes
           (exchange-signing-route-candidates ExchangeSigningBybitReference.))
          (reference-reconstruction
-          (exchange-signing-reconstruct-bybit ExchangeSigningBybitEvidence.))
+          (exchange-signing-reverse-infer-bybit bybit-evidence))
          (causal (exchange-signing-causal-trajectory
                   (.ref profile 'identity)
                   (.ref profile 'observation-needs)))
@@ -197,10 +201,22 @@
         (.ref reference-routes 'observed-candidates)
         bybit-reference-possible-route:
         (.ref reference-routes 'possible-candidates)
-        bybit-reference-supported-reverse-steps:
-        (.ref reference-reconstruction 'supported-reverse-steps)
-        bybit-reference-mechanism-chain-supported?:
-        (.ref reference-reconstruction 'mechanism-chain-supported?)
+        bybit-reference-supported-inference-steps:
+        (.ref reference-reconstruction 'supported-inference-steps)
+        bybit-reference-missing-claims:
+        (.ref reference-reconstruction 'missing-claims)
+        bybit-reference-equality-mismatches:
+        (.ref reference-reconstruction 'equality-mismatches)
+        bybit-reference-value-conflicts:
+        (.ref reference-reconstruction 'value-conflicts)
+        bybit-reference-evidence-consistent?:
+        (.ref reference-reconstruction 'evidence-consistent?)
+        bybit-reference-hypotheses:
+        (.ref reference-reconstruction 'hypothesis-results)
+        bybit-reference-interface-status:
+        (.ref (poo-flow-inference-hypothesis-result
+               reference-reconstruction 'interface-substitution)
+              'status)
         bybit-reference-unresolved-witnesses:
         (.ref reference-reconstruction 'unresolved-witnesses)
         bybit-reference-operation:

@@ -22,7 +22,10 @@
         ExchangeSigningEdgeSource
         ExchangeSigningSignalProgram
         ExchangeSigningSignalQuery
-        ExchangeSigningSignalSource)
+        ExchangeSigningSignalSource
+        ExchangeSigningBybitClaimProgram
+        ExchangeSigningBybitClaimQuery
+        ExchangeSigningBybitClaimSource)
 
 (def ExchangeSigningEdgeProgram
   (.o (:: @ PooFlowGqlQueryProgram.)
@@ -139,3 +142,56 @@
       (poo-flow-query-result-contract
        'exchange/signing-signal-rows 'relation-row
        '(signal evidenceSource admissionStatus) 64)))
+
+;;; The reference replay selects source-labelled claim nodes before Ascent
+;;; joins them. This Query does not authenticate source content.
+(def ExchangeSigningBybitClaimProgram
+  (.o (:: @ PooFlowGqlQueryProgram.)
+      identity: 'exchange-signing-bybit-claims
+      match:
+      (.o (:: @ GqlQueryPath.)
+          start: (.o (:: @ GqlQueryNode.)
+                     binding: 'claim label: 'EvidenceClaim))
+      project:
+      (.o (:: @ GqlQueryProjection.)
+          expression:
+          (.o (:: @ GqlQueryProperty.) binding: 'claim property: 'identity)
+          next:
+          (.o (:: @ GqlQueryProjection.)
+              expression:
+              (.o (:: @ GqlQueryProperty.) binding: 'claim property: 'value)
+              next:
+              (.o (:: @ GqlQueryProjection.)
+                  expression:
+                  (.o (:: @ GqlQueryProperty.)
+                      binding: 'claim property: 'evidenceSource))))))
+
+(def ExchangeSigningBybitClaimSource
+  (poo-flow-query-program->gql ExchangeSigningBybitClaimProgram))
+
+(def ExchangeSigningBybitClaimSourceId
+  (string-append "sha256:"
+                 (hex-encode
+                  (sha256 (string->utf8 ExchangeSigningBybitClaimSource)))))
+
+(def ExchangeSigningBybitClaimQuery
+  (.o (:: @ PooFlowQuery.)
+      identity: 'exchange-signing-bybit-claims
+      version: "1"
+      semantic-revision: ExchangeSigningBybitClaimSourceId
+      element-space-identity: 'exchange/bybit-reference-claims
+      selected-element-identities:
+      '(funds-outflow safe-implementation-rewritten exec-delegatecall
+        attacker-target-in-execution valid-safe-signatures
+        javascript-substituted-signed-fields javascript-target
+        safe-developer-machine-compromised signer-key-compromise)
+      language: PooFlowSchemeGqlQueryLanguage.
+      program: ExchangeSigningBybitClaimProgram
+      result-bound: 64
+      completeness-requirement: 'complete
+      evidence-requirements:
+      '(source-content-identity provenance-root result-digest)
+      result-contract:
+      (poo-flow-query-result-contract
+       'exchange/bybit-claim-rows 'relation-row
+       '(claim value evidenceSource) 64)))

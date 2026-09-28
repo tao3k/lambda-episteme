@@ -3,8 +3,10 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :std/test test-suite check-equal?)
-        (only-in :clan/poo/object .ref)
+        (only-in :clan/poo/object .o .ref)
         (only-in :core/observability/testing-case poo-flow-test-case)
+        (only-in :poo-flow/modules/reverse-inference/interface
+                 poo-flow-inference-claim)
         (only-in :poo-flow/src/scenario/case
                  poo-flow-scenario-case?)
         (only-in :poo-flow/src/scenario/accessors
@@ -15,6 +17,8 @@
                  exchange-signing-route-candidates)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/replay-observability
                  exchange-signing-replay-observability)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/bybit-inference
+                 ExchangeSigningBybitEvidence.)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/flow-profiles
                  ExchangeSigningRecordMutationProfile.
                  ExchangeSigningInterfaceProfile.
@@ -109,7 +113,7 @@
         (check-equal? (.ref receipt 'bybit-reference-possible-route)
                       '((interface bybit-outflow)))
         (check-equal?
-         (.ref receipt 'bybit-reference-mechanism-chain-supported?) #t)
+         (.ref receipt 'bybit-reference-interface-status) 'supported)
         (check-equal?
          (.ref receipt 'bybit-reference-unresolved-witnesses)
          '(initial-developer-machine-entry
@@ -155,4 +159,23 @@
         (check-equal? (.ref interface 'missing-independent-observations)
                       '(trusted-rendered-bytes signed-admin-operation
                         linked-control-change))
-        (check-equal? (.ref interface 'tla-config) "InterfaceAttack.cfg")))))
+        (check-equal? (.ref interface 'tla-config) "InterfaceAttack.cfg")))
+    (poo-flow-test-case "caller evidence changes the replay hypothesis"
+      (let* ((evidence
+              (.o (:: @ ExchangeSigningBybitEvidence.)
+                  claims:
+                  (list (poo-flow-inference-claim
+                         'funds-outflow 'present
+                         'bybit-official-timeline))))
+             (receipt
+              (exchange-signing-replay-observability
+               exchange-signing-interface-substitution
+               '() '() #f evidence)))
+        (check-equal? (.ref receipt 'bybit-reference-interface-status)
+                      'needs-evidence)
+        (check-equal? (.ref receipt 'bybit-reference-evidence-consistent?)
+                      #t)
+        (check-equal? (and (member '(exec-delegatecall)
+                                   (.ref receipt 'bybit-reference-missing-claims))
+                           #t)
+                      #t)))))
