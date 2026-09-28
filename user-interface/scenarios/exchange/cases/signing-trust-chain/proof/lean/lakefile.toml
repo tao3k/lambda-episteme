@@ -5,7 +5,7 @@ defaultTargets = ["SigningTrustChain"]
 [[require]]
 name = "CedarPooSpec"
 git = "https://github.com/tao3k/cedar-poo-spec.git"
-rev = "2d171624299fe68dfde1f4d54bc1e47654ad9535"
+rev = "dfa18b8a2f306ce17b8ae7e523e7029ebe2dff01"
 
 [[lean_lib]]
 name = "SigningTrustChain"
