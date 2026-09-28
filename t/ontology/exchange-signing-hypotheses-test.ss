@@ -5,19 +5,12 @@
 (import (only-in :std/test test-suite check-equal?)
         (only-in :clan/poo/object .o .ref)
         (only-in :core/observability/testing-case poo-flow-test-case)
-        (only-in :gerbil-parser/languages/gql/iso-39075-2024/query-syntax
-                 gql-query-program?)
-        (only-in :poo-flow/modules/query/gql poo-flow-query->gql)
-        (only-in :poo-flow/modules/query/contracts
-                 poo-flow-query-source-content-identity)
-        (only-in :poo-flow/modules/query/objects
-                 poo-flow-query-element-space)
-        (only-in :poo-flow/modules/query/funs poo-flow-query-admit)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/query
-                 ExchangeSigningSignalQuery ExchangeSigningSignalSource)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/hypotheses
                  ExchangeSigningPublicEvidence.
-                 exchange-signing-compare-hypotheses))
+                 exchange-signing-compare-hypotheses
+                 ExchangeSigningFamilyCase.
+                 ExchangeSigningReportedFamilyEvidence.
+                 exchange-signing-rank-families))
 
 (export exchange-signing-hypotheses-test)
 
@@ -26,42 +19,6 @@
 
 (def exchange-signing-hypotheses-test
   (test-suite "Exchange signing hypothesis discriminators"
-    (poo-flow-test-case "GQL AST selects provenance-bearing signal observations"
-      (let* ((source (poo-flow-query->gql ExchangeSigningSignalQuery))
-             (space
-              (poo-flow-query-element-space
-               'exchange/signing-signals
-               (.ref ExchangeSigningSignalQuery 'semantic-revision)
-               '(unauthorized-outflow multi-chain-outflow
-                 withdrawal-without-intent
-                 duplicate-request-id orphan-queue-message
-                 destination-mismatch display-byte-mismatch
-                 observed-admin-effect complete-transfer-only-signing-ledger
-                 authenticated-intent-exact one-use-request-record
-                 verified-producer-chain independently-matched-destination
-                 trusted-rendering-match)
-               #t))
-             (admission (poo-flow-query-admit ExchangeSigningSignalQuery space)))
-        (check-equal? source ExchangeSigningSignalSource)
-        (check-equal?
-         (.ref ExchangeSigningSignalQuery 'selected-element-identities)
-         '(unauthorized-outflow multi-chain-outflow
-           withdrawal-without-intent duplicate-request-id
-           orphan-queue-message destination-mismatch display-byte-mismatch
-           observed-admin-effect complete-transfer-only-signing-ledger
-           authenticated-intent-exact one-use-request-record
-           verified-producer-chain independently-matched-destination
-           trusted-rendering-match))
-        (check-equal?
-         source
-         "MATCH (signal:SigningSignal)\nRETURN signal.identity, signal.evidenceSource, signal.admissionStatus\n")
-        (check-equal?
-         (poo-flow-query-source-content-identity ExchangeSigningSignalQuery)
-         (.ref ExchangeSigningSignalQuery 'semantic-revision))
-        (check-equal?
-         (gql-query-program? (.ref ExchangeSigningSignalQuery 'program)) #t)
-        (check-equal? (.ref admission 'accepted?) #t)
-        (check-equal? (.ref admission 'runtime-executed?) #f)))
     (poo-flow-test-case "public outflow leaves every ingress hypothesis open"
       (let (result
             (exchange-signing-compare-hypotheses
@@ -121,4 +78,52 @@
          (contains? (.ref result 'challenged)
                     '(queue-injection verified-producer-chain
                       independent-queue-audit)) #t)
-        (check-equal? (.ref result 'hypothesis-confirmed?) #f)))))
+        (check-equal? (.ref result 'hypothesis-confirmed?) #f)))
+    (poo-flow-test-case "published record favors backend signed transfer family"
+      (let (result (exchange-signing-rank-families
+                    ExchangeSigningReportedFamilyEvidence.))
+        (check-equal? (.ref result 'preferred-family)
+                      'backend-signed-transfer)
+        (check-equal? (car (.ref result 'fit))
+                      '(backend-signed-transfer 5 5 0 #t))
+        (check-equal? (.ref result 'conditional-on-reports?) #t)
+        (check-equal? (.ref result 'exact-entry-point-known?) #f)))
+    (poo-flow-test-case "backend report alone cannot select an effect family"
+      (let* ((case-value
+              (.o (:: @ ExchangeSigningFamilyCase.)
+                  reported-signals:
+                  '((backend-compromise bitget-incident-explainer)
+                    (spoofed-transaction-data bitget-incident-explainer))))
+             (result (exchange-signing-rank-families case-value)))
+        (check-equal? (.ref result 'preferred-family) 'undetermined)))
+    (poo-flow-test-case "without the gas discriminator the family stays open"
+      (let* ((case-value
+              (.o (:: @ ExchangeSigningReportedFamilyEvidence.)
+                  reported-signals:
+                  '((backend-compromise bitget-incident-explainer)
+                    (spoofed-transaction-data bitget-incident-explainer)
+                    (no-private-key-compromise bitget-incident-explainer)
+                    (wallet-signed-transfers bitquery-chain-analysis)
+                    (cross-chain-bursts bitquery-chain-analysis))))
+             (result (exchange-signing-rank-families case-value)))
+        (check-equal? (.ref result 'preferred-family) 'undetermined)))
+    (poo-flow-test-case "an observed control change redirects the family"
+      (let* ((case-value
+              (.o (:: @ ExchangeSigningFamilyCase.)
+                  reported-signals:
+                  '((backend-compromise independent-backend-receipt)
+                    (spoofed-transaction-data independent-ingress-receipt)
+                    (observed-admin-effect independent-chain-receipt))))
+             (result (exchange-signing-rank-families case-value)))
+        (check-equal? (.ref result 'preferred-family)
+                      'backend-admin-change)))
+    (poo-flow-test-case "extra reporter does not count one signal twice"
+      (let* ((case-value
+              (.o (:: @ ExchangeSigningReportedFamilyEvidence.)
+                  reported-signals:
+                  (cons '(fixed-round-gas-limits second-chain-analysis)
+                        (.ref ExchangeSigningReportedFamilyEvidence.
+                              'reported-signals))))
+             (result (exchange-signing-rank-families case-value)))
+        (check-equal? (car (.ref result 'fit))
+                      '(backend-signed-transfer 5 5 0 #t))))))

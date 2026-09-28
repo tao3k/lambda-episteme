@@ -118,6 +118,10 @@
       element-space-identity: 'exchange/signing-signals
       selected-element-identities:
       '(unauthorized-outflow multi-chain-outflow
+        backend-compromise spoofed-transaction-data
+        no-private-key-compromise wallet-signed-transfers
+        cross-chain-bursts fixed-round-gas-limits
+        private-key-compromise
         withdrawal-without-intent duplicate-request-id
         orphan-queue-message destination-mismatch display-byte-mismatch
         observed-admin-effect complete-transfer-only-signing-ledger

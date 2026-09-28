@@ -5,6 +5,7 @@ lean_root := case_root + "/proof/lean"
 cedar_root := case_root + "/proof/cedar"
 bridge := lean_root + "/.lake/packages/CedarPooSpec/rust/Cargo.toml"
 poo_flow_root := env_var_or_default("POO_FLOW_ROOT", "")
+lambda_root := case_root + "/../../../../.."
 
 # The Case owns the Lean source, the generated Cedar revisions, and replay.
 check-lean:
@@ -27,6 +28,15 @@ check-runtime: check-lean
     jq -e 'length == 21 and all(.[]; .replay.error_policy_ids == [] and .replay.error_free_allow == (.replay.decision == "allow"))' '{{ lean_root }}/.lake/build/signing-receipts.json' > /dev/null
 
 check: check-cedar check-runtime
+
+# One Case gate connects GQL selection, ASCENT ranking, the TLA+ threat path,
+# and Lean/Cedar authorization replay. GQL execution and evidence admission
+# require downstream MRR/Host integration.
+check-chain: check-tla check
+    cd '{{ lambda_root }}' && just test-scheme-atomic t/ontology/exchange-signing-signal-query-test.ss
+    cd '{{ lambda_root }}' && just test-scheme-atomic t/ontology/exchange-signing-hypotheses-test.ss
+    cd '{{ lambda_root }}' && just test-scheme-atomic t/ontology/exchange-signing-chain-test.ss
+    cd '{{ lambda_root }}' && just test-scheme-atomic t/ontology/exchange-signing-flow-test.ss
 
 # The native parser and official TLC are independent parts of this gate.
 # Supply a Gerbil parser package and `tlc` on PATH through the caller's env.

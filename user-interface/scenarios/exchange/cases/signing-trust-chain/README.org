@@ -27,9 +27,18 @@ signer backend or a common intrusion route across those chains.
 [[https://www.coindesk.com/markets/2026/09/25/bitget-s-usd351-million-hack-happened-via-spoofed-transfers-not-private-keys-ceo-gray-chen-says][Reporting of the CEO's preliminary account]] describes
 spoofed transaction data rather than private-key theft. That account remains
 a reported explanation until a technical report supports its details.
+Bitget's later [[https://www.bitget.com/academy/bitget-security-incident-what-happened-timeline-impact-response][incident explainer]] states that a critical wallet backend
+system was compromised, transaction data was spoofed, and private-key
+compromise has been ruled out based on the investigation to date. It still
+does not identify the specific record, API, queue, or mapping-table ingress.
 [[https://www.elliptic.co/insights/bitget-attack-pushes-suspected-north-korea-crypto-heists-over-1-billion-in-2026/][Elliptic's independent tracing]] labels receiving addresses and later fund
 movement; those on-chain observations constrain the outflow and aftermath,
 not the internal request, approval, or signer ingress path.
+[[https://bitquery.io/investigations/bitget-hack][Bitquery's chain analysis]] reports wallet-signed ordinary transfers,
+short multi-chain bursts, and fixed round gas limits on the Ethereum theft
+transactions unlike that week's customer withdrawals from the same hot
+wallets. These are analyst observations and interpretations, not a Bitget
+signer log.
 
 [[https://www.bybit.com/en/press/post/bybit-confirms-security-integrity-amid-safe-wallet-incident-no-compromise-in-infrastructure-blt9986889e919da8d2][Bybit's Safe incident statement]] concerns a separate signing-interface
 compromise. This Case compares mechanisms; it never transfers an observation
@@ -183,6 +192,62 @@ record can narrow the queue hypothesis; a contradictory producer record must
 remain visible. Neither a single matching signal nor a path in the graph
 confirms an intrusion mechanism. The atomic tests demonstrate all three
 outcomes without promoting a hypothesis to a fact or permit.
+
+* Conditional path-family inference
+
+The finer ingress candidates cannot yet be ordered from public data alone.
+The broader *effect family* can be compared. [[file:hypotheses.ss][The Ascent family program]] joins each
+published signal to the predictions and challenges of four families, then
+aggregates distinct matched signals. A second reporter of the same signal
+does not increase its match count. Its output is an auditable fit comparison,
+not a statistical probability.
+
+| Family | Published match | Missing or challenging observation | Current interpretation |
+|--------+-----------------+-----------------------------------+------------------------|
+| Backend-forged signed transfer | 5 of 5 modeled signals: backend compromise, spoofed data, wallet signature, cross-chain bursts, fixed gas limits | No authenticated signer ingress or decoded intent receipt | Best-supported family conditional on the cited reports |
+| Backend administrative change then drain | Backend compromise and spoofed data | A linked on-chain wallet-control change is not in the supplied record | Still possible; operation path unresolved without a control-change receipt |
+| Signer-interface administrative change | None of its distinguishing signals | No Bitget display/byte mismatch or linked control change has been supplied | Bybit mechanism remains a comparison, not the favored Bitget explanation |
+| Private-key exfiltration | None | Bitget says its investigation ruled this out | Challenged by the current official account |
+
+This ordering is intentionally at the family level. Within the favored
+family, withdrawal-record mutation, internal API replay, queue injection,
+and destination-map substitution remain unordered. The fixed gas limit
+pattern favors an internal-transfer-shaped order over an ordinary customer
+withdrawal, but does not reveal which backend component fabricated it. If
+the independent gas analysis is removed, the model returns =undetermined=;
+if a linked administrative effect is supplied instead, it selects the
+administrative temporal path. The regression tests exercise both changes.
+
+#+begin_src mermaid
+flowchart LR
+  G[GQL signal selection contract] --> A[Ascent source-labelled family fit]
+  A -->|backend signed transfer| T[DirectAttack TLC trace]
+  A -->|backend admin change| U[AdminAttack TLC trace]
+  A -->|interface admin change| V[InterfaceAttack TLC trace]
+  T --> L[Lean Host byte and operation binding]
+  U --> L
+  V --> L
+  L --> C[Cedar policy replay]
+#+end_src
+
+[[file:chain.ss][The POO chain Case]] checks that every supplied reported signal appears in the
+GQL selection contract and maps Ascent's preferred family to a TLA+
+configuration and Cedar revision. =just check-chain= runs the Scheme handoff,
+native TLA+ parser and official TLC, Lean build, and Cedar runtime replay in
+one Case gate. The GQL AST is parser-checked but GQL is not executed here;
+MRR result admission and a deployed signing Host remain downstream inputs.
+The chain never converts a research candidate into an authorization fact.
+
+[[file:flow.ss][The six named user compositions]] select attack Profiles from
+[[file:flow-profiles.ss][the Exchange signing Module]] alongside a Funflow runtime Profile. Each
+attack Profile owns its synthetic route Case and TLA+ configuration. The
+shared five-node topology covers GQL selection, Ascent ranking, TLA+ threat
+replay, Lean/Cedar authorization replay, and attack-surface comparison. The
+composition projects an inspectable Funflow plan; it does not schedule those
+steps or turn a possible Ascent route into an observed attack. The Case Just
+gate executes local qualifications, including all six TLC configurations.
+Scheduling, durable receipts, and a family-specific run chosen from admitted
+evidence remain downstream responsibilities.
 
 * Fixture consequence reasoning
 
