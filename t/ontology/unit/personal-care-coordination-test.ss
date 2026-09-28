@@ -5,7 +5,7 @@
 (import :std/test
         (only-in :clan/poo/object .cc .ref)
         :std/list/list
-        (only-in :poo-flow/src/module-system/profile-composition/interface
+        (only-in :poo-flow/src/scenario/accessors
                  poo-flow-scenario-case-name)
         :poo-flow/modules/temporal-causality/interface
         :poo-flow/lambda-episteme/modules/ontology/interface

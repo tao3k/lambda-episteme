@@ -11,9 +11,9 @@
                  poo-flow-graph-node
                  poo-flow-graph-node-id poo-flow-graph-node-payload
                  poo-flow-graph-node-metadata poo-flow-graph-nodes)
-        (only-in :poo-flow/src/module-system/profile-composition/interface
-                 poo-flow-scenario-case
-                 poo-flow-scenario-case?
+        (only-in :poo-flow/src/scenario/case
+                 poo-flow-scenario-case poo-flow-scenario-case?)
+        (only-in :poo-flow/src/scenario/accessors
                  poo-flow-scenario-case-name
                  poo-flow-scenario-case-profiles)
         (only-in :poo-flow/modules/temporal-causality/interface

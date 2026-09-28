@@ -10,7 +10,7 @@
                  poo-flow-graph-edges
                  poo-flow-graph-node-id
                  poo-flow-graph-nodes)
-        (only-in :poo-flow/src/module-system/profile-composition/interface
+        (only-in :poo-flow/src/scenario/accessors
                  poo-flow-scenario-case-name)
         (only-in :poo-flow/modules/standards/interface
                  poo-flow-standard-governance-interface?)

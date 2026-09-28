@@ -131,7 +131,7 @@ Every contributed Module follows the POO Flow-owned five-role contract:
 [[file:MODULES.org][MODULES.org]] for the normative ownership of those files.
 
 The currently migrated ontology Scenarios are Healthcare, Software
-Engineering, Commercial Finance, Manufacturing, Education and Vehicle.  They
+Engineering, Commercial Finance, Manufacturing, Education, Vehicle and Exchange.  They
 all reuse the same =modules/ontology= mechanism; no industry creates a second
 ontology engine or module registry.
 
@@ -140,6 +140,8 @@ separation between GQL, TLA+/TLC, Lean and Cedar are documented in
 [[file:user-interface/scenarios/healthcare/README.org][Healthcare Scenario relations and assurance flow]].
 The [[file:user-interface/scenarios/vehicle/README.org][Vehicle Scenario]] demonstrates a selected TARA treatment handoff to an
 OTA policy candidate without claiming assessment approval or policy execution.
+The [[file:user-interface/scenarios/exchange/README.org][Exchange Scenario]] compares signing-chain hypotheses and records the evidence
+needed to discriminate them.
 
 * Declarative user interface
 

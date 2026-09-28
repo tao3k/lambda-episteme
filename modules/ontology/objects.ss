@@ -13,7 +13,7 @@
                  poo-flow-graph-edge-kind poo-flow-graph-edge-to
                  poo-flow-graph-edges poo-flow-graph-node-id
                  poo-flow-graph-node-payload poo-flow-graph-nodes)
-        (only-in :poo-flow/src/module-system/profile-composition/interface
+        (only-in :poo-flow/src/scenario/case
                  poo-flow-scenario-case)
         (only-in :poo-flow/modules/authorization/types
                  poo-flow-authorization-capability?)

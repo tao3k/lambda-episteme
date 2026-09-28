@@ -2,7 +2,7 @@
 ;;;
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
-(import (only-in :poo-flow/src/module-system/declaration/interface
+(import (only-in :poo-flow/src/user-interface/module-selection
                  poo-flow-user-module-selection?
                  poo-flow-user-module-selection-flags
                  poo-flow-user-module-selection-key)

@@ -4,17 +4,18 @@
 (import (only-in :std/test check-equal? check-exception test-case test-suite)
         (only-in :std/error Error?)
         (only-in :poo-flow/src/core/failure execution-failure?)
-        (only-in :poo-flow/src/module-system/load poo-flow-modules!)
-        (only-in :poo-flow/src/module-system/declaration/interface
+        (only-in :poo-flow/src/user-interface/module-selection-syntax
+                 poo-flow-modules!)
+        (only-in :poo-flow/src/user-interface/module-selection
                  poo-flow-user-module-selection
                  poo-flow-user-module-selection-entrypoint
                  poo-flow-user-module-selection-source-ref
                  poo-flow-user-module-bundles->modules)
-        (only-in :poo-flow/src/module-system/loader/source
+        (only-in :core/module-system/source/objects
                  poo-flow-module-source-ref-kind
                  poo-flow-module-source-ref-metadata
                  poo-flow-module-source-ref-value)
-        (only-in :poo-flow/src/module-system/loader/module-source-interface
+        (only-in :poo-flow/src/authoring/module-source-collection
                  make-poo-flow-module-source-collection
                  make-poo-flow-module-load-path
                  make-poo-flow-contribution-module-source
@@ -26,7 +27,8 @@
                  poo-flow-module-source-collection-owner
                  poo-flow-module-source-collection-modules-root
                  poo-flow-load-modules
-                 poo-flow-module-load-path-collections
+                 poo-flow-module-load-path-collections)
+        (only-in :poo-flow/src/user-interface/module-source-selection
                  poo-flow-module-selection-source-refs)
         (rename-in :poo-flow/lambda-episteme/user-interface/init
                    (poo-flow-user-module-bundles
@@ -146,7 +148,7 @@
        (map poo-flow-module-source-collection-identity
             (poo-flow-module-load-path-collections
              lambda-episteme-user-module-load-path))
-       '(lambda-episteme-user poo-flow-maintained lambda-episteme))
+       '(lambda-episteme-user lambda-episteme poo-flow-maintained))
       (check-equal?
        (poo-flow-module-source-collection-owner
         lambda-episteme-user-module-source)

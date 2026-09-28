@@ -15,7 +15,7 @@
                  testing-interface-add-profile
                  testing-interface-map-profile
                  testing-test-selector)
-        (only-in :poo-flow/src/module-system/observability/testing-extension
+        (only-in :poo-flow/src/testing/testing-extension
                  make-poo-flow-testing-observability-profile
                  poo-flow-testing-observability-extension))
 
