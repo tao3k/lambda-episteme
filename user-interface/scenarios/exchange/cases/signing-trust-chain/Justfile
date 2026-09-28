@@ -33,6 +33,7 @@ check: check-cedar check-runtime
 # and Lean/Cedar authorization replay. GQL execution and evidence admission
 # require downstream MRR/Host integration.
 check-chain: check-tla check
+    cd '{{ lambda_root }}' && just test-scheme-atomic t/ontology/exchange-signing-causal-test.ss
     cd '{{ lambda_root }}' && just test-scheme-atomic t/ontology/exchange-signing-signal-query-test.ss
     cd '{{ lambda_root }}' && just test-scheme-atomic t/ontology/exchange-signing-hypotheses-test.ss
     cd '{{ lambda_root }}' && just test-scheme-atomic t/ontology/exchange-signing-ingress-inference-test.ss

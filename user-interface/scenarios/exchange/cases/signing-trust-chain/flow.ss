@@ -5,9 +5,10 @@
 ;;; The current public binding is `user-composition`, followed by a native
 ;;; `(compose profiles ...)` expression with module-local aliases. Attack
 ;;; variants inherit their POO Profile from flow-profiles.ss.
-(import (only-in :poo-flow/src/module-system/profile-composition/profile-bundle
+(import (only-in :core/profile-composition/profile-bundle
                  profiles compose)
-        :poo-flow/src/module-system/profile-composition/binding-syntax
+        :core/profile-composition/selection-syntax
+        :poo-flow/src/scenario/composition-syntax
         (only-in :poo-flow/modules/funflow/profile-library
                  FunflowProfileModule)
         (only-in "flow-profiles.ss" ExchangeSigningAttackModule))

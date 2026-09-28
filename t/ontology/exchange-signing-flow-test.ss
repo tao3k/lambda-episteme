@@ -5,9 +5,9 @@
 (import (only-in :std/test test-suite check-equal?)
         (only-in :clan/poo/object .ref)
         (only-in :core/observability/testing-case poo-flow-test-case)
-        (only-in :poo-flow/src/module-system/profile-composition/scenario-case
+        (only-in :poo-flow/src/scenario/case
                  poo-flow-scenario-case?)
-        (only-in :poo-flow/src/module-system/profile-composition/accessors
+        (only-in :poo-flow/src/scenario/accessors
                  poo-flow-scenario-case-profiles)
         (only-in :poo-flow/modules/funflow/runtime-load-projection
                  poo-flow-runtime-load-projection)
@@ -51,7 +51,7 @@
            exchange-signing-backend-admin-change))))
     (poo-flow-test-case "direct and admin attacks select distinct TLC models"
       (check-equal? (.ref ExchangeSigningRecordMutationProfile. 'tla-config)
-                    "DirectAttack.cfg")
+                    "RecordAttack.cfg")
       (check-equal? (.ref ExchangeSigningInterfaceProfile. 'tla-config)
                     "InterfaceAttack.cfg")
       (check-equal? (.ref ExchangeSigningBackendAdminProfile. 'tla-config)
@@ -82,7 +82,7 @@
              (check-equal? (.ref candidates 'observed-candidates) '())
              (check-equal? (.ref candidates 'action-authority?) #f)))
          cases)))
-    (poo-flow-test-case "composition projects five linked Funflow nodes"
+    (poo-flow-test-case "composition projects six linked Funflow nodes"
       (let* ((projection
               (poo-flow-runtime-load-projection
                exchange-signing-record-mutation))
@@ -91,8 +91,8 @@
                       'poo-flow.funflow.plan-projection)
         (check-equal? (cdr (assq 'origin plan))
                       'user-composition-funflow)
-        (check-equal? (vector-length (cdr (assq 'node-table plan))) 5)
-        (check-equal? (vector-length (cdr (assq 'edge-table plan))) 4)
+        (check-equal? (vector-length (cdr (assq 'node-table plan))) 6)
+        (check-equal? (vector-length (cdr (assq 'edge-table plan))) 5)
         (check-equal? (cdr (assq 'runtime-executed projection)) #f)))
     (poo-flow-test-case "replay exposes proposed links and missing witnesses"
       (let (receipt
@@ -113,17 +113,19 @@
         (check-equal?
          (.ref receipt 'missing-independent-observations)
          '(queue-producer-attestation signer-decoded-transaction))
-        (check-equal? (.ref receipt 'tla-config) "DirectAttack.cfg")
-        (check-equal? (.ref receipt 'ingress-leading-routes)
-                      '(api-replay queue-injection))
-        (check-equal? (.ref receipt 'ingress-relative-support-shares)
-                      '((api-replay 2 6) (queue-injection 2 6)
-                        (record-mutation 1 6)
-                        (address-map-substitution 1 6)))
-        (check-equal? (.ref receipt 'ingress-without-gas-assumption)
-                      '((record-mutation 1 4) (api-replay 1 4)
-                        (queue-injection 1 4)
-                        (address-map-substitution 1 4)))
+        (check-equal? (.ref receipt 'tla-config) "QueueAttack.cfg")
+        (check-equal? (.ref receipt 'causal-assessment-status)
+                      'causal-trajectory-admitted)
+        (check-equal? (.ref receipt 'causal-report-source)
+                      "bitget/official-security-incident")
+        (check-equal? (length (.ref receipt 'causal-report-cut-event-ids)) 1)
+        (check-equal? (.ref receipt 'causal-required-independent-evidence)
+                      '(queue-producer-attestation signer-ingress-receipt
+                        signer-decoded-transaction))
+        (check-equal? (.ref receipt 'historical-ingress-observed?) #f)
+        (check-equal? (.ref receipt 'ingress-ranking-status)
+                      'awaiting-tla-qualification)
+        (check-equal? (.ref receipt 'ingress-leading-routes) #f)
         (check-equal?
          (and (member '(backend-signed-transfer fixed-round-gas-limits
                         bitquery-chain-analysis)

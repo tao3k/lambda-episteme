@@ -259,7 +259,9 @@ distinguishes API from queue.
 | Withdrawal record mutation | 1/6 | Withdrawal with no authenticated matching intent | Exact authenticated intent |
 | Address-map substitution | 1/6 | Destination differs from independently committed destination | Independent destination match |
 
-These fractions are conditional on the stated factor and source reports;
+The integrated replay emits these fractions only after all four route-specific
+TLC counterexamples qualify. These fractions are conditional on the stated
+factor and source reports;
 they must not be presented as calibrated incident probabilities. A verified
 duplicate signer request in a synthetic test changes the model weights to
 =8:2:1:1=; an exact one-use signer record instead removes API replay from
@@ -269,19 +271,20 @@ about the real ingress.
 
 #+begin_src mermaid
 flowchart LR
-  G[GQL signal selection contract] --> A[Ascent source-labelled family fit]
-  A -->|backend signed transfer| T[DirectAttack TLC trace]
-  A -->|backend admin change| U[AdminAttack TLC trace]
-  A -->|interface admin change| V[InterfaceAttack TLC trace]
-  T --> L[Lean Host byte and operation binding]
-  U --> L
-  V --> L
+  O[Public report as observed anchor] --> P[POO Flow causal graph and temporal cut]
+  P --> T[Route-specific TLA+ counterexample]
+  T --> G[GQL source-labelled signal selection contract]
+  G --> A[Ascent factor and challenge joins]
+  A --> R[Conditional route support]
+  R --> L[Lean Host byte and operation binding]
   L --> C[Cedar policy replay]
 #+end_src
 
 [[file:chain.ss][The POO chain Case]] checks that every supplied reported signal appears in the
 GQL selection contract and maps Ascent's preferred family to a TLA+
-configuration and Cedar revision. =just check-chain= runs the Scheme handoff,
+configuration and Cedar revision. This is preliminary family screening used
+to select models; the integrated ingress ranking waits for route-specific
+causal and TLC qualification. =just check-chain= runs the Scheme handoff,
 native TLA+ parser and official TLC, Lean build, and Cedar runtime replay in
 one Case gate. The GQL AST is parser-checked but GQL is not executed here;
 MRR result admission and a deployed signing Host remain downstream inputs.
@@ -290,11 +293,12 @@ The chain never converts a research candidate into an authorization fact.
 [[file:flow.ss][The six named user compositions]] select attack Profiles from
 [[file:flow-profiles.ss][the Exchange signing Module]] alongside a Funflow runtime Profile. Each
 attack Profile owns its synthetic route Case and TLA+ configuration. The
-shared five-node topology covers GQL selection, Ascent ranking, TLA+ threat
-replay, Lean/Cedar authorization replay, and attack-surface comparison. The
+shared six-node topology covers the causal trajectory, route-specific TLA+
+replay, GQL selection, Ascent ranking, Lean/Cedar authorization replay, and
+attack-surface comparison. The
 composition projects an inspectable Funflow plan; it does not schedule those
 steps or turn a possible Ascent route into an observed attack. The Case Just
-gate executes local qualifications, including all six TLC configurations.
+gate executes local qualifications, including all ten TLC configurations.
 Scheduling, durable receipts, and a family-specific run chosen from admitted
 evidence remain downstream responsibilities.
 
@@ -304,15 +308,31 @@ proposed edges, Ascent possible and observed routes, published family fit,
 the attack Profile's required independent observations, and which of those
 remain missing. A supplied observation marked =provisional= remains visible
 but does not close a missing independent witness. The TLA+ checker writes a
-local qualification receipt only after the native parser and all six TLC
-checks succeed; =just check-chain= joins its actual counterexample transition
-names with the corresponding composition. The receipt keeps GQL execution,
+local qualification receipt only after the native parser and all ten TLC
+checks succeed; =just check-chain= joins each route's counterexample entry
+state and transition names with its causal assessment. The report-time cut
+contains the public report only; proposed ingress and recurrence remain
+counterfactual. A route missing its TLC qualification cannot enter the
+integrated Ascent ranking. The receipt keeps GQL execution,
 external evidence admission, Cedar runtime status, route attribution, and
 action authority explicit. No local counterexample identifies Bitget's ingress.
+
+[[file:causal.ss][The causal Case]] uses POO Flow's event graph, trajectory assessment, digest,
+and temporal cut. Its observed anchor is the public report itself. The
+proposed ingress, weak signature, transfer, and potential loss describe a
+prospective recurrence and carry counterfactual or hypothesized modalities.
+The receipt exposes the first unobserved frontier, required independent
+evidence, and a route-specific causal digest bound to its TLC configuration.
+The underlying causal engine rejects parent links at the same logical
+position; a same-time two-event cycle was found by this Case and fixed in the
+engine's atomic regression. This does not turn a threat-model path into a
+historical observation.
 
 | Replay | Possible route from synthetic edges | Missing independent witness example | TLA+ trace obligation |
 |--------+-------------------------------------+-------------------------------------+-----------------------|
 | Queue producer injection | Producer to outflow | Producer attestation and signer ingress receipt | WeakSign then ApplyTransfer |
+| Internal API replay | API to outflow | Request identity and one-use signer ledger | Entry = internal-api, missingWitness = request-identity |
+| Address-map substitution | Address map to outflow | Independent destination commitment | Entry = address-map, missingWitness = destination-binding |
 | Interface substitution | Interface to Bybit outflow | Trusted rendered bytes and linked control change | PrepareInterfaceAdmin then WeakSign and admin drain |
 | Backend admin change | Backend to outflow | Signed admin operation linked to control change | WeakSign then ApplyAdminChange and drain |
 
@@ -373,7 +393,8 @@ stateDiagram-v2
 | =ReceiptRequiresEffect= | Independent observation follows an effect. | Lean replay records effect before observation. |
 | =ControlRequiresAdminSignature= | Wallet control follows a signed admin instruction. | Lean replay separates sign and control change. |
 
-=DirectAttackSpec=, =AdminAttackSpec=, =InterfaceAttackSpec=,
+=DirectAttackSpec=, the four route-specific direct specs, =AdminAttackSpec=,
+=InterfaceAttackSpec=,
 =FrozenAdminSpec=, and =RecoveredDirectSpec= expose distinct possible paths
 through =WeakSign=.
 =DefendedSpec= uses =BoundSign=. The freeze after an administrative effect
@@ -381,7 +402,7 @@ cannot revoke control already applied; the model allows a later drain even
 while the signer is frozen. This is a model counterexample to relying on a
 signer-local freeze alone after the control change. [[file:proof/tla/README.org][The atomic qualification]]
 requires Scheme parser acceptance and official TLC completion for the
-defended finite state graph; five attack configurations must yield the
+defended finite state graph; nine attack configurations must yield the
 expected invariant violation and transition sequence. The Lean companion
 proves the listed finite replay cases. These results cover their bounded
 models, not every possible deployed wallet behavior or a formal refinement

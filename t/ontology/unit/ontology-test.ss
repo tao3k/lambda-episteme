@@ -12,8 +12,11 @@
                  poo-flow-graph-node-metadata poo-flow-graph-nodes
                  poo-flow-graph-node-id
                  poo-flow-graph?)
-        :poo-flow/src/module-system/contribution/interface
-        :poo-flow/src/module-system/profile-composition/interface
+        :core/contribution/objects
+        :core/profile-composition/profile-bundle
+        :poo-flow/src/scenario/case
+        :poo-flow/src/scenario/accessors
+        :poo-flow/src/scenario/composition-syntax
         :poo-flow/modules/governance/interface
         (only-in :poo-flow/modules/query/objects
                  poo-flow-query-execution-candidate)

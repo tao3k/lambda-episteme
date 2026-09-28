@@ -57,6 +57,14 @@
   (list defended
         (require-counterexample "DirectAttack.cfg"
                                 '("WeakSign" "ApplyTransfer"))
+        (require-counterexample "RecordAttack.cfg"
+                                '("entry = \"backend-record\"" "missingWitness = \"record-intent\"" "WeakSign" "ApplyTransfer"))
+        (require-counterexample "ApiAttack.cfg"
+                                '("entry = \"internal-api\"" "missingWitness = \"request-identity\"" "WeakSign" "ApplyTransfer"))
+        (require-counterexample "QueueAttack.cfg"
+                                '("entry = \"queue-producer\"" "missingWitness = \"producer-chain\"" "WeakSign" "ApplyTransfer"))
+        (require-counterexample "AddressMapAttack.cfg"
+                                '("entry = \"address-map\"" "missingWitness = \"destination-binding\"" "WeakSign" "ApplyTransfer"))
         (require-counterexample "AdminAttack.cfg"
                                 '("WeakSign" "ApplyAdminChange"
                                   "DrainControlledWallet"))

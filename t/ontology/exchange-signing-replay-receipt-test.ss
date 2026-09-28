@@ -33,11 +33,50 @@
              (interface
               (exchange-signing-replay-observability
                exchange-signing-interface-substitution '() qualified)))
-        (check-equal? (length qualified) 6)
+        (check-equal? (length qualified) 10)
         (check-equal? (.ref direct 'tla-qualification-status)
                       'counterexample)
         (check-equal? (.ref direct 'tla-counterexample-transitions)
-                      '("WeakSign" "ApplyTransfer"))
+                      '("entry = \"backend-record\""
+                        "missingWitness = \"record-intent\""
+                        "WeakSign" "ApplyTransfer"))
+        (check-equal? (.ref direct 'causally-and-temporally-qualified-routes)
+                      '(record-mutation api-replay queue-injection
+                        address-map-substitution))
+        (check-equal? (length (.ref direct 'causal-tla-bindings)) 4)
+        (check-equal? (.ref direct 'ingress-leading-routes)
+                      '(api-replay queue-injection))
+        (check-equal? (.ref direct 'ingress-relative-support-shares)
+                      '((api-replay 2 6) (queue-injection 2 6)
+                        (record-mutation 1 6)
+                        (address-map-substitution 1 6)))
+        (let (without-api
+              (exchange-signing-replay-observability
+               exchange-signing-record-mutation '()
+               (filter (lambda (row)
+                         (not (equal? (car row) "ApiAttack.cfg")))
+                       qualified)))
+          (check-equal?
+           (.ref without-api 'causally-and-temporally-qualified-routes)
+           '(record-mutation queue-injection address-map-substitution))
+          (check-equal? (.ref without-api 'ingress-ranking-status)
+                        'partial-route-qualification)
+          (check-equal? (.ref without-api 'ingress-relative-support-shares)
+                        '((queue-injection 2 4) (record-mutation 1 4)
+                          (address-map-substitution 1 4))))
+        (let* ((api-row (assoc "ApiAttack.cfg" qualified))
+               (missing-witness
+                (cons (list (car api-row) (cadr api-row) (caddr api-row)
+                            '("entry = \"internal-api\"" "WeakSign"
+                              "ApplyTransfer"))
+                      (filter (lambda (row)
+                                (not (equal? (car row) "ApiAttack.cfg")))
+                              qualified)))
+               (replay (exchange-signing-replay-observability
+                        exchange-signing-record-mutation '() missing-witness)))
+          (check-equal? (.ref replay 'causally-and-temporally-qualified-routes)
+                        '(record-mutation queue-injection
+                          address-map-substitution)))
         (check-equal? (.ref admin 'tla-counterexample-transitions)
                       '("WeakSign" "ApplyAdminChange"
                         "DrainControlledWallet"))

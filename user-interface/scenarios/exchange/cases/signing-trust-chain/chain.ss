@@ -65,6 +65,8 @@
           reported-sources: (map cadr reported)
           reported-signal-rows: reported
           preferred-family: family
+          preliminary-family-screen?: #t
+          route-qualification-required?: #t
           family-fit: (.ref ranked 'fit)
           family-matches: (.ref ranked 'matched)
           family-challenges: (.ref ranked 'challenged)

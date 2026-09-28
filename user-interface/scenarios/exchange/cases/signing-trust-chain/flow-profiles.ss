@@ -6,10 +6,10 @@
 ;;; Funflow step topology is inherited; each attack specializes only its
 ;;; identity and temporal model selection.
 (import (only-in :clan/poo/object .o)
-        (only-in :core/module-schema/relations poo-flow-semantic-identity)
-        (only-in :poo-flow/src/module-system/semantic-module/objects
+        (only-in :core/module-system/schema/relations poo-flow-semantic-identity)
+        (only-in :poo-flow/src/authoring/semantic-module
                  poo-flow-semantic-module)
-        (only-in :poo-flow/src/module-system/profile-composition/profile-bundle
+        (only-in :core/profile-composition/profile-bundle
                  poo-flow-module-profiles poo-flow-profile-export)
         (only-in "simulation.ss"
                  ExchangeSigningCandidateTransfer.
@@ -38,17 +38,19 @@
       stages:
       (.o replay:
           (.o steps:
-              (.o gql-selection: (.o contract: 'source-labelled-signal-query)
-                  ascent-ranking: (.o contract: 'conditional-family-fit)
-                  tla-threat-replay: (.o contract: 'bounded-temporal-check)
+              (.o causal-trajectory: (.o contract: 'source-labelled-causal-path)
+                  tla-threat-replay: (.o contract: 'route-specific-temporal-check)
+                  gql-selection: (.o contract: 'source-labelled-signal-query)
+                  ascent-ranking: (.o contract: 'qualified-conditional-fit)
                   lean-cedar-replay: (.o policy-root: 'Integrated)
                   attack-surface-comparison:
                   (.o contract: 'candidate-support-and-challenge))
               edges:
-              (.o selection-ranking: '(gql-selection ascent-ranking)
-                  ranking-temporal: '(ascent-ranking tla-threat-replay)
-                  temporal-authorization:
-                  '(tla-threat-replay lean-cedar-replay)
+              (.o causal-temporal: '(causal-trajectory tla-threat-replay)
+                  temporal-selection: '(tla-threat-replay gql-selection)
+                  selection-ranking: '(gql-selection ascent-ranking)
+                  ranking-authorization:
+                  '(ascent-ranking lean-cedar-replay)
                   authorization-comparison:
                   '(lean-cedar-replay attack-surface-comparison))))))
 
@@ -59,7 +61,7 @@
       observation-needs:
       '(authenticated-withdrawal-intent signer-decoded-transaction
         record-write-audit)
-      tla-config: "DirectAttack.cfg"))
+      tla-config: "RecordAttack.cfg"))
 
 (def ExchangeSigningApiReplayProfile.
   (.o (:: @ ExchangeSigningAttackProfile.)
@@ -68,7 +70,7 @@
       observation-needs:
       '(one-use-request-ledger signer-request-authentication
         signer-decoded-transaction)
-      tla-config: "DirectAttack.cfg"))
+      tla-config: "ApiAttack.cfg"))
 
 (def ExchangeSigningQueueInjectionProfile.
   (.o (:: @ ExchangeSigningAttackProfile.)
@@ -77,7 +79,7 @@
       observation-needs:
       '(queue-producer-attestation signer-ingress-receipt
         signer-decoded-transaction)
-      tla-config: "DirectAttack.cfg"))
+      tla-config: "QueueAttack.cfg"))
 
 (def ExchangeSigningAddressMapProfile.
   (.o (:: @ ExchangeSigningAttackProfile.)
@@ -86,7 +88,7 @@
       observation-needs:
       '(independent-destination-commitment address-map-version
         signer-decoded-transaction)
-      tla-config: "DirectAttack.cfg"))
+      tla-config: "AddressMapAttack.cfg"))
 
 (def ExchangeSigningInterfaceProfile.
   (.o (:: @ ExchangeSigningAttackProfile.)

@@ -7,13 +7,19 @@
 ;;; witnesses remain distinct. This projection never admits evidence or runs
 ;;; TLC, GQL, Lean, or Cedar on behalf of the caller.
 (import (only-in :clan/poo/object .o .ref .slot? object?)
-        (only-in :poo-flow/src/module-system/profile-composition/accessors
+        (only-in :poo-flow/src/scenario/accessors
                  poo-flow-scenario-case-profiles)
         (only-in "chain.ss"
                  ExchangeSigningReportedChain.
                  exchange-signing-plan-chain)
         (only-in "reasoning.ss" exchange-signing-route-candidates)
         (only-in "simulation.ss" ExchangeSigningBybitReference.)
+        (only-in "causal.ss" exchange-signing-causal-trajectory)
+        (only-in "flow-profiles.ss"
+                 ExchangeSigningRecordMutationProfile.
+                 ExchangeSigningApiReplayProfile.
+                 ExchangeSigningQueueInjectionProfile.
+                 ExchangeSigningAddressMapProfile.)
         (only-in "ingress-inference.ss"
                  ExchangeSigningPublicIngress.
                  exchange-signing-compare-ingress))
@@ -50,6 +56,35 @@
        (list? (cadddr row))
        (andmap string? (cadddr row))))
 
+(def direct-profiles
+  (list (list ExchangeSigningRecordMutationProfile. "entry = \"backend-record\""
+              "missingWitness = \"record-intent\"")
+        (list ExchangeSigningApiReplayProfile. "entry = \"internal-api\""
+              "missingWitness = \"request-identity\"")
+        (list ExchangeSigningQueueInjectionProfile. "entry = \"queue-producer\""
+              "missingWitness = \"producer-chain\"")
+        (list ExchangeSigningAddressMapProfile.
+              "entry = \"address-map\""
+              "missingWitness = \"destination-binding\"")))
+
+(def (route-qualification entry qualifications)
+  (let* ((profile (car entry))
+         (causal (exchange-signing-causal-trajectory
+                  (.ref profile 'identity)
+                  (.ref profile 'observation-needs)))
+         (row (assoc (.ref profile 'tla-config) qualifications)))
+    (and (eq? (.ref causal 'assessment-status) 'causal-trajectory-admitted)
+         (.ref causal 'report-cut-complete?)
+         row (eq? (cadr row) 'counterexample)
+         (member (cadr entry) (cadddr row))
+         (member (caddr entry) (cadddr row))
+         (member "WeakSign" (cadddr row))
+         (member "ApplyTransfer" (cadddr row))
+         (list (.ref profile 'identity)
+               (.ref causal 'assessment-digest)
+               (.ref profile 'tla-config)
+               (cadr entry) (caddr entry)))))
+
 (def (exchange-signing-replay-observability composition
                                             (observations '())
                                             (qualifications '()))
@@ -66,13 +101,22 @@
          (routes (exchange-signing-route-candidates route-case))
          (reference-routes
           (exchange-signing-route-candidates ExchangeSigningBybitReference.))
+         (causal (exchange-signing-causal-trajectory
+                  (.ref profile 'identity)
+                  (.ref profile 'observation-needs)))
+         (bindings-value
+          (filter-map (lambda (entry)
+                        (route-qualification entry qualifications))
+                      direct-profiles))
+         (qualified-routes (map car bindings-value))
          (chain (exchange-signing-plan-chain ExchangeSigningReportedChain.))
          (ingress
           (and (memq (.ref profile 'identity)
                      '(record-mutation api-replay queue-injection
                        address-map-substitution))
+               (pair? qualified-routes)
                (exchange-signing-compare-ingress
-                ExchangeSigningPublicIngress.)))
+                ExchangeSigningPublicIngress. qualified-routes)))
          (neutral-ingress
           (and ingress
                (exchange-signing-compare-ingress
@@ -81,7 +125,8 @@
                     (filter
                      (lambda (row)
                        (not (eq? (cadr row) 'fixed-round-gas-limits)))
-                     (.ref ExchangeSigningPublicIngress. 'model-factors))))))
+                     (.ref ExchangeSigningPublicIngress. 'model-factors)))
+                qualified-routes)))
          (qualification
           (assoc (.ref profile 'tla-config) qualifications))
          (needed (.ref profile 'observation-needs))
@@ -91,6 +136,18 @@
     (.o kind: 'lambda-episteme.exchange.signing-replay-observability
         composition: (.ref composition 'name)
         attack-profile: (.ref profile 'identity)
+        causal-assessment-status: (.ref causal 'assessment-status)
+        causal-assessment-digest: (.ref causal 'assessment-digest)
+        causal-report-source: (.ref causal 'report-source)
+        causal-report-cut-event-ids: (.ref causal 'report-cut-event-ids)
+        causal-proposed-path: (.ref causal 'proposed-path)
+        causal-first-unobserved-frontier:
+        (.ref causal 'first-unobserved-frontier)
+        causal-required-independent-evidence:
+        (.ref causal 'required-independent-evidence)
+        historical-ingress-observed?: #f
+        causal-tla-bindings: bindings-value
+        causally-and-temporally-qualified-routes: qualified-routes
         public-observed-edges: (.ref routes 'observed-edges)
         synthetic-proposed-edges: (.ref routes 'proposed-edges)
         possible-candidates: (.ref routes 'possible-candidates)
@@ -98,6 +155,7 @@
         supplied-observations: observations
         missing-independent-observations: missing
         public-family-preference: (.ref chain 'preferred-family)
+        public-family-screen-preliminary?: #t
         public-family-fit: (.ref chain 'family-fit)
         public-family-matches: (.ref chain 'family-matches)
         public-family-challenges: (.ref chain 'family-challenges)
@@ -128,6 +186,11 @@
         ingress-next-probes:
         (and ingress (.ref ingress 'next-probes))
         ingress-calibrated-probabilities?: #f
+        ingress-ranking-status:
+        (cond ((null? qualified-routes) 'awaiting-tla-qualification)
+              ((= (length qualified-routes) (length direct-profiles))
+               'all-modeled-routes-qualified)
+              (else 'partial-route-qualification))
         tla-config: (.ref profile 'tla-config)
         tla-qualification-status:
         (if qualification (cadr qualification) 'not-supplied)

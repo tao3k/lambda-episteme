@@ -87,10 +87,17 @@
    ((> (cadr score) (cadar ranked)) (cons score ranked))
    (else (cons (car ranked) (insert-ranked score (cdr ranked))))))
 
-(def (exchange-signing-compare-ingress case-value)
+(def (exchange-signing-compare-ingress case-value
+                                      (eligible-routes #f))
   (unless (model-case? case-value)
     (error "invalid Exchange signing ingress Case" case-value))
-  (let* ((observations
+  (let* ((eligible (or eligible-routes (.ref case-value 'routes)))
+         (_ (unless (and (list? eligible)
+                         (every (lambda (route)
+                                  (memq route (.ref case-value 'routes)))
+                                eligible))
+              (error "invalid causal/TLA route eligibility" eligible)))
+         (observations
           (append
            (map (lambda (row) (list (car row) (cadr row) 'reported))
                 (.ref case-value 'reported-signals))
@@ -100,6 +107,8 @@
           (gerbil-ascent-evaluate-program
            (ascent
             (relation observation (signal source class) observations)
+            (relation eligible-route (route)
+              (map list eligible))
             (relation factor (route signal multiplier assumption)
               (.ref case-value 'model-factors))
             (relation challenge (route signal)
@@ -109,11 +118,13 @@
             (relation factor-hit (route signal multiplier assumption))
             (relation challenge-hit (route signal source))
             ((factor-match r s multiplier assumption src class) <--
+             (eligible-route r)
              (factor r s multiplier assumption)
              (observation s src class))
             ((factor-hit r s multiplier assumption) <--
              (factor-match r s multiplier assumption src class))
             ((challenge-hit r s src) <--
+             (eligible-route r)
              (challenge r s) (observation s src independent))
             (bounds 64 256 512))))
          (rows-of (.ref result 'rows-of))
@@ -123,7 +134,7 @@
          (scores
           (map (lambda (route)
                  (list route (route-weight route hits challenges)))
-               (.ref case-value 'routes)))
+               eligible))
          (ranked (foldl (lambda (score ordered)
                           (insert-ranked score ordered))
                         '() scores))
@@ -139,6 +150,7 @@
         reference-case: (.ref case-value 'reference-case)
         reference-source: (.ref case-value 'reference-source)
         reference-use: (.ref case-value 'reference-use)
+        eligible-routes: eligible
         ranked-support: ranked
         relative-support-shares:
         (map (lambda (score) (list (car score) (cadr score) total)) ranked)
