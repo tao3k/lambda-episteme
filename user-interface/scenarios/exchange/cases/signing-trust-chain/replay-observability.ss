@@ -87,7 +87,8 @@
 
 (def (exchange-signing-replay-observability composition
                                             (observations '())
-                                            (qualifications '()))
+                                            (qualifications '())
+                                            (query-result #f))
   (unless (and (list? observations)
                (andmap observation-row? observations))
     (error "observations require (signal source admitted|provisional) rows"
@@ -95,6 +96,13 @@
   (unless (and (list? qualifications)
                (andmap qualification-row? qualifications))
     (error "invalid TLA+ qualification rows" qualifications))
+  (when (and query-result
+             (not (and (object? query-result)
+                       (.slot? query-result 'kind)
+                       (eq? (.ref query-result 'kind)
+                            'lambda-episteme.exchange.signing-signal-result)
+                       (.ref query-result 'integrity-bound?))))
+    (error "query result rows require an integrity-bound candidate"))
   (let* ((profile
           (attack-profile (poo-flow-scenario-case-profiles composition)))
          (route-case (.ref profile 'route-case))
@@ -110,10 +118,11 @@
                       direct-profiles))
          (qualified-routes (map car bindings-value))
          (chain (exchange-signing-plan-chain ExchangeSigningReportedChain.))
+         (candidate-rows (if query-result (.ref query-result 'rows) '()))
          (independent-rows
           (map (lambda (row) (list (car row) (cadr row)))
                (filter (lambda (row) (eq? (caddr row) 'admitted))
-                       observations)))
+                       (append observations candidate-rows))))
          (ingress-case-value
           (.o (:: @ ExchangeSigningPublicIngress.)
               independent-signals: independent-rows))
@@ -160,7 +169,14 @@
         possible-candidates: (.ref routes 'possible-candidates)
         observed-candidates: (.ref routes 'observed-candidates)
         supplied-observations: observations
-        caller-declared-independent-signals: independent-rows
+        query-candidate-rows: candidate-rows
+        query-result-integrity-bound?: (and query-result #t)
+        query-result-provenance-verified?: #f
+        caller-declared-independent-signals:
+        (map (lambda (row) (list (car row) (cadr row)))
+             (filter (lambda (row) (eq? (caddr row) 'admitted))
+                     observations))
+        conditional-independent-signals: independent-rows
         input-provenance-verified?: #f
         missing-independent-observations: missing
         public-family-preference: (.ref chain 'preferred-family)

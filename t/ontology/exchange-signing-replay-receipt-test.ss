@@ -7,6 +7,14 @@
 (import (only-in :std/test test-suite check-equal?)
         (only-in :clan/poo/object .ref)
         (only-in :core/observability/testing-case poo-flow-test-case)
+        (only-in :poo-flow/modules/query/objects poo-flow-query-execution-candidate)
+        (only-in :poo-flow/modules/query/contracts
+                 poo-flow-query-source-content-identity)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/query
+                 ExchangeSigningSignalQuery)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/signal-result
+                 exchange-signing-signal-result-digest
+                 exchange-signing-bind-signal-result)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/replay-observability
                  exchange-signing-replay-observability)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/flow
@@ -59,6 +67,27 @@
            '((api-replay 8 12) (queue-injection 2 12)
              (record-mutation 1 12) (address-map-substitution 1 12)))
           (check-equal? (.ref ledger-evidence 'input-provenance-verified?) #f))
+        (let* ((rows '((duplicate-request-id signer-ledger admitted)))
+               (candidate
+                (poo-flow-query-execution-candidate
+                 'mrr 'exchange-signing-signals "1"
+                 (.ref ExchangeSigningSignalQuery 'semantic-revision)
+                 (poo-flow-query-source-content-identity
+                  ExchangeSigningSignalQuery)
+                 'gerbil-parser "sha256:unverified-provider-root"
+                 (exchange-signing-signal-result-digest rows) 1 #t))
+               (result (exchange-signing-bind-signal-result candidate rows))
+               (replay
+                (exchange-signing-replay-observability
+                 exchange-signing-record-mutation '() qualified result)))
+          (check-equal? (.ref replay 'query-result-integrity-bound?) #t)
+          (check-equal? (.ref replay 'query-candidate-rows) rows)
+          (check-equal? (.ref replay 'input-provenance-verified?) #f)
+          (check-equal? (.ref replay 'gql-executed?) #f)
+          (check-equal?
+           (.ref replay 'ingress-relative-support-shares)
+           '((api-replay 8 12) (queue-injection 2 12)
+             (record-mutation 1 12) (address-map-substitution 1 12))))
         (let (ledger-challenge
               (exchange-signing-replay-observability
                exchange-signing-record-mutation

@@ -114,10 +114,15 @@ contain a route from a suspected surface to the transfer. The output is
 explicitly non-authoritative. The [[file:query.ss][GQL query contract]] constructs a
 language-owned AST for selecting event links and source metadata from an
 admitted ontology graph. The atomic test checks its projection and Query
-admission; it does not execute GQL or bind query results. MRR and the Host
-must perform those steps with admitted evidence before the selected links
-can become observed Case facts. Neither graph reachability nor a GQL path
-proves that a route happened.
+admission. The [[file:signal-result.ss][signal result adapter]] also checks an MRR candidate against
+the exact Query, result count, row schema, selected signal identities, unique
+signal identities, and a digest over the supplied rows. A bound result can
+change the conditional Ascent comparison in the TLA-qualified replay. This
+Case does not execute GQL or authenticate the candidate's provenance root;
+those inputs remain conditional even after integrity binding. MRR and the
+Host must establish source lineage and admission before any row becomes an
+observed Case fact. Neither graph reachability nor a GQL path proves that a
+route happened.
 
 The Scheme Ascent kernel and its rule qualifications are maintained by
 [[https://github.com/tao3k/gerbil-ascent][gerbil-ascent]]. POO Flow PR #34 pins that package. The
