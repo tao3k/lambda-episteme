@@ -2,13 +2,14 @@
 ;;; SPDX-FileCopyrightText: 2026 tao3k team and Contributors
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
-;;; POO-authored GQL selection contract. MRR owns execution and result
-;;; admission; the projected source is parser-checked by the Case test.
+;;; POO-authored GQL selection contract. The single-node signal query runs
+;;; through POO Flow's bounded Scheme selector over Case-owned POO nodes.
 (import (only-in :clan/poo/object .o)
         (only-in :std/crypto/digest sha256)
         (only-in :std/encoding/hex hex-encode)
         (only-in :poo-flow/modules/query/objects
                  PooFlowQuery. PooFlowGqlQueryLanguage.
+                 PooFlowSchemeGqlQueryLanguage.
                  PooFlowGqlQueryProgram.
                  GqlQueryNode. GqlQueryStep. GqlQueryPath.
                  GqlQueryProperty. GqlQueryProjection.
@@ -79,8 +80,8 @@
        'exchange/signing-edge-rows 'relation-row
        '(source target evidenceSource status) 64)))
 
-;;; Query syntax for hypothesis discriminators. Execution, provenance checks,
-;;; and binding of selected results to admitted Ascent inputs remain external.
+;;; Query syntax for hypothesis discriminators. Local Scheme selection is
+;;; executable; authenticating source evidence remains a Host boundary.
 (def ExchangeSigningSignalProgram
   (.o (:: @ PooFlowGqlQueryProgram.)
       identity: 'exchange-signing-signals
@@ -128,7 +129,7 @@
         authenticated-intent-exact one-use-request-record
         verified-producer-chain independently-matched-destination
         trusted-rendering-match)
-      language: PooFlowGqlQueryLanguage.
+      language: PooFlowSchemeGqlQueryLanguage.
       program: ExchangeSigningSignalProgram
       result-bound: 64
       completeness-requirement: 'complete

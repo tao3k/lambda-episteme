@@ -22,7 +22,9 @@
                  ExchangeSigningAddressMapProfile.)
         (only-in "ingress-inference.ss"
                  ExchangeSigningPublicIngress.
-                 exchange-signing-compare-ingress))
+                 exchange-signing-compare-ingress)
+        (only-in "signal-result.ss"
+                 exchange-signing-run-signal-query))
 
 (export exchange-signing-replay-observability)
 
@@ -88,7 +90,7 @@
 (def (exchange-signing-replay-observability composition
                                             (observations '())
                                             (qualifications '())
-                                            (query-result #f))
+                                            (signal-nodes #f))
   (unless (and (list? observations)
                (andmap observation-row? observations))
     (error "observations require (signal source admitted|provisional) rows"
@@ -96,13 +98,6 @@
   (unless (and (list? qualifications)
                (andmap qualification-row? qualifications))
     (error "invalid TLA+ qualification rows" qualifications))
-  (when (and query-result
-             (not (and (object? query-result)
-                       (.slot? query-result 'kind)
-                       (eq? (.ref query-result 'kind)
-                            'lambda-episteme.exchange.signing-signal-result)
-                       (.ref query-result 'integrity-bound?))))
-    (error "query result rows require an integrity-bound candidate"))
   (let* ((profile
           (attack-profile (poo-flow-scenario-case-profiles composition)))
          (route-case (.ref profile 'route-case))
@@ -118,11 +113,14 @@
                       direct-profiles))
          (qualified-routes (map car bindings-value))
          (chain (exchange-signing-plan-chain ExchangeSigningReportedChain.))
-         (candidate-rows (if query-result (.ref query-result 'rows) '()))
+         (query-result
+          (and signal-nodes
+               (exchange-signing-run-signal-query signal-nodes)))
+         (selected-rows (if query-result (.ref query-result 'rows) '()))
          (independent-rows
           (map (lambda (row) (list (car row) (cadr row)))
                (filter (lambda (row) (eq? (caddr row) 'admitted))
-                       (append observations candidate-rows))))
+                       (append observations selected-rows))))
          (ingress-case-value
           (.o (:: @ ExchangeSigningPublicIngress.)
               independent-signals: independent-rows))
@@ -169,8 +167,8 @@
         possible-candidates: (.ref routes 'possible-candidates)
         observed-candidates: (.ref routes 'observed-candidates)
         supplied-observations: observations
-        query-candidate-rows: candidate-rows
-        query-result-integrity-bound?: (and query-result #t)
+        query-selected-rows: selected-rows
+        query-executed-in-scheme?: (and query-result #t)
         query-result-provenance-verified?: #f
         caller-declared-independent-signals:
         (map (lambda (row) (list (car row) (cadr row)))
@@ -223,7 +221,7 @@
         (if qualification (cadddr qualification) '())
         cedar-root: (.ref chain 'cedar-root)
         cedar-runtime-status: 'not-supplied
-        gql-executed?: #f
+        gql-executed?: (and query-result #t)
         evidence-admitted?: #f
         route-attributed?: #f
         action-authority?: #f)))

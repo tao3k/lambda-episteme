@@ -40,7 +40,7 @@
           (.o steps:
               (.o causal-trajectory: (.o contract: 'source-labelled-causal-path)
                   tla-threat-replay: (.o contract: 'route-specific-temporal-check)
-                  gql-selection: (.o contract: 'source-labelled-signal-query)
+                  gql-selection: (.o contract: 'scheme-gql-signal-selection)
                   ascent-ranking: (.o contract: 'qualified-conditional-fit)
                   lean-cedar-replay: (.o policy-root: 'Integrated)
                   attack-surface-comparison:

@@ -112,25 +112,20 @@ The dotted links are candidate mechanisms, not established Bitget attack
 steps. A bounded Ascent closure can show whether the Case's supplied edges
 contain a route from a suspected surface to the transfer. The output is
 explicitly non-authoritative. The [[file:query.ss][GQL query contract]] constructs a
-language-owned AST for selecting event links and source metadata from an
-admitted ontology graph. The atomic test checks its projection and Query
-admission. The [[file:signal-result.ss][signal result adapter]] also checks an MRR candidate against
-the exact Query, result count, row schema, selected signal identities, unique
-signal identities, and a digest over the supplied rows. A bound result can
-change the conditional Ascent comparison in the TLA-qualified replay. This
-Case does not execute GQL or authenticate the candidate's provenance root;
-those inputs remain conditional even after integrity binding. MRR and the
-Host must establish source lineage and admission before any row becomes an
-observed Case fact. Neither graph reachability nor a GQL path proves that a
-route happened.
+parser-owned AST. POO Flow's bounded Scheme selector executes this Case's
+single-node =MATCH/RETURN= slice over source-labelled POO nodes; the
+[[file:signal-result.ss][Case adapter]] checks signal identities and row shape. The selected rows
+can change the conditional Ascent comparison after TLA qualification. Local
+query execution does not authenticate a report, signer ledger, or graph node.
+The Host must establish source lineage before a row becomes an observed Case
+fact. Neither graph reachability nor a GQL match proves that a route happened.
 
 The Scheme Ascent kernel and its rule qualifications are maintained by
 [[https://github.com/tao3k/gerbil-ascent][gerbil-ascent]]. POO Flow PR #34 pins that package. The
 [[file:reasoning.ss][Exchange Case rules]] use Ascent to compute both possible routes (observed and
 proposed links) and routes supported only by observed links. The Lambda
 package declares no Ascent dependency of its own; its CI consumes the pinned
-POO Flow checkout. MRR owns semantic source identity, lineage, and admission;
-this Scenario does not assert an MRR admission receipt.
+POO Flow checkout. This Scenario uses no MRR runtime or candidate receipt.
 
 | Discriminator | Backend substitution | Interface substitution |
 |---------------+----------------------+------------------------|
@@ -189,9 +184,9 @@ graph join from silently transferring one incident's evidence to the other.
 signals with five ingress mechanisms and one orthogonal operation-path
 hypothesis. The [[file:query.ss][GQL signal query]] is a
 language-owned AST selecting signal identity, evidence source, and admission
-status. Its test verifies Query admission but does not execute GQL. MRR and
-the Host must bind an actual, complete query receipt before supplying any
-independently authenticated signal to Ascent. The public transfer notice
+status. Its test executes the supported single-node slice in Scheme. The
+Host must still authenticate any independent signal before assigning it
+historical weight. The public transfer notice
 supports every candidate equally; it does not identify the ingress route.
 
 | Candidate mechanism | Assumed attacker control | Distinguishing signal to seek | Independent challenge | Signing boundary that cuts it |
@@ -278,7 +273,7 @@ about the real ingress.
 flowchart LR
   O[Public report as observed anchor] --> P[POO Flow causal graph and temporal cut]
   P --> T[Route-specific TLA+ counterexample]
-  T --> G[GQL source-labelled signal selection contract]
+  T --> G[Scheme GQL source-labelled signal selection]
   G --> A[Ascent factor and challenge joins]
   A --> R[Conditional route support]
   R --> L[Lean Host byte and operation binding]
@@ -291,8 +286,8 @@ configuration and Cedar revision. This is preliminary family screening used
 to select models; the integrated ingress ranking waits for route-specific
 causal and TLC qualification. =just check-chain= runs the Scheme handoff,
 native TLA+ parser and official TLC, Lean build, and Cedar runtime replay in
-one Case gate. The GQL AST is parser-checked but GQL is not executed here;
-MRR result admission and a deployed signing Host remain downstream inputs.
+one Case gate. Scheme executes the bounded GQL selection when the Case
+supplies POO signal nodes; a deployed signing Host remains a separate input.
 The chain never converts a research candidate into an authorization fact.
 
 [[file:flow.ss][The six named user compositions]] select attack Profiles from
@@ -315,14 +310,14 @@ remain missing. A supplied observation marked =provisional= remains visible
 but does not close a missing independent witness. Caller-supplied =admitted=
 rows enter Ascent's independent signal relation, so a signer-ledger support
 row or challenge changes the conditional ranking. The receipt still marks
-input provenance unverified until a Host or MRR admission step establishes it.
+input provenance unverified until the Host establishes it.
 The TLA+ checker writes a
 local qualification receipt only after the native parser and all ten TLC
 checks succeed; =just check-chain= joins each route's counterexample entry
 state and transition names with its causal assessment. The report-time cut
 contains the public report only; proposed ingress and recurrence remain
 counterfactual. A route missing its TLC qualification cannot enter the
-integrated Ascent ranking. The receipt keeps GQL execution,
+integrated Ascent ranking. The receipt keeps Scheme GQL execution,
 external evidence admission, Cedar runtime status, route attribution, and
 action authority explicit. No local counterexample identifies Bitget's ingress.
 
