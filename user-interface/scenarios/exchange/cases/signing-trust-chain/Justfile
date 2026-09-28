@@ -40,6 +40,7 @@ check-chain: check-tla check
     cd '{{ lambda_root }}' && just test-scheme-atomic t/ontology/exchange-signing-chain-test.ss
     cd '{{ lambda_root }}' && just test-scheme-atomic t/ontology/exchange-signing-flow-test.ss
     cd '{{ lambda_root }}' && just test-scheme-atomic t/ontology/exchange-signing-replay-receipt-test.ss
+    cd '{{ lambda_root }}' && just test-scheme-atomic t/ontology/exchange-signing-bybit-reconstruction-test.ss
 
 # The native parser and official TLC are independent parts of this gate.
 # Supply a Gerbil parser package and `tlc` on PATH through the caller's env.

@@ -82,9 +82,10 @@
         (signer admin-change synthetic-admin-signature)
         (wallet-control chain-transfer synthetic-controlled-wallet-drain))))
 
-;;; A separate, source-labelled reference trace for the already documented
-;;; Bybit event. It validates the shared signing-boundary threat class; no
-;;; row is imported into Bitget's backend-ingress comparison.
+;;; A separate reference for the documented Bybit mechanism. The interface
+;;; to signer link is an explanation from code analysis, not an independently
+;;; witnessed historical edge. The evidence-driven reverse Case is in
+;;; bybit-reconstruction.ss. Nothing here enters Bitget's ingress comparison.
 (def ExchangeSigningBybitReference.
   (.o (:: @ ExchangeSigningRouteCase.)
       operation-kind: 'delegatecall
@@ -92,13 +93,14 @@
       display-witness-status: 'inferred-in-ncc-analysis
       signed-data-status: 'malicious-javascript-analysis
       observed-edges:
-      '((interface signer ncc-group-malicious-javascript-analysis)
-        (signer admin-change safe-github-onchain-analysis)
+      '((signer admin-change safe-github-onchain-analysis)
         (admin-change wallet-control safe-github-onchain-analysis)
         (wallet-control chain-transfer safe-github-onchain-analysis)
         (chain-transfer bybit-outflow bybit-official-timeline))
       surfaces: '((interface))
-      targets: '((bybit-outflow))))
+      targets: '((bybit-outflow))
+      proposed-edges:
+      '((interface signer ncc-group-malicious-javascript-analysis))))
 
 (def ExchangeSigningApiReplay.
   (.o (:: @ ExchangeSigningNotice.)

@@ -14,6 +14,9 @@
                  exchange-signing-plan-chain)
         (only-in "reasoning.ss" exchange-signing-route-candidates)
         (only-in "simulation.ss" ExchangeSigningBybitReference.)
+        (only-in "bybit-reconstruction.ss"
+                 ExchangeSigningBybitEvidence.
+                 exchange-signing-reconstruct-bybit)
         (only-in "causal.ss" exchange-signing-causal-trajectory)
         (only-in "flow-profiles.ss"
                  ExchangeSigningRecordMutationProfile.
@@ -104,6 +107,8 @@
          (routes (exchange-signing-route-candidates route-case))
          (reference-routes
           (exchange-signing-route-candidates ExchangeSigningBybitReference.))
+         (reference-reconstruction
+          (exchange-signing-reconstruct-bybit ExchangeSigningBybitEvidence.))
          (causal (exchange-signing-causal-trajectory
                   (.ref profile 'identity)
                   (.ref profile 'observation-needs)))
@@ -190,6 +195,14 @@
         bybit-reference-use: 'threat-class-validation-only
         bybit-reference-observed-route:
         (.ref reference-routes 'observed-candidates)
+        bybit-reference-possible-route:
+        (.ref reference-routes 'possible-candidates)
+        bybit-reference-supported-reverse-steps:
+        (.ref reference-reconstruction 'supported-reverse-steps)
+        bybit-reference-mechanism-chain-supported?:
+        (.ref reference-reconstruction 'mechanism-chain-supported?)
+        bybit-reference-unresolved-witnesses:
+        (.ref reference-reconstruction 'unresolved-witnesses)
         bybit-reference-operation:
         (.ref ExchangeSigningBybitReference. 'operation-kind)
         bybit-reference-control-change:

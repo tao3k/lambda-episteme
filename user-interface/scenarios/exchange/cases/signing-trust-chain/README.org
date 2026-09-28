@@ -51,14 +51,59 @@ contract-control change. The GitHub issue is an analyst's on-chain account,
 not Safe's own forensic attribution. These technical sources provide a
 concrete reference trace for this threat class; they do not identify the
 entry point in Bitget's separate incident.
-[[file:simulation.ss][The Bybit reference Case]] retains source-labelled links from the malicious
-signing script to the signed administrative operation, changed wallet
-control, and drain. Ascent derives a source-supported route for that
-reference Case. NCC distinguishes a changed wallet signing request from
+[[file:simulation.ss][The Bybit reference Case]] retains source-labelled on-chain and reported
+effects, while its interface-to-signer link remains proposed. Ascent no
+longer presents an observed end-to-end interface route. The separate
+[[file:bybit-reconstruction.ss][reverse reconstruction]] joins source-labelled claims rather than taking
+the desired causal chain as an observed input. NCC distinguishes a changed
+wallet signing request from
 the transaction later proposed to Safe's gateway; its account of exactly
 what each signer saw on screen is an inference, not a direct display witness.
 The Bitget candidate Cases have no observed end-to-end ingress route;
 reference evidence is never copied into their observation relation.
+
+* Bybit reverse reconstruction
+
+The reverse Case begins with the published outflow and asks which mechanism
+steps the remaining source-labelled evidence can support. An Ascent rule
+joins the required claims for each reverse step. Reachability is derived
+only after those joins, so an outflow observation alone yields no attack
+route. This is a bounded explanatory model, not a reconstruction of the
+historical signer screens or an attribution engine.
+
+| Claim supplied to the Case | Source and basis | Reverse step it can support |
+|----------------------------+------------------+-----------------------------|
+| Funds left the cold wallet | [[https://www.bybit.com/en/learn/this-week-in-bybit/bybit-security-incident-timeline][Bybit incident timeline]] | Outflow to wallet control, only when combined with the implementation rewrite |
+| Safe implementation slot changed | [[https://www.nccgroup.com/research/in-depth-technical-analysis-of-the-bybit-hack/][NCC on-chain analysis]] | Wallet control to delegatecall execution |
+| Executed transaction used =operation=1= and an attacker contract | [[https://www.nccgroup.com/research/in-depth-technical-analysis-of-the-bybit-hack/][NCC transaction analysis]] | Delegatecall execution to signed transaction and payload |
+| Safe accepted the signatures | [[https://www.nccgroup.com/research/in-depth-technical-analysis-of-the-bybit-hack/][NCC transaction analysis]] | Signed transaction to executed payload; validity alone says nothing about intent |
+| Malicious JavaScript replaced fields before signing; its target address equals the executed target | [[https://www.nccgroup.com/research/in-depth-technical-analysis-of-the-bybit-hack/][NCC archived-script and transaction analyses]] | Ascent joins the separately supplied target values before linking payload to substitution |
+| A Safe developer machine was compromised | [[https://www.nccgroup.com/research/in-depth-technical-analysis-of-the-bybit-hack/][NCC summary of forensic findings]] | Links the substitution to a reported compromise, without explaining initial access |
+
+#+begin_src mermaid
+flowchart RL
+  O[Observed outflow] --> C[Implementation rewrite]
+  C --> D[Executed delegatecall]
+  D --> S[Valid Safe signatures]
+  S --> P[Executed attacker payload]
+  P --> J[JavaScript signing substitution]
+  J --> M[Reported developer machine compromise]
+  M -. unresolved .-> I[Initial access]
+  J -. unresolved .-> W[Each signer trusted display]
+#+end_src
+
+The [[file:../../../../../t/ontology/exchange-signing-bybit-reconstruction-test.ss][atomic reconstruction check]] removes each of the implementation rewrite,
+delegatecall, valid signatures, JavaScript target value, and field
+substitution claims in turn. Every removal breaks the complete mechanism
+route; removing the reported developer compromise leaves the mechanism
+route but breaks the upstream compromise link. Replacing the JavaScript
+target with a different address also breaks the route. These are dependency checks,
+not evidence authenticity checks. The receipt always leaves initial machine
+access, each signer's trusted display, and an independent signing-intent
+receipt unresolved. The TLA+ interface branch qualifies the abstract
+control-change path, while Lean/Cedar qualify the modeled authorization
+boundary; neither checks historical Safe transaction bytes or proves what
+the signers saw.
 
 * Structural risk scope
 
@@ -70,7 +115,7 @@ trust boundary, not by a particular wallet product or intrusion route.
 
 | Incident or model | Entry surface | What is established here | What remains a hypothesis |
 |-------------------+---------------+--------------------------+---------------------------|
-| Bybit 2025 | Human signing interface | Bybit reports a compromised Safe developer account and deceptive signing interface. | The generic model does not reconstruct every production control. |
+| Bybit 2025 | Human signing interface | Bybit reports a deceptive Safe interface and wallet logic change; NCC summarizes forensic findings about a compromised Safe developer machine. | Initial machine access, each signer's trusted display, and other production controls. |
 | Bitget 2026 | Exchange hot/warm-wallet pipeline | Bitget reports unauthorized outflow; the CEO's preliminary backend explanation is reported separately. | Record mutation, API replay, queue injection, destination mapping, exact signer ingress. |
 | Shared threat model | Candidate transaction before signing | Either entry class can be represented as a candidate that lacks an independently bound intent or display witness. | No particular candidate path is thereby proven to have occurred. |
 

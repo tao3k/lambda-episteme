@@ -105,7 +105,16 @@
                       '((queue-producer outflow)))
         (check-equal? (.ref receipt 'observed-candidates) '())
         (check-equal? (.ref receipt 'bybit-reference-observed-route)
+                      '())
+        (check-equal? (.ref receipt 'bybit-reference-possible-route)
                       '((interface bybit-outflow)))
+        (check-equal?
+         (.ref receipt 'bybit-reference-mechanism-chain-supported?) #t)
+        (check-equal?
+         (.ref receipt 'bybit-reference-unresolved-witnesses)
+         '(initial-developer-machine-entry
+           each-signer-trusted-display
+           independent-signing-intent-receipt))
         (check-equal? (.ref receipt 'bybit-reference-operation)
                       'delegatecall)
         (check-equal? (.ref receipt 'bybit-display-witness-status)
