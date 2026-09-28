@@ -35,10 +35,17 @@
               (poo-flow-query-element-space
                'exchange/signing-chain
                (.ref ExchangeSigningEdgeQuery 'semantic-revision)
-               '(backend payload signer chain-transfer admin-change wallet-control outflow)
+               '(backend payload queue signer chain-transfer outflow
+                 interface display admin-change wallet-control bybit-outflow
+                 internal-api queue-producer address-map)
                #t))
              (admission (poo-flow-query-admit ExchangeSigningEdgeQuery space)))
         (check-equal? source ExchangeSigningEdgeSource)
+        (check-equal?
+         (.ref ExchangeSigningEdgeQuery 'selected-element-identities)
+         '(backend payload queue signer chain-transfer outflow
+           interface display admin-change wallet-control bybit-outflow
+           internal-api queue-producer address-map))
         (check-equal?
          source
          "MATCH (source:SigningEvent)-[:CANDIDATE_NEXT]->(target:SigningEvent)\nRETURN source.identity, target.identity, target.evidenceSource, target.status\n")
@@ -53,11 +60,11 @@
       (let* ((case-value
               (.o (:: @ ExchangeSigningRouteCase.)
                   observed-edges:
-                  '((transfer outflow bitget-incident-notice))
+                  '((chain-transfer outflow bitget-incident-notice))
                   proposed-edges:
                   '((backend payload reported-preliminary-account)
                     (payload signer synthetic-signing-queue)
-                    (signer transfer synthetic-signer-effect))
+                    (signer chain-transfer synthetic-signer-effect))
                   surfaces: '((backend))
                   targets: '((outflow))))
              (result (exchange-signing-route-candidates case-value)))
@@ -71,10 +78,10 @@
       (let* ((case-value
               (.o (:: @ ExchangeSigningRouteCase.)
                   observed-edges:
-                  '((transfer outflow bitget-incident-notice))
+                  '((chain-transfer outflow bitget-incident-notice))
                   proposed-edges:
                   '((backend payload reported-preliminary-account)
-                    (signer transfer synthetic-signer-effect))
+                    (signer chain-transfer synthetic-signer-effect))
                   surfaces: '((backend))
                   targets: '((outflow))))
              (result (exchange-signing-route-candidates case-value)))

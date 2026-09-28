@@ -64,7 +64,10 @@
       version: "1"
       semantic-revision: ExchangeSigningEdgeSourceId
       element-space-identity: 'exchange/signing-chain
-      selected-element-identities: '(backend payload signer transfer outflow)
+      selected-element-identities:
+      '(backend payload queue signer chain-transfer outflow
+        interface display admin-change wallet-control bybit-outflow
+        internal-api queue-producer address-map)
       language: PooFlowGqlQueryLanguage.
       program: ExchangeSigningEdgeProgram
       result-bound: 64
@@ -114,8 +117,10 @@
       semantic-revision: ExchangeSigningSignalSourceId
       element-space-identity: 'exchange/signing-signals
       selected-element-identities:
-      '(unauthorized-outflow withdrawal-without-intent duplicate-request-id
+      '(unauthorized-outflow multi-chain-outflow
+        withdrawal-without-intent duplicate-request-id
         orphan-queue-message destination-mismatch display-byte-mismatch
+        observed-admin-effect complete-transfer-only-signing-ledger
         authenticated-intent-exact one-use-request-record
         verified-producer-chain independently-matched-destination
         trusted-rendering-match)

@@ -21,6 +21,9 @@ were unaffected. A [[https://www.bitget.com/zh-CN/support/articles/1256060389610
 million without reporting a second theft. Bitget says it identified and
 remediated the underlying vulnerability, but the linked notices do not
 disclose the entry point, internal message path, or signer ingress records.
+The later update identifies Ethereum and other EVM networks, XRP Ledger,
+Zcash, and TRON. This establishes a multi-chain observation, not a shared
+signer backend or a common intrusion route across those chains.
 [[https://www.coindesk.com/markets/2026/09/25/bitget-s-usd351-million-hack-happened-via-spoofed-transfers-not-private-keys-ceo-gray-chen-says][Reporting of the CEO's preliminary account]] describes
 spoofed transaction data rather than private-key theft. That account remains
 a reported explanation until a technical report supports its details.
@@ -45,6 +48,12 @@ trust boundary, not by a particular wallet product or intrusion route.
 | Bybit 2025 | Human signing interface | Bybit reports a compromised Safe developer account and deceptive signing interface. | The generic model does not reconstruct every production control. |
 | Bitget 2026 | Exchange hot/warm-wallet pipeline | Bitget reports unauthorized outflow; the CEO's preliminary backend explanation is reported separately. | Record mutation, API replay, queue injection, destination mapping, exact signer ingress. |
 | Shared threat model | Candidate transaction before signing | Either entry class can be represented as a candidate that lacks an independently bound intent or display witness. | No particular candidate path is thereby proven to have occurred. |
+
+Bybit's [[https://www.bybit.com/en/learn/this-week-in-bybit/bybit-security-incident-timeline][published timeline]] describes a disguised administrative transaction
+that changed wallet contract logic before the drain. Its effect shape is
+therefore different from a directly signed transfer. The Bitget update
+does not identify which effect shape occurred internally. A chain-observed
+outflow cannot by itself distinguish them.
 
 The defensive cut is an independently authenticated, signer-side binding of
 decoded transaction bytes to user intent, risk approval, ledger reservation,
@@ -100,6 +109,7 @@ this Scenario does not assert an MRR admission receipt.
 | Signer accepted a request without an independent intent attestation | Exposes shared trust boundary | Exposes shared trust boundary |
 | Complete signer ingress log absent | Route remains uncertain | Route remains uncertain |
 | All matching records originate from the same backend | Correlated, weak support | Correlated, weak support |
+| Outflows span several chain families | Requires chain-specific decoded-byte and transaction receipts | Does not identify the ingress route or prove one shared backend |
 
 These are *tests to discriminate hypotheses*. They do not claim that any listed
 artifact has been recovered from either incident. Independent signer ingress,
@@ -192,6 +202,12 @@ These are intentionally synthetic figures, separate from both exchanges'
 reported losses. The [[file:../../../../../t/ontology/exchange-signing-outcome-test.ss][atomic outcome test]] checks the joins and missing-evidence
 cases. An application must bind independent chain, signer, and ordering
 receipts before these rows can support an incident conclusion.
+When two observers report the same fixture transaction, the algebra counts
+its amount once. Inconsistent amounts for that transaction fail closed
+instead of producing an aggregate. Transaction identity, chain identity,
+asset units, and valuation time still need an admitted deployment-specific
+normalization before applying the same rule to real multi-chain evidence;
+the synthetic USD rows are not an estimate of Bitget's loss.
 
 * Temporal threat model and effect replay
 
@@ -255,7 +271,11 @@ contamination, incident freeze, and premature removal of the freeze. It
 also models an abstract signer Host: if it accepts Cedar =Allow= while trusting
 backend-supplied claims, the attacker bytes reach a modeled signing effect;
 requiring separately authenticated intent, risk, ledger, and display
-witnesses blocks the same attempt. The model signs no real bytes and submits
+witnesses blocks the same attempt. The Host replay also checks an
+=admin-change= request whose digest labels agree but whose authenticated
+intent witness says =transfer=: the Cedar claim passes, while binding the
+operation type at the signer blocks the substituted effect. The model signs
+no real bytes and submits
 no wallet transaction.
 
 * Scenario boundary

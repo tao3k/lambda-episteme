@@ -32,7 +32,8 @@
               (poo-flow-query-element-space
                'exchange/signing-signals
                (.ref ExchangeSigningSignalQuery 'semantic-revision)
-               '(unauthorized-outflow withdrawal-without-intent
+               '(unauthorized-outflow multi-chain-outflow
+                 withdrawal-without-intent
                  duplicate-request-id orphan-queue-message
                  destination-mismatch display-byte-mismatch
                  observed-admin-effect complete-transfer-only-signing-ledger
@@ -42,6 +43,15 @@
                #t))
              (admission (poo-flow-query-admit ExchangeSigningSignalQuery space)))
         (check-equal? source ExchangeSigningSignalSource)
+        (check-equal?
+         (.ref ExchangeSigningSignalQuery 'selected-element-identities)
+         '(unauthorized-outflow multi-chain-outflow
+           withdrawal-without-intent duplicate-request-id
+           orphan-queue-message destination-mismatch display-byte-mismatch
+           observed-admin-effect complete-transfer-only-signing-ledger
+           authenticated-intent-exact one-use-request-record
+           verified-producer-chain independently-matched-destination
+           trusted-rendering-match))
         (check-equal?
          source
          "MATCH (signal:SigningSignal)\nRETURN signal.identity, signal.evidenceSource, signal.admissionStatus\n")

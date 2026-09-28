@@ -14,6 +14,8 @@
         ExchangeSigningOutcomeCase.
         ExchangeSigningDirectFixture.
         ExchangeSigningDirectNoSignature.
+        ExchangeSigningDirectDuplicateObserver.
+        ExchangeSigningDirectConflictingObserver.
         ExchangeSigningAdminFixture.
         ExchangeSigningAdminNoEffect.
         exchange-signing-outcome)
@@ -60,11 +62,26 @@
                                          (cadr signed)))
                                  matches)))))))
       total:
-      (lambda (rows)
-        (let loop ((pending rows) (usd 0))
+      (lambda (rows transaction-of subject-of)
+        ;; Observers may independently report one chain transaction. Count
+        ;; its amount once; contradictory observations cannot form a total.
+        (let loop ((pending rows) (seen '()) (usd 0))
           (if (null? pending)
             usd
-            (loop (cdr pending) (+ usd (caddr (car pending)))))))
+            (let* ((row (car pending))
+                   (transaction (transaction-of row))
+                   (claim (cons (subject-of row) (caddr row)))
+                   (previous (assoc transaction seen)))
+              (cond
+               ((not previous)
+                (loop (cdr pending)
+                      (cons (cons transaction claim) seen)
+                      (+ usd (caddr row))))
+               ((equal? (cdr previous) claim)
+                (loop (cdr pending) seen usd))
+               (else
+                (error "conflicting chain observations for one transaction"
+                       transaction (cdr previous) claim)))))))
       derive:
       (lambda (algebra case-value)
         (let* ((direct-different
@@ -111,8 +128,8 @@
           (.o kind: 'lambda-episteme.exchange.signing-outcome-result
               direct-loss-rows: direct
               indirect-loss-rows: indirect
-              direct-loss-usd: (.call algebra total direct)
-              indirect-loss-usd: (.call algebra total indirect)
+              direct-loss-usd: (.call algebra total direct car cadr)
+              indirect-loss-usd: (.call algebra total indirect cadr car)
               fixture-only?: #t
               incident-attribution?: #f
               action-authority?: #f)))))
@@ -149,6 +166,21 @@
 (def ExchangeSigningDirectNoSignature.
   (.o (:: @ ExchangeSigningDirectFixture.)
       signatures: '()))
+
+(def ExchangeSigningDirectDuplicateObserver.
+  (.o (:: @ ExchangeSigningDirectFixture.)
+      outflows:
+      '((tx-a attacker-byte-a 30000 chain-observer)
+        (tx-a attacker-byte-a 30000 independent-chain-observer)
+        (tx-b attacker-byte-b 45000 chain-observer)
+        (tx-c unchanged-byte 5000 chain-observer))))
+
+(def ExchangeSigningDirectConflictingObserver.
+  (.o (:: @ ExchangeSigningDirectFixture.)
+      outflows:
+      '((tx-a attacker-byte-a 30000 chain-observer)
+        (tx-a attacker-byte-a 31000 independent-chain-observer)
+        (tx-b attacker-byte-b 45000 chain-observer))))
 
 ;;; Bybit-inspired *shape*: a deceived signing interface can obtain an
 ;;; administrative signature; an independently observed contract change and

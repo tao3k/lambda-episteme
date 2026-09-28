@@ -17,6 +17,7 @@ inductive Issuer where
 structure Witness where
   issuer : Issuer
   bytesId : String
+  operation : String
   authenticated : Bool
   deriving Repr
 
@@ -43,14 +44,20 @@ structure SignedInstruction where
   nonce : Nat
   deriving Repr
 
-def witnessMatches (issuer : Issuer) (bytesId : String) (witness : Witness) : Bool :=
-  witness.authenticated && witness.issuer == issuer && witness.bytesId == bytesId
+def witnessMatches (issuer : Issuer) (bytesId operation : String)
+    (witness : Witness) : Bool :=
+  witness.authenticated && witness.issuer == issuer &&
+  witness.bytesId == bytesId && witness.operation == operation
 
 def independentBinding (state : HostState) (attempt : Attempt) : Bool :=
-  witnessMatches .intentOwner attempt.candidateBytesId attempt.intent &&
-  witnessMatches .riskOwner attempt.candidateBytesId attempt.risk &&
-  witnessMatches .ledgerOwner attempt.candidateBytesId attempt.ledger &&
-  witnessMatches .signerDisplay attempt.candidateBytesId attempt.display &&
+  witnessMatches .intentOwner attempt.candidateBytesId
+    attempt.facts.candidateOperation attempt.intent &&
+  witnessMatches .riskOwner attempt.candidateBytesId
+    attempt.facts.candidateOperation attempt.risk &&
+  witnessMatches .ledgerOwner attempt.candidateBytesId
+    attempt.facts.candidateOperation attempt.ledger &&
+  witnessMatches .signerDisplay attempt.candidateBytesId
+    attempt.facts.candidateOperation attempt.display &&
   attempt.facts.nonceFresh && attempt.facts.walletEpoch == state.walletEpoch
 
 def release (requireIndependent : Bool) (root : String)
@@ -73,8 +80,8 @@ def unauthorizedSigningEffect (attempt : Attempt)
   (attempt.candidateBytesId != attempt.actualUserIntentBytesId ||
     attempt.facts.candidateOperation != attempt.actualUserIntentOperation)
 
-def backendWitness (bytesId : String) : Witness :=
-  ⟨.backend, bytesId, true⟩
+def backendWitness (bytesId : String) (operation : String := "transfer") : Witness :=
+  ⟨.backend, bytesId, operation, true⟩
 
 def contaminatedAttempt : Attempt :=
   { candidateBytesId := "attacker-transfer"
@@ -95,18 +102,36 @@ def independentAttempt : Attempt :=
   { candidateBytesId := "user-transfer"
     actualUserIntentBytesId := "user-transfer"
     facts := independentFacts
-    intent := ⟨.intentOwner, "user-transfer", true⟩
-    risk := ⟨.riskOwner, "user-transfer", true⟩
-    ledger := ⟨.ledgerOwner, "user-transfer", true⟩
-    display := ⟨.signerDisplay, "user-transfer", true⟩
+    intent := ⟨.intentOwner, "user-transfer", "transfer", true⟩
+    risk := ⟨.riskOwner, "user-transfer", "transfer", true⟩
+    ledger := ⟨.ledgerOwner, "user-transfer", "transfer", true⟩
+    display := ⟨.signerDisplay, "user-transfer", "transfer", true⟩
     nonce := 78 }
 
 def forgedIssuerLabels : Attempt :=
   { contaminatedAttempt with
-    intent := ⟨.intentOwner, "attacker-transfer", false⟩
-    risk := ⟨.riskOwner, "attacker-transfer", false⟩
-    ledger := ⟨.ledgerOwner, "attacker-transfer", false⟩
-    display := ⟨.signerDisplay, "attacker-transfer", false⟩ }
+    intent := ⟨.intentOwner, "attacker-transfer", "transfer", false⟩
+    risk := ⟨.riskOwner, "attacker-transfer", "transfer", false⟩
+    ledger := ⟨.ledgerOwner, "attacker-transfer", "transfer", false⟩
+    display := ⟨.signerDisplay, "attacker-transfer", "transfer", false⟩ }
+
+-- The Cedar request repeats an admin operation, while the authenticated
+-- intent witness still attests a transfer. A byte label alone misses this.
+def operationLabelForgery : Attempt :=
+  { candidateBytesId := "shared-envelope"
+    actualUserIntentBytesId := "shared-envelope"
+    actualUserIntentOperation := "transfer"
+    facts := { singleSourceAdminForgery with
+      candidateDigest := "shared-envelope"
+      intentDigest := "shared-envelope"
+      riskDigest := "shared-envelope"
+      ledgerDigest := "shared-envelope"
+      displayDigest := "shared-envelope" }
+    intent := ⟨.intentOwner, "shared-envelope", "transfer", true⟩
+    risk := ⟨.riskOwner, "shared-envelope", "admin-change", true⟩
+    ledger := ⟨.ledgerOwner, "shared-envelope", "admin-change", true⟩
+    display := ⟨.signerDisplay, "shared-envelope", "admin-change", true⟩
+    nonce := 80 }
 
 def emptyHost : HostState := {}
 
@@ -125,6 +150,14 @@ theorem forgedIssuerLabelsDoNotAuthenticate :
     authorized "Integrated" hotWallet forgedIssuerLabels.facts = true ∧
     wouldSign
       (release true "Integrated" emptyHost forgedIssuerLabels) = false := by
+  native_decide
+
+theorem operationWitnessCutsMetadataSubstitution :
+    authorized "Integrated" hotWallet operationLabelForgery.facts = true ∧
+    unauthorizedSigningEffect operationLabelForgery
+      (release false "Integrated" emptyHost operationLabelForgery) = true ∧
+    wouldSign
+      (release true "Integrated" emptyHost operationLabelForgery) = false := by
   native_decide
 
 theorem freezeStopsWeakSigner :
