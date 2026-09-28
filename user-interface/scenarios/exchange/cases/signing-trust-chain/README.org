@@ -43,6 +43,22 @@ signer log.
 [[https://www.bybit.com/en/press/post/bybit-confirms-security-integrity-amid-safe-wallet-incident-no-compromise-in-infrastructure-blt9986889e919da8d2][Bybit's Safe incident statement]] concerns a separate signing-interface
 compromise. This Case compares mechanisms; it never transfers an observation
 from Bybit into Bitget's factual record.
+The [[https://github.com/safe-fndn/safe-smart-account/issues/914][contemporaneous on-chain analysis in Safe's GitHub repository]] documents
+an =operation=1= delegatecall and a change to the Safe proxy's implementation
+slot. The [[https://www.nccgroup.com/research/in-depth-technical-analysis-of-the-bybit-hack/][NCC Group technical analysis]] reconstructs the tampered signing UI,
+the difference between displayed and signed data, and the subsequent
+contract-control change. The GitHub issue is an analyst's on-chain account,
+not Safe's own forensic attribution. These technical sources provide a
+concrete reference trace for this threat class; they do not identify the
+entry point in Bitget's separate incident.
+[[file:simulation.ss][The Bybit reference Case]] retains source-labelled links from the malicious
+signing script to the signed administrative operation, changed wallet
+control, and drain. Ascent derives a source-supported route for that
+reference Case. NCC distinguishes a changed wallet signing request from
+the transaction later proposed to Safe's gateway; its account of exactly
+what each signer saw on screen is an inference, not a direct display witness.
+The Bitget candidate Cases have no observed end-to-end ingress route;
+reference evidence is never copied into their observation relation.
 
 * Structural risk scope
 
@@ -209,14 +225,47 @@ not a statistical probability.
 | Signer-interface administrative change | None of its distinguishing signals | No Bitget display/byte mismatch or linked control change has been supplied | Bybit mechanism remains a comparison, not the favored Bitget explanation |
 | Private-key exfiltration | None | Bitget says its investigation ruled this out | Challenged by the current official account |
 
-This ordering is intentionally at the family level. Within the favored
-family, withdrawal-record mutation, internal API replay, queue injection,
-and destination-map substitution remain unordered. The fixed gas limit
-pattern favors an internal-transfer-shaped order over an ordinary customer
-withdrawal, but does not reveal which backend component fabricated it. If
-the independent gas analysis is removed, the model returns =undetermined=;
-if a linked administrative effect is supplied instead, it selects the
+This ordering is at the effect-family level. The fixed gas limit pattern
+favors an internal-transfer-shaped order over an ordinary customer withdrawal,
+but does not reveal which backend component fabricated it. If the independent
+gas analysis is removed, the effect-family model returns =undetermined=; if a
+linked administrative effect is supplied instead, it selects the
 administrative temporal path. The regression tests exercise both changes.
+
+** Conditional ingress comparison
+
+[[file:ingress-inference.ss][The separate ingress Case]] compares four possible backend entry surfaces through
+Ascent relations. Its POO slots declare reported signals, independent
+discriminators, hard challenges, and explicit model factors. Every factor hit
+retains the signal and source that caused it; repeated reports of the same
+signal do not multiply its weight. The output is a *model-relative support
+share*, not an empirical probability that the actual intrusion used that
+route. The four routes can also overlap in a real attack chain.
+
+The illustrative architecture assumption is that the fixed gas pattern
+identified by Bitquery is twice as compatible with an internal API or queue
+operation as with mutation of an ordinary customer-withdrawal record or
+destination map. Under equal starting weights, this gives API replay and
+queue injection =2/6= each, versus record mutation and address-map
+substitution =1/6= each. Removing that assumption makes all four tie at
+=1/4=. A record mutation that enters an internal transfer worker would also
+invalidate the assumption. No public signer-ingress record currently
+distinguishes API from queue.
+
+| Candidate ingress | Current model weight | Discriminating observation to obtain | Independent challenge |
+|-------------------+----------------------+-------------------------------------+-----------------------|
+| Internal API replay | 2/6 | Duplicate request identity in signer-owned ledger | Exact one-use request record |
+| Queue injection | 2/6 | Orphan signer-ingress message | Verified producer chain |
+| Withdrawal record mutation | 1/6 | Withdrawal with no authenticated matching intent | Exact authenticated intent |
+| Address-map substitution | 1/6 | Destination differs from independently committed destination | Independent destination match |
+
+These fractions are conditional on the stated factor and source reports;
+they must not be presented as calibrated incident probabilities. A verified
+duplicate signer request in a synthetic test changes the model weights to
+=8:2:1:1=; an exact one-use signer record instead removes API replay from
+that model. This sensitivity is the point of the comparison: the receipt
+shows which evidence would change the ranking, while preserving uncertainty
+about the real ingress.
 
 #+begin_src mermaid
 flowchart LR

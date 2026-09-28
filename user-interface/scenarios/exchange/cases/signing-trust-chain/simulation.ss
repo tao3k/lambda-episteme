@@ -18,6 +18,7 @@
         ExchangeSigningCandidateTransfer.
         ExchangeSigningQueueInterrupted.
         ExchangeSigningInterfaceSubstitution.
+        ExchangeSigningBybitReference.
         ExchangeSigningApiReplay.
         ExchangeSigningQueueProducer.
         ExchangeSigningAddressMap.
@@ -80,6 +81,24 @@
         (display signer synthetic-displayed-bytes-mismatch)
         (signer admin-change synthetic-admin-signature)
         (wallet-control chain-transfer synthetic-controlled-wallet-drain))))
+
+;;; A separate, source-labelled reference trace for the already documented
+;;; Bybit event. It validates the shared signing-boundary threat class; no
+;;; row is imported into Bitget's backend-ingress comparison.
+(def ExchangeSigningBybitReference.
+  (.o (:: @ ExchangeSigningRouteCase.)
+      operation-kind: 'delegatecall
+      control-change: 'safe-proxy-implementation-slot
+      display-witness-status: 'inferred-in-ncc-analysis
+      signed-data-status: 'malicious-javascript-analysis
+      observed-edges:
+      '((interface signer ncc-group-malicious-javascript-analysis)
+        (signer admin-change safe-github-onchain-analysis)
+        (admin-change wallet-control safe-github-onchain-analysis)
+        (wallet-control chain-transfer safe-github-onchain-analysis)
+        (chain-transfer bybit-outflow bybit-official-timeline))
+      surfaces: '((interface))
+      targets: '((bybit-outflow))))
 
 (def ExchangeSigningApiReplay.
   (.o (:: @ ExchangeSigningNotice.)

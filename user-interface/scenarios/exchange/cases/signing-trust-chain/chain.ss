@@ -61,6 +61,7 @@
       (.o kind: 'lambda-episteme.exchange.signing-chain-result
           gql-source: (.ref case-value 'query-source)
           gql-source-identity: (.ref query 'semantic-revision)
+          gql-selected-identities: selected
           reported-sources: (map cadr reported)
           reported-signal-rows: reported
           preferred-family: family

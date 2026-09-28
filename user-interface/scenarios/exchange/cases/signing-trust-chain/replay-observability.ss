@@ -12,7 +12,11 @@
         (only-in "chain.ss"
                  ExchangeSigningReportedChain.
                  exchange-signing-plan-chain)
-        (only-in "reasoning.ss" exchange-signing-route-candidates))
+        (only-in "reasoning.ss" exchange-signing-route-candidates)
+        (only-in "simulation.ss" ExchangeSigningBybitReference.)
+        (only-in "ingress-inference.ss"
+                 ExchangeSigningPublicIngress.
+                 exchange-signing-compare-ingress))
 
 (export exchange-signing-replay-observability)
 
@@ -60,7 +64,24 @@
           (attack-profile (poo-flow-scenario-case-profiles composition)))
          (route-case (.ref profile 'route-case))
          (routes (exchange-signing-route-candidates route-case))
+         (reference-routes
+          (exchange-signing-route-candidates ExchangeSigningBybitReference.))
          (chain (exchange-signing-plan-chain ExchangeSigningReportedChain.))
+         (ingress
+          (and (memq (.ref profile 'identity)
+                     '(record-mutation api-replay queue-injection
+                       address-map-substitution))
+               (exchange-signing-compare-ingress
+                ExchangeSigningPublicIngress.)))
+         (neutral-ingress
+          (and ingress
+               (exchange-signing-compare-ingress
+                (.o (:: @ ExchangeSigningPublicIngress.)
+                    model-factors:
+                    (filter
+                     (lambda (row)
+                       (not (eq? (cadr row) 'fixed-round-gas-limits)))
+                     (.ref ExchangeSigningPublicIngress. 'model-factors))))))
          (qualification
           (assoc (.ref profile 'tla-config) qualifications))
          (needed (.ref profile 'observation-needs))
@@ -82,6 +103,31 @@
         public-family-challenges: (.ref chain 'family-challenges)
         reported-signal-rows: (.ref chain 'reported-signal-rows)
         reported-sources: (.ref chain 'reported-sources)
+        gql-source-identity: (.ref chain 'gql-source-identity)
+        gql-selected-identities: (.ref chain 'gql-selected-identities)
+        structural-risk: 'signed-but-unintended-effect
+        bybit-reference-use: 'threat-class-validation-only
+        bybit-reference-observed-route:
+        (.ref reference-routes 'observed-candidates)
+        bybit-reference-operation:
+        (.ref ExchangeSigningBybitReference. 'operation-kind)
+        bybit-reference-control-change:
+        (.ref ExchangeSigningBybitReference. 'control-change)
+        bybit-display-witness-status:
+        (.ref ExchangeSigningBybitReference. 'display-witness-status)
+        ingress-leading-routes:
+        (and ingress (.ref ingress 'leading-routes))
+        ingress-relative-support-shares:
+        (and ingress (.ref ingress 'relative-support-shares))
+        ingress-without-gas-assumption:
+        (and neutral-ingress (.ref neutral-ingress 'relative-support-shares))
+        ingress-source-linked-matches:
+        (and ingress (.ref ingress 'source-linked-factor-matches))
+        ingress-applied-assumptions:
+        (and ingress (.ref ingress 'applied-factors))
+        ingress-next-probes:
+        (and ingress (.ref ingress 'next-probes))
+        ingress-calibrated-probabilities?: #f
         tla-config: (.ref profile 'tla-config)
         tla-qualification-status:
         (if qualification (cadr qualification) 'not-supplied)
