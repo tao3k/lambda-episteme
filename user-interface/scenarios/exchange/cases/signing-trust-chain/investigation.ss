@@ -87,6 +87,15 @@
                   source group uri digest)
                  tasks)))))))
 
+(def (missing-reference-tasks selected references)
+  (let (referenced (map car references))
+    (map
+     (lambda (row)
+       (investigation-task
+        (car row) 'source-reference-and-artifact (caddr row)))
+     (filter (lambda (row) (not (memq (car row) referenced)))
+             selected))))
+
 (def (distinct-missing-claims results)
   (let loop ((pending
               (apply append
@@ -101,7 +110,11 @@
 (def (exchange-signing-bybit-investigation-brief-from-receipt receipt)
   (let* ((witnesses (.ref receipt 'unresolved-witnesses))
          (reference-tasks
-          (source-binding-tasks (.ref receipt 'evidence-references)))
+          (append
+           (source-binding-tasks (.ref receipt 'evidence-references))
+           (missing-reference-tasks
+            (.ref receipt 'query-selected-claims)
+            (.ref receipt 'evidence-references))))
          (option-values
           (map missing-claim-collection-option
                (distinct-missing-claims

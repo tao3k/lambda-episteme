@@ -128,6 +128,8 @@ step is to preserve and identify the exact source artifact. A digest supplied
 with a claim remains unverified until the Host binds it to that artifact;
 it never removes the source-binding task. The collection
 options below have no ordering or preferred path.
+Claims without any source reference produce a separate request for the source
+reference and artifact; the absence of a URI is visible in that task.
 
 | Request | Why it matters | Proposed collection | Authority at this stage |
 |---------+----------------+---------------------+-------------------------|

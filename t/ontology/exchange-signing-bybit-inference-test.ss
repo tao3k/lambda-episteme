@@ -189,6 +189,32 @@
                       "sha256:unverified-claim")
         (check-equal? (.ref (car claimed) 'tool-binding) #f)
         (check-equal? (.ref brief 'source-authenticity-verified?) #f)))
+    (poo-flow-test-case "an unreferenced claim requests its source artifact"
+      (let* ((case-value
+              (.o (:: @ ExchangeSigningBybitEvidence.)
+                  claims:
+                  (map
+                   (lambda (row)
+                     (if (eq? (.ref row 'identity) 'exec-delegatecall)
+                       (.o (:: @ row) evidence-reference: #f)
+                       row))
+                   (.ref ExchangeSigningBybitEvidence. 'claims))))
+             (brief (exchange-signing-bybit-investigation-brief
+                     case-value))
+             (bindings (.ref brief 'source-binding-tasks))
+             (unreferenced
+              (filter
+               (lambda (task)
+                 (eq? (.ref task 'collection)
+                      'source-reference-and-artifact))
+               bindings)))
+        (check-equal? (length bindings) 3)
+        (check-equal? (length unreferenced) 1)
+        (check-equal? (.ref (car unreferenced) 'claim)
+                      'exec-delegatecall)
+        (check-equal? (.ref (car unreferenced) 'source-uri) #f)
+        (check-equal? (.ref (car unreferenced) 'tool-binding) #f)
+        (check-equal? (.ref brief 'source-authenticity-verified?) #f)))
     (poo-flow-test-case "agent explores opposing branches without a winner"
       (let* ((exploration
               (exchange-signing-bybit-explore
