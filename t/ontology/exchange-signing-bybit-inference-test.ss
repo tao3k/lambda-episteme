@@ -162,6 +162,33 @@
         (check-equal? (and (memq 'javascript-target claims) #t) #t)
         (check-equal? (and (memq 'signer-key-compromise claims) #t) #t)
         (check-equal? (.ref brief 'action-authority?) #f)))
+    (poo-flow-test-case "a claimed digest still requires source binding"
+      (let* ((case-value
+              (.o (:: @ ExchangeSigningBybitEvidence.)
+                  claims:
+                  (map
+                   (lambda (row)
+                     (if (eq? (.ref row 'identity) 'exec-delegatecall)
+                       (.o (:: @ row)
+                           evidence-reference:
+                           (.o (:: @ (.ref row 'evidence-reference))
+                               content-digest: "sha256:unverified-claim"))
+                       row))
+                   (.ref ExchangeSigningBybitEvidence. 'claims))))
+             (brief (exchange-signing-bybit-investigation-brief
+                     case-value))
+             (bindings (.ref brief 'source-binding-tasks))
+             (claimed
+              (filter
+               (lambda (task)
+                 (.ref task 'claimed-content-digest))
+               bindings)))
+        (check-equal? (length bindings) 3)
+        (check-equal? (length claimed) 1)
+        (check-equal? (.ref (car claimed) 'claimed-content-digest)
+                      "sha256:unverified-claim")
+        (check-equal? (.ref (car claimed) 'tool-binding) #f)
+        (check-equal? (.ref brief 'source-authenticity-verified?) #f)))
     (poo-flow-test-case "agent explores opposing branches without a winner"
       (let* ((exploration
               (exchange-signing-bybit-explore

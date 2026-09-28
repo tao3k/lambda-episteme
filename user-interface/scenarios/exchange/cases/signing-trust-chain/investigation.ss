@@ -25,19 +25,22 @@
       expected-owner: #f
       independence-group: #f
       source-uri: #f
+      claimed-content-digest: #f
       read-only?: #t
       tool-binding: #f
       execution-authority?: #f
       evidence-admitted?: #f))
 
 (def (investigation-task claim-value collection-value owner-value
-                         (group-value #f) (uri-value #f))
+                         (group-value #f) (uri-value #f)
+                         (digest-value #f))
   (.o (:: @ ExchangeSigningInvestigationTask.)
       claim: claim-value
       collection: collection-value
       expected-owner: owner-value
       independence-group: group-value
-      source-uri: uri-value))
+      source-uri: uri-value
+      claimed-content-digest: digest-value))
 
 (def (missing-claim-collection-option claim-value)
   (case claim-value
@@ -67,19 +70,21 @@
                          'case-investigator))))
 
 (def (source-binding-tasks references)
-  (let loop ((pending references) (seen-uris '()) (tasks '()))
+  (let loop ((pending references) (seen-references '()) (tasks '()))
     (if (null? pending) (reverse tasks)
       (let* ((reference (cadar pending))
              (uri (.ref reference 'uri))
-             (group (.ref reference 'independence-group)))
-        (if (or (member uri seen-uris)
-                (.ref reference 'content-digest))
-          (loop (cdr pending) seen-uris tasks)
-          (loop (cdr pending) (cons uri seen-uris)
+             (group (.ref reference 'independence-group))
+             (source (.ref reference 'source))
+             (digest (.ref reference 'content-digest))
+             (key (list uri group digest)))
+        (if (member key seen-references)
+          (loop (cdr pending) seen-references tasks)
+          (loop (cdr pending) (cons key seen-references)
                 (cons
                  (investigation-task
-                  (.ref reference 'source) 'canonical-source-snapshot
-                  (.ref reference 'source) group uri)
+                  source 'canonical-source-snapshot
+                  source group uri digest)
                  tasks)))))))
 
 (def (distinct-missing-claims results)

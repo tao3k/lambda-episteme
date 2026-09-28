@@ -124,7 +124,9 @@ witnesses remain separate. The source
 binding tasks group all NCC claims under one reporting organization rather
 than treating the article's sections as independent corroboration. Every
 reference currently lacks a bound content digest, so the first collection
-step is to preserve and identify the exact source artifact. The collection
+step is to preserve and identify the exact source artifact. A digest supplied
+with a claim remains unverified until the Host binds it to that artifact;
+it never removes the source-binding task. The collection
 options below have no ordering or preferred path.
 
 | Request | Why it matters | Proposed collection | Authority at this stage |
