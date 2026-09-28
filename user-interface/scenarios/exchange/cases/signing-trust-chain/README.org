@@ -249,6 +249,24 @@ gate executes local qualifications, including all six TLC configurations.
 Scheduling, durable receipts, and a family-specific run chosen from admitted
 evidence remain downstream responsibilities.
 
+[[file:replay-observability.ss][The replay observability API]] projects one source-preserving diagnostic receipt
+per composition. It reports public observed edges separately from synthetic
+proposed edges, Ascent possible and observed routes, published family fit,
+the attack Profile's required independent observations, and which of those
+remain missing. A supplied observation marked =provisional= remains visible
+but does not close a missing independent witness. The TLA+ checker writes a
+local qualification receipt only after the native parser and all six TLC
+checks succeed; =just check-chain= joins its actual counterexample transition
+names with the corresponding composition. The receipt keeps GQL execution,
+external evidence admission, Cedar runtime status, route attribution, and
+action authority explicit. No local counterexample identifies Bitget's ingress.
+
+| Replay | Possible route from synthetic edges | Missing independent witness example | TLA+ trace obligation |
+|--------+-------------------------------------+-------------------------------------+-----------------------|
+| Queue producer injection | Producer to outflow | Producer attestation and signer ingress receipt | WeakSign then ApplyTransfer |
+| Interface substitution | Interface to Bybit outflow | Trusted rendered bytes and linked control change | PrepareInterfaceAdmin then WeakSign and admin drain |
+| Backend admin change | Backend to outflow | Signed admin operation linked to control change | WeakSign then ApplyAdminChange and drain |
+
 * Fixture consequence reasoning
 
 [[file:outcome.ss][The POO outcome algebra]] accepts Case-owned event rows through a =semantics=

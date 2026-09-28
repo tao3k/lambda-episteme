@@ -62,8 +62,11 @@
           gql-source: (.ref case-value 'query-source)
           gql-source-identity: (.ref query 'semantic-revision)
           reported-sources: (map cadr reported)
+          reported-signal-rows: reported
           preferred-family: family
           family-fit: (.ref ranked 'fit)
+          family-matches: (.ref ranked 'matched)
+          family-challenges: (.ref ranked 'challenged)
           tla-config: (and route (.ref route 'tla-config))
           cedar-root: (and route (.ref route 'cedar-root))
           host-cut: (and route (.ref route 'host-cut))

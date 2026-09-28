@@ -41,26 +41,39 @@
                           transitions))
         (error "TLC did not produce the required counterexample"
                config (tla-plus-model-receipt->alist receipt)))
-      (displayln "TLA-COUNTEREXAMPLE-OK " config))))
+      (displayln "TLA-COUNTEREXAMPLE-OK " config)
+      (list config 'counterexample 'NoUnauthorizedEffect transitions))))
 
-(let (defended (qualification "Defended.cfg"))
-  (require-source defended "Defended.cfg")
-  (unless (tla-plus-model-receipt-admitted defended)
-    (error "defended TLA+ model was not admitted"
-           (tla-plus-model-receipt->alist defended)))
-  (displayln "TLA-DEFENDED-OK"))
+(def defended
+  (let (receipt (qualification "Defended.cfg"))
+    (require-source receipt "Defended.cfg")
+    (unless (tla-plus-model-receipt-admitted receipt)
+      (error "defended TLA+ model was not admitted"
+             (tla-plus-model-receipt->alist receipt)))
+    (displayln "TLA-DEFENDED-OK")
+    '("Defended.cfg" defended NoUnauthorizedEffect ())))
 
-(require-counterexample "DirectAttack.cfg" '("WeakSign" "ApplyTransfer"))
-(require-counterexample "AdminAttack.cfg"
-                        '("WeakSign" "ApplyAdminChange"
-                          "DrainControlledWallet"))
-(require-counterexample "InterfaceAttack.cfg"
-                        '("PrepareInterfaceAdmin" "WeakSign"
-                          "ApplyAdminChange" "DrainControlledWallet"))
-(require-counterexample "FrozenAdmin.cfg"
-                        '("ApplyAdminChange" "FreezeAfterControl"
-                          "DrainAfterFreeze"))
-(require-counterexample "RecoveredDirect.cfg"
-                        '("Freeze" "PrematureRecover" "WeakSignRecovered"
-                          "ApplyTransfer"))
+(def qualified
+  (list defended
+        (require-counterexample "DirectAttack.cfg"
+                                '("WeakSign" "ApplyTransfer"))
+        (require-counterexample "AdminAttack.cfg"
+                                '("WeakSign" "ApplyAdminChange"
+                                  "DrainControlledWallet"))
+        (require-counterexample "InterfaceAttack.cfg"
+                                '("PrepareInterfaceAdmin" "WeakSign"
+                                  "ApplyAdminChange" "DrainControlledWallet"))
+        (require-counterexample "FrozenAdmin.cfg"
+                                '("ApplyAdminChange" "FreezeAfterControl"
+                                  "DrainAfterFreeze"))
+        (require-counterexample "RecoveredDirect.cfg"
+                                '("Freeze" "PrematureRecover"
+                                  "WeakSignRecovered" "ApplyTransfer"))))
+
+;;; Written only after every parser/TLC check succeeds; a failed run leaves no
+;;; fresh complete receipt. The Case gate removes the previous file first.
+(call-with-output-file "qualification-receipts.sexp"
+  (lambda (port)
+    (write qualified port)
+    (newline port)))
 (displayln "TLA-QUALIFICATION-OK")

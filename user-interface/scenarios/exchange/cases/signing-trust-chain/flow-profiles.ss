@@ -33,6 +33,7 @@
       module: 'exchange-signing
       tla-config: #f
       route-case: #f
+      observation-needs: '()
       runtime-executed?: #f
       stages:
       (.o replay:
@@ -55,36 +56,54 @@
   (.o (:: @ ExchangeSigningAttackProfile.)
       identity: 'record-mutation name: 'record-mutation
       route-case: ExchangeSigningCandidateTransfer.
+      observation-needs:
+      '(authenticated-withdrawal-intent signer-decoded-transaction
+        record-write-audit)
       tla-config: "DirectAttack.cfg"))
 
 (def ExchangeSigningApiReplayProfile.
   (.o (:: @ ExchangeSigningAttackProfile.)
       identity: 'api-replay name: 'api-replay
       route-case: ExchangeSigningApiReplay.
+      observation-needs:
+      '(one-use-request-ledger signer-request-authentication
+        signer-decoded-transaction)
       tla-config: "DirectAttack.cfg"))
 
 (def ExchangeSigningQueueInjectionProfile.
   (.o (:: @ ExchangeSigningAttackProfile.)
       identity: 'queue-injection name: 'queue-injection
       route-case: ExchangeSigningQueueProducer.
+      observation-needs:
+      '(queue-producer-attestation signer-ingress-receipt
+        signer-decoded-transaction)
       tla-config: "DirectAttack.cfg"))
 
 (def ExchangeSigningAddressMapProfile.
   (.o (:: @ ExchangeSigningAttackProfile.)
       identity: 'address-map-substitution name: 'address-map-substitution
       route-case: ExchangeSigningAddressMap.
+      observation-needs:
+      '(independent-destination-commitment address-map-version
+        signer-decoded-transaction)
       tla-config: "DirectAttack.cfg"))
 
 (def ExchangeSigningInterfaceProfile.
   (.o (:: @ ExchangeSigningAttackProfile.)
       identity: 'interface-substitution name: 'interface-substitution
       route-case: ExchangeSigningInterfaceSubstitution.
+      observation-needs:
+      '(trusted-rendered-bytes signed-admin-operation
+        linked-control-change)
       tla-config: "InterfaceAttack.cfg"))
 
 (def ExchangeSigningBackendAdminProfile.
   (.o (:: @ ExchangeSigningAttackProfile.)
       identity: 'backend-admin-change name: 'backend-admin-change
       route-case: ExchangeSigningBackendAdmin.
+      observation-needs:
+      '(signed-admin-operation linked-control-change
+        controlled-wallet-drain)
       tla-config: "AdminAttack.cfg"))
 
 (def ExchangeSigningAttackModule

@@ -13,6 +13,8 @@
                  poo-flow-runtime-load-projection)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/reasoning
                  exchange-signing-route-candidates)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/replay-observability
+                 exchange-signing-replay-observability)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/flow-profiles
                  ExchangeSigningRecordMutationProfile.
                  ExchangeSigningInterfaceProfile.
@@ -91,4 +93,39 @@
                       'user-composition-funflow)
         (check-equal? (vector-length (cdr (assq 'node-table plan))) 5)
         (check-equal? (vector-length (cdr (assq 'edge-table plan))) 4)
-        (check-equal? (cdr (assq 'runtime-executed projection)) #f)))))
+        (check-equal? (cdr (assq 'runtime-executed projection)) #f)))
+    (poo-flow-test-case "replay exposes proposed links and missing witnesses"
+      (let (receipt
+            (exchange-signing-replay-observability
+             exchange-signing-queue-injection
+             '((queue-producer-attestation backend-log provisional)
+               (signer-ingress-receipt signer-audit admitted))))
+        (check-equal? (.ref receipt 'attack-profile) 'queue-injection)
+        (check-equal? (.ref receipt 'possible-candidates)
+                      '((queue-producer outflow)))
+        (check-equal? (.ref receipt 'observed-candidates) '())
+        (check-equal?
+         (.ref receipt 'missing-independent-observations)
+         '(queue-producer-attestation signer-decoded-transaction))
+        (check-equal? (.ref receipt 'tla-config) "DirectAttack.cfg")
+        (check-equal?
+         (and (member '(backend-signed-transfer fixed-round-gas-limits
+                        bitquery-chain-analysis)
+                      (.ref receipt 'public-family-matches))
+              #t)
+         #t)
+        (check-equal? (.ref receipt 'tla-qualification-status)
+                      'not-supplied)
+        (check-equal? (.ref receipt 'action-authority?) #f)))
+    (poo-flow-test-case "different routes request different independent evidence"
+      (let ((api (exchange-signing-replay-observability
+                  exchange-signing-api-replay))
+            (interface (exchange-signing-replay-observability
+                        exchange-signing-interface-substitution)))
+        (check-equal? (.ref api 'missing-independent-observations)
+                      '(one-use-request-ledger signer-request-authentication
+                        signer-decoded-transaction))
+        (check-equal? (.ref interface 'missing-independent-observations)
+                      '(trusted-rendered-bytes signed-admin-operation
+                        linked-control-change))
+        (check-equal? (.ref interface 'tla-config) "InterfaceAttack.cfg")))))
