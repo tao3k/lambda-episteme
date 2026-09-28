@@ -115,6 +115,37 @@ control-change path, while Lean/Cedar qualify the modeled authorization
 boundary; neither checks historical Safe transaction bytes or proves what
 the signers saw.
 
+** Agent investigation proposals
+
+[[file:investigation.ss][The investigation projection]] exposes the full reverse receipt to an Agent
+investigator. Each supported hypothesis includes one actual Ascent witness
+path; missing claims and the three unresolved signer and workstation
+witnesses remain separate. The source
+binding tasks group all NCC claims under one reporting organization rather
+than treating the article's sections as independent corroboration. Every
+reference currently lacks a bound content digest, so the first collection
+step is to preserve and identify the exact source artifact. The collection
+options below have no ordering or preferred path.
+
+| Request | Why it matters | Proposed collection | Authority at this stage |
+|---------+----------------+---------------------+-------------------------|
+| Bind Bybit and NCC source artifacts | Establish stable content identity and separate reporting groups | Canonical source snapshots | Proposal only |
+| Check signer-key compromise alternative | Distinguish a competing mechanism without seeking private keys | Custodian key-use attestation | Proposal only |
+| Resolve initial workstation entry | Extend the reported compromise toward a testable entry path | Independent forensic timeline | Proposal only |
+| Resolve each signer display and intent | Test whether displayed intent matched signed bytes | Device receipts and intent-to-bytes record | Proposal only |
+
+These are read-only collection options, not executable tool calls. The Agent
+may author several POO branches that add possible evidence, contest a source,
+or contradict a value. =exchange-signing-bybit-explore= replays every branch
+against every hypothesis and returns changed statuses, witness paths, and
+remaining gaps without selecting a winner. A Host must
+bind an allowed tool, authorize its scope, preserve the result, and admit the
+evidence before rerunning the Case. The
+[[file:replay-observability.ss][replay observability receipt]] exposes this brief without running a tool or
+promoting any hypothesis to an incident fact. The atomic tests verify that
+support, contradiction, and source withdrawal produce different branches,
+and that no branch or collection option carries tool or action authority.
+
 * Structural risk scope
 
 The shared risk is *instruction contamination before a valid signature*:
@@ -336,9 +367,10 @@ flowchart LR
 #+end_src
 
 [[file:chain.ss][The POO chain Case]] checks that every supplied reported signal appears in the
-GQL selection contract and maps Ascent's preferred family to a TLA+
-configuration and Cedar revision. This is preliminary family screening used
-to select models; the integrated ingress ranking waits for route-specific
+GQL selection contract and retains every mapped family with its TLA+
+configuration and Cedar revision. The family comparison reports which models
+fit the supplied reports while preserving all mapped alternatives; the
+integrated ingress comparison waits for route-specific
 causal and TLC qualification. =just check-chain= runs the Scheme handoff,
 native TLA+ parser and official TLC, Lean build, and Cedar runtime replay in
 one Case gate. Scheme executes the bounded GQL selection when the Case
@@ -349,13 +381,13 @@ The chain never converts a research candidate into an authorization fact.
 [[file:flow-profiles.ss][the Exchange signing Module]] alongside a Funflow runtime Profile. Each
 attack Profile owns its synthetic route Case and TLA+ configuration. The
 shared six-node topology covers the causal trajectory, route-specific TLA+
-replay, GQL selection, Ascent ranking, Lean/Cedar authorization replay, and
+replay, GQL selection, Ascent comparison, Lean/Cedar authorization replay, and
 attack-surface comparison. The
 composition projects an inspectable Funflow plan; it does not schedule those
 steps or turn a possible Ascent route into an observed attack. The Case Just
 gate executes local qualifications, including all ten TLC configurations.
-Scheduling, durable receipts, and a family-specific run chosen from admitted
-evidence remain downstream responsibilities.
+Scheduling, durable receipts, and source admission remain downstream
+responsibilities. No single family is selected for execution here.
 
 [[file:replay-observability.ss][The replay observability API]] projects one source-preserving diagnostic receipt
 per composition. It reports public observed edges separately from synthetic

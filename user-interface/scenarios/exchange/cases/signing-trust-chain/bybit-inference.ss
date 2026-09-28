@@ -8,6 +8,7 @@
 (import (only-in :clan/poo/object .o)
         (only-in :poo-flow/modules/reverse-inference/interface
                  PooFlowReverseInferenceCase.
+                 poo-flow-inference-evidence-reference
                  poo-flow-inference-claim
                  poo-flow-inference-step
                  poo-flow-inference-hypothesis
@@ -17,33 +18,61 @@
 (export ExchangeSigningBybitEvidence.
         exchange-signing-reverse-infer-bybit)
 
+(def BybitOfficialReference.
+  (poo-flow-inference-evidence-reference
+   'bybit-official-timeline
+   "https://www.bybit.com/en/learn/this-week-in-bybit/bybit-security-incident-timeline"
+   'bybit-official))
+
+(def NccOnchainReference.
+  (poo-flow-inference-evidence-reference
+   'ncc-onchain-analysis
+   "https://www.nccgroup.com/research/in-depth-technical-analysis-of-the-bybit-hack/"
+   'ncc-group))
+
+(def NccJavascriptReference.
+  (poo-flow-inference-evidence-reference
+   'ncc-javascript-analysis
+   "https://www.nccgroup.com/research/in-depth-technical-analysis-of-the-bybit-hack/"
+   'ncc-group))
+
+(def NccForensicReference.
+  (poo-flow-inference-evidence-reference
+   'ncc-forensic-report-summary
+   "https://www.nccgroup.com/research/in-depth-technical-analysis-of-the-bybit-hack/"
+   'ncc-group))
+
 (def ExchangeSigningBybitEvidence.
   (.o (:: @ PooFlowReverseInferenceCase.)
       query: ExchangeSigningBybitClaimQuery
       claims:
       (list
        (poo-flow-inference-claim
-        'funds-outflow 'present 'bybit-official-timeline)
+        'funds-outflow 'present 'bybit-official-timeline
+        BybitOfficialReference.)
        (poo-flow-inference-claim
-        'safe-implementation-rewritten 'present 'ncc-onchain-analysis)
+        'safe-implementation-rewritten 'present 'ncc-onchain-analysis
+        NccOnchainReference.)
        (poo-flow-inference-claim
-        'exec-delegatecall 'present 'ncc-onchain-analysis)
+        'exec-delegatecall 'present 'ncc-onchain-analysis
+        NccOnchainReference.)
        (poo-flow-inference-claim
         'attacker-target-in-execution
         '0x96221423681a6d52e184d440a8efcebb105c7242
-        'ncc-onchain-analysis)
+        'ncc-onchain-analysis NccOnchainReference.)
        (poo-flow-inference-claim
-        'valid-safe-signatures 'present 'ncc-onchain-analysis)
+        'valid-safe-signatures 'present 'ncc-onchain-analysis
+        NccOnchainReference.)
        (poo-flow-inference-claim
         'javascript-substituted-signed-fields 'present
-        'ncc-javascript-analysis)
+        'ncc-javascript-analysis NccJavascriptReference.)
        (poo-flow-inference-claim
         'javascript-target
         '0x96221423681a6d52e184d440a8efcebb105c7242
-        'ncc-javascript-analysis)
+        'ncc-javascript-analysis NccJavascriptReference.)
        (poo-flow-inference-claim
         'safe-developer-machine-compromised 'present
-        'ncc-forensic-report-summary))
+        'ncc-forensic-report-summary NccForensicReference.))
       steps:
       (list
        (poo-flow-inference-step

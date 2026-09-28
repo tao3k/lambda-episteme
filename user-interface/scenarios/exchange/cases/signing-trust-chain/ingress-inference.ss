@@ -39,7 +39,7 @@
         (api-replay one-use-request-record)
         (queue-injection verified-producer-chain)
         (address-map-substitution independently-matched-destination))
-      next-probes:
+      evidence-questions:
       '((record-mutation withdrawal-without-intent)
         (api-replay duplicate-request-id)
         (queue-injection orphan-queue-message)
@@ -69,7 +69,7 @@
        (every signal-row? (.ref value 'independent-signals))
        (every factor-row? (.ref value 'model-factors))
        (every signal-row? (.ref value 'hard-challenges))
-       (every signal-row? (.ref value 'next-probes))))
+       (every signal-row? (.ref value 'evidence-questions))))
 
 (def (route-weight route hits challenges)
   (if (assoc route challenges)
@@ -158,7 +158,7 @@
         source-linked-factor-matches: matches
         applied-factors: hits
         independent-challenges: challenges
-        next-probes: (.ref case-value 'next-probes)
+        evidence-questions: (.ref case-value 'evidence-questions)
         model-factors: (.ref case-value 'model-factors)
         conditional-on-reports?: #t
         calibrated-probabilities?: #f

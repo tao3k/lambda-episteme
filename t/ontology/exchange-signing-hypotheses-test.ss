@@ -10,7 +10,7 @@
                  exchange-signing-compare-hypotheses
                  ExchangeSigningFamilyCase.
                  ExchangeSigningReportedFamilyEvidence.
-                 exchange-signing-rank-families))
+                 exchange-signing-compare-families))
 
 (export exchange-signing-hypotheses-test)
 
@@ -80,10 +80,10 @@
                       independent-queue-audit)) #t)
         (check-equal? (.ref result 'hypothesis-confirmed?) #f)))
     (poo-flow-test-case "published record favors backend signed transfer family"
-      (let (result (exchange-signing-rank-families
+      (let (result (exchange-signing-compare-families
                     ExchangeSigningReportedFamilyEvidence.))
-        (check-equal? (.ref result 'preferred-family)
-                      'backend-signed-transfer)
+        (check-equal? (.ref result 'model-compatible-families)
+                      '(backend-signed-transfer))
         (check-equal? (car (.ref result 'fit))
                       '(backend-signed-transfer 5 5 0 #t))
         (check-equal? (.ref result 'conditional-on-reports?) #t)
@@ -94,8 +94,8 @@
                   reported-signals:
                   '((backend-compromise bitget-incident-explainer)
                     (spoofed-transaction-data bitget-incident-explainer))))
-             (result (exchange-signing-rank-families case-value)))
-        (check-equal? (.ref result 'preferred-family) 'undetermined)))
+             (result (exchange-signing-compare-families case-value)))
+        (check-equal? (.ref result 'model-compatible-families) '())))
     (poo-flow-test-case "without the gas discriminator the family stays open"
       (let* ((case-value
               (.o (:: @ ExchangeSigningReportedFamilyEvidence.)
@@ -105,8 +105,8 @@
                     (no-private-key-compromise bitget-incident-explainer)
                     (wallet-signed-transfers bitquery-chain-analysis)
                     (cross-chain-bursts bitquery-chain-analysis))))
-             (result (exchange-signing-rank-families case-value)))
-        (check-equal? (.ref result 'preferred-family) 'undetermined)))
+             (result (exchange-signing-compare-families case-value)))
+        (check-equal? (.ref result 'model-compatible-families) '())))
     (poo-flow-test-case "an observed control change redirects the family"
       (let* ((case-value
               (.o (:: @ ExchangeSigningFamilyCase.)
@@ -114,9 +114,9 @@
                   '((backend-compromise independent-backend-receipt)
                     (spoofed-transaction-data independent-ingress-receipt)
                     (observed-admin-effect independent-chain-receipt))))
-             (result (exchange-signing-rank-families case-value)))
-        (check-equal? (.ref result 'preferred-family)
-                      'backend-admin-change)))
+             (result (exchange-signing-compare-families case-value)))
+        (check-equal? (.ref result 'model-compatible-families)
+                      '(backend-admin-change))))
     (poo-flow-test-case "extra reporter does not count one signal twice"
       (let* ((case-value
               (.o (:: @ ExchangeSigningReportedFamilyEvidence.)
@@ -124,6 +124,6 @@
                   (cons '(fixed-round-gas-limits second-chain-analysis)
                         (.ref ExchangeSigningReportedFamilyEvidence.
                               'reported-signals))))
-             (result (exchange-signing-rank-families case-value)))
+             (result (exchange-signing-compare-families case-value)))
         (check-equal? (car (.ref result 'fit))
                       '(backend-signed-transfer 5 5 0 #t))))))

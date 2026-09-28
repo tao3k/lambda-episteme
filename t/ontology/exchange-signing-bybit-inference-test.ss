@@ -3,14 +3,18 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :std/test test-suite check-equal? check-exception)
-        (only-in :clan/poo/object .o .ref)
+        (only-in :clan/poo/object .o .ref .slot?)
         (only-in :core/observability/testing-case poo-flow-test-case)
         (only-in :poo-flow/modules/reverse-inference/interface
                  poo-flow-inference-claim
+                 poo-flow-inference-branch
                  poo-flow-inference-hypothesis-result)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/bybit-inference
                  ExchangeSigningBybitEvidence.
-                 exchange-signing-reverse-infer-bybit))
+                 exchange-signing-reverse-infer-bybit)
+        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/investigation
+                 exchange-signing-bybit-investigation-brief
+                 exchange-signing-bybit-explore))
 
 (export exchange-signing-bybit-inference-test)
 
@@ -126,4 +130,74 @@
                       'supported)
         (check-equal?
          (hypothesis-status receipt 'reported-developer-compromise)
-         'needs-evidence)))))
+         'needs-evidence)))
+    (poo-flow-test-case "agent brief preserves the open inquiry space"
+      (let* ((brief (exchange-signing-bybit-investigation-brief))
+             (bindings (.ref brief 'source-binding-tasks))
+             (tasks (.ref brief 'collection-options))
+             (task (car tasks)))
+        (check-equal? (length bindings) 2)
+        (check-equal? (.ref (cadr bindings) 'independence-group)
+                      'ncc-group)
+        (check-equal?
+         (.ref (cadr bindings) 'source-uri)
+         "https://www.nccgroup.com/research/in-depth-technical-analysis-of-the-bybit-hack/")
+        (check-equal? (length (.ref brief 'evidence-without-content-digest))
+                      8)
+        (check-equal? (length tasks) 1)
+        (check-equal? (.ref task 'claim) 'signer-key-compromise)
+        (check-equal? (.ref task 'collection) 'key-use-attestation)
+        (check-equal? (.ref task 'read-only?) #t)
+        (check-equal? (.ref task 'tool-binding) #f)
+        (check-equal? (.ref task 'execution-authority?) #f)
+        (check-equal? (length (.ref brief 'unresolved-witness-tasks)) 3)
+        (check-equal? (length (.ref brief 'interface-witness-path)) 6)
+        (check-equal? (.ref brief 'tool-executed?) #f)))
+    (poo-flow-test-case "a missing display claim remains a collection option"
+      (let* ((brief (exchange-signing-bybit-investigation-brief
+                     (without 'javascript-target)))
+             (claims
+              (map (lambda (task) (.ref task 'claim))
+                   (.ref brief 'collection-options))))
+        (check-equal? (and (memq 'javascript-target claims) #t) #t)
+        (check-equal? (and (memq 'signer-key-compromise claims) #t) #t)
+        (check-equal? (.ref brief 'action-authority?) #f)))
+    (poo-flow-test-case "agent explores opposing branches without a winner"
+      (let* ((exploration
+              (exchange-signing-bybit-explore
+               (list
+                (poo-flow-inference-branch
+                 'key-use
+                 (list (poo-flow-inference-claim
+                        'signer-key-compromise 'present
+                        'hypothetical-custodian-report))
+                 '() 'test-key-alternative)
+                (poo-flow-inference-branch
+                 'contradict-display
+                 (list (poo-flow-inference-claim
+                        'javascript-target 'different-address
+                        'hypothetical-display-artifact))
+                 '() 'test-address-conflict)
+                (poo-flow-inference-branch
+                 'without-javascript-source '()
+                 '(javascript-target javascript-substituted-signed-fields)
+                 'test-source-dependence))))
+             (branches (.ref exploration 'branch-results)))
+        (check-equal? (length branches) 3)
+        (check-equal?
+         (.ref (poo-flow-inference-hypothesis-result
+                (.ref (car branches) 'receipt)
+                'signer-key-compromise) 'status)
+         'supported)
+        (check-equal?
+         (.ref (poo-flow-inference-hypothesis-result
+                (.ref (cadr branches) 'receipt)
+                'interface-substitution) 'status)
+         'conflicted)
+        (check-equal?
+         (.ref (poo-flow-inference-hypothesis-result
+                (.ref (caddr branches) 'receipt)
+                'interface-substitution) 'status)
+         'needs-evidence)
+        (check-equal? (.slot? exploration 'recommended-branch) #f)
+        (check-equal? (.ref exploration 'action-authority?) #f)))))

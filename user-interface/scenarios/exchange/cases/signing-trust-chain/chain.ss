@@ -12,7 +12,7 @@
                  ExchangeSigningSignalQuery ExchangeSigningSignalSource)
         (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/hypotheses
                  ExchangeSigningReportedFamilyEvidence.
-                 exchange-signing-rank-families))
+                 exchange-signing-compare-families))
 
 (export ExchangeSigningChainCase.
         ExchangeSigningReportedChain.
@@ -55,25 +55,40 @@
          (reported (.ref hypothesis 'reported-signals)))
     (unless (every (lambda (row) (memq (car row) selected)) reported)
       (error "Exchange signing GQL selection omits a reported signal"))
-    (let* ((ranked (exchange-signing-rank-families hypothesis))
-           (family (.ref ranked 'preferred-family))
-           (route (.call case-value resolve family)))
+    (let* ((compared (exchange-signing-compare-families hypothesis))
+           (compatible (.ref compared 'model-compatible-families))
+           (handoffs
+            (filter-map
+             (lambda (fit)
+               (let* ((family-id (car fit))
+                      (route (.call case-value resolve family-id)))
+                 (and route
+                      (.o kind: 'lambda-episteme.exchange.family-handoff
+                          family: family-id
+                          model-fit: fit
+                          model-compatible?:
+                          (and (memq family-id compatible) #t)
+                          tla-config: (.ref route 'tla-config)
+                          cedar-root: (.ref route 'cedar-root)
+                          host-cut: (.ref route 'host-cut)))))
+             (.ref compared 'fit))))
       (.o kind: 'lambda-episteme.exchange.signing-chain-result
           gql-source: (.ref case-value 'query-source)
           gql-source-identity: (.ref query 'semantic-revision)
           gql-selected-identities: selected
           reported-sources: (map cadr reported)
           reported-signal-rows: reported
-          preferred-family: family
+          model-compatible-families: compatible
+          family-handoffs: handoffs
           preliminary-family-screen?: #t
           route-qualification-required?: #t
-          family-fit: (.ref ranked 'fit)
-          family-matches: (.ref ranked 'matched)
-          family-challenges: (.ref ranked 'challenged)
-          tla-config: (and route (.ref route 'tla-config))
-          cedar-root: (and route (.ref route 'cedar-root))
-          host-cut: (and route (.ref route 'host-cut))
+          family-fit: (.ref compared 'fit)
+          family-matches: (.ref compared 'matched)
+          family-challenges: (.ref compared 'challenged)
+          tla-configs: (map (lambda (row) (.ref row 'tla-config)) handoffs)
+          cedar-roots: (map (lambda (row) (.ref row 'cedar-root)) handoffs)
+          host-cuts: (map (lambda (row) (.ref row 'host-cut)) handoffs)
           gql-executed?: #f
           evidence-admitted?: #f
-          handoff-resolved?: (and route #t)
+          handoff-resolved?: (pair? handoffs)
           action-authority?: #f))))

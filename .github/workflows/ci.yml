@@ -84,6 +84,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          echo "RUSTUP_HOME=${RUSTUP_HOME:-$HOME/.rustup}" >> "$GITHUB_ENV"
+          echo "CARGO_HOME=${CARGO_HOME:-$HOME/.cargo}" >> "$GITHUB_ENV"
           export HOME="$GITHUB_WORKSPACE/.ci/home"
           export ELAN_HOME="$HOME/.elan"
           mkdir -p "$HOME"
@@ -124,7 +126,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           repository: tao3k/poo-flow
-          ref: a847c0501d9d594274d45c8ded5092406aecd201
+          ref: be5d0db7fb250ec4d778bb7504fd6b0128b3c5ac
           path: poo-flow
           submodules: true
 

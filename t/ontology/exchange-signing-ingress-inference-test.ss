@@ -24,7 +24,7 @@
               (andmap (lambda (row) (memq (cadr row) selected))
                       (.ref ExchangeSigningPublicIngress. 'hard-challenges))
               (andmap (lambda (row) (memq (cadr row) selected))
-                      (.ref ExchangeSigningPublicIngress. 'next-probes))
+                      (.ref ExchangeSigningPublicIngress. 'evidence-questions))
               #t)
          #t)))
     (poo-flow-test-case "reported gas shape yields conditional 2:2:1:1"

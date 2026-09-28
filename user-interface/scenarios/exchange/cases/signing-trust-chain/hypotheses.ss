@@ -15,7 +15,7 @@
         exchange-signing-compare-hypotheses
         ExchangeSigningFamilyCase.
         ExchangeSigningReportedFamilyEvidence.
-        exchange-signing-rank-families)
+        exchange-signing-compare-families)
 
 (def ExchangeSigningHypothesisCase.
   (.o kind: 'lambda-episteme.exchange.signing-hypothesis-case
@@ -178,17 +178,7 @@
     (list family (if count-row (cadr count-row) 0) (length required)
           (length counter) (and eligible? (null? counter)))))
 
-(def (better-fit? candidate incumbent)
-  (and (list-ref candidate 4)
-       (or (not incumbent)
-           (not (list-ref incumbent 4))
-           (> (* (cadr candidate) (caddr incumbent))
-              (* (cadr incumbent) (caddr candidate)))
-           (and (= (* (cadr candidate) (caddr incumbent))
-                   (* (cadr incumbent) (caddr candidate)))
-                (> (cadr candidate) (cadr incumbent))))))
-
-(def (exchange-signing-rank-families case-value)
+(def (exchange-signing-compare-families case-value)
   (unless (family-case? case-value)
     (error "invalid Exchange signing family Case" case-value))
   (let* ((result
@@ -226,17 +216,13 @@
                              (.ref case-value 'selection-requirements)
                              counters))
                (.ref case-value 'families)))
-         (best
-          (let loop ((pending fits) (winner #f))
-            (if (null? pending) winner
-              (loop (cdr pending)
-                    (if (better-fit? (car pending) winner)
-                      (car pending) winner))))))
+         (compatible
+          (map car (filter (lambda (fit) (list-ref fit 4)) fits))))
     (.o kind: 'lambda-episteme.exchange.signing-family-result
         fit: fits
         matched: matches
         challenged: counters
-        preferred-family: (if best (car best) 'undetermined)
+        model-compatible-families: compatible
         conditional-on-reports?: #t
         exact-entry-point-known?: #f
         action-authority?: #f)))

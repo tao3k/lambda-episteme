@@ -19,6 +19,8 @@
         (only-in "bybit-inference.ss"
                  ExchangeSigningBybitEvidence.
                  exchange-signing-reverse-infer-bybit)
+        (only-in "investigation.ss"
+                 exchange-signing-bybit-investigation-brief-from-receipt)
         (only-in "causal.ss" exchange-signing-causal-trajectory)
         (only-in "flow-profiles.ss"
                  ExchangeSigningRecordMutationProfile.
@@ -113,6 +115,9 @@
           (exchange-signing-route-candidates ExchangeSigningBybitReference.))
          (reference-reconstruction
           (exchange-signing-reverse-infer-bybit bybit-evidence))
+         (investigation-brief
+          (exchange-signing-bybit-investigation-brief-from-receipt
+           reference-reconstruction))
          (causal (exchange-signing-causal-trajectory
                   (.ref profile 'identity)
                   (.ref profile 'observation-needs)))
@@ -186,7 +191,9 @@
         conditional-independent-signals: independent-rows
         input-provenance-verified?: #f
         missing-independent-observations: missing
-        public-family-preference: (.ref chain 'preferred-family)
+        public-model-compatible-families:
+        (.ref chain 'model-compatible-families)
+        public-family-handoffs: (.ref chain 'family-handoffs)
         public-family-screen-preliminary?: #t
         public-family-fit: (.ref chain 'family-fit)
         public-family-matches: (.ref chain 'family-matches)
@@ -213,6 +220,7 @@
         (.ref reference-reconstruction 'evidence-consistent?)
         bybit-reference-hypotheses:
         (.ref reference-reconstruction 'hypothesis-results)
+        bybit-agent-investigation-brief: investigation-brief
         bybit-reference-interface-status:
         (.ref (poo-flow-inference-hypothesis-result
                reference-reconstruction 'interface-substitution)
@@ -235,8 +243,8 @@
         (and ingress (.ref ingress 'source-linked-factor-matches))
         ingress-applied-assumptions:
         (and ingress (.ref ingress 'applied-factors))
-        ingress-next-probes:
-        (and ingress (.ref ingress 'next-probes))
+        ingress-evidence-questions:
+        (and ingress (.ref ingress 'evidence-questions))
         ingress-calibrated-probabilities?: #f
         ingress-ranking-status:
         (cond ((null? qualified-routes) 'awaiting-tla-qualification)
@@ -248,7 +256,7 @@
         (if qualification (cadr qualification) 'not-supplied)
         tla-counterexample-transitions:
         (if qualification (cadddr qualification) '())
-        cedar-root: (.ref chain 'cedar-root)
+        cedar-roots: (.ref chain 'cedar-roots)
         cedar-runtime-status: 'not-supplied
         gql-executed?: (and query-result #t)
         evidence-admitted?: #f
