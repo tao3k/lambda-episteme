@@ -25,13 +25,6 @@
                  GqlQueryEquals. GqlQueryProjection.
                  poo-flow-query-result-contract
                  poo-flow-query-element-space)
-        (only-in :poo-flow/modules/query/funs
-                 poo-flow-query-admit)
-        (only-in :poo-flow/modules/query/contracts
-                 poo-flow-query-source-content-identity
-                 poo-flow-query-bind-execution-receipt)
-        (only-in :poo-flow/modules/query/providers/mrr/interface
-                 MrrGqlQueryProvider)
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface
                  OntologyQuery. ontology-source
                  ontology-reasoning-query-property))
@@ -45,7 +38,6 @@
         HealthcarePrescriptionCausalTrajectoryQuery
         healthcare-query-source-path
         healthcare-query-element-space
-        healthcare-bind-mrr-query-candidate
         healthcare-case-profile-property-source)
 
 (def (digest text)
@@ -250,9 +242,7 @@
              (.ref query 'identity) actual))
     path))
 
-;;; The accepted ontology graph is the immutable ElementSpace snapshot used by
-;;; Query admission.  MRR execution remains outside this package; this helper
-;;; only binds a typed runtime candidate back to the originating Query.
+;;; The accepted ontology graph supplies the Query ElementSpace snapshot.
 (def (healthcare-query-element-space query graph)
   (unless (poo-flow-graph? graph)
     (error "Healthcare Query admission requires an ontology graph" graph))
@@ -261,12 +251,6 @@
    (.ref query 'semantic-revision)
    (map poo-flow-graph-node-id (poo-flow-graph-nodes graph))
    #t))
-
-(def (healthcare-bind-mrr-query-candidate query graph candidate)
-  (let* ((space (healthcare-query-element-space query graph))
-         (admission (poo-flow-query-admit query space)))
-    (poo-flow-query-bind-execution-receipt
-     MrrGqlQueryProvider query admission candidate)))
 
 ;;; Project the accepted POO reasoning graph into source-owned property rows.
 ;;; This is not an MRR catalog or a physical snapshot: MRR owns type identity
