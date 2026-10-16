@@ -3,10 +3,10 @@
 
 (import (only-in :std/test check-equal? check-exception test-case test-suite)
         (only-in :std/error Error?)
-        (only-in :poo-flow/src/core/failure execution-failure?)
-        (only-in :poo-flow/src/user-interface/module-selection-syntax
+        (only-in :poo-flow/modules/workflow/control-plane/failure execution-failure?)
+        (only-in :poo-flow/modules/user-interface/module-selection-syntax
                  poo-flow-modules!)
-        (only-in :poo-flow/src/user-interface/module-selection
+        (only-in :poo-flow/modules/user-interface/module-selection
                  poo-flow-user-module-selection
                  poo-flow-user-module-selection-entrypoint
                  poo-flow-user-module-selection-source-ref
@@ -15,7 +15,7 @@
                  poo-flow-module-source-ref-kind
                  poo-flow-module-source-ref-metadata
                  poo-flow-module-source-ref-value)
-        (only-in :poo-flow/src/authoring/module-source-collection
+        (only-in :poo-flow/modules/module-authoring/module-source-collection
                  make-poo-flow-module-source-collection
                  make-poo-flow-module-load-path
                  make-poo-flow-contribution-module-source
@@ -28,7 +28,7 @@
                  poo-flow-module-source-collection-modules-root
                  poo-flow-load-modules
                  poo-flow-module-load-path-collections)
-        (only-in :poo-flow/src/user-interface/module-source-selection
+        (only-in :poo-flow/modules/user-interface/module-source-selection
                  poo-flow-module-selection-source-refs)
         (rename-in :poo-flow/lambda-episteme/user-interface/init
                    (poo-flow-user-module-bundles

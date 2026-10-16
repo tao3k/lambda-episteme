@@ -2,11 +2,11 @@
         (only-in :clan/poo/object .o .ref)
         :core/contribution/objects
         (only-in :core/profile-composition/profile-bundle compose profiles)
-        (only-in :poo-flow/src/scenario/accessors
+        (only-in :poo-flow/modules/workflow/scenario/accessors
                  poo-flow-scenario-case-profiles)
-        (only-in :poo-flow/src/user-interface/module-selection
+        (only-in :poo-flow/modules/user-interface/module-selection
                  poo-flow-user-module-selection)
-        (only-in :poo-flow/src/scenario/composition-syntax user-composition)
+        (only-in :poo-flow/modules/workflow/scenario/composition-syntax user-composition)
         :poo-flow/modules/governance/interface
         :poo-flow/lambda-episteme/modules/diataxis/interface
         :poo-flow/lambda-episteme/modules/decision-kind/interface)

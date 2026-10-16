@@ -4,7 +4,7 @@
 
 (import (only-in :clan/poo/object .all-slots .ref .slot? object?)
         :std/list/list
-        (only-in :poo-flow/src/graph/types poo-flow-graph?)
+        (only-in :core/graph/types poo-flow-graph?)
         (only-in :poo-flow/modules/authorization/types
                  poo-flow-authorization-capability?)
         (only-in :poo-flow/modules/temporal-causality/types

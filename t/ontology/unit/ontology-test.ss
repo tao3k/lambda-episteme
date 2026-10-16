@@ -6,7 +6,7 @@
         (only-in :clan/poo/object
                  .all-slots .cc .def .o .ref .set! .slot? object?)
         :std/list/list
-        (only-in :poo-flow/src/graph/types
+        (only-in :core/graph/types
                  poo-flow-graph poo-flow-graph-edge poo-flow-graph-node
                  poo-flow-graph-edge-kind poo-flow-graph-edges
                  poo-flow-graph-node-metadata poo-flow-graph-nodes
@@ -14,9 +14,9 @@
                  poo-flow-graph?)
         :core/contribution/objects
         :core/profile-composition/profile-bundle
-        :poo-flow/src/scenario/case
-        :poo-flow/src/scenario/accessors
-        :poo-flow/src/scenario/composition-syntax
+        :poo-flow/modules/workflow/scenario/case
+        :poo-flow/modules/workflow/scenario/accessors
+        :poo-flow/modules/workflow/scenario/composition-syntax
         :poo-flow/modules/governance/interface
         (only-in :poo-flow/modules/query/objects
                  poo-flow-query-execution-candidate)

@@ -9,7 +9,7 @@
         (only-in :std/misc/ports read-file-u8vector)
         :std/list/list
         (only-in :std/encoding/json JSONReadOptions u8vector->json)
-        (only-in :poo-flow/src/feature-system/source-lock-feature
+        (only-in :core/feature-system/source-lock-feature
                  require-source-lock-payload
                  sources-lock-ref)
         "sources.ss")

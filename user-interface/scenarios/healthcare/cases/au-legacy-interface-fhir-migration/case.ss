@@ -5,7 +5,7 @@
 
 (import (only-in :clan/poo/object .def .o .ref)
         (rename-in
-         (only-in :poo-flow/src/graph/types
+         (only-in :core/graph/types
                   graph poo-flow-graph-edge poo-flow-graph-node)
          (graph Graph))
         (only-in :poo-flow/lambda-episteme/modules/ontology/interface

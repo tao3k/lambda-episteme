@@ -7,7 +7,7 @@
 ;;; witnesses remain distinct. This projection never admits evidence or runs
 ;;; TLC, GQL, Lean, or Cedar on behalf of the caller.
 (import (only-in :clan/poo/object .o .ref .slot? object?)
-        (only-in :poo-flow/src/scenario/accessors
+        (only-in :poo-flow/modules/workflow/scenario/accessors
                  poo-flow-scenario-case-profiles)
         (only-in :poo-flow/modules/reverse-inference/interface
                  poo-flow-inference-hypothesis-result)

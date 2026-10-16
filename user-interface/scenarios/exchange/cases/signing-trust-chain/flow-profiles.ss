@@ -7,7 +7,7 @@
 ;;; identity and temporal model selection.
 (import (only-in :clan/poo/object .o)
         (only-in :core/module-system/schema/relations poo-flow-semantic-identity)
-        (only-in :poo-flow/src/authoring/semantic-module
+        (only-in :poo-flow/modules/module-authoring/semantic-module
                  poo-flow-semantic-module)
         (only-in :core/profile-composition/profile-bundle
                  poo-flow-module-profiles poo-flow-profile-export)

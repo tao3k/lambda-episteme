@@ -6,7 +6,7 @@
 ;;; Final User Composition. The root imports exactly the POO values it composes;
 ;;; no filesystem scanner or implicit re-export widens this boundary.
 (import (only-in :core/profile-composition/profile-bundle compose profiles)
-        (only-in :poo-flow/src/scenario/composition-syntax user-composition)
+        (only-in :poo-flow/modules/workflow/scenario/composition-syntax user-composition)
         (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
         (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy

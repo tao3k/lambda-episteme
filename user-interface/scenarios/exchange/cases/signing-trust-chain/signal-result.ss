@@ -5,7 +5,7 @@
 ;;; Source-labelled POO nodes feed the bounded Scheme GQL selector. A local
 ;;; query result is a conditional model observation, never source admission.
 (import (only-in :clan/poo/object .o .ref)
-        (only-in :poo-flow/src/utilities/functional
+        (only-in :core/utilities/functional
                  poo-flow-all? poo-flow-map poo-flow-stable-duplicates)
         (only-in :poo-flow/modules/query/scheme-select
                  poo-flow-query-select-scheme-nodes)

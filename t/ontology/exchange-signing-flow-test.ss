@@ -7,9 +7,9 @@
         (only-in :core/observability/testing-case poo-flow-test-case)
         (only-in :poo-flow/modules/reverse-inference/interface
                  poo-flow-inference-claim)
-        (only-in :poo-flow/src/scenario/case
+        (only-in :poo-flow/modules/workflow/scenario/case
                  poo-flow-scenario-case?)
-        (only-in :poo-flow/src/scenario/accessors
+        (only-in :poo-flow/modules/workflow/scenario/accessors
                  poo-flow-scenario-case-profiles)
         (only-in :poo-flow/modules/funflow/runtime-load-projection
                  poo-flow-runtime-load-projection)

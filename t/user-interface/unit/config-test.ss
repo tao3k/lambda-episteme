@@ -5,8 +5,8 @@
 
 (import :std/test
         (only-in :clan/poo/object .ref)
-        (only-in :poo-flow/src/scenario/case poo-flow-scenario-case?)
-        (only-in :poo-flow/src/scenario/accessors
+        (only-in :poo-flow/modules/workflow/scenario/case poo-flow-scenario-case?)
+        (only-in :poo-flow/modules/workflow/scenario/accessors
                  poo-flow-scenario-case-name
                  poo-flow-scenario-case-profiles)
         :poo-flow/lambda-episteme/user-interface/config)

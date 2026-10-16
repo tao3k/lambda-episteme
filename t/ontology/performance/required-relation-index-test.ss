@@ -10,7 +10,7 @@
                  benchmark-fixture-contract-pass?
                  benchmark-receipt-pass?
                  benchmark-run)
-        (only-in :poo-flow/src/graph/types
+        (only-in :core/graph/types
                  poo-flow-graph poo-flow-graph-edge poo-flow-graph-edge-from
                  poo-flow-graph-edge-kind poo-flow-graph-node
                  poo-flow-graph-node-id poo-flow-graph-node-payload)

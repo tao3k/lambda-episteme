@@ -5,12 +5,12 @@
 
 (import :std/test
         (only-in :clan/poo/object .ref)
-        (only-in :poo-flow/src/graph/types
+        (only-in :core/graph/types
                  poo-flow-graph-edge-kind
                  poo-flow-graph-edges
                  poo-flow-graph-node-id
                  poo-flow-graph-nodes)
-        (only-in :poo-flow/src/scenario/accessors
+        (only-in :poo-flow/modules/workflow/scenario/accessors
                  poo-flow-scenario-case-name)
         (only-in :poo-flow/modules/standards/interface
                  poo-flow-standard-governance-interface?)
