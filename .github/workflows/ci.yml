@@ -121,13 +121,13 @@ jobs:
       GERBIL_BUILD_CORES: 12
       POO_FLOW_ROOT: ${{ github.workspace }}/poo-flow
       GERBIL_PATH: ${{ github.workspace }}/poo-flow/.gerbil
-      GERBIL_LOADPATH: ${{ github.workspace }}/poo-flow/packages/lambda-episteme:${{ github.workspace }}/poo-flow:${{ github.workspace }}/poo-flow/core:${{ github.workspace }}/poo-flow/.gerbil/lib
+      GERBIL_LOADPATH: ${{ github.workspace }}/poo-flow/packages/lambda-episteme:${{ github.workspace }}/poo-flow:${{ github.workspace }}/poo-flow/.gerbil/lib
     steps:
       - name: Checkout pinned POO Flow mechanism library
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           repository: tao3k/poo-flow
-          ref: 018d6652b439fefe5ca9c54b0f59fb574d0a8562
+          ref: b00a5e9b3cc8c4f454a3badaf13903b0cf3ceac7
           path: poo-flow
           submodules: false
 
@@ -155,6 +155,10 @@ jobs:
       - name: Resolve immutable Gerbil release and module graph
         working-directory: poo-flow
         run: bazelisk mod deps --lockfile_mode=error
+
+      - name: Materialize pinned native dependency commits
+        working-directory: poo-flow
+        run: python3 packages/automation/gerbil_dependency_pin.py prepare-native --package-root "$PWD/.gerbil/pkg"
 
       - name: Install declared Gerbil package dependencies
         working-directory: poo-flow
