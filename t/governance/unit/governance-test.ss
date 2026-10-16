@@ -4,7 +4,7 @@
         (only-in :core/profile-composition/profile-bundle compose profiles)
         (only-in :poo-flow/modules/workflow/scenario/accessors
                  poo-flow-scenario-case-profiles)
-        (only-in :poo-flow/modules/user-interface/module-selection
+        (only-in :core/module-system/selection/objects
                  poo-flow-user-module-selection)
         (only-in :poo-flow/modules/workflow/scenario/composition-syntax user-composition)
         :poo-flow/modules/governance/interface
