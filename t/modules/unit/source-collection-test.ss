@@ -15,19 +15,8 @@
                  poo-flow-module-source-ref-kind
                  poo-flow-module-source-ref-metadata
                  poo-flow-module-source-ref-value)
-        (only-in :poo-flow/modules/module-authoring/module-source-collection
-                 make-poo-flow-module-source-collection
-                 make-poo-flow-module-load-path
-                 make-poo-flow-contribution-module-source
-                 make-poo-flow-contribution-module-load-path
-                 make-poo-flow-user-interface-module-source
-                 make-poo-flow-user-interface-module-load-path
-                 extend-poo-flow-module-load-path
-                 poo-flow-module-source-collection-identity
-                 poo-flow-module-source-collection-owner
-                 poo-flow-module-source-collection-modules-root
-                 poo-flow-load-modules
-                 poo-flow-module-load-path-collections)
+        (only-in :core/module-system/source/collection make-poo-flow-module-source-collection make-poo-flow-module-load-path make-poo-flow-contribution-module-source make-poo-flow-user-interface-module-source make-poo-flow-user-interface-module-load-path extend-poo-flow-module-load-path poo-flow-module-source-collection-identity poo-flow-module-source-collection-owner poo-flow-module-source-collection-modules-root poo-flow-load-modules poo-flow-module-load-path-collections)
+        (only-in :poo-flow/modules/module-authoring/module-source-collection make-poo-flow-contribution-module-load-path)
         (only-in :poo-flow/modules/user-interface/module-source-selection
                  poo-flow-module-selection-source-refs)
         (rename-in :poo-flow/lambda-episteme/user-interface/init
