@@ -6,14 +6,14 @@
 ;;; Final User Composition. The root imports exactly the POO values it composes;
 ;;; no filesystem scanner or implicit re-export widens this boundary.
 (import (only-in :core/profile-composition/profile-bundle compose profiles)
-        (only-in :poo-flow/modules/workflow/scenario/composition-syntax user-composition)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
+        (only-in :agentic-ai-lab/modules/workflow/scenario/composition-syntax user-composition)
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/privacy
                  PrivacyProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
                  HealthcareBaseProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/regions/australia
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/regions/australia
                  AustraliaHealthcareRegionProfile))
 
 (export healthcare-australia)

@@ -7,9 +7,9 @@ permit (
   resource is Healthcare::StandardMigration
 )
 when {
-  context.poo_flow.governanceAdmitted &&
+  context.agentic_ai_lab.governanceAdmitted &&
   !context.aiAuthority &&
-  context.migrationDigest == context.poo_flow.intentDigest &&
+  context.migrationDigest == context.agentic_ai_lab.intentDigest &&
   context.formalAssuranceDigest != "" &&
   context.humanReviewDigest != "" &&
   context.targetStandardEdition == "hl7.fhir.au.core@1.0.0"

@@ -6,9 +6,9 @@
 ;;; Lambda Healthcare composes the generic Standards Lego stud with its FHIR
 ;;; family, exact editions, catalog and Provider.  Core owns none of these.
 (import (only-in :clan/poo/object .o)
-        (only-in :poo-flow/modules/standards/config
-                 poo-flow-standard-default-budget
-                 poo-flow-standards-module)
+        (only-in :agentic-ai-lab/modules/standards/config
+                 agentic-ai-lab-standard-default-budget
+                 agentic-ai-lab-standards-module)
         (only-in "fhir/config.ss"
                  FHIRStandardsCatalog
                  FHIRValidationProvider
@@ -26,10 +26,10 @@
 
 (def HealthcareStandardsModule
   (.o (:: @
-          (poo-flow-standards-module
+          (agentic-ai-lab-standards-module
            "lambda-episteme/modules/healthcare/standards"
            FHIRStandardsCatalog
-           poo-flow-standard-default-budget
+           agentic-ai-lab-standard-default-budget
            (.o fhir: FHIRValidationProvider)
            (.o migration: HealthcareStandardMigrationFeatureModule)))
       industry: 'healthcare

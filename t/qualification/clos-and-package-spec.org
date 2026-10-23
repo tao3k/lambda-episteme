@@ -4,7 +4,7 @@
 * Current source boundary
 
 Lambda Episteme publishes decision-kind, Diataxis, Healthcare and Ontology
-module interfaces. POO Flow's contribution registry owns checkout discovery and
+module interfaces. Agentic AI Lab's contribution registry owns checkout discovery and
 maps those four public modules to the pinned child source. ADR, GitOps, SDLC and
 NASA lifecycle ownership resides in Lambda Aitia. The Episteme child package
 does not implement a second source registry, compiler, scheduler or cache.
@@ -27,7 +27,7 @@ layer, the second rebuilt =healthcare/standards/interface.ss= and
 =healthcare/config.ss=, the third rebuilt =healthcare/interface.ss=, and the
 fourth emitted zero compile rows.  ASP's projected closure is dependency-first;
 Gerbil 0.18.2 =std/make= waits for direct dependencies but retains library
-timestamps while deciding dependent currentness.  POO Flow does not compensate
+timestamps while deciding dependent currentness.  Agentic AI Lab does not compensate
 with force builds, timestamp mutation, retries or a second scheduler.  Therefore
 single-invocation incremental convergence remains an upstream boundary rather
 than a completed optimization claim.
@@ -71,11 +71,11 @@ qualification performed 19 checks from retained HL7v2 bytes through
 admission and Ontology composition; all passed.
 
 The current contribution build projects 43 targets through ASP/std-make.
-POO Flow's earlier build projected 157 targets in
+Agentic AI Lab's earlier build projected 157 targets in
 =24.108s= after adding the public config-discovery macro to =build.ss=.  The
 ordinary child User Interface config test subsequently passed from the
 installed macro and emitted a five-second heartbeat during its =9.283745s=
-operation.  POO Flow's own discovery-role and Doom-config tests also passed,
+operation.  Agentic AI Lab's own discovery-role and Doom-config tests also passed,
 proving that packaged contributor discovery does not change root UI discovery.
 
 * Limits

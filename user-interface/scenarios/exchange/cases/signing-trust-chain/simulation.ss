@@ -7,7 +7,7 @@
 ;;; terminal outflow; the independent Bybit timeline records a control change
 ;;; and outflow without importing either observation into the Bitget branch.
 (import (only-in :clan/poo/object .o .ref)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/reasoning
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/reasoning
                  ExchangeSigningRouteCase.
                  exchange-signing-route-candidates))
 

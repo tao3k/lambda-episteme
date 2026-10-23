@@ -4,4 +4,4 @@
 
 ;;; Native contributor package identity only. Profiles, Scenarios, Cases and
 ;;; build behavior are owned by their Scheme sources and the parent build API.
-(package: poo-flow/lambda-episteme)
+(package: agentic-ai-lab/lambda-episteme)

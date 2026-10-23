@@ -5,11 +5,11 @@
 
 (import (only-in :clan/poo/object .ref .slot? object?)
         (only-in :clan/poo/mop define-type Type. element?)
-        (only-in :poo-flow/modules/standards/types
-                 poo-flow-standards-module?))
+        (only-in :agentic-ai-lab/modules/standards/types
+                 agentic-ai-lab-standards-module?))
 
 (export +lambda-healthcare-module-kind+
-        PooFlowHealthcareModule
+        AgenticAILabHealthcareModule
         lambda-healthcare-module?)
 
 (def +lambda-healthcare-module-kind+ 'lambda-episteme.healthcare-module.v1)
@@ -21,10 +21,10 @@
        (.slot? value 'standards)
        (eq? (.ref value 'kind) +lambda-healthcare-module-kind+)
        (string? (.ref value 'identity))
-       (poo-flow-standards-module? (.ref value 'standards))))
+       (agentic-ai-lab-standards-module? (.ref value 'standards))))
 
-(define-type (PooFlowHealthcareModule @ Type.)
+(define-type (AgenticAILabHealthcareModule @ Type.)
   .element?: lambda-healthcare-module-shape?)
 
 (def (lambda-healthcare-module? value)
-  (element? PooFlowHealthcareModule value))
+  (element? AgenticAILabHealthcareModule value))

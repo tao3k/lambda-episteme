@@ -5,15 +5,15 @@
 (import (only-in :clan/poo/object .def .o)
         (rename-in
          (only-in :core/graph/types
-                  graph poo-flow-graph-edge poo-flow-graph-node)
+                  graph agentic-ai-lab-graph-edge agentic-ai-lab-graph-node)
          (graph Graph))
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  OntologyCase)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/manufacturing/profiles/base
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/manufacturing/profiles/base
                  ManufacturingBaseProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/manufacturing/scenario
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/manufacturing/scenario
                  ManufacturingScenario))
 
 (export WorkOrderExecutionCase)
@@ -29,12 +29,12 @@
    (.o (:: @ Graph)
        graph-id: 'work-order-execution
        node-declarations:
-       (.o machine-1: (poo-flow-graph-node 'machine-1 'Machine)
-           work-order-1: (poo-flow-graph-node 'work-order-1 'WorkOrder)
-           part-1: (poo-flow-graph-node 'part-1 'Part))
+       (.o machine-1: (agentic-ai-lab-graph-node 'machine-1 'Machine)
+           work-order-1: (agentic-ai-lab-graph-node 'work-order-1 'WorkOrder)
+           part-1: (agentic-ai-lab-graph-node 'part-1 'Part))
        edge-declarations:
        (.o machine-executes-work-order:
-           (poo-flow-graph-edge
+           (agentic-ai-lab-graph-edge
             'machine-1 'work-order-1 'executesWorkOrder)
            work-order-consumes-part:
-           (poo-flow-graph-edge 'work-order-1 'part-1 'consumesPart)))))
+           (agentic-ai-lab-graph-edge 'work-order-1 'part-1 'consumesPart)))))

@@ -17,7 +17,7 @@
  (sourcePath . "t/scenarios/performance/ontology-required-relation-index/benchmark.ss")
  (rule . GERBIL-SCHEME-AGENT-R031)
  (feature . ontology-required-relation-index)
- (optimizationFocus . "single-pass std hash endpoint index and POO Flow functional filter-map")
+ (optimizationFocus . "single-pass std hash endpoint index and Agentic AI Lab functional filter-map")
  (inputShape . "10,000 Transaction nodes, one Account node and 9,999 postsTo edges")
  (expectedOutcome . "one missing required-relation diagnostic without a node-by-edge nested scan")
  (expectedRepair . "retain one endpoint index per rule evaluation; do not restore per-node full-edge find")

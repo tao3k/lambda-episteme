@@ -3,22 +3,22 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .def .o .ref)
-        (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/fhir/config
+        (only-in :agentic-ai-lab/lambda-episteme/modules/healthcare/standards/fhir/config
                  FHIRR4StandardRef
                  AUBaseStandardRef
                  AUCoreStandardRef)
-        (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/fhir/objects
+        (only-in :agentic-ai-lab/lambda-episteme/modules/healthcare/standards/fhir/objects
                  FHIRMedicationRequestStandardProfile)
-        (only-in :poo-flow/modules/governance/objects
-                 poo-flow-governance-precondition
-                 poo-flow-governance-threat)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/modules/governance/objects
+                 agentic-ai-lab-governance-precondition
+                 agentic-ai-lab-governance-threat)
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  ontology-source)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/governance
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/governance
                  healthcare-contextual-governance-assessment)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/primary-care
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/primary-care
                  PrimaryCareProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/support-at-home
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/support-at-home
                  SupportAtHomeProfile))
 
 (export AustraliaHealthcareRegionProfile)
@@ -55,21 +55,21 @@
   (rule-declarations =>.+ (.o))
   (threat-declarations =>.+
    (.o primary-care-program-drift:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/regions/australia/threat/primary-care-program-drift"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/regions/australia/precondition/primary-care-program"
           #t "evidence:current-mymedicare-program"))
         mitigations:
         '("validate MyMedicare registration and provider requirements against current authority evidence"))
        home-support-program-drift:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/regions/australia/threat/home-support-program-drift"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/regions/australia/precondition/home-support-program"
           #t "evidence:current-support-at-home-program"))
         mitigations:

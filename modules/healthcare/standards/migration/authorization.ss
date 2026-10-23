@@ -7,15 +7,15 @@
 ;;; policy execution; this module owns the exact reviewer/action/resource
 ;;; projection and the admitted governance Binding returned to an Agent.
 (import (only-in :clan/poo/object .o .ref)
-        (only-in :poo-flow/modules/authorization/providers/cedar/interface
+        (only-in :agentic-ai-lab/modules/authorization/providers/cedar/interface
                  CedarAuthorizationProvider
-                 poo-flow-cedar-authorization-request
-                 poo-flow-cedar-authorization-request?
-                 poo-flow-cedar-decision-permit?
-                 poo-flow-cedar-runtime-handoff?)
-        (only-in :poo-flow/modules/standards/interface
-                 poo-flow-standard-digest
-                 poo-flow-standard-governance-binding)
+                 agentic-ai-lab-cedar-authorization-request
+                 agentic-ai-lab-cedar-authorization-request?
+                 agentic-ai-lab-cedar-decision-permit?
+                 agentic-ai-lab-cedar-runtime-handoff?)
+        (only-in :agentic-ai-lab/modules/standards/interface
+                 agentic-ai-lab-standard-digest
+                 agentic-ai-lab-standard-governance-binding)
         "types.ss")
 
 (export HealthcareStandardMigrationHumanAuthorizationInterface
@@ -32,13 +32,13 @@
                (.ref migration-receipt 'valid?)
                (string=? (.ref migration-case 'identity)
                          (.ref migration-receipt 'case-identity))
-               (poo-flow-cedar-runtime-handoff? handoff))
+               (agentic-ai-lab-cedar-runtime-handoff? handoff))
     (error "Cedar migration request requires an admitted exact migration"
            migration-case migration-receipt))
   (let (review (.ref migration-case 'review))
     (unless (eq? (.ref review 'decision) 'approved)
       (error "Cedar migration request requires approved human review" review))
-    (poo-flow-cedar-authorization-request
+    (agentic-ai-lab-cedar-authorization-request
      (string-append "Healthcare::MigrationReviewer::\""
                     (.ref review 'reviewer-identity) "\"")
      +migration-action+
@@ -55,18 +55,18 @@
 
 (def (healthcare-standard-migration-human-authorization-binding
       request-value decision-value)
-  (unless (and (poo-flow-cedar-authorization-request? request-value)
+  (unless (and (agentic-ai-lab-cedar-authorization-request? request-value)
                (string=? (.ref request-value 'action) +migration-action+)
-               (poo-flow-cedar-decision-permit? decision-value))
+               (agentic-ai-lab-cedar-decision-permit? decision-value))
     (error "Standard migration cutover requires an exact Cedar permit"
            request-value decision-value))
   (let (binding-digest
-        (poo-flow-standard-digest
+        (agentic-ai-lab-standard-digest
          (list 'lambda-episteme.healthcare-standard-migration-cedar-permit.v1
                (.ref request-value 'principal) (.ref request-value 'action)
                (.ref request-value 'resource) (.ref request-value 'intent)
                (.ref decision-value 'decision-digest))))
-    (poo-flow-standard-governance-binding
+    (agentic-ai-lab-standard-governance-binding
      'human-authorization "lambda-healthcare/standard-migration"
      'cedar-human-permit binding-digest 'admitted #t
      (.o request: request-value decision: decision-value))))

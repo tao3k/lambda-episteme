@@ -119,25 +119,25 @@ jobs:
     timeout-minutes: 60
     env:
       GERBIL_BUILD_CORES: 12
-      POO_FLOW_ROOT: ${{ github.workspace }}/poo-flow
-      GERBIL_PATH: ${{ github.workspace }}/poo-flow/.gerbil
-      GERBIL_LOADPATH: ${{ github.workspace }}/poo-flow/packages/lambda-episteme:${{ github.workspace }}/poo-flow:${{ github.workspace }}/poo-flow/.gerbil/lib
+      AGENTIC_AI_LAB_ROOT: ${{ github.workspace }}/agentic-ai-lab
+      GERBIL_PATH: ${{ github.workspace }}/agentic-ai-lab/.gerbil
+      GERBIL_LOADPATH: ${{ github.workspace }}/agentic-ai-lab/packages/lambda-episteme:${{ github.workspace }}/agentic-ai-lab:${{ github.workspace }}/agentic-ai-lab/.gerbil/lib
     steps:
-      - name: Checkout pinned POO Flow mechanism library
+      - name: Checkout pinned Agentic AI Lab mechanism library
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
-          repository: tao3k/poo-flow
+          repository: tao3k/agentic-ai-lab
           ref: f721d112f1d27569e404d979607007f4a6de6552
-          path: poo-flow
+          path: agentic-ai-lab
           submodules: false
 
       - name: Checkout Lambda Episteme under packages
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
-          path: poo-flow/packages/lambda-episteme
+          path: agentic-ai-lab/packages/lambda-episteme
 
       - name: Initialize pinned Core source directory
-        working-directory: poo-flow
+        working-directory: agentic-ai-lab
         run: git submodule update --init core
 
       - name: Install Just
@@ -153,25 +153,25 @@ jobs:
           repository-cache: true
 
       - name: Resolve immutable Gerbil release and module graph
-        working-directory: poo-flow
+        working-directory: agentic-ai-lab
         run: bazelisk mod deps --lockfile_mode=error
 
       - name: Materialize pinned native dependency commits
-        working-directory: poo-flow
+        working-directory: agentic-ai-lab
         run: python3 packages/automation/gerbil_dependency_pin.py prepare-native --package-root "$PWD/.gerbil/pkg"
 
       - name: Install declared Gerbil package dependencies
-        working-directory: poo-flow
+        working-directory: agentic-ai-lab
         run: bazelisk run @local_gerbil//:install_dependencies
 
-      - name: Build POO Flow mechanism library
-        working-directory: poo-flow
+      - name: Build Agentic AI Lab mechanism library
+        working-directory: agentic-ai-lab
         run: bazelisk run @local_gerbil//:native_scheme_env -- bash -lc 'cd "$BUILD_WORKSPACE_DIRECTORY" && just build'
 
       - name: Run native Scheme tests
-        working-directory: poo-flow
+        working-directory: agentic-ai-lab
         run: bazelisk run @local_gerbil//:native_scheme_env -- bash -lc 'cd "$BUILD_WORKSPACE_DIRECTORY/packages/lambda-episteme" && just test-scheme-all'
 
       - name: Build Lambda Episteme
-        working-directory: poo-flow
+        working-directory: agentic-ai-lab
         run: bazelisk run @local_gerbil//:native_scheme_env -- bash -lc 'cd "$BUILD_WORKSPACE_DIRECTORY/packages/lambda-episteme" && just build-scheme'

@@ -4,20 +4,20 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .def .o .ref)
-        (only-in :poo-flow/modules/governance/objects
-                 poo-flow-governance-precondition
-                 poo-flow-governance-threat)
-        (only-in :poo-flow/lambda-episteme/modules/healthcare/interface
+        (only-in :agentic-ai-lab/modules/governance/objects
+                 agentic-ai-lab-governance-precondition
+                 agentic-ai-lab-governance-threat)
+        (only-in :agentic-ai-lab/lambda-episteme/modules/healthcare/interface
                  HealthcareModule)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  ontology-source)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/privacy
                  PrivacyProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/governance
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/governance
                  healthcare-contextual-governance-assessment)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
                  HealthcareBaseProfile))
 
 (export AustraliaHealthcareStandardMigrationProfile)
@@ -76,58 +76,58 @@
   (rule-declarations =>.+ (.o))
   (threat-declarations =>.+
    (.o parser-evidence-unbound:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/regions/australia/migration/threat/parser-evidence-unbound"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/regions/australia/migration/precondition/parser-receipt"
           #t "evidence:gerbil-parser-qualified-source-snapshot"))
         mitigations: '("bind parser receipt to the exact legacy source snapshot"))
        ai-authority-escalation:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/regions/australia/migration/threat/ai-authority-escalation"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/regions/australia/migration/precondition/ai-advisory-only"
           #t "evidence:ai-analysis-is-advisory"))
         mitigations: '("require independent human approval of every mapping"))
        target-conformance-bypass:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/regions/australia/migration/threat/target-conformance-bypass"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/regions/australia/migration/precondition/conformance"
           #t "evidence:exact-au-core-conformance-receipt"))
         mitigations: '("validate the candidate against the pinned AU Core edition"))
        formal-impact-stale:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/regions/australia/migration/threat/formal-impact-stale"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/regions/australia/migration/precondition/tla-lean-impact"
           #t "evidence:exact-tla-digest-bound-to-lean-refinement"))
         mitigations:
         '("reject stale Lean evidence whenever the TLA+ source digest changes"))
        human-authorization-bypass:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/regions/australia/migration/threat/human-authorization-bypass"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/regions/australia/migration/precondition/cedar-human-permit"
           #t "evidence:exact-reviewer-action-resource-cedar-permit"))
         mitigations:
         '("require Cedar human authorization before cutover readiness"))
        unsafe-cutover:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/regions/australia/migration/threat/unsafe-cutover"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/regions/australia/migration/precondition/rollback"
           #t "evidence:legacy-source-snapshot-retained"))
         mitigations: '("shadow validate before a phased application-owned cutover"))))

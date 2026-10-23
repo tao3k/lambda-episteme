@@ -1,15 +1,15 @@
 #+title: POO contribution module contract
 
 * Framework-owned module contract
-The normative layout is documented by POO Flow in
+The normative layout is documented by Agentic AI Lab in
 =docs/10-19-design/10.06-poo-module-system/contribution-module-layout.org=.
 Each module follows =types.ss=, =objects.ss=, =funs.ss=, =config.ss= and
 =interface.ss=. The narrow =gerbil.pkg= declares native package identity and
 the sole =build.ss= derives its PackageSpec from ASP's library prototype.  This
 repository does not implement its own layout checker, source registry, source
-walker, compiler, scheduler, cache, or =modules/init.ss=. POO Flow's
+walker, compiler, scheduler, cache, or =modules/init.ss=. Agentic AI Lab's
 trusted contribution registry maps =lambda-episteme= and its public module
-names to this repository's pinned source. POO Flow's =poo-flow-load-modules=
+names to this repository's pinned source. Agentic AI Lab's =agentic-ai-lab-load-modules=
 discovers direct =modules/<module-name>/= directories through their sole public
 =interface.ss= entrypoints and constructs the
 contributor and user source collections from repository roots. Its root-owned
@@ -30,7 +30,7 @@ Healthcare and Ontology.
 Executable tests live under =t/<owner>/<lane>/= and declare/export ordinary
 =:std/test= suites with the same binding as the file basename. The single =unit-tests.ss= entry delegates
 discovery and execution to =:clan/testing=.
-Core policy and macro documentation live in POO Flow's
+Core policy and macro documentation live in Agentic AI Lab's
 =contribution-test-ownership-rfc.org=, not a child-owned testing framework.
 
 * Native POO module-writing standard
@@ -72,7 +72,7 @@ preserves that protocol.  A kind-tagged Profile, Scenario or Case does not pass
 that test merely because a specialized printer would look convenient.
 
 Ontology terms, relations, imports and policies are owned by POO Profile slots.
-Case topology derives the POO Flow =graph= prototype directly: =node-declarations= and
+Case topology derives the Agentic AI Lab =graph= prototype directly: =node-declarations= and
 =edge-declarations= are named POO object slots, not raw lists, RDF triples or a second
 Graph builder.  The core Graph owns the lazy projection consumed by its existing
 algorithms.
@@ -89,8 +89,8 @@ admission over gxtest's prepared native graph and rejects a violation with
 for every file; the per-test timeout remains containment for genuinely dynamic
 hangs, not the primary diagnostic.
 
-* POO Flow contribution build integration
-POO Flow owns the default core PackageSpec, package namespace, root-level
+* Agentic AI Lab contribution build integration
+Agentic AI Lab owns the default core PackageSpec, package namespace, root-level
 contribution adapter, =std/make= handoff, and build environment. Contribution
 production and test stages are independent from the core public closure but
 install into the shared namespace. There is no contribution-owned package
@@ -105,7 +105,7 @@ closure.
 
 * Generated source identity
 An external artifact owned by a Module is declared in editable =sources.ss=.
-Its adjacent =source.lock.ss= is generated through POO Flow's Sources Lock
+Its adjacent =source.lock.ss= is generated through Agentic AI Lab's Sources Lock
 Feature and is never edited by hand.  Runtime loaders must derive the path,
 canonical URI, exact version, representation, digest and size from the lock and
 must preserve the verification receipt.  Domain parsing and semantic admission

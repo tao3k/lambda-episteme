@@ -5,25 +5,25 @@
 (import (only-in :clan/poo/object .alist/sort .cc .o .ref object?)
         :std/list/list
         (only-in :core/graph/types
-                 poo-flow-graph poo-flow-graph-edge
-                 poo-flow-graph-edge-from poo-flow-graph-edge-kind
-                 poo-flow-graph-edge-to poo-flow-graph-edges
-                 poo-flow-graph-node
-                 poo-flow-graph-node-id poo-flow-graph-node-payload
-                 poo-flow-graph-node-metadata poo-flow-graph-nodes)
-        (only-in :poo-flow/modules/workflow/scenario/case
-                 poo-flow-scenario-case poo-flow-scenario-case?)
-        (only-in :poo-flow/modules/workflow/scenario/accessors
-                 poo-flow-scenario-case-name
-                 poo-flow-scenario-case-profiles)
-        (only-in :poo-flow/modules/temporal-causality/interface
-                 poo-flow-causal-event?
-                 poo-flow-causal-event-graph
-                 poo-flow-causal-trajectory-assess
-                 poo-flow-causal-trajectory-contract?
-                 poo-flow-structural-impact-analyze)
-        (only-in :poo-flow/modules/governance/funs
-                 poo-flow-governance-evaluate)
+                 agentic-ai-lab-graph agentic-ai-lab-graph-edge
+                 agentic-ai-lab-graph-edge-from agentic-ai-lab-graph-edge-kind
+                 agentic-ai-lab-graph-edge-to agentic-ai-lab-graph-edges
+                 agentic-ai-lab-graph-node
+                 agentic-ai-lab-graph-node-id agentic-ai-lab-graph-node-payload
+                 agentic-ai-lab-graph-node-metadata agentic-ai-lab-graph-nodes)
+        (only-in :agentic-ai-lab/modules/workflow/scenario/case
+                 agentic-ai-lab-scenario-case agentic-ai-lab-scenario-case?)
+        (only-in :agentic-ai-lab/modules/workflow/scenario/accessors
+                 agentic-ai-lab-scenario-case-name
+                 agentic-ai-lab-scenario-case-profiles)
+        (only-in :agentic-ai-lab/modules/temporal-causality/interface
+                 agentic-ai-lab-causal-event?
+                 agentic-ai-lab-causal-event-graph
+                 agentic-ai-lab-causal-trajectory-assess
+                 agentic-ai-lab-causal-trajectory-contract?
+                 agentic-ai-lab-structural-impact-analyze)
+        (only-in :agentic-ai-lab/modules/governance/funs
+                 agentic-ai-lab-governance-evaluate)
         (only-in "types.ss"
                  ontology-case? ontology-case-composition-receipt?
                  ontology-profile? ontology-source?)
@@ -75,7 +75,7 @@
       (unless (hash-get node-index id)
         (hash-put! node-index id #t)
         (set! nodes
-              (cons (poo-flow-graph-node
+              (cons (agentic-ai-lab-graph-node
                      id payload
                      (list (cons 'entity-kind entity-kind)
                            (cons 'identity identity)))
@@ -85,7 +85,7 @@
         (unless (hash-get edge-index key)
           (hash-put! edge-index key #t)
           (set! edges
-                (cons (poo-flow-graph-edge
+                (cons (agentic-ai-lab-graph-edge
                        from to kind (list (cons 'modality modality)))
                       edges)))))
     (def (add-profile! profile)
@@ -142,7 +142,7 @@
            (add-edge! scenario-id case-id 'HAS_CASE 'declared)
            (for-each
             (lambda (composition)
-              (let* ((name (poo-flow-scenario-case-name composition))
+              (let* ((name (agentic-ai-lab-scenario-case-name composition))
                      (composition-identity
                       (string-append
                        (ontology-reasoning-identity->string case-identity)
@@ -163,7 +163,7 @@
                     (ontology-reasoning-node-id
                      'profile (.ref profile 'identity))
                     'SELECTS_PROFILE 'declared))
-                 (poo-flow-scenario-case-profiles composition))))
+                 (agentic-ai-lab-scenario-case-profiles composition))))
             (.ref receipt 'compositions))
            (for-each
             (lambda (profile)
@@ -191,7 +191,7 @@
                  (.ref event 'causal-parent-identities))))
             (.ref receipt 'events))))
        receipts)
-      (poo-flow-graph
+      (agentic-ai-lab-graph
        (list 'ontology-reasoning scenario-identity)
        (reverse nodes)
        (reverse edges)
@@ -206,12 +206,12 @@
    (list receipt)))
 
 (def (ontology-reasoning-node-entity-kind node)
-  (let (entry (assq 'entity-kind (poo-flow-graph-node-metadata node)))
+  (let (entry (assq 'entity-kind (agentic-ai-lab-graph-node-metadata node)))
     (and entry (cdr entry))))
 
 ;;; Expose domain properties from admitted POO values, not transport node IDs.
 (def (ontology-reasoning-query-property node key)
-  (let (payload (poo-flow-graph-node-payload node))
+  (let (payload (agentic-ai-lab-graph-node-payload node))
     (case (ontology-reasoning-node-entity-kind node)
       ((scenario profile)
        (unless (eq? key 'identity)
@@ -228,12 +228,12 @@
 (def (ontology-reasoning-impact graph target-id)
   (let* ((target
           (find (lambda (node)
-                  (equal? (poo-flow-graph-node-id node) target-id))
-                (poo-flow-graph-nodes graph))))
+                  (equal? (agentic-ai-lab-graph-node-id node) target-id))
+                (agentic-ai-lab-graph-nodes graph))))
     (unless target
       (error "reasoning Impact target is absent" target-id))
     (let* ((impact
-            (poo-flow-structural-impact-analyze
+            (agentic-ai-lab-structural-impact-analyze
              graph
              (list target-id)
              '(HAS_CASE USES_COMPOSITION SELECTS_PROFILE IMPORTS_PROFILE
@@ -249,12 +249,12 @@
       (for-each
        (lambda (node)
          (when (and (hash-get dependency-index
-                              (poo-flow-graph-node-id node))
+                              (agentic-ai-lab-graph-node-id node))
                     (eq? (ontology-reasoning-node-entity-kind node) 'case))
            (set! impacted-cases
-                 (cons (.ref (poo-flow-graph-node-payload node) 'case-id)
+                 (cons (.ref (agentic-ai-lab-graph-node-payload node) 'case-id)
                        impacted-cases))))
-       (poo-flow-graph-nodes graph))
+       (agentic-ai-lab-graph-nodes graph))
       ;; Extend the strict core receipt directly.  Do not retain the receipt in
       ;; another lazy slot: that duplicates the same value and can create a
       ;; self-resolving POO path when the duplicate slot is forced.
@@ -644,7 +644,7 @@
              (.cc (.ref receipt 'case)
                   compositions:
                   (list
-                   (poo-flow-scenario-case
+                   (agentic-ai-lab-scenario-case
                     'ontology-profile-removal '() remaining '() '()))
                   sources: (.ref receipt 'sources)))))))))
 
@@ -664,7 +664,7 @@
     (let* ((input-diagnostics
             (append
              (if (and (list? compositions) (pair? compositions)
-                      (every poo-flow-scenario-case? compositions))
+                      (every agentic-ai-lab-scenario-case? compositions))
                '()
                (list (ontology-diagnostic
                       'invalid-case-compositions '(compositions)
@@ -673,12 +673,12 @@
                (list (ontology-diagnostic
                       'invalid-case-sources '(sources) case-sources)))
              (if (and (list? case-events)
-                      (every poo-flow-causal-event? case-events))
+                      (every agentic-ai-lab-causal-event? case-events))
                '()
                (list (ontology-diagnostic
                       'invalid-case-events '(events) case-events)))
              (if (and (list? case-trajectories)
-                      (every poo-flow-causal-trajectory-contract?
+                      (every agentic-ai-lab-causal-trajectory-contract?
                              case-trajectories))
                '()
                (list (ontology-diagnostic
@@ -687,7 +687,7 @@
          (profile-values
           (if (null? input-diagnostics)
             (concatenate
-             (map poo-flow-scenario-case-profiles compositions))
+             (map agentic-ai-lab-scenario-case-profiles compositions))
             '())))
     (let-values (((profile-index selected-profiles index-diagnostics)
                   (ontology-index-profiles profile-values)))
@@ -723,10 +723,10 @@
               (if (and (null? input-diagnostics)
                        (pair? case-trajectories))
                 (let (event-graph
-                      (poo-flow-causal-event-graph
+                      (agentic-ai-lab-causal-event-graph
                        (.ref (car case-events) 'subject) case-events))
                   (map (lambda (trajectory)
-                         (poo-flow-causal-trajectory-assess
+                         (agentic-ai-lab-causal-trajectory-assess
                           trajectory event-graph))
                        case-trajectories))
                 '()))
@@ -749,7 +749,7 @@
              (governance-assessments
               (if (null? pre-governance-diagnostics)
                 (map (lambda (profile)
-                       (poo-flow-governance-evaluate profile case-value))
+                       (agentic-ai-lab-governance-evaluate profile case-value))
                      profiles)
                 '()))
              (governance-diagnostics
@@ -831,26 +831,26 @@
         (relation-index (.ref environment 'relation-index)))
     (for-each
      (lambda (node)
-       (let (identity (poo-flow-graph-node-id node))
+       (let (identity (agentic-ai-lab-graph-node-id node))
          (if (hash-get node-index identity)
            (set! diagnostics
                  (cons (ontology-diagnostic
                         'duplicate-graph-node (list 'graph 'nodes identity) node)
                        diagnostics))
            (hash-put! node-index identity node))
-         (unless (hash-get concept-index (poo-flow-graph-node-payload node))
+         (unless (hash-get concept-index (agentic-ai-lab-graph-node-payload node))
            (set! diagnostics
                  (cons (ontology-diagnostic
                         'unknown-node-concept
                         (list 'graph 'nodes identity 'payload)
-                        (poo-flow-graph-node-payload node))
+                        (agentic-ai-lab-graph-node-payload node))
                        diagnostics)))))
-     (poo-flow-graph-nodes graph))
+     (agentic-ai-lab-graph-nodes graph))
     (for-each
      (lambda (edge)
-       (let ((relation (poo-flow-graph-edge-kind edge))
-             (source (poo-flow-graph-edge-from edge))
-             (target (poo-flow-graph-edge-to edge)))
+       (let ((relation (agentic-ai-lab-graph-edge-kind edge))
+             (source (agentic-ai-lab-graph-edge-from edge))
+             (target (agentic-ai-lab-graph-edge-to edge)))
          (unless (hash-get relation-index relation)
            (set! diagnostics
                  (cons (ontology-diagnostic
@@ -868,7 +868,7 @@
                            (cdr endpoint))
                           diagnostics))))
           (list (cons 'source source) (cons 'target target)))))
-     (poo-flow-graph-edges graph))
+     (agentic-ai-lab-graph-edges graph))
     (reverse diagnostics)))
 
 (def (ontology-evaluate-case composition-receipt)

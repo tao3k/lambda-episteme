@@ -4,26 +4,26 @@
 
 (import (only-in :std/test test-suite check-equal?)
         (only-in :clan/poo/object .o .ref)
-        (only-in :core/observability/testing-case poo-flow-test-case)
-        (only-in :poo-flow/modules/reverse-inference/interface
-                 poo-flow-inference-claim)
-        (only-in :poo-flow/modules/workflow/scenario/case
-                 poo-flow-scenario-case?)
-        (only-in :poo-flow/modules/workflow/scenario/accessors
-                 poo-flow-scenario-case-profiles)
-        (only-in :poo-flow/modules/funflow/runtime-load-projection
-                 poo-flow-runtime-load-projection)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/reasoning
+        (only-in :core/observability/testing-case agentic-ai-lab-test-case)
+        (only-in :agentic-ai-lab/modules/reverse-inference/interface
+                 agentic-ai-lab-inference-claim)
+        (only-in :agentic-ai-lab/modules/workflow/scenario/case
+                 agentic-ai-lab-scenario-case?)
+        (only-in :agentic-ai-lab/modules/workflow/scenario/accessors
+                 agentic-ai-lab-scenario-case-profiles)
+        (only-in :agentic-ai-lab/modules/funflow/runtime-load-projection
+                 agentic-ai-lab-runtime-load-projection)
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/reasoning
                  exchange-signing-route-candidates)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/replay-observability
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/replay-observability
                  exchange-signing-replay-observability)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/bybit-inference
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/bybit-inference
                  ExchangeSigningBybitEvidence.)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/flow-profiles
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/flow-profiles
                  ExchangeSigningRecordMutationProfile.
                  ExchangeSigningInterfaceProfile.
                  ExchangeSigningBackendAdminProfile.)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/flow
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/flow
                  exchange-signing-record-mutation
                  exchange-signing-api-replay
                  exchange-signing-queue-injection
@@ -35,7 +35,7 @@
 
 (def exchange-signing-flow-test
   (test-suite "Exchange signing named user compositions"
-    (poo-flow-test-case "six attack names select maintained Funflow Profile"
+    (agentic-ai-lab-test-case "six attack names select maintained Funflow Profile"
       (let (compositions
             (list exchange-signing-record-mutation
                   exchange-signing-api-replay
@@ -43,7 +43,7 @@
                   exchange-signing-address-map-substitution
                   exchange-signing-interface-substitution
                   exchange-signing-backend-admin-change))
-        (check-equal? (map poo-flow-scenario-case? compositions)
+        (check-equal? (map agentic-ai-lab-scenario-case? compositions)
                       '(#t #t #t #t #t #t))
         (check-equal?
          (map (lambda (composition) (.ref composition 'name)) compositions)
@@ -53,14 +53,14 @@
            exchange-signing-address-map-substitution
            exchange-signing-interface-substitution
            exchange-signing-backend-admin-change))))
-    (poo-flow-test-case "direct and admin attacks select distinct TLC models"
+    (agentic-ai-lab-test-case "direct and admin attacks select distinct TLC models"
       (check-equal? (.ref ExchangeSigningRecordMutationProfile. 'tla-config)
                     "RecordAttack.cfg")
       (check-equal? (.ref ExchangeSigningInterfaceProfile. 'tla-config)
                     "InterfaceAttack.cfg")
       (check-equal? (.ref ExchangeSigningBackendAdminProfile. 'tla-config)
                     "AdminAttack.cfg"))
-    (poo-flow-test-case "each composition selects its own proposed route"
+    (agentic-ai-lab-test-case "each composition selects its own proposed route"
       (let (cases
             (list (list exchange-signing-record-mutation
                         'record-mutation '(backend outflow))
@@ -76,7 +76,7 @@
                         'backend-admin-change '(backend outflow))))
         (for-each
          (lambda (entry)
-           (let* ((profile (cadr (poo-flow-scenario-case-profiles (car entry))))
+           (let* ((profile (cadr (agentic-ai-lab-scenario-case-profiles (car entry))))
                   (candidates
                    (exchange-signing-route-candidates
                     (.ref profile 'route-case))))
@@ -86,19 +86,19 @@
              (check-equal? (.ref candidates 'observed-candidates) '())
              (check-equal? (.ref candidates 'action-authority?) #f)))
          cases)))
-    (poo-flow-test-case "composition projects six linked Funflow nodes"
+    (agentic-ai-lab-test-case "composition projects six linked Funflow nodes"
       (let* ((projection
-              (poo-flow-runtime-load-projection
+              (agentic-ai-lab-runtime-load-projection
                exchange-signing-record-mutation))
              (plan (cdr (assq 'plan projection))))
         (check-equal? (cdr (assq 'kind projection))
-                      'poo-flow.funflow.plan-projection)
+                      'agentic-ai-lab.funflow.plan-projection)
         (check-equal? (cdr (assq 'origin plan))
                       'user-composition-funflow)
         (check-equal? (vector-length (cdr (assq 'node-table plan))) 6)
         (check-equal? (vector-length (cdr (assq 'edge-table plan))) 5)
         (check-equal? (cdr (assq 'runtime-executed projection)) #f)))
-    (poo-flow-test-case "replay exposes proposed links and missing witnesses"
+    (agentic-ai-lab-test-case "replay exposes proposed links and missing witnesses"
       (let (receipt
             (exchange-signing-replay-observability
              exchange-signing-queue-injection
@@ -148,7 +148,7 @@
         (check-equal? (.ref receipt 'tla-qualification-status)
                       'not-supplied)
         (check-equal? (.ref receipt 'action-authority?) #f)))
-    (poo-flow-test-case "different routes request different independent evidence"
+    (agentic-ai-lab-test-case "different routes request different independent evidence"
       (let ((api (exchange-signing-replay-observability
                   exchange-signing-api-replay))
             (interface (exchange-signing-replay-observability
@@ -160,11 +160,11 @@
                       '(trusted-rendered-bytes signed-admin-operation
                         linked-control-change))
         (check-equal? (.ref interface 'tla-config) "InterfaceAttack.cfg")))
-    (poo-flow-test-case "caller evidence changes the replay hypothesis"
+    (agentic-ai-lab-test-case "caller evidence changes the replay hypothesis"
       (let* ((evidence
               (.o (:: @ ExchangeSigningBybitEvidence.)
                   claims:
-                  (list (poo-flow-inference-claim
+                  (list (agentic-ai-lab-inference-claim
                          'funds-outflow 'present
                          'bybit-official-timeline))))
              (receipt

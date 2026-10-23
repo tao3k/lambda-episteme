@@ -27,11 +27,11 @@ belong in native Concepts, Relations and Rule objects.
 
 1. Create =modules/<name>/= with =types.ss=, =objects.ss=, =funs.ss=,
    =config.ss= and the public =interface.ss=.
-2. Run =just build-scheme= through POO Flow's root-owned contribution adapter
+2. Run =just build-scheme= through Agentic AI Lab's root-owned contribution adapter
    and official =std/make= handoff.  Do not add per-file entries, a child
    PackageSpec or another build script.
 3. Include a runnable =user-interface/= scenario selecting or deriving the profile through the
-   existing POO Flow composition API.
+   existing Agentic AI Lab composition API.
 4. Add native tests for contract validation, derivation and conflicting exports.
 5. If supplying GQL, add it to the source test set; require successful native
    parsing, valid artifacts, unchanged roundtrip and a malformed-source case.
@@ -39,13 +39,13 @@ belong in native Concepts, Relations and Rule objects.
    application's integration suite. Mark query execution untested until that
    suite supplies attributable results.
 
-Core contract tests stay in POO Flow. Domain and authoring tests stay here.
+Core contract tests stay in Agentic AI Lab. Domain and authoring tests stay here.
 Application execution tests are a third lane and do not gate either unit suite.
 
 * Test ownership
 Place executable tests at =t/<module_name>/<lane>/*-test.ss=. Define and export
 an ordinary =:std/test= suite whose name equals its file basename. The current
-POO Flow contract does not provide a test declaration macro; =:clan/testing=
+Agentic AI Lab contract does not provide a test declaration macro; =:clan/testing=
 owns discovery and execution via =:asp-gerbil-scheme/testing-api=.
 Lanes are =unit=, =source=, =user-interface= and =integration=. Optional source
 checks use =*-check.ss= and are invoked explicitly with their installed parser.

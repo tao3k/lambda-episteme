@@ -5,17 +5,17 @@
 (import (only-in :clan/poo/object .def .o)
         (rename-in
          (only-in :core/graph/types
-                  graph poo-flow-graph-edge poo-flow-graph-node)
+                  graph agentic-ai-lab-graph-edge agentic-ai-lab-graph-node)
          (graph Graph))
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  OntologyCase ontology-source)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/vehicle/profiles/base
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/vehicle/profiles/base
                  VehicleBaseProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/vehicle/profiles/tara-treatment
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/vehicle/profiles/tara-treatment
                  VehicleTaraTreatmentProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/vehicle/scenario
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/vehicle/scenario
                  VehicleScenario))
 
 (export VehicleOtaTreatmentHandoffCase)
@@ -46,22 +46,22 @@
        graph-id: 'vehicle-ota-treatment-handoff
        node-declarations:
        (.o assessment:
-           (poo-flow-graph-node 'assessment 'ExternalTaraAssessment)
+           (agentic-ai-lab-graph-node 'assessment 'ExternalTaraAssessment)
            treatment-goal:
-           (poo-flow-graph-node 'treatment-goal 'VehicleTreatmentGoal)
+           (agentic-ai-lab-graph-node 'treatment-goal 'VehicleTreatmentGoal)
            policy-candidate:
-           (poo-flow-graph-node 'policy-candidate 'VehiclePolicyCandidate)
+           (agentic-ai-lab-graph-node 'policy-candidate 'VehiclePolicyCandidate)
            software-release:
-           (poo-flow-graph-node 'software-release 'VehicleSoftwareRelease)
+           (agentic-ai-lab-graph-node 'software-release 'VehicleSoftwareRelease)
            vehicle-fleet:
-           (poo-flow-graph-node 'vehicle-fleet 'VehicleFleet))
+           (agentic-ai-lab-graph-node 'vehicle-fleet 'VehicleFleet))
        edge-declarations:
        (.o assessment-origin:
-           (poo-flow-graph-edge
+           (agentic-ai-lab-graph-edge
             'treatment-goal 'assessment 'sourcedFromAssessment)
            executable-treatment:
-           (poo-flow-graph-edge
+           (agentic-ai-lab-graph-edge
             'treatment-goal 'policy-candidate 'realizedByPolicy)
            release-target:
-           (poo-flow-graph-edge
+           (agentic-ai-lab-graph-edge
             'policy-candidate 'software-release 'governsRelease)))))

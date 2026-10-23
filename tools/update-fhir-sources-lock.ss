@@ -10,7 +10,7 @@
         (only-in :core/feature-system/source-lock-feature
                  sources-lock-freeze
                  write-sources-lock-module)
-        :poo-flow/lambda-episteme/modules/healthcare/standards/fhir/sources)
+        :agentic-ai-lab/lambda-episteme/modules/healthcare/standards/fhir/sources)
 
 (def arguments (cddr (command-line)))
 (def root (if (pair? arguments) (car (reverse arguments)) "."))

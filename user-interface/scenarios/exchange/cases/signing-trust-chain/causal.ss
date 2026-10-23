@@ -5,14 +5,14 @@
 ;;; A public report anchors a prospective threat trajectory. The proposed
 ;;; ingress, signing and recurrence are counterfactual, never incident facts.
 (import (only-in :clan/poo/object .o .ref)
-        (only-in :poo-flow/modules/temporal-causality/interface
-                 poo-flow-temporal-observation
-                 poo-flow-causal-event
-                 poo-flow-causal-event-graph
-                 poo-flow-causal-trajectory-contract
-                 poo-flow-causal-trajectory-assess
-                 poo-flow-causal-trajectory-assessment-digest
-                 poo-flow-causal-cut))
+        (only-in :agentic-ai-lab/modules/temporal-causality/interface
+                 agentic-ai-lab-temporal-observation
+                 agentic-ai-lab-causal-event
+                 agentic-ai-lab-causal-event-graph
+                 agentic-ai-lab-causal-trajectory-contract
+                 agentic-ai-lab-causal-trajectory-assess
+                 agentic-ai-lab-causal-trajectory-assessment-digest
+                 agentic-ai-lab-causal-cut))
 
 (export exchange-signing-causal-trajectory)
 
@@ -36,13 +36,13 @@
          (impact (string-append prefix "/potential-loss"))
          (event
           (lambda (id kind position parents modality committed? provenance)
-            (poo-flow-causal-event
+            (agentic-ai-lab-causal-event
              id subject kind
-             (poo-flow-temporal-observation
+             (agentic-ai-lab-temporal-observation
               (string-append id "/time") 'logical-version position provenance)
              id parents modality committed?)))
          (graph
-          (poo-flow-causal-event-graph
+          (agentic-ai-lab-causal-event-graph
            subject
            (list (event report 'public-incident-report 0 '() 'observed #t
                         source-identity)
@@ -57,18 +57,18 @@
                  (event impact 'potential-loss 4 (list effect)
                         'hypothesized #f "exchange/impact-assumption"))))
          (contract
-          (poo-flow-causal-trajectory-contract
+          (agentic-ai-lab-causal-trajectory-contract
            (string-append prefix "/trajectory") report (list review)
            (list (list ingress signature effect)) '() (list impact)))
-         (assessment (poo-flow-causal-trajectory-assess contract graph))
-         (cut (poo-flow-causal-cut graph 0)))
+         (assessment (agentic-ai-lab-causal-trajectory-assess contract graph))
+         (cut (agentic-ai-lab-causal-cut graph 0)))
     (.o kind: 'lambda-episteme.exchange.signing-causal-trajectory
         route: route-name
         graph-identity: (.ref graph 'identity)
         report-source: source-identity
         assessment-status: (.ref assessment 'status)
         assessment-digest:
-        (poo-flow-causal-trajectory-assessment-digest assessment)
+        (agentic-ai-lab-causal-trajectory-assessment-digest assessment)
         report-cut-complete?: (.ref cut 'complete?)
         report-cut-event-ids: (map (lambda (e) (.ref e 'identity))
                                    (.ref cut 'events))

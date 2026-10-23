@@ -12,11 +12,11 @@
         (only-in :std/misc/ports read-all-as-string)
         (only-in :gerbil/core string-contains)
         (only-in :std/encoding/hex hex-encode)
-        (only-in :poo-flow/modules/standards/interface
-                 poo-flow-standard-digest)
-        (only-in :poo-flow/modules/proof/interface
-                 poo-flow-proof-assurance)
-        (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/migration/interface
+        (only-in :agentic-ai-lab/modules/standards/interface
+                 agentic-ai-lab-standard-digest)
+        (only-in :agentic-ai-lab/modules/proof/interface
+                 agentic-ai-lab-proof-assurance)
+        (only-in :agentic-ai-lab/lambda-episteme/modules/healthcare/standards/migration/interface
                  AUHealthcareMigrationFormalModelEvidence
                  AUHealthcareMigrationTLAConfigEvidence
                  AUHealthcareMigrationImpactContract
@@ -68,7 +68,7 @@
         (.ref (.ref AUHealthcareMigrationCedarAuthorizationEvidence
                     'metadata)
               'upstream-semantics)
-        "PooFlowProof.PooC3.CedarAuthorizationSemantics")
+        "AgenticAILabProof.PooC3.CedarAuthorizationSemantics")
        (check-equal?
         (.ref (.ref AUHealthcareMigrationRefinementProofEvidence 'metadata)
               'tla-source-digest)
@@ -92,9 +92,9 @@
               'proof-assurance))
             (stale-tla
              (.cc AUHealthcareMigrationFormalModelEvidence 'content-digest
-                  (poo-flow-standard-digest 'changed-tla-source)))
+                  (agentic-ai-lab-standard-digest 'changed-tla-source)))
             (stale-assurance
-             (poo-flow-proof-assurance
+             (agentic-ai-lab-proof-assurance
               "lambda-episteme/healthcare/standard-migration/stale-proof"
               (list stale-tla AUHealthcareMigrationTLAConfigEvidence
                     AUHealthcareMigrationRefinementProofEvidence

@@ -3,6 +3,6 @@
 
 (import :core/module-system/selection/init-syntax)
 
-(poo-flow!
+(agentic-ai-lab!
  :custom
  (ontology))

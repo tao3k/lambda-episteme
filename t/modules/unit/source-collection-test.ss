@@ -3,65 +3,65 @@
 
 (import (only-in :std/test check-equal? check-exception test-case test-suite)
         (only-in :std/error Error?)
-        (only-in :poo-flow/modules/workflow/control-plane/failure execution-failure?)
+        (only-in :agentic-ai-lab/modules/workflow/control-plane/failure execution-failure?)
         (only-in :core/module-system/selection/syntax
-                 poo-flow-modules!)
+                 agentic-ai-lab-modules!)
         (only-in :core/module-system/selection/objects
-                 poo-flow-user-module-selection
-                 poo-flow-user-module-selection-entrypoint
-                 poo-flow-user-module-selection-source-ref
-                 poo-flow-user-module-bundles->modules)
+                 agentic-ai-lab-user-module-selection
+                 agentic-ai-lab-user-module-selection-entrypoint
+                 agentic-ai-lab-user-module-selection-source-ref
+                 agentic-ai-lab-user-module-bundles->modules)
         (only-in :core/module-system/source/objects
-                 poo-flow-module-source-ref-kind
-                 poo-flow-module-source-ref-metadata
-                 poo-flow-module-source-ref-value)
-        (only-in :core/module-system/source/collection make-poo-flow-module-source-collection make-poo-flow-module-load-path make-poo-flow-contribution-module-source make-poo-flow-user-interface-module-source make-poo-flow-user-interface-module-load-path extend-poo-flow-module-load-path poo-flow-module-source-collection-identity poo-flow-module-source-collection-owner poo-flow-module-source-collection-modules-root poo-flow-module-source-collection-interfaces poo-flow-module-load-path-collections)
-        (only-in :poo-flow/modules/module-authoring/module-source-collection make-poo-flow-contribution-module-load-path)
-        (only-in :poo-flow/modules/workflow/scenario/configuration/module-source-selection
-                 poo-flow-module-selection-source-refs)
-        (rename-in :poo-flow/lambda-episteme/user-interface/init
-                   (poo-flow-user-module-bundles
+                 agentic-ai-lab-module-source-ref-kind
+                 agentic-ai-lab-module-source-ref-metadata
+                 agentic-ai-lab-module-source-ref-value)
+        (only-in :core/module-system/source/collection make-agentic-ai-lab-module-source-collection make-agentic-ai-lab-module-load-path make-agentic-ai-lab-contribution-module-source make-agentic-ai-lab-user-interface-module-source make-agentic-ai-lab-user-interface-module-load-path extend-agentic-ai-lab-module-load-path agentic-ai-lab-module-source-collection-identity agentic-ai-lab-module-source-collection-owner agentic-ai-lab-module-source-collection-modules-root agentic-ai-lab-module-source-collection-interfaces agentic-ai-lab-module-load-path-collections)
+        (only-in :agentic-ai-lab/modules/module-authoring/module-source-collection make-agentic-ai-lab-contribution-module-load-path)
+        (only-in :agentic-ai-lab/modules/workflow/scenario/configuration/module-source-selection
+                 agentic-ai-lab-module-selection-source-refs)
+        (rename-in :agentic-ai-lab/lambda-episteme/user-interface/init
+                   (agentic-ai-lab-user-module-bundles
                     lambda-user-module-bundles)))
 
 (export lambda-episteme-source-collection-test)
 
 ;;; The contributor is tested from its own checkout. Parent-repository mount
-;;; paths belong to POO Flow integration tests, not this independent package.
+;;; paths belong to Agentic AI Lab integration tests, not this independent package.
 (defrule (composition-root-test-case name body ...)
   (test-case name body ...))
 
 (def (metadata-ref source-ref key)
-  (let (entry (assq key (poo-flow-module-source-ref-metadata source-ref)))
+  (let (entry (assq key (agentic-ai-lab-module-source-ref-metadata source-ref)))
     (and entry (cdr entry))))
 
 (def lambda-episteme-module-source
-  (make-poo-flow-contribution-module-source
+  (make-agentic-ai-lab-contribution-module-source
    'lambda-episteme "."))
 
 (def lambda-episteme-module-load-path
-  (make-poo-flow-contribution-module-load-path
+  (make-agentic-ai-lab-contribution-module-load-path
    'lambda-episteme "."))
 
 (def lambda-episteme-user-module-source
-  (make-poo-flow-user-interface-module-source
+  (make-agentic-ai-lab-user-interface-module-source
    'lambda-episteme-user "user-interface"))
 
 (def lambda-episteme-user-module-load-path
-  (make-poo-flow-user-interface-module-load-path
+  (make-agentic-ai-lab-user-interface-module-load-path
    'lambda-episteme-user
    "user-interface"
    lambda-episteme-module-load-path))
 
 (def lambda-episteme-contribution-load-path
-  (make-poo-flow-contribution-module-load-path 'lambda-episteme "."))
+  (make-agentic-ai-lab-contribution-module-load-path 'lambda-episteme "."))
 
 (def lambda-episteme-source-collection-test
   (test-suite "Lambda module source collection and unified POO load path"
-    (composition-root-test-case "poo-flow-module-source-collection-interfaces discovers public module interfaces"
+    (composition-root-test-case "agentic-ai-lab-module-source-collection-interfaces discovers public module interfaces"
       (let (sources
-            (poo-flow-module-source-collection-interfaces lambda-episteme-module-source))
+            (agentic-ai-lab-module-source-collection-interfaces lambda-episteme-module-source))
         (check-equal?
-         (map poo-flow-module-source-ref-value sources)
+         (map agentic-ai-lab-module-source-ref-value sources)
          '("modules/decision-kind/interface.ss"
            "modules/diataxis/interface.ss"
            "modules/healthcare/interface.ss"
@@ -74,30 +74,30 @@
            (custom . ontology)))
         (check-equal?
          (map (lambda (source) (metadata-ref source 'module-layout)) sources)
-         '(poo-flow-module-v1 poo-flow-module-v1
-           poo-flow-module-v1 poo-flow-module-v1))
+         '(agentic-ai-lab-module-v1 agentic-ai-lab-module-v1
+           agentic-ai-lab-module-v1 agentic-ai-lab-module-v1))
         (check-equal?
          (map (lambda (source) (metadata-ref source 'entrypoint-role)) sources)
          '(interface interface interface interface))))
 
     (composition-root-test-case "Lambda init uses the same source-neutral module declaration"
       (let* ((selections
-              (poo-flow-user-module-bundles->modules
+              (agentic-ai-lab-user-module-bundles->modules
                lambda-user-module-bundles))
              (selection (car (reverse selections))))
-        (check-equal? (poo-flow-user-module-selection-source-ref selection) #f)
-        (check-equal? (poo-flow-user-module-selection-entrypoint selection) #f)))
+        (check-equal? (agentic-ai-lab-user-module-selection-source-ref selection) #f)
+        (check-equal? (agentic-ai-lab-user-module-selection-entrypoint selection) #f)))
 
     (composition-root-test-case "an explicit @ modules path resolves public interfaces"
       (let* ((selection
               (caar
-               (poo-flow-modules!
+               (agentic-ai-lab-modules!
                 :custom (@ "./modules" +private))))
              (sources
-              (poo-flow-module-selection-source-refs
+              (agentic-ai-lab-module-selection-source-refs
                lambda-episteme-module-load-path selection)))
         (check-equal?
-         (map poo-flow-module-source-ref-value sources)
+         (map agentic-ai-lab-module-source-ref-value sources)
          '("./modules/decision-kind/interface.ss"
            "./modules/diataxis/interface.ss"
            "./modules/healthcare/interface.ss"
@@ -105,45 +105,45 @@
 
     (composition-root-test-case "the contribution identity expands its checked-out modules"
       (let* ((selection
-              (caar (poo-flow-modules! :custom (lambda-episteme))))
+              (caar (agentic-ai-lab-modules! :custom (lambda-episteme))))
              (sources
-              (poo-flow-module-selection-source-refs
+              (agentic-ai-lab-module-selection-source-refs
                lambda-episteme-contribution-load-path
                selection)))
         (check-equal? (length sources) 4)
         (check-equal?
-         (map poo-flow-module-source-ref-kind sources)
+         (map agentic-ai-lab-module-source-ref-kind sources)
          '(local local local local))
         (check-equal?
-         (map poo-flow-module-source-ref-value sources)
+         (map agentic-ai-lab-module-source-ref-value sources)
          '("modules/decision-kind/interface.ss"
            "modules/diataxis/interface.ss"
            "modules/healthcare/interface.ss"
            "modules/ontology/interface.ss"))))
 
     (composition-root-test-case "a module name resolves one contributed module"
-      (let* ((selection (caar (poo-flow-modules! :custom (ontology))))
+      (let* ((selection (caar (agentic-ai-lab-modules! :custom (ontology))))
              (source
               (car
-               (poo-flow-module-selection-source-refs
+               (agentic-ai-lab-module-selection-source-refs
                 lambda-episteme-contribution-load-path selection))))
         (check-equal? (metadata-ref source 'source-collection)
                       'lambda-episteme)
-        (check-equal? (poo-flow-module-source-ref-value source)
+        (check-equal? (agentic-ai-lab-module-source-ref-value source)
                       "modules/ontology/interface.ss")))
 
     (composition-root-test-case "the User Interface exposes a user-first private module source"
       (check-equal?
-       (map poo-flow-module-source-collection-identity
-            (poo-flow-module-load-path-collections
+       (map agentic-ai-lab-module-source-collection-identity
+            (agentic-ai-lab-module-load-path-collections
              lambda-episteme-user-module-load-path))
-       '(lambda-episteme-user lambda-episteme poo-flow-maintained))
+       '(lambda-episteme-user lambda-episteme agentic-ai-lab-maintained))
       (check-equal?
-       (poo-flow-module-source-collection-owner
+       (agentic-ai-lab-module-source-collection-owner
         lambda-episteme-user-module-source)
        'user)
       (check-equal?
-       (poo-flow-module-source-collection-modules-root
+       (agentic-ai-lab-module-source-collection-modules-root
         lambda-episteme-user-module-source)
        "user-interface/modules"))
 
@@ -151,39 +151,39 @@
       (let* ((selection
               (car
                (reverse
-                (poo-flow-user-module-bundles->modules
+                (agentic-ai-lab-user-module-bundles->modules
                  lambda-user-module-bundles))))
              (source
-              (car (poo-flow-module-selection-source-refs
+              (car (agentic-ai-lab-module-selection-source-refs
                     lambda-episteme-contribution-load-path selection))))
         (check-equal? (metadata-ref source 'source-collection) 'lambda-episteme)
         (check-equal? (metadata-ref source 'source-owner) 'contributor)
-        (check-equal? (poo-flow-module-source-ref-value source)
+        (check-equal? (agentic-ai-lab-module-source-ref-value source)
                       "modules/ontology/interface.ss")))
 
     (composition-root-test-case "a user source placed first overrides the contributor source"
       (let* ((user-source
-              (make-poo-flow-module-source-collection
+              (make-agentic-ai-lab-module-source-collection
                'user-modules 'user "." "modules"))
              (user-first
-             (make-poo-flow-module-load-path
+             (make-agentic-ai-lab-module-load-path
                'user-first
                (cons user-source
-                     (poo-flow-module-load-path-collections
+                     (agentic-ai-lab-module-load-path-collections
                       lambda-episteme-contribution-load-path))))
              (selection
               (car
                (reverse
-                (poo-flow-user-module-bundles->modules
+                (agentic-ai-lab-user-module-bundles->modules
                  lambda-user-module-bundles))))
              (source
-              (car (poo-flow-module-selection-source-refs
+              (car (agentic-ai-lab-module-selection-source-refs
                     user-first selection))))
         (check-equal? (metadata-ref source 'source-collection) 'user-modules)))
 
     (composition-root-test-case "duplicate collection identities fail during composition"
       (check-exception
-       (extend-poo-flow-module-load-path
+       (extend-agentic-ai-lab-module-load-path
         lambda-episteme-module-load-path
         'duplicate
         (list lambda-episteme-module-source))
@@ -192,17 +192,17 @@
     (composition-root-test-case "explicit private paths remain an intentional escape hatch"
       (let* ((selection
               (caar
-               (poo-flow-modules!
+               (agentic-ai-lab-modules!
                 :custom (private-module @ "./private/module" +doctor))))
              (source
-              (car (poo-flow-module-selection-source-refs
+              (car (agentic-ai-lab-module-selection-source-refs
                     lambda-episteme-module-load-path selection))))
-        (check-equal? (poo-flow-module-source-ref-value source)
+        (check-equal? (agentic-ai-lab-module-source-ref-value source)
                       "./private/module/interface.ss")))
 
     (composition-root-test-case "a missing source fails before loader execution"
       (check-exception
-       (poo-flow-module-selection-source-refs
+       (agentic-ai-lab-module-selection-source-refs
         lambda-episteme-module-load-path
-        (poo-flow-user-module-selection 'custom 'missing '()))
+        (agentic-ai-lab-user-module-selection 'custom 'missing '()))
        execution-failure?))))

@@ -8,37 +8,37 @@
 ;;; validator and never treats unavailable output as a successful comparison.
 (import (only-in :std/encoding/json JSONReadOptions string->json)
         (only-in :gerbil/core string-prefix?)
-        (only-in :poo-flow/modules/standards/funs
-                 poo-flow-standard-digest
-                 poo-flow-standard-make-reference-observation))
+        (only-in :agentic-ai-lab/modules/standards/funs
+                 agentic-ai-lab-standard-digest
+                 agentic-ai-lab-standard-make-reference-observation))
 
-(export +poo-flow-fhir-reference-validator-identity+
-        poo-flow-fhir-reference-observation-from-operation-outcome
-        poo-flow-fhir-reference-observation-from-bundle)
+(export +agentic-ai-lab-fhir-reference-validator-identity+
+        agentic-ai-lab-fhir-reference-observation-from-operation-outcome
+        agentic-ai-lab-fhir-reference-observation-from-bundle)
 
-(def +poo-flow-fhir-reference-validator-identity+ "hl7.fhir.validator-cli")
-(def +poo-flow-fhir-contribution-prefix+ "packages/lambda-episteme/")
-(def +poo-flow-fhir-reference-json-read-options+
+(def +agentic-ai-lab-fhir-reference-validator-identity+ "hl7.fhir.validator-cli")
+(def +agentic-ai-lab-fhir-contribution-prefix+ "packages/lambda-episteme/")
+(def +agentic-ai-lab-fhir-reference-json-read-options+
   (JSONReadOptions key-as-symbol: #f
                    array-as-vector: #f
                    object-as-hash: #t))
 
 ;;; Reference receipts keep the caller's portable source-ref, while reading
-;;; from either supported checkout shape: POO Flow's registered mount or the
+;;; from either supported checkout shape: Agentic AI Lab's registered mount or the
 ;;; Lambda contribution root itself.
 (def (resolve-fhir-reference-output-path path)
   (cond
    ((file-exists? path) path)
-   ((string-prefix? +poo-flow-fhir-contribution-prefix+ path)
+   ((string-prefix? +agentic-ai-lab-fhir-contribution-prefix+ path)
     (let (relative
           (substring path
-                     (string-length +poo-flow-fhir-contribution-prefix+)
+                     (string-length +agentic-ai-lab-fhir-contribution-prefix+)
                      (string-length path)))
       (if (file-exists? relative)
         relative
         (error "FHIR reference output is unavailable" path))))
-   ((file-exists? (string-append +poo-flow-fhir-contribution-prefix+ path))
-    (string-append +poo-flow-fhir-contribution-prefix+ path))
+   ((file-exists? (string-append +agentic-ai-lab-fhir-contribution-prefix+ path))
+    (string-append +agentic-ai-lab-fhir-contribution-prefix+ path))
    (else (error "FHIR reference output is unavailable" path))))
 
 (def (json-ref object key default)
@@ -86,7 +86,7 @@
          (raw-output (read-file-string resolved-output-path))
          (decoded
           (string->json raw-output
-                        +poo-flow-fhir-reference-json-read-options+))
+                        +agentic-ai-lab-fhir-reference-json-read-options+))
          (operation-outcome
           (reference-output-operation-outcome
            decoded output-path entry-index))
@@ -95,25 +95,25 @@
          (outcome (if (ormap operation-outcome-error? issues)
                     'invalid
                     'valid)))
-    (poo-flow-standard-make-reference-observation
-     +poo-flow-fhir-reference-validator-identity+
+    (agentic-ai-lab-standard-make-reference-observation
+     +agentic-ai-lab-fhir-reference-validator-identity+
      validator-version validator-binary-digest fixture-identity
-     (poo-flow-standard-digest subject) profile-identities outcome
+     (agentic-ai-lab-standard-digest subject) profile-identities outcome
      issue-identities
-     (poo-flow-standard-digest (list raw-output entry-index))
+     (agentic-ai-lab-standard-digest (list raw-output entry-index))
      (append
       (list (cons 'source-ref output-path)
             (cons 'representation 'fhir-operation-outcome-json))
       (if entry-index (list (cons 'bundle-entry-index entry-index)) '())))))
 
-(def (poo-flow-fhir-reference-observation-from-operation-outcome
+(def (agentic-ai-lab-fhir-reference-observation-from-operation-outcome
       validator-version validator-binary-digest fixture-identity subject
       profile-identities output-path)
   (reference-observation-from-output
    validator-version validator-binary-digest fixture-identity subject
    profile-identities output-path #f))
 
-(def (poo-flow-fhir-reference-observation-from-bundle
+(def (agentic-ai-lab-fhir-reference-observation-from-bundle
       validator-version validator-binary-digest fixture-identity subject
       profile-identities output-path entry-index)
   (reference-observation-from-output

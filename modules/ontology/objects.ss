@@ -7,23 +7,23 @@
         (only-in :gerbil/core hash-get hash-put!)
         :std/list/list
         (only-in :core/graph/algorithms
-                 poo-flow-graph-cycle-path)
+                 agentic-ai-lab-graph-cycle-path)
         (only-in :core/graph/types
-                 poo-flow-graph poo-flow-graph-edge-from
-                 poo-flow-graph-edge-kind poo-flow-graph-edge-to
-                 poo-flow-graph-edges poo-flow-graph-node-id
-                 poo-flow-graph-node-payload poo-flow-graph-nodes)
-        (only-in :poo-flow/modules/workflow/scenario/case
-                 poo-flow-scenario-case)
-        (only-in :poo-flow/modules/authorization/types
-                 poo-flow-authorization-capability?)
-        (only-in :poo-flow/modules/governance/objects
-                 PooFlowGovernanceProfile.
-                 poo-flow-governance-source
-                 poo-flow-governance-threat-model)
-        (only-in :poo-flow/modules/query/objects PooFlowQuery.)
+                 agentic-ai-lab-graph agentic-ai-lab-graph-edge-from
+                 agentic-ai-lab-graph-edge-kind agentic-ai-lab-graph-edge-to
+                 agentic-ai-lab-graph-edges agentic-ai-lab-graph-node-id
+                 agentic-ai-lab-graph-node-payload agentic-ai-lab-graph-nodes)
+        (only-in :agentic-ai-lab/modules/workflow/scenario/case
+                 agentic-ai-lab-scenario-case)
+        (only-in :agentic-ai-lab/modules/authorization/types
+                 agentic-ai-lab-authorization-capability?)
+        (only-in :agentic-ai-lab/modules/governance/objects
+                 AgenticAILabGovernanceProfile.
+                 agentic-ai-lab-governance-source
+                 agentic-ai-lab-governance-threat-model)
+        (only-in :agentic-ai-lab/modules/query/objects AgenticAILabQuery.)
         (only-in :core/utilities/functional
-                 poo-flow-filter-map)
+                 agentic-ai-lab-filter-map)
         (only-in "types.ss"
                  ontology-concept? ontology-profile? ontology-relation?
                  ontology-rule? ontology-query?
@@ -64,7 +64,7 @@
     (error "Case profile-selection must be a POO object" declarations))
   (map
    (lambda (composition-name)
-     (poo-flow-scenario-case
+     (agentic-ai-lab-scenario-case
       composition-name
       '()
       (ontology-declaration-values
@@ -102,7 +102,7 @@
 ;;; Ontology refines only source-projection facts.  The Query's language,
 ;;; semantic revision, bounds, visibility and authority remain core-owned.
 (def OntologyQuery.
-  (.o (:: @ PooFlowQuery.)
+  (.o (:: @ AgenticAILabQuery.)
       source: #f
       expected-source-content-id: #f
       graph-kind: #f))
@@ -174,8 +174,8 @@
             position: position-value
             .evaluate:
             (lambda (rule graph)
-              (let ((nodes (poo-flow-graph-nodes graph))
-                    (edges (poo-flow-graph-edges graph))
+              (let ((nodes (agentic-ai-lab-graph-nodes graph))
+                    (edges (agentic-ai-lab-graph-edges graph))
                     (relation (.ref rule 'relation))
                     (position (.ref rule 'position))
                     (covered-node-ids (make-hash-table)))
@@ -183,24 +183,24 @@
                 ;; node-by-node edge scan was O(V*E) for large Case graphs.
                 (for-each
                  (lambda (edge)
-                   (when (eq? (poo-flow-graph-edge-kind edge) relation)
+                   (when (eq? (agentic-ai-lab-graph-edge-kind edge) relation)
                      (hash-put!
                       covered-node-ids
                       (if (eq? position 'source)
-                        (poo-flow-graph-edge-from edge)
-                        (poo-flow-graph-edge-to edge))
+                        (agentic-ai-lab-graph-edge-from edge)
+                        (agentic-ai-lab-graph-edge-to edge))
                       #t)))
                  edges)
-                (poo-flow-filter-map
+                (agentic-ai-lab-filter-map
                  (lambda (node)
                    (and
-                    (eq? (poo-flow-graph-node-payload node)
+                    (eq? (agentic-ai-lab-graph-node-payload node)
                          (.ref rule 'concept))
                     (not (hash-get covered-node-ids
-                                   (poo-flow-graph-node-id node)))
+                                   (agentic-ai-lab-graph-node-id node)))
                     (ontology-rule-diagnostic
                      rule 'required-relation-missing
-                     (list 'graph (poo-flow-graph-node-id node))
+                     (list 'graph (agentic-ai-lab-graph-node-id node))
                      relation)))
                  nodes)))
             .project:
@@ -224,15 +224,15 @@
             (lambda (rule graph)
               (let* ((relation (.ref rule 'relation))
                      (relation-graph
-                      (poo-flow-graph
+                      (agentic-ai-lab-graph
                        (list 'ontology-rule relation)
-                       (poo-flow-graph-nodes graph)
+                       (agentic-ai-lab-graph-nodes graph)
                        (filter
                         (lambda (edge)
-                          (eq? (poo-flow-graph-edge-kind edge) relation))
-                        (poo-flow-graph-edges graph))))
+                          (eq? (agentic-ai-lab-graph-edge-kind edge) relation))
+                        (agentic-ai-lab-graph-edges graph))))
                      (cycle-path
-                      (poo-flow-graph-cycle-path relation-graph)))
+                      (agentic-ai-lab-graph-cycle-path relation-graph)))
                 (if cycle-path
                   (list (ontology-rule-diagnostic
                          rule 'relation-cycle '(graph) cycle-path))
@@ -249,7 +249,7 @@
 (def (ontology-source identity-value path-value language-value scope-value
                       scenario-value case-id-value)
   (let (value
-        (.o (:: @ (poo-flow-governance-source
+        (.o (:: @ (agentic-ai-lab-governance-source
                     identity-value path-value language-value))
             kind: 'lambda-episteme.ontology-source
             source-scope: scope-value
@@ -272,7 +272,7 @@
                  (eq? (.ref profile 'scenario) identity))))))
 
 (def OntologyProfile
-  (.o (:: @ PooFlowGovernanceProfile.)
+  (.o (:: @ AgenticAILabGovernanceProfile.)
       identity: "lambda-episteme/ontology"
       revision: "1"
       owner: "lambda-episteme"
@@ -312,7 +312,7 @@
       conflicts: (ontology-declaration-values conflict-declarations
                                               'conflict-declarations)
       threat-model:
-      (poo-flow-governance-threat-model
+      (agentic-ai-lab-governance-threat-model
        (string-append identity "/threat-model")
        (ontology-declaration-values threat-declarations
                                     'threat-declarations))

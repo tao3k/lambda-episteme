@@ -4,8 +4,8 @@
 
 (import (only-in :std/test test-suite check-equal?)
         (only-in :clan/poo/object .o .ref)
-        (only-in :core/observability/testing-case poo-flow-test-case)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/hypotheses
+        (only-in :core/observability/testing-case agentic-ai-lab-test-case)
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/hypotheses
                  ExchangeSigningPublicEvidence.
                  exchange-signing-compare-hypotheses
                  ExchangeSigningFamilyCase.
@@ -19,7 +19,7 @@
 
 (def exchange-signing-hypotheses-test
   (test-suite "Exchange signing hypothesis discriminators"
-    (poo-flow-test-case "public outflow leaves every ingress hypothesis open"
+    (agentic-ai-lab-test-case "public outflow leaves every ingress hypothesis open"
       (let (result
             (exchange-signing-compare-hypotheses
              ExchangeSigningPublicEvidence.))
@@ -27,7 +27,7 @@
         (check-equal? (.ref result 'specific-support) '())
         (check-equal? (.ref result 'challenged) '())
         (check-equal? (.ref result 'hypothesis-confirmed?) #f)))
-    (poo-flow-test-case "a provisional backend log cannot become admitted support"
+    (agentic-ai-lab-test-case "a provisional backend log cannot become admitted support"
       (let* ((case-value
               (.o (:: @ ExchangeSigningPublicEvidence.)
                   provisional-signals:
@@ -38,7 +38,7 @@
          (contains? (.ref result 'provisional-support)
                     '(queue-injection orphan-queue-message
                       backend-controlled-log)) #t)))
-    (poo-flow-test-case "independent queue evidence narrows but does not prove ingress"
+    (agentic-ai-lab-test-case "independent queue evidence narrows but does not prove ingress"
       (let* ((case-value
               (.o (:: @ ExchangeSigningPublicEvidence.)
                   admitted-signals:
@@ -50,7 +50,7 @@
          '((queue-injection orphan-queue-message independent-signer-log)))
         (check-equal? (.ref result 'hypothesis-confirmed?) #f)
         (check-equal? (.ref result 'action-authority?) #f)))
-    (poo-flow-test-case "an observed admin effect narrows operation, not ingress"
+    (agentic-ai-lab-test-case "an observed admin effect narrows operation, not ingress"
       (let* ((case-value
               (.o (:: @ ExchangeSigningPublicEvidence.)
                   admitted-signals:
@@ -62,7 +62,7 @@
                     '(admin-change-path observed-admin-effect
                       independent-chain-receipt)) #t)
         (check-equal? (.ref result 'hypothesis-confirmed?) #f)))
-    (poo-flow-test-case "contradictory independent observations remain visible"
+    (agentic-ai-lab-test-case "contradictory independent observations remain visible"
       (let* ((case-value
               (.o (:: @ ExchangeSigningPublicEvidence.)
                   admitted-signals:
@@ -79,7 +79,7 @@
                     '(queue-injection verified-producer-chain
                       independent-queue-audit)) #t)
         (check-equal? (.ref result 'hypothesis-confirmed?) #f)))
-    (poo-flow-test-case "published record favors backend signed transfer family"
+    (agentic-ai-lab-test-case "published record favors backend signed transfer family"
       (let (result (exchange-signing-compare-families
                     ExchangeSigningReportedFamilyEvidence.))
         (check-equal? (.ref result 'model-compatible-families)
@@ -88,7 +88,7 @@
                       '(backend-signed-transfer 5 5 0 #t))
         (check-equal? (.ref result 'conditional-on-reports?) #t)
         (check-equal? (.ref result 'exact-entry-point-known?) #f)))
-    (poo-flow-test-case "backend report alone cannot select an effect family"
+    (agentic-ai-lab-test-case "backend report alone cannot select an effect family"
       (let* ((case-value
               (.o (:: @ ExchangeSigningFamilyCase.)
                   reported-signals:
@@ -96,7 +96,7 @@
                     (spoofed-transaction-data bitget-incident-explainer))))
              (result (exchange-signing-compare-families case-value)))
         (check-equal? (.ref result 'model-compatible-families) '())))
-    (poo-flow-test-case "without the gas discriminator the family stays open"
+    (agentic-ai-lab-test-case "without the gas discriminator the family stays open"
       (let* ((case-value
               (.o (:: @ ExchangeSigningReportedFamilyEvidence.)
                   reported-signals:
@@ -107,7 +107,7 @@
                     (cross-chain-bursts bitquery-chain-analysis))))
              (result (exchange-signing-compare-families case-value)))
         (check-equal? (.ref result 'model-compatible-families) '())))
-    (poo-flow-test-case "an observed control change redirects the family"
+    (agentic-ai-lab-test-case "an observed control change redirects the family"
       (let* ((case-value
               (.o (:: @ ExchangeSigningFamilyCase.)
                   reported-signals:
@@ -117,7 +117,7 @@
              (result (exchange-signing-compare-families case-value)))
         (check-equal? (.ref result 'model-compatible-families)
                       '(backend-admin-change))))
-    (poo-flow-test-case "extra reporter does not count one signal twice"
+    (agentic-ai-lab-test-case "extra reporter does not count one signal twice"
       (let* ((case-value
               (.o (:: @ ExchangeSigningReportedFamilyEvidence.)
                   reported-signals:

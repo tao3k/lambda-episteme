@@ -13,6 +13,6 @@
 
 (def HealthcareModule
   (validate
-   PooFlowHealthcareModule
-   (.o (:: @ PooFlowHealthcareModule.)
+   AgenticAILabHealthcareModule
+   (.o (:: @ AgenticAILabHealthcareModule.)
        standards: HealthcareStandardsModule)))

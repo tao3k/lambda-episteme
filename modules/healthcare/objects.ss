@@ -6,9 +6,9 @@
 (import (only-in :clan/poo/object .o)
         "types.ss")
 
-(export PooFlowHealthcareModule.)
+(export AgenticAILabHealthcareModule.)
 
-(def PooFlowHealthcareModule.
+(def AgenticAILabHealthcareModule.
   (.o kind: +lambda-healthcare-module-kind+
       identity: "lambda-episteme/modules/healthcare"
       standards: #f))

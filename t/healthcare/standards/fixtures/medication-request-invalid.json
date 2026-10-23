@@ -1,6 +1,6 @@
 {
   "resourceType": "Observation",
-  "id": "poo-flow-invalid",
+  "id": "agentic-ai-lab-invalid",
   "status": "final",
   "code": {
     "text": "not a MedicationRequest"

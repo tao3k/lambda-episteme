@@ -7,12 +7,12 @@
 ;;; already-normalized healthcare subject; it does not parse HL7v2 or CDA.
 (import (only-in :clan/poo/object .o .ref object?)
         :std/list/list
-        (only-in :poo-flow/modules/standards/types
-                 poo-flow-standard-conformance-receipt?
-                 poo-flow-standard-governance-interface?
-                 poo-flow-standard-validation-closure?)
-        (only-in :poo-flow/modules/standards/funs
-                 poo-flow-standard-digest)
+        (only-in :agentic-ai-lab/modules/standards/types
+                 agentic-ai-lab-standard-conformance-receipt?
+                 agentic-ai-lab-standard-governance-interface?
+                 agentic-ai-lab-standard-validation-closure?)
+        (only-in :agentic-ai-lab/modules/standards/funs
+                 agentic-ai-lab-standard-digest)
         "types.ss"
         "objects.ss")
 
@@ -74,9 +74,9 @@
                                           conformance-receipt
                                           governance-interface)
   (unless (and (healthcare-standard-migration-case? migration-case)
-               (poo-flow-standard-validation-closure? validation-closure)
-               (poo-flow-standard-conformance-receipt? conformance-receipt)
-               (poo-flow-standard-governance-interface?
+               (agentic-ai-lab-standard-validation-closure? validation-closure)
+               (agentic-ai-lab-standard-conformance-receipt? conformance-receipt)
+               (agentic-ai-lab-standard-governance-interface?
                 governance-interface))
     (error "invalid Healthcare Standard migration admission input"
            migration-case))
@@ -124,7 +124,7 @@
                '(source-qualification-state))))
            (if (string=?
                 (.ref migration-case 'source-qualification-digest)
-                (poo-flow-standard-digest
+                (agentic-ai-lab-standard-digest
                  (list 'gerbil-parser-hl7v2-qualification
                        (.ref migration-case 'source-snapshot-digest)
                        (.ref migration-case 'parser-grammar-digest)
@@ -233,7 +233,7 @@
          (failures
           (append (.ref conformance-receipt 'failures) policy-failures))
          (migration-digest
-          (poo-flow-standard-digest
+          (agentic-ai-lab-standard-digest
            (list 'lambda-episteme.healthcare-standard-migration.v1
                  (.ref migration-case 'identity)
                  (.ref migration-case 'source-interface)

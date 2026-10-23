@@ -6,10 +6,10 @@
         (only-in :clan/poo/object .ref)
         :std/list/list
         (only-in :core/graph/types
-                 poo-flow-graph-edge-kind poo-flow-graph-edges)
-        :poo-flow/modules/temporal-causality/interface
-        :poo-flow/lambda-episteme/modules/ontology/interface
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/wrong-prescription-review/case)
+                 agentic-ai-lab-graph-edge-kind agentic-ai-lab-graph-edges)
+        :agentic-ai-lab/modules/temporal-causality/interface
+        :agentic-ai-lab/lambda-episteme/modules/ontology/interface
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/cases/wrong-prescription-review/case)
 
 (export temporal-causality-test)
 
@@ -19,16 +19,16 @@
    (test-case "wrong prescription keeps future candidates outside the cut"
      (let* ((receipt (ontology-compose-case WrongPrescriptionReviewCase))
             (event-graph
-             (poo-flow-causal-event-graph
+             (agentic-ai-lab-causal-event-graph
               "patient-1" (.ref receipt 'events)))
-            (cut (poo-flow-causal-cut event-graph 4))
+            (cut (agentic-ai-lab-causal-cut event-graph 4))
             (classification
-             (poo-flow-temporal-causal-classify
+             (agentic-ai-lab-temporal-causal-classify
               event-graph cut "prescription-1/rev1" 6))
             (reasoning (ontology-case-reasoning-graph receipt))
             (edge-kinds
-             (map poo-flow-graph-edge-kind
-                  (poo-flow-graph-edges reasoning))))
+             (map agentic-ai-lab-graph-edge-kind
+                  (agentic-ai-lab-graph-edges reasoning))))
        (check (.ref receipt 'accepted?) => #t)
        (check (length (.ref receipt 'events)) => 7)
        (check (map (lambda (event) (.ref event 'identity))

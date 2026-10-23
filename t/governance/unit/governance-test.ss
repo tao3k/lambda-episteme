@@ -2,14 +2,14 @@
         (only-in :clan/poo/object .o .ref)
         :core/contribution/objects
         (only-in :core/profile-composition/profile-bundle compose profiles)
-        (only-in :poo-flow/modules/workflow/scenario/accessors
-                 poo-flow-scenario-case-profiles)
+        (only-in :agentic-ai-lab/modules/workflow/scenario/accessors
+                 agentic-ai-lab-scenario-case-profiles)
         (only-in :core/module-system/selection/objects
-                 poo-flow-user-module-selection)
-        (only-in :poo-flow/modules/workflow/scenario/composition-syntax user-composition)
-        :poo-flow/modules/governance/interface
-        :poo-flow/lambda-episteme/modules/diataxis/interface
-        :poo-flow/lambda-episteme/modules/decision-kind/interface)
+                 agentic-ai-lab-user-module-selection)
+        (only-in :agentic-ai-lab/modules/workflow/scenario/composition-syntax user-composition)
+        :agentic-ai-lab/modules/governance/interface
+        :agentic-ai-lab/lambda-episteme/modules/diataxis/interface
+        :agentic-ai-lab/lambda-episteme/modules/decision-kind/interface)
 (def ProjectDiataxisProfile
   (.o (:: @ DiataxisProfile)
       identity: "example/diataxis" owner: "example-project"
@@ -27,7 +27,7 @@
       (for-each (lambda (module)
                   (check-equal? (contribution? module) #t)
                   (check-equal?
-                   (poo-flow-governance-profile? (.ref module 'profile)) #t))
+                   (agentic-ai-lab-governance-profile? (.ref module 'profile)) #t))
                 (list diataxis-module decision-kind-module)))
     (test-case "local derivation changes only the selected policy"
       (check-equal? (.ref (.ref (.ref ProjectDiataxisProfile 'policies) 'document-kind) 'severity) 'error)
@@ -36,7 +36,7 @@
       (check-equal? (eq? (.ref ProjectDiataxisProfile 'source-assets) (.ref DiataxisProfile 'source-assets)) #t))
     (test-case "composition imports source values without backend capabilities"
       (let ((receipt (admit-contributions
-                      (poo-flow-scenario-case-profiles project-composition)
+                      (agentic-ai-lab-scenario-case-profiles project-composition)
                       '())))
         (check-equal? (.ref receipt 'accepted?) #t)
         (check-equal? (.ref receipt 'runtime-executed?) #f)
@@ -47,31 +47,31 @@
               (list decision-kind-module decision-kind-module) '())
              'accepted?)
        #f))
-    (test-case "module config delegates exact family admission to POO Flow"
+    (test-case "module config delegates exact family admission to Agentic AI Lab"
       (check-equal?
        (eq? (diataxis-config
-             (poo-flow-user-module-selection 'custom 'diataxis '()))
+             (agentic-ai-lab-user-module-selection 'custom 'diataxis '()))
             diataxis-module)
        #t)
       (check-equal?
        (eq? (decision-kind-config
-             (poo-flow-user-module-selection 'custom 'decision-kind '()))
+             (agentic-ai-lab-user-module-selection 'custom 'decision-kind '()))
             decision-kind-module)
        #t)
       (check-exception
        (decision-kind-config
-        (poo-flow-user-module-selection 'custom 'diataxis '()))
+        (agentic-ai-lab-user-module-selection 'custom 'diataxis '()))
        true))
     (test-case "query language is an optional source facet"
       (let ((plain
-             (.o (:: @ PooFlowGovernanceProfile.)
+             (.o (:: @ AgenticAILabGovernanceProfile.)
                  identity: "example/plain"
                  revision: "1"
                  owner: "example-project")))
-        (check-equal? (poo-flow-governance-profile? plain) #t)
+        (check-equal? (agentic-ai-lab-governance-profile? plain) #t)
         (check-equal?
          (.ref
-          (poo-flow-governance-contribution
+          (agentic-ai-lab-governance-contribution
            plain '(knowledge-governance) '())
           'requires)
          '())

@@ -2,11 +2,11 @@
 --
 -- SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
-import PooFlowProof.PooC3.CedarAuthorizationSemantics
+import AgenticAILabProof.PooC4.CedarAuthorizationSemantics
 
 namespace EpistemeProof.Healthcare.StandardMigrationCedarAuthorization
 
-open PooFlowProof.PooC3.CedarAuthorizationSemantics
+open AgenticAILabProof.PooC4.CedarAuthorizationSemantics
 
 /-!
 Vertical Cedar specification for the AU legacy-interface migration Case.

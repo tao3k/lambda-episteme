@@ -3,20 +3,20 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .def .o)
-        (only-in :poo-flow/modules/authorization/objects
-                 poo-flow-authorization-capability)
-        (only-in :poo-flow/modules/governance/objects
-                 poo-flow-governance-precondition
-                 poo-flow-governance-threat)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/modules/authorization/objects
+                 agentic-ai-lab-authorization-capability)
+        (only-in :agentic-ai-lab/modules/governance/objects
+                 agentic-ai-lab-governance-precondition
+                 agentic-ai-lab-governance-threat)
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  ontology-concept ontology-relation)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/privacy
                  PrivacyProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/governance
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/governance
                  healthcare-contextual-governance-assessment)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
                  HealthcareBaseProfile))
 
 (export PrimaryCareProfile)
@@ -75,38 +75,38 @@
   (rule-declarations =>.+ (.o))
   (threat-declarations =>.+
    (.o registration-without-dual-consent:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/primary-care/threat/unconsented-registration"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/primary-care/precondition/registration-consent"
           #t "evidence:primary-care-registration-consent"))
         mitigations: '("patient and practice consent are recorded"))
        ineligible-practice-or-gp:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/primary-care/threat/ineligible-practice-or-provider"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/primary-care/precondition/provider-eligibility"
           #t "evidence:practice-registration-and-provider-number"))
         mitigations: '("practice registration and GP provider number are verified"))
        routine-path-without-triage:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/primary-care/threat/untriaged-appointment"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/primary-care/precondition/clinical-triage"
           #t "evidence:appointment-triage"))
         mitigations: '("urgent symptoms leave the routine booking path"))
        health-information-over-disclosure:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/primary-care/threat/health-information-over-disclosure"
         'high 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/primary-care/precondition/disclosure-consent"
           #t "evidence:purpose-limited-health-information-consent"))
         mitigations: '("disclosure stays within consented care coordination purpose"))))
@@ -118,7 +118,7 @@
        disclosure: 'purpose-limited))
   (capability-declarations =>.+
    (.o schedule-primary-care:
-       (poo-flow-authorization-capability
+       (agentic-ai-lab-authorization-capability
         "healthcare/primary-care/capability/schedule-appointment"
         "Healthcare::Action::\"schedulePrimaryCareAppointment\""
         4301 'ordinary)))

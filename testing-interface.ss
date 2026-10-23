@@ -15,9 +15,9 @@
                  testing-interface-add-profile
                  testing-interface-map-profile
                  testing-test-selector)
-        (only-in :poo-flow/dev/modules/testing/testing-extension
-                 make-poo-flow-testing-observability-profile
-                 poo-flow-testing-observability-extension))
+        (only-in :agentic-ai-lab/dev/modules/testing/testing-extension
+                 make-agentic-ai-lab-testing-observability-profile
+                 agentic-ai-lab-testing-observability-extension))
 
 (export +lambda-episteme-testing-interface+)
 
@@ -55,7 +55,7 @@
   (.cc +testing-memory-profile+ maxHeapMiB: 2048))
 
 (def +lambda-episteme-testing-interface+
-  (poo-flow-testing-observability-extension
+  (agentic-ai-lab-testing-observability-extension
    (testing-interface-map-profile
     (testing-interface-map-profile
      (testing-interface-map-profile
@@ -87,5 +87,5 @@
      +testing-serial-resource-profile+)
     +lambda-episteme-performance-selector+
     +testing-serial-resource-profile+)
-   (make-poo-flow-testing-observability-profile
+   (make-agentic-ai-lab-testing-observability-profile
     'lambda-episteme/testing 5)))

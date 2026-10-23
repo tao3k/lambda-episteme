@@ -5,11 +5,11 @@
 (import :std/test
         (only-in :clan/poo/object .cc .ref)
         :std/list/list
-        (only-in :poo-flow/modules/workflow/scenario/accessors
-                 poo-flow-scenario-case-name)
-        :poo-flow/modules/temporal-causality/interface
-        :poo-flow/lambda-episteme/modules/ontology/interface
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/personal-care-coordination/case)
+        (only-in :agentic-ai-lab/modules/workflow/scenario/accessors
+                 agentic-ai-lab-scenario-case-name)
+        :agentic-ai-lab/modules/temporal-causality/interface
+        :agentic-ai-lab/lambda-episteme/modules/ontology/interface
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/cases/personal-care-coordination/case)
 
 (export personal-care-coordination-test)
 
@@ -31,7 +31,7 @@
        (check (.ref admitted-receipt 'governance-handoff-ready?) => #t)
        (check (.ref admitted-receipt 'trajectory-handoff-ready?) => #t)
        (check (length (.ref admitted-receipt 'trajectory-assessments)) => 1)
-       (check (map poo-flow-scenario-case-name
+       (check (map agentic-ai-lab-scenario-case-name
                    (.ref PersonalCareCoordinationCase 'compositions))
               => '(common healthcare personal-care regions))
        (check (map (lambda (profile) (.ref profile 'name))
@@ -47,11 +47,11 @@
 
    (test-case "the causal cut keeps routine, unsafe and prospective paths apart"
      (let* ((event-graph
-             (poo-flow-causal-event-graph
+             (agentic-ai-lab-causal-event-graph
               "person-1" (.ref admitted-receipt 'events)))
-            (cut (poo-flow-causal-cut event-graph 8))
+            (cut (agentic-ai-lab-causal-cut event-graph 8))
             (classification
-             (poo-flow-temporal-causal-classify
+             (agentic-ai-lab-temporal-causal-classify
               event-graph cut "personal-care-request-1" 10)))
        (check (length (.ref cut 'events)) => 8)
        (check (.ref classification 'past-event-ids)

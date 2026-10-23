@@ -6,9 +6,9 @@
 (import :std/test
         (only-in :clan/poo/object .all-slots .ref)
         :std/list/list
-        (only-in :poo-flow/modules/standards/interface
-                 poo-flow-standard-edition-ref?)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/regions/australia
+        (only-in :agentic-ai-lab/modules/standards/interface
+                 agentic-ai-lab-standard-edition-ref?)
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/regions/australia
                  AustraliaHealthcareRegionProfile))
 
 (export standards-australia-profile-test)
@@ -23,7 +23,7 @@
                       '("hl7.fhir.r4.core@4.0.1"
                         "hl7.fhir.au.base@5.0.0"
                         "hl7.fhir.au.core@1.0.0"))
-        (check-equal? (every poo-flow-standard-edition-ref? requirements) #t)))
+        (check-equal? (every agentic-ai-lab-standard-edition-ref? requirements) #t)))
     (test-case "domain identity maps without renaming Lambda ontology"
       (let (mapping
             (.ref (.ref AustraliaHealthcareRegionProfile 'standard-mappings)

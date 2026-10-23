@@ -6,10 +6,10 @@
 ;;; Funflow step topology is inherited; each attack specializes only its
 ;;; identity and temporal model selection.
 (import (only-in :clan/poo/object .o)
-        (only-in :core/module-system/schema/relations poo-flow-semantic-identity)
-        (only-in :core/module-system/authoring/roles poo-flow-semantic-module)
+        (only-in :core/module-system/schema/relations agentic-ai-lab-semantic-identity)
+        (only-in :core/module-system/authoring/roles agentic-ai-lab-semantic-module)
         (only-in :core/profile-composition/profile-bundle
-                 poo-flow-module-profiles poo-flow-profile-export)
+                 agentic-ai-lab-module-profiles agentic-ai-lab-profile-export)
         (only-in "simulation.ss"
                  ExchangeSigningCandidateTransfer.
                  ExchangeSigningApiReplay.
@@ -108,19 +108,19 @@
       tla-config: "AdminAttack.cfg"))
 
 (def ExchangeSigningAttackModule
-  (poo-flow-semantic-module
-   (poo-flow-semantic-identity 'lambda-episteme 'exchange-signing-attack)
+  (agentic-ai-lab-semantic-module
+   (agentic-ai-lab-semantic-identity 'lambda-episteme 'exchange-signing-attack)
    profiles:
-   (poo-flow-module-profiles
-    (poo-flow-profile-export 'record-mutation
+   (agentic-ai-lab-module-profiles
+    (agentic-ai-lab-profile-export 'record-mutation
                              ExchangeSigningRecordMutationProfile.)
-    (poo-flow-profile-export 'api-replay
+    (agentic-ai-lab-profile-export 'api-replay
                              ExchangeSigningApiReplayProfile.)
-    (poo-flow-profile-export 'queue-injection
+    (agentic-ai-lab-profile-export 'queue-injection
                              ExchangeSigningQueueInjectionProfile.)
-    (poo-flow-profile-export 'address-map-substitution
+    (agentic-ai-lab-profile-export 'address-map-substitution
                              ExchangeSigningAddressMapProfile.)
-    (poo-flow-profile-export 'interface-substitution
+    (agentic-ai-lab-profile-export 'interface-substitution
                              ExchangeSigningInterfaceProfile.)
-    (poo-flow-profile-export 'backend-admin-change
+    (agentic-ai-lab-profile-export 'backend-admin-change
                              ExchangeSigningBackendAdminProfile.))))

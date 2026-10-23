@@ -1,7 +1,7 @@
 ;;; Place at t/example/unit/profile-test.ss; replace example and binding.
 (import :std/test
-        :poo-flow/src/module-system/contribution/testing
-        :poo-flow/lambda-episteme/modules/example/interface)
+        :agentic-ai-lab/src/module-system/contribution/testing
+        :agentic-ai-lab/lambda-episteme/modules/example/interface)
 (define-module-test profile-test example unit
   "example module contract"
   (test-case "default profile satisfies its contract"

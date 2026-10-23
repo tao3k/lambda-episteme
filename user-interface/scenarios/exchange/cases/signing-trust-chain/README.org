@@ -55,7 +55,7 @@ entry point in Bitget's separate incident.
 effects, while its interface-to-signer link remains proposed. Ascent no
 longer presents an observed end-to-end interface route. The separate
 [[file:bybit-inference.ss][Bybit reverse inference]] declares source-labelled POO claims,
-steps, and competing hypotheses for POO Flow's generic =ReverseInference=
+steps, and competing hypotheses for Agentic AI Lab's generic =ReverseInference=
 module. The engine joins those claims rather than taking the desired causal
 chain as an observed input. NCC distinguishes a changed
 wallet signing request from
@@ -202,7 +202,7 @@ The dotted links are candidate mechanisms, not established Bitget attack
 steps. A bounded Ascent closure can show whether the Case's supplied edges
 contain a route from a suspected surface to the transfer. The output is
 explicitly non-authoritative. The [[file:query.ss][GQL query contract]] constructs a
-parser-owned AST. POO Flow's bounded Scheme selector executes this Case's
+parser-owned AST. Agentic AI Lab's bounded Scheme selector executes this Case's
 single-node =MATCH/RETURN= slice over source-labelled POO nodes; the
 [[file:signal-result.ss][Case adapter]] checks signal identities and row shape. The selected rows
 can change the conditional Ascent comparison after TLA qualification. Local
@@ -211,11 +211,11 @@ The Host must establish source lineage before a row becomes an observed Case
 fact. Neither graph reachability nor a GQL match proves that a route happened.
 
 The Scheme Ascent kernel and its rule qualifications are maintained by
-[[https://github.com/tao3k/gerbil-ascent][gerbil-ascent]]. POO Flow PR #34 pins that package. The
+[[https://github.com/tao3k/gerbil-ascent][gerbil-ascent]]. Agentic AI Lab PR #34 pins that package. The
 [[file:reasoning.ss][Exchange Case rules]] use Ascent to compute both possible routes (observed and
 proposed links) and routes supported only by observed links. The Lambda
 package declares no Ascent dependency of its own; its CI consumes the pinned
-POO Flow checkout. This Scenario uses no MRR runtime or candidate receipt.
+Agentic AI Lab checkout. This Scenario uses no MRR runtime or candidate receipt.
 
 | Discriminator | Backend substitution | Interface substitution |
 |---------------+----------------------+------------------------|
@@ -231,7 +231,7 @@ artifact has been recovered from either incident. Independent signer ingress,
 approval display capture, chain transaction bytes, and timestamped source
 identities are needed before a forensic conclusion.
 
-The [[file:../../../../../t/ontology/exchange-signing-reasoning-test.ss][atomic Case test]] runs under the POO Flow Observability test boundary. It
+The [[file:../../../../../t/ontology/exchange-signing-reasoning-test.ss][atomic Case test]] runs under the Agentic AI Lab Observability test boundary. It
 uses a Bitget notice as one observed transfer link and
 marks the backend, queue, and signer links as proposed. Ascent derives a
 possible backend-to-outflow route but no fully observed route. Removing the
@@ -361,7 +361,7 @@ about the real ingress.
 
 #+begin_src mermaid
 flowchart LR
-  O[Public report as observed anchor] --> P[POO Flow causal graph and temporal cut]
+  O[Public report as observed anchor] --> P[Agentic AI Lab causal graph and temporal cut]
   P --> T[Route-specific TLA+ counterexample]
   T --> G[Scheme GQL source-labelled signal selection]
   G --> A[Ascent factor and challenge joins]
@@ -412,7 +412,7 @@ integrated Ascent ranking. The receipt keeps Scheme GQL execution,
 external evidence admission, Cedar runtime status, route attribution, and
 action authority explicit. No local counterexample identifies Bitget's ingress.
 
-[[file:causal.ss][The causal Case]] uses POO Flow's event graph, trajectory assessment, digest,
+[[file:causal.ss][The causal Case]] uses Agentic AI Lab's event graph, trajectory assessment, digest,
 and temporal cut. Its observed anchor is the public report itself. The
 proposed ingress, weak signature, transfer, and potential loss describe a
 prospective recurrence and carry counterfactual or hypothesized modalities.
@@ -532,4 +532,4 @@ This directory carries the incident-specific source ledger, hypothesis
 matrix, TLA+ model, and Lean-generated Cedar policy set. It contains no keys
 or live exchange transactions. A downstream deployment must ingest its own
 admitted records, check source independence, and replay the published Cedar
-policy set through the POO Flow Host before any signer effect.
+policy set through the Agentic AI Lab Host before any signer effect.

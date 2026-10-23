@@ -8,11 +8,11 @@
 (import (only-in :clan/poo/object .o .ref .slot?)
         :std/list/list
         :core/poo-clos/interface
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
                  AIClinicalDecisionSupportProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
                  MedicationSafetyProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/pharmacology-safety
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/pharmacology-safety
                  PharmacologySafetyProfile))
 
 (export HealthcareAuthorizationProjectionExecutor

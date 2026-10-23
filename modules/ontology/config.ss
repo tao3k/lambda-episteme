@@ -3,24 +3,24 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :core/module-system/selection/objects
-                 poo-flow-user-module-selection?
-                 poo-flow-user-module-selection-flags
-                 poo-flow-user-module-selection-key)
-        (only-in :poo-flow/modules/governance/funs
-                 poo-flow-governance-contribution)
+                 agentic-ai-lab-user-module-selection?
+                 agentic-ai-lab-user-module-selection-flags
+                 agentic-ai-lab-user-module-selection-key)
+        (only-in :agentic-ai-lab/modules/governance/funs
+                 agentic-ai-lab-governance-contribution)
         (only-in "objects.ss"
                  OntologyProfile))
 
 (export ontology-module ontology-config)
 
 (def ontology-module
-  (poo-flow-governance-contribution
+  (agentic-ai-lab-governance-contribution
    OntologyProfile '(ontology-governance) '()))
 
 (def (ontology-config selection)
-  (unless (and (poo-flow-user-module-selection? selection)
-               (equal? (poo-flow-user-module-selection-key selection)
+  (unless (and (agentic-ai-lab-user-module-selection? selection)
+               (equal? (agentic-ai-lab-user-module-selection-key selection)
                        '(custom . ontology))
-               (null? (poo-flow-user-module-selection-flags selection)))
+               (null? (agentic-ai-lab-user-module-selection-flags selection)))
     (error "invalid ontology module selection"))
   ontology-module)

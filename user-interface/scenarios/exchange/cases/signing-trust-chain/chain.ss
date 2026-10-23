@@ -8,9 +8,9 @@
 ;;; not execute GQL or admit external evidence into the signer Host.
 (import (only-in :clan/poo/object .o .ref .slot? .call object?)
         (only-in :std/list/list every)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/query
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/query
                  ExchangeSigningSignalQuery ExchangeSigningSignalSource)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/hypotheses
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/hypotheses
                  ExchangeSigningReportedFamilyEvidence.
                  exchange-signing-compare-families))
 

@@ -8,13 +8,13 @@ open Lake DSL
 package «lambda-episteme-proof» where
   version := v!"0.1.0"
 
-/-! The vertical proof consumes only the published POO Flow temporal-causality
+/-! The vertical proof consumes only the published Agentic AI Lab temporal-causality
 core. The exact revision prevents a parent checkout or sibling worktree from
 silently changing the theorem base. -/
-require «poo-flow-proof» from git
-  "https://github.com/tao3k/poo-flow.git"
-  @ "da492eea00a7dab502cfb4c7586edefbba96bbec"
-  / "packages/proof/lean"
+require «agentic-ai-lab-proof» from git
+  "https://github.com/tao3k/agentic-ai-lab.git"
+  @ "f30b858bdae9b52f79bef5359537766403e3cbec"
+  / "packages/proofs/lean"
 
 @[default_target]
 lean_lib EpistemeHealthcareTemporalProof where

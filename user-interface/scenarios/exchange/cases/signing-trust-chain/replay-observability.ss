@@ -7,10 +7,10 @@
 ;;; witnesses remain distinct. This projection never admits evidence or runs
 ;;; TLC, GQL, Lean, or Cedar on behalf of the caller.
 (import (only-in :clan/poo/object .o .ref .slot? object?)
-        (only-in :poo-flow/modules/workflow/scenario/accessors
-                 poo-flow-scenario-case-profiles)
-        (only-in :poo-flow/modules/reverse-inference/interface
-                 poo-flow-inference-hypothesis-result)
+        (only-in :agentic-ai-lab/modules/workflow/scenario/accessors
+                 agentic-ai-lab-scenario-case-profiles)
+        (only-in :agentic-ai-lab/modules/reverse-inference/interface
+                 agentic-ai-lab-inference-hypothesis-result)
         (only-in "chain.ss"
                  ExchangeSigningReportedChain.
                  exchange-signing-plan-chain)
@@ -108,7 +108,7 @@
                (andmap qualification-row? qualifications))
     (error "invalid TLA+ qualification rows" qualifications))
   (let* ((profile
-          (attack-profile (poo-flow-scenario-case-profiles composition)))
+          (attack-profile (agentic-ai-lab-scenario-case-profiles composition)))
          (route-case (.ref profile 'route-case))
          (routes (exchange-signing-route-candidates route-case))
          (reference-routes
@@ -222,7 +222,7 @@
         (.ref reference-reconstruction 'hypothesis-results)
         bybit-agent-investigation-brief: investigation-brief
         bybit-reference-interface-status:
-        (.ref (poo-flow-inference-hypothesis-result
+        (.ref (agentic-ai-lab-inference-hypothesis-result
                reference-reconstruction 'interface-substitution)
               'status)
         bybit-reference-unresolved-witnesses:

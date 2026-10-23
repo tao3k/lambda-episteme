@@ -2,7 +2,7 @@
 ;;; SPDX-FileCopyrightText: 2026 tao3k team and Contributors
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
-;;; Industry-owned rules. POO Flow pins the Ascent kernel; this module only
+;;; Industry-owned rules. Agentic AI Lab pins the Ascent kernel; this module only
 ;;; separates observed links from proposed links in one signing-chain Case.
 (import (only-in :clan/poo/object .o .ref .slot? object?)
         (only-in :std/list/list every)

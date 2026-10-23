@@ -8,8 +8,8 @@
 (import (only-in :core/profile-composition/profile-bundle
                  profiles compose)
         :core/profile-composition/selection-syntax
-        :poo-flow/modules/workflow/scenario/composition-syntax
-        (only-in :poo-flow/modules/funflow/profile-library
+        :agentic-ai-lab/modules/workflow/scenario/composition-syntax
+        (only-in :agentic-ai-lab/modules/funflow/profile-library
                  FunflowProfileModule)
         (only-in "flow-profiles.ss" ExchangeSigningAttackModule))
 

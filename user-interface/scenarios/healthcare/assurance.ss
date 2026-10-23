@@ -9,23 +9,23 @@
         (only-in :std/crypto/digest sha256)
         :std/list/list
         (only-in :std/encoding/hex hex-encode)
-        (only-in :poo-flow/modules/temporal-causality/interface
-                 poo-flow-causal-cut poo-flow-causal-event-graph
-                 poo-flow-causal-trajectory-assessment-digest
-                 poo-flow-causal-trajectory-assessment?
-                 poo-flow-temporal-causal-classify)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/modules/temporal-causality/interface
+                 agentic-ai-lab-causal-cut agentic-ai-lab-causal-event-graph
+                 agentic-ai-lab-causal-trajectory-assessment-digest
+                 agentic-ai-lab-causal-trajectory-assessment?
+                 agentic-ai-lab-temporal-causal-classify)
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  ontology-case-composition-receipt?)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/reasoning
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/reasoning
                  HealthcareCaseProfileRelationsQuery
                  HealthcareProfileImpactQuery
                  HealthcarePrescriptionCausalTrajectoryQuery
                  healthcare-query-source-path)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/formal-assurance-projection
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/formal-assurance-projection
                  HealthcareLeanAssuranceProjector
                  HealthcareTLAPlusAssuranceProjector
                  healthcare-formal-assurance-project)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
                  AIClinicalDecisionSupportProfile))
 
 (export healthcare-tlc-model-receipt
@@ -108,7 +108,7 @@
      path
      (lambda (port)
        (write
-        `((schema . "poo-flow.healthcare-lean-refinement.v1")
+        `((schema . "agentic-ai-lab.healthcare-lean-refinement.v1")
           (library . ,(.ref metadata 'lean-library))
           (module . ,(.ref metadata 'lean-module))
           (source-digest . ,(.ref metadata 'lean-source-content-id))
@@ -265,8 +265,8 @@
     (error "invalid Healthcare Case assurance receipt" value))
   (append
    (.ref (.ref value 'lean-receipt) 'certifications)
-   '("PooFlowProof.Enterprise.GovernanceThreatAssuranceClosure"
-     "PooFlowProof.PooC3.CedarDualEngineArbitration")))
+   '("AgenticAILabProof.Enterprise.GovernanceThreatAssuranceClosure"
+     "AgenticAILabProof.PooC3.CedarDualEngineArbitration")))
 
 (def (healthcare-case-assurance? value)
   (and (object? value)
@@ -282,12 +282,12 @@
        (eq? (.ref value 'case-id) +case-id+)
        (equal? (.ref value 'query-contracts) +query-contract-canonical+)
        (classification-valid? (.ref value 'temporal-classification))
-       (poo-flow-causal-trajectory-assessment?
+       (agentic-ai-lab-causal-trajectory-assessment?
         (.ref value 'trajectory-assessment))
        (.ref (.ref value 'trajectory-assessment) 'accepted?)
        (equal?
         (.ref value 'trajectory-assessment-digest)
-        (poo-flow-causal-trajectory-assessment-digest
+        (agentic-ai-lab-causal-trajectory-assessment-digest
          (.ref value 'trajectory-assessment)))
        (let (trajectory-digest (.ref value 'trajectory-assessment-digest))
          (and (list? (.ref value 'formal-assurance-bindings))
@@ -326,7 +326,7 @@
                    trajectory-assessments)))
          (trajectory-value (car trajectory-assessments))
          (trajectory-digest-value
-          (poo-flow-causal-trajectory-assessment-digest
+          (agentic-ai-lab-causal-trajectory-assessment-digest
            trajectory-value))
          (assurance-profile
           (find (lambda (profile)
@@ -344,10 +344,10 @@
             HealthcareLeanAssuranceProjector assurance-profile
             trajectory-value lean-value)))
          (event-graph
-          (poo-flow-causal-event-graph "patient-1" (.ref receipt 'events)))
-         (cut (poo-flow-causal-cut event-graph 6))
+          (agentic-ai-lab-causal-event-graph "patient-1" (.ref receipt 'events)))
+         (cut (agentic-ai-lab-causal-cut event-graph 6))
          (classification
-          (poo-flow-temporal-causal-classify
+          (agentic-ai-lab-temporal-causal-classify
            event-graph cut "ai-tmp-smx-recommendation-1" 9)))
     (unless (classification-valid? classification)
       (error "Healthcare temporal classification assurance failed"))

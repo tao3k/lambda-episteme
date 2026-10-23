@@ -5,15 +5,15 @@
 (import (only-in :clan/poo/object .def .o)
         (rename-in
          (only-in :core/graph/types
-                  graph poo-flow-graph-edge poo-flow-graph-node)
+                  graph agentic-ai-lab-graph-edge agentic-ai-lab-graph-node)
          (graph Graph))
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  OntologyCase)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/software-engineering/profiles/base
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/software-engineering/profiles/base
                  SoftwareEngineeringBaseProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/software-engineering/scenario
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/software-engineering/scenario
                  SoftwareEngineeringScenario))
 
 (export ArchitectureGovernanceCase)
@@ -30,17 +30,17 @@
        graph-id: 'architecture-governance
        node-declarations:
        (.o component-api:
-           (poo-flow-graph-node 'component-api 'SoftwareComponent)
+           (agentic-ai-lab-graph-node 'component-api 'SoftwareComponent)
            component-domain:
-           (poo-flow-graph-node 'component-domain 'SoftwareComponent)
+           (agentic-ai-lab-graph-node 'component-domain 'SoftwareComponent)
            decision-1:
-           (poo-flow-graph-node 'decision-1 'DecisionRecord)
+           (agentic-ai-lab-graph-node 'decision-1 'DecisionRecord)
            implementation-1:
-           (poo-flow-graph-node
+           (agentic-ai-lab-graph-node
             'implementation-1 'ImplementationArtifact))
        edge-declarations:
        (.o api-depends-on-domain:
-           (poo-flow-graph-edge 'component-api 'component-domain 'dependsOn)
+           (agentic-ai-lab-graph-edge 'component-api 'component-domain 'dependsOn)
            implementation-links-decision:
-           (poo-flow-graph-edge
+           (agentic-ai-lab-graph-edge
             'implementation-1 'decision-1 'implementsDecision)))))

@@ -4,18 +4,18 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .o)
-        (only-in :poo-flow/modules/governance/objects
-                 PooFlowGovernanceProfile.
-                 poo-flow-governance-source))
+        (only-in :agentic-ai-lab/modules/governance/objects
+                 AgenticAILabGovernanceProfile.
+                 agentic-ai-lab-governance-source))
 (export DiataxisProfile)
 (def diataxis-ontology
   (.o document-label: 'Document kind-property: 'kind identity-property: 'id))
 (def diataxis-source-assets
-  (list (poo-flow-governance-source
+  (list (agentic-ai-lab-governance-source
          "diataxis/document-kinds"
          "modules/diataxis/document-kinds.gql" 'gql)))
 (def DiataxisProfile
-  (.o (:: @ PooFlowGovernanceProfile.) identity: "lambda-episteme/diataxis"
+  (.o (:: @ AgenticAILabGovernanceProfile.) identity: "lambda-episteme/diataxis"
       revision: "1" owner: "lambda-episteme"
       module-family: 'diataxis
       ontology: diataxis-ontology

@@ -4,21 +4,21 @@
 
 (import (only-in :std/test test-suite check-equal?)
         (only-in :clan/poo/object .o .ref)
-        (only-in :core/observability/testing-case poo-flow-test-case)
+        (only-in :core/observability/testing-case agentic-ai-lab-test-case)
         (only-in :gerbil-parser/languages/gql/iso-39075-2024/query-syntax
                  gql-query-program?)
-        (only-in :poo-flow/modules/query/gql poo-flow-query->gql)
-        (only-in :poo-flow/modules/query/contracts
-                 poo-flow-query-source-content-identity)
-        (only-in :poo-flow/modules/query/objects
-                 poo-flow-query-element-space)
-        (only-in :poo-flow/modules/query/funs poo-flow-query-admit)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/query
+        (only-in :agentic-ai-lab/modules/query/gql agentic-ai-lab-query->gql)
+        (only-in :agentic-ai-lab/modules/query/contracts
+                 agentic-ai-lab-query-source-content-identity)
+        (only-in :agentic-ai-lab/modules/query/objects
+                 agentic-ai-lab-query-element-space)
+        (only-in :agentic-ai-lab/modules/query/funs agentic-ai-lab-query-admit)
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/query
                  ExchangeSigningEdgeQuery ExchangeSigningEdgeSource)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/reasoning
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/reasoning
                  ExchangeSigningRouteCase.
                  exchange-signing-route-candidates)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/simulation
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/simulation
                  exchange-signing-attack-stages
                  exchange-signing-evaluate-stage))
 
@@ -29,17 +29,17 @@
 
 (def exchange-signing-reasoning-test
   (test-suite "Exchange signing-chain hypotheses"
-    (poo-flow-test-case "language-owned GQL AST projects and admits the selected element space"
-      (let* ((source (poo-flow-query->gql ExchangeSigningEdgeQuery))
+    (agentic-ai-lab-test-case "language-owned GQL AST projects and admits the selected element space"
+      (let* ((source (agentic-ai-lab-query->gql ExchangeSigningEdgeQuery))
              (space
-              (poo-flow-query-element-space
+              (agentic-ai-lab-query-element-space
                'exchange/signing-chain
                (.ref ExchangeSigningEdgeQuery 'semantic-revision)
                '(backend payload queue signer chain-transfer outflow
                  interface display admin-change wallet-control bybit-outflow
                  internal-api queue-producer address-map)
                #t))
-             (admission (poo-flow-query-admit ExchangeSigningEdgeQuery space)))
+             (admission (agentic-ai-lab-query-admit ExchangeSigningEdgeQuery space)))
         (check-equal? source ExchangeSigningEdgeSource)
         (check-equal?
          (.ref ExchangeSigningEdgeQuery 'selected-element-identities)
@@ -50,13 +50,13 @@
          source
          "MATCH (source:SigningEvent)-[:CANDIDATE_NEXT]->(target:SigningEvent)\nRETURN source.identity, target.identity, target.evidenceSource, target.status\n")
         (check-equal?
-         (poo-flow-query-source-content-identity ExchangeSigningEdgeQuery)
+         (agentic-ai-lab-query-source-content-identity ExchangeSigningEdgeQuery)
          (.ref ExchangeSigningEdgeQuery 'semantic-revision))
         (check-equal?
          (gql-query-program? (.ref ExchangeSigningEdgeQuery 'program)) #t)
         (check-equal? (.ref admission 'accepted?) #t)
         (check-equal? (.ref admission 'runtime-executed?) #f)))
-    (poo-flow-test-case "proposed backend links yield a possible, not observed route"
+    (agentic-ai-lab-test-case "proposed backend links yield a possible, not observed route"
       (let* ((case-value
               (.o (:: @ ExchangeSigningRouteCase.)
                   observed-edges:
@@ -74,7 +74,7 @@
         (check-equal? (.ref result 'observed-candidates) '())
         (check-equal? (.ref result 'admitted?) #f)
         (check-equal? (.ref result 'action-authority?) #f)))
-    (poo-flow-test-case "missing queue link removes the proposed backend route"
+    (agentic-ai-lab-test-case "missing queue link removes the proposed backend route"
       (let* ((case-value
               (.o (:: @ ExchangeSigningRouteCase.)
                   observed-edges:
@@ -87,7 +87,7 @@
              (result (exchange-signing-route-candidates case-value)))
         (check-equal? (.ref result 'possible-candidates) '())
         (check-equal? (.ref result 'observed-candidates) '())))
-    (poo-flow-test-case "attack stages stay declarative before inference"
+    (agentic-ai-lab-test-case "attack stages stay declarative before inference"
       (check-equal?
        (map (lambda (stage) (.ref stage 'identity))
             (exchange-signing-attack-stages))
@@ -95,13 +95,13 @@
          candidate-transfer queue-interrupted interface-substitution
          api-replay queue-producer-injection address-map-substitution
          backend-admin-change)))
-    (poo-flow-test-case "public notice alone does not establish a backend route"
+    (agentic-ai-lab-test-case "public notice alone does not establish a backend route"
       (let (result
             (exchange-signing-evaluate-stage
              (car (exchange-signing-attack-stages))))
         (check-equal? (.ref result 'possible-candidates) '())
         (check-equal? (.ref result 'observed-candidates) '())))
-    (poo-flow-test-case "synthetic backend chain remains a candidate only"
+    (agentic-ai-lab-test-case "synthetic backend chain remains a candidate only"
       (let (result
             (exchange-signing-evaluate-stage
              (list-ref (exchange-signing-attack-stages) 4)))
@@ -109,13 +109,13 @@
                       '((backend outflow)))
         (check-equal? (.ref result 'observed-candidates) '())
         (check-equal? (.ref result 'action-authority?) #f)))
-    (poo-flow-test-case "cutting the synthetic queue link removes backend reachability"
+    (agentic-ai-lab-test-case "cutting the synthetic queue link removes backend reachability"
       (let (result
             (exchange-signing-evaluate-stage
              (list-ref (exchange-signing-attack-stages) 5)))
         (check-equal? (.ref result 'possible-candidates) '())
         (check-equal? (.ref result 'observed-candidates) '())))
-    (poo-flow-test-case "interface substitution is a distinct candidate entry"
+    (agentic-ai-lab-test-case "interface substitution is a distinct candidate entry"
       (let (result
             (exchange-signing-evaluate-stage
              (list-ref (exchange-signing-attack-stages) 6)))
@@ -123,21 +123,21 @@
                       '((interface bybit-outflow)))
         (check-equal? (.ref result 'observed-candidates) '())
         (check-equal? (.ref result 'action-authority?) #f)))
-    (poo-flow-test-case "API replay is a distinct candidate entry"
+    (agentic-ai-lab-test-case "API replay is a distinct candidate entry"
       (let (result
             (exchange-signing-evaluate-stage
              (list-ref (exchange-signing-attack-stages) 7)))
         (check-equal? (.ref result 'possible-candidates)
                       '((internal-api outflow)))
         (check-equal? (.ref result 'observed-candidates) '())))
-    (poo-flow-test-case "queue injection is a distinct candidate entry"
+    (agentic-ai-lab-test-case "queue injection is a distinct candidate entry"
       (let (result
             (exchange-signing-evaluate-stage
              (list-ref (exchange-signing-attack-stages) 8)))
         (check-equal? (.ref result 'possible-candidates)
                       '((queue-producer outflow)))
         (check-equal? (.ref result 'observed-candidates) '())))
-    (poo-flow-test-case "an admin-change hypothesis also reaches Bitget's public outflow"
+    (agentic-ai-lab-test-case "an admin-change hypothesis also reaches Bitget's public outflow"
       (let (result
             (exchange-signing-evaluate-stage
              (list-ref (exchange-signing-attack-stages) 10)))
@@ -145,7 +145,7 @@
                       '((backend outflow)))
         (check-equal? (.ref result 'observed-candidates) '())
         (check-equal? (.ref result 'action-authority?) #f)))
-    (poo-flow-test-case "destination mapping is a distinct candidate entry"
+    (agentic-ai-lab-test-case "destination mapping is a distinct candidate entry"
       (let (result
             (exchange-signing-evaluate-stage
              (list-ref (exchange-signing-attack-stages) 9)))

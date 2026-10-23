@@ -7,16 +7,16 @@
 ;;; MRR remains a downstream Rust library consumer of the parser-owned FFI.
 (import :std/test
         (only-in :clan/poo/object .o .ref)
-        (only-in :poo-flow/modules/authorization/providers/cedar/interface
-                 poo-flow-cedar-authorization-request->runtime
-                 poo-flow-cedar-authority-context
-                 poo-flow-cedar-authority-snapshot->runtime
-                 poo-flow-governance-assessments-digest
-                 poo-flow-cedar-proof-binding
-                 poo-flow-cedar-runtime-handoff)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/modules/authorization/providers/cedar/interface
+                 agentic-ai-lab-cedar-authorization-request->runtime
+                 agentic-ai-lab-cedar-authority-context
+                 agentic-ai-lab-cedar-authority-snapshot->runtime
+                 agentic-ai-lab-governance-assessments-digest
+                 agentic-ai-lab-cedar-proof-binding
+                 agentic-ai-lab-cedar-runtime-handoff)
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  ontology-compose-case)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/assurance
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/assurance
                  HealthcareCaseQualificationMetadata
                  healthcare-case-assurance
                  healthcare-case-assurance-certifications
@@ -26,14 +26,14 @@
                  healthcare-case-qualification-path
                  healthcare-lean-refinement-receipt-read-file
                  healthcare-tlc-model-receipt-read-file)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/authorization
                  healthcare-authorization-capability-digest
                  healthcare-authorization-subject-digest
                  healthcare-case-cedar-request
                  healthcare-case-cedar-snapshot
                  healthcare-profile-bundle-digest
                  healthcare-profile-origin-digest)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/ai-assisted-antibiotic-prescription/case
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/cases/ai-assisted-antibiotic-prescription/case
                  AIAssistedAntibioticPrescriptionCase))
 
 (export healthcare-case-assurance-qualification)
@@ -44,7 +44,7 @@
 (def (case-proof receipt assurance)
   (let* ((profiles (.ref receipt 'profiles))
          (authorization (car (.ref (.ref receipt 'case) 'authorizations))))
-    (poo-flow-cedar-proof-binding
+    (agentic-ai-lab-cedar-proof-binding
      (symbol->string (.ref receipt 'case-id))
      (map (lambda (profile) (.ref profile 'identity)) profiles)
      (healthcare-profile-origin-digest
@@ -52,7 +52,7 @@
      (healthcare-profile-bundle-digest receipt)
      (healthcare-case-assurance-digest assurance)
      (healthcare-authorization-capability-digest receipt)
-     (poo-flow-governance-assessments-digest
+     (agentic-ai-lab-governance-assessments-digest
       (.ref receipt 'governance-assessments))
      (healthcare-authorization-subject-digest receipt authorization)
      (healthcare-case-assurance-certifications assurance))))
@@ -75,7 +75,7 @@
 (def (qualification-snapshot receipt assurance)
   (healthcare-case-cedar-snapshot
    receipt assurance (healthcare-case-qualification-path 'contributor-root)
-   (poo-flow-cedar-authority-context
+   (agentic-ai-lab-cedar-authority-context
     "healthcare-authority" "prescription-runtime" 1
     (healthcare-case-assurance-digest assurance) 1 1 0)
    (case-proof receipt assurance)))
@@ -113,7 +113,7 @@
                    (qualification-receipt-and-assurance)))
        (let* ((snapshot (qualification-snapshot receipt assurance))
               (runtime
-               (poo-flow-cedar-authority-snapshot->runtime snapshot)))
+               (agentic-ai-lab-cedar-authority-snapshot->runtime snapshot)))
          (check (hash-ref runtime "object_kind")
                 => "cedar-authority-snapshot"))))
 
@@ -122,9 +122,9 @@
                    (qualification-receipt-and-assurance)))
        (let* ((snapshot (qualification-snapshot receipt assurance))
               (_runtime
-               (poo-flow-cedar-authority-snapshot->runtime snapshot))
+               (agentic-ai-lab-cedar-authority-snapshot->runtime snapshot))
             (handoff
-             (poo-flow-cedar-runtime-handoff
+             (agentic-ai-lab-cedar-runtime-handoff
               1 #u8(1 2 3) qualification-digest qualification-digest
               qualification-digest qualification-digest))
             (request
@@ -132,7 +132,7 @@
               receipt assurance (healthcare-case-assurance-digest assurance)
               handoff))
             (runtime-request
-             (poo-flow-cedar-authorization-request->runtime request)))
+             (agentic-ai-lab-cedar-authorization-request->runtime request)))
          (check (hash-ref runtime-request "principal")
                 => "Healthcare::Provider::\"clinician-1\"")
          (check (hash-ref runtime-request "action")

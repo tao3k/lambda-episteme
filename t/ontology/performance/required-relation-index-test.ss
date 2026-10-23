@@ -11,10 +11,10 @@
                  benchmark-receipt-pass?
                  benchmark-run)
         (only-in :core/graph/types
-                 poo-flow-graph poo-flow-graph-edge poo-flow-graph-edge-from
-                 poo-flow-graph-edge-kind poo-flow-graph-node
-                 poo-flow-graph-node-id poo-flow-graph-node-payload)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/objects
+                 agentic-ai-lab-graph agentic-ai-lab-graph-edge agentic-ai-lab-graph-edge-from
+                 agentic-ai-lab-graph-edge-kind agentic-ai-lab-graph-node
+                 agentic-ai-lab-graph-node-id agentic-ai-lab-graph-node-payload)
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/objects
                  ontology-required-relation-rule
                  ontology-rule-evaluate))
 
@@ -29,12 +29,12 @@
 (def fixture (call-with-input-file fixture-path read))
 
 (def (required-relation-graph node-count)
-  (poo-flow-graph
+  (agentic-ai-lab-graph
    'ontology-required-relation/performance
-   (cons (poo-flow-graph-node 'account 'Account)
-         (map (lambda (id) (poo-flow-graph-node id 'Transaction))
+   (cons (agentic-ai-lab-graph-node 'account 'Account)
+         (map (lambda (id) (agentic-ai-lab-graph-node id 'Transaction))
               (iota node-count)))
-   (map (lambda (id) (poo-flow-graph-edge id 'account 'postsTo))
+   (map (lambda (id) (agentic-ai-lab-graph-edge id 'account 'postsTo))
         (iota (- node-count 1)))))
 
 (def required-relation-rule
@@ -53,14 +53,14 @@
             (map
              (lambda (node)
                (and
-                (eq? (poo-flow-graph-node-payload node) 'Transaction)
+                (eq? (agentic-ai-lab-graph-node-payload node) 'Transaction)
                 (not
                  (find
                   (lambda (edge)
                     (set! comparisons (+ comparisons 1))
-                    (and (eq? (poo-flow-graph-edge-kind edge) 'postsTo)
-                         (eq? (poo-flow-graph-edge-from edge)
-                              (poo-flow-graph-node-id node))))
+                    (and (eq? (agentic-ai-lab-graph-edge-kind edge) 'postsTo)
+                         (eq? (agentic-ai-lab-graph-edge-from edge)
+                              (agentic-ai-lab-graph-node-id node))))
                   edges))))
              (.ref graph 'nodes)))))
       (list (cons 'node-count node-count)

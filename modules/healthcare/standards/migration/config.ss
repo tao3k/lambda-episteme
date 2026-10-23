@@ -4,24 +4,24 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .cc .o .ref .slot?)
-        (only-in :poo-flow/modules/standards/config
-                 PooFlowStandardMigrationGovernanceInterface.)
-        (only-in :poo-flow/modules/standards/objects
-                 poo-flow-standard-feature-module
-                 poo-flow-standard-governance-binding
-                 poo-flow-standard-governance-interface)
-        (only-in :poo-flow/modules/standards/funs
-                 poo-flow-standard-digest)
-        (only-in :poo-flow/modules/proof/interface
-                 poo-flow-proof-artifact
-                 poo-flow-proof-receipt
-                 poo-flow-proof-impact-binding
-                 poo-flow-proof-refinement-binding
-                 poo-flow-proof-assurance
-                 poo-flow-proof-assurance?)
-        (only-in :poo-flow/modules/authorization/providers/cedar/config
+        (only-in :agentic-ai-lab/modules/standards/config
+                 AgenticAILabStandardMigrationGovernanceInterface.)
+        (only-in :agentic-ai-lab/modules/standards/objects
+                 agentic-ai-lab-standard-feature-module
+                 agentic-ai-lab-standard-governance-binding
+                 agentic-ai-lab-standard-governance-interface)
+        (only-in :agentic-ai-lab/modules/standards/funs
+                 agentic-ai-lab-standard-digest)
+        (only-in :agentic-ai-lab/modules/proof/interface
+                 agentic-ai-lab-proof-artifact
+                 agentic-ai-lab-proof-receipt
+                 agentic-ai-lab-proof-impact-binding
+                 agentic-ai-lab-proof-refinement-binding
+                 agentic-ai-lab-proof-assurance
+                 agentic-ai-lab-proof-assurance?)
+        (only-in :agentic-ai-lab/modules/authorization/providers/cedar/config
                  CedarAuthorizationProvider)
-        (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/fhir/objects
+        (only-in :agentic-ai-lab/lambda-episteme/modules/healthcare/standards/fhir/objects
                  FHIRAUCorePatientStandardProfile)
         "types.ss"
         "objects.ss"
@@ -60,7 +60,7 @@
   "sha256:3661cc83e29981c20da89301dd53fd135aee01703ce7e7edf6edd1d65c08ef93")
 
 (def AUHealthcareMigrationFormalModelEvidence
-  (poo-flow-proof-artifact
+  (agentic-ai-lab-proof-artifact
    "lambda-episteme/healthcare/standard-migration/tla-model"
    'tlc 'tla-plus
    "user-interface/scenarios/healthcare/cases/au-legacy-interface-fhir-migration/proof/tla/HealthcareStandardMigration.tla"
@@ -72,7 +72,7 @@
        config-digest: +au-migration-tla-config-digest+)))
 
 (def AUHealthcareMigrationTLAConfigEvidence
-  (poo-flow-proof-artifact
+  (agentic-ai-lab-proof-artifact
    "lambda-episteme/healthcare/standard-migration/tlc-config"
    'tlc 'tla-plus-config
    "user-interface/scenarios/healthcare/cases/au-legacy-interface-fhir-migration/proof/tla/HealthcareStandardMigration.cfg"
@@ -81,7 +81,7 @@
        "lambda-episteme/healthcare/standard-migration/tla-model")))
 
 (def AUHealthcareMigrationRefinementProofEvidence
-  (poo-flow-proof-artifact
+  (agentic-ai-lab-proof-artifact
    "lambda-episteme/healthcare/standard-migration/lean-refinement"
    'lean 'lean
    "proof/lean/EpistemeProof/Healthcare/StandardMigrationRefinement.lean"
@@ -93,17 +93,17 @@
        tla-source-digest: +au-migration-tla-source-digest+)))
 
 (def AUHealthcareMigrationRefinementReceipt
-  (poo-flow-proof-receipt
+  (agentic-ai-lab-proof-receipt
    "lambda-episteme/healthcare/standard-migration/lean-receipt"
    AUHealthcareMigrationRefinementProofEvidence 'lean
    '(aiCannotAuthorize cutoverRequiresHumanCedarAndEvidence
      tlaImpactContractBindsExactSource)
-   (poo-flow-standard-digest
+   (agentic-ai-lab-standard-digest
     (list 'EpistemeHealthcareProof +au-migration-lean-source-digest+))
    #t))
 
 (def AUHealthcareMigrationCedarAuthorizationEvidence
-  (poo-flow-proof-artifact
+  (agentic-ai-lab-proof-artifact
    "lambda-episteme/healthcare/standard-migration/cedar-lean-spec"
    'lean 'lean
    "proof/lean/EpistemeProof/Healthcare/StandardMigrationCedarAuthorization.lean"
@@ -117,12 +117,12 @@
        module:
        "EpistemeProof.Healthcare.StandardMigrationCedarAuthorization"
        upstream-semantics:
-       "PooFlowProof.PooC3.CedarAuthorizationSemantics"
+       "AgenticAILabProof.PooC3.CedarAuthorizationSemantics"
        cedar-spec-revision:
        "e9fa9c1e6b636f29b0897d8706bd7aa5eaf06f9a")))
 
 (def AUHealthcareMigrationCedarAuthorizationReceipt
-  (poo-flow-proof-receipt
+  (agentic-ai-lab-proof-receipt
    "lambda-episteme/healthcare/standard-migration/cedar-lean-receipt"
    AUHealthcareMigrationCedarAuthorizationEvidence 'lean
    '(cutoverRequiresIndependentHumanReview
@@ -130,7 +130,7 @@
      cutoverRequiresExactHealthcareCedarProjection
      cedarDenyBlocksCutover
      explicitCedarForbidBlocksCutover)
-   (poo-flow-standard-digest
+   (agentic-ai-lab-standard-digest
     (list 'EpistemeHealthcareCedarProof
           +au-migration-cedar-lean-source-digest+
           "e9fa9c1e6b636f29b0897d8706bd7aa5eaf06f9a"))
@@ -140,7 +140,7 @@
 ;;; invariant set cannot reuse an old Lean qualification.  The Agent must write
 ;;; a new refinement-proof Binding before review/admission can pass again.
 (def AUHealthcareMigrationImpactContract
-  (poo-flow-proof-impact-binding
+  (agentic-ai-lab-proof-impact-binding
    "lambda-episteme/healthcare/standard-migration/tla-to-lean-impact"
    AUHealthcareMigrationFormalModelEvidence
    AUHealthcareMigrationRefinementProofEvidence
@@ -155,7 +155,7 @@
        '(cutoverRequiresHumanCedarAndEvidence))))
 
 (def AUHealthcareMigrationRefinementBinding
-  (poo-flow-proof-refinement-binding
+  (agentic-ai-lab-proof-refinement-binding
    "lambda-episteme/healthcare/standard-migration/refinement-binding"
    AUHealthcareMigrationFormalModelEvidence
    AUHealthcareMigrationRefinementProofEvidence
@@ -163,7 +163,7 @@
    AUHealthcareMigrationImpactContract))
 
 (def AUHealthcareMigrationProofAssurance
-  (poo-flow-proof-assurance
+  (agentic-ai-lab-proof-assurance
    "lambda-episteme/healthcare/standard-migration/proof-assurance"
    (list AUHealthcareMigrationFormalModelEvidence
          AUHealthcareMigrationTLAConfigEvidence
@@ -252,7 +252,7 @@
    "lambda-episteme/healthcare/migration/au/hl7v2-adt-a08-to-au-core-patient/proposal/v1"
    'hl7v2
    (.ref FHIRAUCorePatientStandardProfile 'identity)
-   (poo-flow-standard-digest AULegacyHL7v2PatientFHIRCandidate)
+   (agentic-ai-lab-standard-digest AULegacyHL7v2PatientFHIRCandidate)
    (.ref AULegacyHL7v2PatientAIAnalysis 'mapping-evidence-digest)
    (.ref AULegacyHL7v2PatientAIAnalysis 'analysis-digest)
    "ai-mapping-assistant/example-v1" 'advisory-only))
@@ -262,7 +262,7 @@
    AULegacyHL7v2PatientMigrationProposal
    "human-reviewer/example-au-clinical-informatician"
    'approved
-   (poo-flow-standard-digest
+   (agentic-ai-lab-standard-digest
     '(human-review-evidence example-au-patient-1 approved))))
 
 (def AULegacyHL7v2PatientMigrationCase
@@ -270,14 +270,14 @@
    "lambda-episteme/healthcare/migration/au/hl7v2-adt-a08-to-au-core-patient/v1"
    'AU 'hl7v2 "2.5.1" "hl7.fhir.au.core@1.0.0"
    (.ref AULegacyHL7v2PatientSubject 'source-snapshot-digest)
-   (poo-flow-standard-digest AULegacyHL7v2PatientParserProjection)
+   (agentic-ai-lab-standard-digest AULegacyHL7v2PatientParserProjection)
    (.ref AULegacyHL7v2PatientSubject 'parser-grammar-digest)
    'qualified
-   (poo-flow-standard-digest
+   (agentic-ai-lab-standard-digest
     (list 'gerbil-parser-hl7v2-qualification
           (.ref AULegacyHL7v2PatientSubject 'source-snapshot-digest)
           (.ref AULegacyHL7v2PatientSubject 'parser-grammar-digest)
-          (poo-flow-standard-digest AULegacyHL7v2PatientParserProjection)))
+          (agentic-ai-lab-standard-digest AULegacyHL7v2PatientParserProjection)))
    AULegacyHL7v2PatientAIAnalysis
    AULegacyHL7v2PatientMigrationProposal
    AULegacyHL7v2PatientMigrationReview))
@@ -300,8 +300,8 @@
 
 (def (migration-governance-binding slot owner evidence-kind status
                                    authority-bearing? payload canonical)
-  (poo-flow-standard-governance-binding
-   slot owner evidence-kind (poo-flow-standard-digest canonical)
+  (agentic-ai-lab-standard-governance-binding
+   slot owner evidence-kind (agentic-ai-lab-standard-digest canonical)
    status authority-bearing? payload))
 
 (def (healthcare-migration-governance-binding-valid? binding)
@@ -323,7 +323,7 @@
              (equal? (.ref (.ref payload 'request) 'action)
                      "Healthcare::Action::\"approveStandardMigrationCutover\""))))
       ((proof-assurance)
-       (and (poo-flow-proof-assurance? payload)
+       (and (agentic-ai-lab-proof-assurance? payload)
             (.ref payload 'current?)
             (.ref payload 'admitted?)
             (equal? (.ref payload 'assurance-digest)
@@ -336,16 +336,16 @@
       (else #t))))
 
 (def HealthcareStandardMigrationGovernanceInterface
-  (poo-flow-standard-governance-interface
+  (agentic-ai-lab-standard-governance-interface
    "lambda-episteme/healthcare/standards/migration/governance"
-   (.ref PooFlowStandardMigrationGovernanceInterface. 'required-slots)
-   (.ref PooFlowStandardMigrationGovernanceInterface. 'optional-slots)
-   (.ref PooFlowStandardMigrationGovernanceInterface. 'stage-requirements)
+   (.ref AgenticAILabStandardMigrationGovernanceInterface. 'required-slots)
+   (.ref AgenticAILabStandardMigrationGovernanceInterface. 'optional-slots)
+   (.ref AgenticAILabStandardMigrationGovernanceInterface. 'stage-requirements)
    (.o authority-provider:
        (migration-governance-binding
-        'authority-provider "poo-flow/authorization/cedar"
+        'authority-provider "agentic-ai-lab/authorization/cedar"
         'cedar-dual-engine 'qualified #t CedarAuthorizationProvider
-        '(poo-flow authorization cedar strict-lockstep))
+        '(agentic-ai-lab authorization cedar strict-lockstep))
        human-authorization:
        (migration-governance-binding
         'human-authorization "lambda-healthcare/standard-migration"
@@ -357,7 +357,7 @@
        proof-assurance:
        (migration-governance-binding
         'proof-assurance "lambda-healthcare/standard-migration"
-        'poo-flow-proof-assurance 'qualified #f
+        'agentic-ai-lab-proof-assurance 'qualified #f
         AUHealthcareMigrationProofAssurance
         (list (.ref AUHealthcareMigrationProofAssurance 'assurance-digest)
               +au-migration-tla-source-digest+
@@ -384,7 +384,7 @@
   (letrec
       ((feature-value
         (.cc
-         (poo-flow-standard-feature-module
+         (agentic-ai-lab-standard-feature-module
           "lambda-episteme/healthcare/standards/features/migration"
           'migration
           '(source-adapter mapping-proposal human-review conformance

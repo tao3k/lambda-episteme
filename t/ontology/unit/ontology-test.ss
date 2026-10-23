@@ -7,52 +7,52 @@
                  .all-slots .cc .def .o .ref .set! .slot? object?)
         :std/list/list
         (only-in :core/graph/types
-                 poo-flow-graph poo-flow-graph-edge poo-flow-graph-node
-                 poo-flow-graph-edge-kind poo-flow-graph-edges
-                 poo-flow-graph-node-metadata poo-flow-graph-nodes
-                 poo-flow-graph-node-id
-                 poo-flow-graph?)
+                 agentic-ai-lab-graph agentic-ai-lab-graph-edge agentic-ai-lab-graph-node
+                 agentic-ai-lab-graph-edge-kind agentic-ai-lab-graph-edges
+                 agentic-ai-lab-graph-node-metadata agentic-ai-lab-graph-nodes
+                 agentic-ai-lab-graph-node-id
+                 agentic-ai-lab-graph?)
         :core/contribution/objects
         :core/profile-composition/profile-bundle
-        :poo-flow/modules/workflow/scenario/case
-        :poo-flow/modules/workflow/scenario/accessors
-        :poo-flow/modules/workflow/scenario/composition-syntax
-        :poo-flow/modules/governance/interface
-        (only-in :poo-flow/modules/query/objects
-                 poo-flow-query-execution-candidate)
-        (only-in :poo-flow/modules/query/contracts
-                 poo-flow-query-source-content-identity)
-        (only-in :poo-flow/modules/query/types
-                 poo-flow-source-query-receipt?)
-        :poo-flow/modules/authorization/providers/cedar/interface
-        :poo-flow/lambda-episteme/modules/ontology/interface
-        :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
-        :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/scenario
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/reasoning
+        :agentic-ai-lab/modules/workflow/scenario/case
+        :agentic-ai-lab/modules/workflow/scenario/accessors
+        :agentic-ai-lab/modules/workflow/scenario/composition-syntax
+        :agentic-ai-lab/modules/governance/interface
+        (only-in :agentic-ai-lab/modules/query/objects
+                 agentic-ai-lab-query-execution-candidate)
+        (only-in :agentic-ai-lab/modules/query/contracts
+                 agentic-ai-lab-query-source-content-identity)
+        (only-in :agentic-ai-lab/modules/query/types
+                 agentic-ai-lab-source-query-receipt?)
+        :agentic-ai-lab/modules/authorization/providers/cedar/interface
+        :agentic-ai-lab/lambda-episteme/modules/ontology/interface
+        :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/evidence
+        :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/privacy
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/scenario
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/reasoning
                  HealthcareCaseProfileRelationsQuery
                  healthcare-bind-mrr-query-candidate
                  healthcare-case-profile-property-source)
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base/objects
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/base/objects
                  HealthcareBaseProfilePrototype)
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/healing
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/post-operative-healing/case
-        :poo-flow/lambda-episteme/user-interface/scenarios/software-engineering/profiles/base
-        :poo-flow/lambda-episteme/user-interface/scenarios/software-engineering/scenario
-        :poo-flow/lambda-episteme/user-interface/scenarios/software-engineering/cases/architecture-governance/case
-        :poo-flow/lambda-episteme/user-interface/scenarios/commercial-finance/profiles/base
-        :poo-flow/lambda-episteme/user-interface/scenarios/commercial-finance/scenario
-        :poo-flow/lambda-episteme/user-interface/scenarios/commercial-finance/cases/transaction-posting/case
-        :poo-flow/lambda-episteme/user-interface/scenarios/manufacturing/profiles/base
-        :poo-flow/lambda-episteme/user-interface/scenarios/manufacturing/scenario
-        :poo-flow/lambda-episteme/user-interface/scenarios/manufacturing/cases/work-order-execution/case
-        :poo-flow/lambda-episteme/user-interface/scenarios/education/profiles/base
-        :poo-flow/lambda-episteme/user-interface/scenarios/education/scenario
-        :poo-flow/lambda-episteme/user-interface/scenarios/education/cases/enrollment-context/case)
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/healing
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/authorization
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/cases/post-operative-healing/case
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/software-engineering/profiles/base
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/software-engineering/scenario
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/software-engineering/cases/architecture-governance/case
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/commercial-finance/profiles/base
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/commercial-finance/scenario
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/commercial-finance/cases/transaction-posting/case
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/manufacturing/profiles/base
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/manufacturing/scenario
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/manufacturing/cases/work-order-execution/case
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/education/profiles/base
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/education/scenario
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/education/cases/enrollment-context/case)
 
 (export ontology-test)
 
@@ -69,7 +69,7 @@
       imports: (list MissingCaseProfile)))
 
 (def broken-import-composition
-  (poo-flow-scenario-case
+  (agentic-ai-lab-scenario-case
    'broken-import '() (list BrokenImportProfile) '() '()))
 
 (def ReverseScopeProfile
@@ -79,7 +79,7 @@
       imports: (list HealingProfile)))
 
 (def reverse-scope-composition
-  (poo-flow-scenario-case
+  (agentic-ai-lab-scenario-case
    'reverse-scope '()
    (list EvidenceProfile HealthcareBaseProfile HealingProfile
          ReverseScopeProfile)
@@ -94,7 +94,7 @@
       (list "lambda-episteme/ontology/healthcare/medication-safety")))
 
 (def conflicting-composition
-  (poo-flow-scenario-case
+  (agentic-ai-lab-scenario-case
    'conflicting '()
    (list EvidenceProfile PrivacyProfile HealthcareBaseProfile
          MedicationSafetyProfile ConflictingProfile)
@@ -105,18 +105,18 @@
   (name 'medication-safety-unmitigated)
   (threat-declarations =>.+
    (.o contraindication-evidence-drift:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/medication/threat/contraindication-evidence-drift"
         'critical
         'exposed
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/medication/precondition/reconciliation-missing"
           #t
           "evidence:medication-reconciliation-missing"))))))
 
 (def unmitigated-medication-composition
-  (poo-flow-scenario-case
+  (agentic-ai-lab-scenario-case
    'unmitigated-medication '()
    (list EvidenceProfile PrivacyProfile HealthcareBaseProfile
          UnmitigatedMedicationSafetyProfile)
@@ -129,15 +129,15 @@
   (let* ((profiles (.ref receipt 'profiles))
          (assessments (.ref receipt 'governance-assessments))
          (authorization (car (.ref (.ref receipt 'case) 'authorizations))))
-    (poo-flow-cedar-proof-binding
+    (agentic-ai-lab-cedar-proof-binding
      (symbol->string (.ref receipt 'case-id))
      (map (lambda (profile) (.ref profile 'identity)) profiles)
      cedar-test-digest cedar-test-digest cedar-test-digest
      (healthcare-authorization-capability-digest receipt)
-     (poo-flow-governance-assessments-digest assessments)
+     (agentic-ai-lab-governance-assessments-digest assessments)
      (healthcare-authorization-subject-digest receipt authorization)
-     '("PooFlowProof.Enterprise.GovernanceThreatAssuranceClosure"
-       "PooFlowProof.PooC3.CedarDualEngineArbitration"))))
+     '("AgenticAILabProof.Enterprise.GovernanceThreatAssuranceClosure"
+       "AgenticAILabProof.PooC3.CedarDualEngineArbitration"))))
 
 (def CustomProjectionProfile
   (.o (:: @ HealingProfile)
@@ -150,7 +150,7 @@
             projection-kind: 'healthcare-custom))))
 
 (def custom-projection-composition
-  (poo-flow-scenario-case
+  (agentic-ai-lab-scenario-case
    'custom-projection '()
    (list EvidenceProfile HealthcareBaseProfile CustomProjectionProfile)
    '() '()))
@@ -176,7 +176,7 @@
 (.set! CyclicProfileA imports (list CyclicProfileB))
 
 (def cyclic-composition
-  (poo-flow-scenario-case
+  (agentic-ai-lab-scenario-case
    'cyclic '()
    (list EvidenceProfile HealthcareBaseProfile CyclicProfileA CyclicProfileB)
    '() '()))
@@ -196,7 +196,7 @@
       terms: (ontology-vocabulary-concept-identities BrokenSemanticVocabulary)))
 
 (def broken-semantic-composition
-  (poo-flow-scenario-case
+  (agentic-ai-lab-scenario-case
    'broken-semantics '()
    (list EvidenceProfile HealthcareBaseProfile BrokenSemanticProfile)
    '() '()))
@@ -215,7 +215,7 @@
   (ontology-compose-case
    (test-ontology-case
     case-id-value HealthcareScenario compositions-value sources-value
-    (poo-flow-graph case-id-value '() '()))))
+    (agentic-ai-lab-graph case-id-value '() '()))))
 
 ;; Case files export declarations only. Receipts and evaluations are consumers'
 ;; derived values, never extra user-interface bindings maintained beside a Case.
@@ -345,7 +345,7 @@
    (test-case "one declarative Case slot closes named Profile compositions"
      (check (object? (.ref PostOperativeHealingCase 'profile-selection)) => #t)
      (check (length post-operative-healing-compositions) => 3)
-     (check (map poo-flow-scenario-case-name
+     (check (map agentic-ai-lab-scenario-case-name
                  post-operative-healing-compositions)
             => '(common healthcare medication))
      (check (ontology-case-composition-receipt?
@@ -362,13 +362,13 @@
      (let* ((reasoning
              (ontology-case-reasoning-graph
               post-operative-healing-receipt))
-            (edges (poo-flow-graph-edges reasoning))
-            (edge-kinds (map poo-flow-graph-edge-kind edges))
+            (edges (agentic-ai-lab-graph-edges reasoning))
+            (edge-kinds (map agentic-ai-lab-graph-edge-kind edges))
             (impact
              (ontology-reasoning-impact
               reasoning
               "source:healthcare/medication/authorization/policy")))
-       (check (poo-flow-graph? reasoning) => #t)
+       (check (agentic-ai-lab-graph? reasoning) => #t)
        (check (length (filter (lambda (kind) (eq? kind 'HAS_CASE))
                               edge-kinds))
               => 1)
@@ -420,14 +420,14 @@
                 => (.ref (car cases) 'entity-id))
          (check-exception
           (healthcare-case-profile-property-source
-           (poo-flow-graph
+           (agentic-ai-lab-graph
             '(ontology-reasoning healthcare)
-            (poo-flow-graph-nodes reasoning)
-            (cons (poo-flow-graph-edge
+            (agentic-ai-lab-graph-nodes reasoning)
+            (cons (agentic-ai-lab-graph-edge
                    (.ref (car cases) 'entity-id)
                    (.ref (car scenarios) 'entity-id)
                    'HAS_CASE)
-                  (poo-flow-graph-edges reasoning))
+                  (agentic-ai-lab-graph-edges reasoning))
             '()))
           true))))
 
@@ -437,12 +437,12 @@
               post-operative-healing-receipt))
             (query HealthcareCaseProfileRelationsQuery)
             (candidate
-             (poo-flow-query-execution-candidate
+             (agentic-ai-lab-query-execution-candidate
               'mrr
               (.ref query 'identity)
               (.ref query 'version)
               (.ref query 'semantic-revision)
-              (poo-flow-query-source-content-identity query)
+              (agentic-ai-lab-query-source-content-identity query)
               'gerbil-parser
               "sha256:healthcare-case-profile-provenance-v1"
               "sha256:healthcare-case-profile-result-v1"
@@ -451,7 +451,7 @@
             (receipt
              (healthcare-bind-mrr-query-candidate
               query reasoning candidate)))
-       (check (poo-flow-source-query-receipt? receipt) => #t)
+       (check (agentic-ai-lab-source-query-receipt? receipt) => #t)
        (check (.ref receipt 'admitted?) => #t)
        (check (.ref receipt 'diagnostics) => '())
        (check (.ref receipt 'query-identity)
@@ -464,20 +464,20 @@
      (let* ((reasoning
              (ontology-case-reasoning-graph
               post-operative-healing-receipt))
-            (nodes (poo-flow-graph-nodes reasoning))
+            (nodes (agentic-ai-lab-graph-nodes reasoning))
             (scenario
              (find (lambda (node)
-                     (equal? (poo-flow-graph-node-id node)
+                     (equal? (agentic-ai-lab-graph-node-id node)
                              "scenario:healthcare"))
                    nodes))
             (case-node
              (find (lambda (node)
-                     (equal? (poo-flow-graph-node-id node)
+                     (equal? (agentic-ai-lab-graph-node-id node)
                              "case:post-operative-healing"))
                    nodes))
             (profile
              (find (lambda (node)
-                     (equal? (poo-flow-graph-node-id node)
+                     (equal? (agentic-ai-lab-graph-node-id node)
                              "profile:lambda-episteme/ontology/healthcare/healing"))
                    nodes)))
        (check (ontology-reasoning-query-property scenario 'identity)
@@ -491,27 +491,27 @@
      (let* ((reasoning
              (ontology-case-reasoning-graph
               post-operative-healing-receipt))
-            (nodes (poo-flow-graph-nodes reasoning))
-            (edges (poo-flow-graph-edges reasoning))
+            (nodes (agentic-ai-lab-graph-nodes reasoning))
+            (edges (agentic-ai-lab-graph-edges reasoning))
             (has-case (find (lambda (edge)
-                              (eq? (poo-flow-graph-edge-kind edge)
+                              (eq? (agentic-ai-lab-graph-edge-kind edge)
                                    'HAS_CASE))
                             edges)))
        (check-exception
         (healthcare-case-profile-property-source
-         (poo-flow-graph '(ontology-reasoning healthcare)
+         (agentic-ai-lab-graph '(ontology-reasoning healthcare)
                          (cons (car nodes) nodes) edges '()))
         true)
        (check-exception
         (healthcare-case-profile-property-source
-         (poo-flow-graph '(ontology-reasoning healthcare)
+         (agentic-ai-lab-graph '(ontology-reasoning healthcare)
                          nodes (cons has-case edges) '()))
         true)
        (check-exception
         (healthcare-case-profile-property-source
-         (poo-flow-graph
+         (agentic-ai-lab-graph
           '(ontology-reasoning healthcare)
-          (cons (poo-flow-graph-node
+          (cons (agentic-ai-lab-graph-node
                  "profile:orphan" #f '((entity-kind . profile)))
                 nodes)
           edges '()))
@@ -531,10 +531,10 @@
                  "lambda-episteme/ontology/healthcare/medication-safety"))
               assessments)))
        (check (length threats) => 1)
-       (check (poo-flow-governance-threat? (car threats)) => #t)
+       (check (agentic-ai-lab-governance-threat? (car threats)) => #t)
        (check (.ref (car threats) 'phase) => 'mitigated)
        (check (length assessments) => 5)
-       (check (poo-flow-governance-assessment? medication-assessment) => #t)
+       (check (agentic-ai-lab-governance-assessment? medication-assessment) => #t)
        (check (.ref medication-assessment 'handoff-ready?) => #t)
        (check (.ref medication-assessment 'runtime-executed?) => #f)
        (check (.ref post-operative-healing-receipt
@@ -545,7 +545,7 @@
      (let* ((root (if (file-exists? "modules/ontology/interface.ss")
                     "." "lambda-episteme"))
             (context
-             (poo-flow-cedar-authority-context
+             (agentic-ai-lab-cedar-authority-context
               "healthcare-authority" "post-operative-runtime" 1
               cedar-test-digest 1 1 0))
             (proof (healthcare-test-proof post-operative-healing-receipt)))
@@ -558,7 +558,7 @@
      (for-each
       (lambda (evaluation)
         (check (ontology-case-evaluation-receipt? evaluation) => #t)
-        (check (poo-flow-graph? (.ref evaluation 'graph)) => #t)
+        (check (agentic-ai-lab-graph? (.ref evaluation 'graph)) => #t)
         (check (.ref evaluation 'accepted?) => #t)
         (check (.ref evaluation 'runtime-executed?) => #t))
       (list post-operative-healing-evaluation
@@ -692,9 +692,9 @@
              (test-ontology-case
               'missing-transaction-account CommercialFinanceScenario
               (list (car (.ref TransactionPostingCase 'compositions))) '()
-              (poo-flow-graph
+              (agentic-ai-lab-graph
                'missing-transaction-account
-               (list (poo-flow-graph-node
+               (list (agentic-ai-lab-graph-node
                       'transaction-only 'Transaction))
                '())))
             (missing-evaluation
@@ -703,15 +703,15 @@
              (test-ontology-case
               'cyclic-architecture SoftwareEngineeringScenario
               (list (car (.ref ArchitectureGovernanceCase 'compositions))) '()
-              (poo-flow-graph
+              (agentic-ai-lab-graph
                'cyclic-architecture
-               (list (poo-flow-graph-node
+               (list (agentic-ai-lab-graph-node
                       'component-a 'SoftwareComponent)
-                     (poo-flow-graph-node
+                     (agentic-ai-lab-graph-node
                       'component-b 'SoftwareComponent))
-               (list (poo-flow-graph-edge
+               (list (agentic-ai-lab-graph-edge
                       'component-a 'component-b 'dependsOn)
-                     (poo-flow-graph-edge
+                     (agentic-ai-lab-graph-edge
                       'component-b 'component-a 'dependsOn)))))
             (cyclic-evaluation
              (ontology-evaluate-case (ontology-compose-case cyclic-case))))

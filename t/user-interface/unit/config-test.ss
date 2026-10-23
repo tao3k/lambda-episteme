@@ -5,21 +5,21 @@
 
 (import :std/test
         (only-in :clan/poo/object .ref)
-        (only-in :poo-flow/modules/workflow/scenario/case poo-flow-scenario-case?)
-        (only-in :poo-flow/modules/workflow/scenario/accessors
-                 poo-flow-scenario-case-name
-                 poo-flow-scenario-case-profiles)
-        :poo-flow/lambda-episteme/user-interface/config)
+        (only-in :agentic-ai-lab/modules/workflow/scenario/case agentic-ai-lab-scenario-case?)
+        (only-in :agentic-ai-lab/modules/workflow/scenario/accessors
+                 agentic-ai-lab-scenario-case-name
+                 agentic-ai-lab-scenario-case-profiles)
+        :agentic-ai-lab/lambda-episteme/user-interface/config)
 
 (export config-test)
 
 (def config-test
   (test-suite "Lambda Episteme direct User Composition"
     (test-case "config discovers and composes common and vertical Profiles"
-      (check-equal? (poo-flow-scenario-case? healthcare-australia) #t)
-      (check-equal? (poo-flow-scenario-case-name healthcare-australia)
+      (check-equal? (agentic-ai-lab-scenario-case? healthcare-australia) #t)
+      (check-equal? (agentic-ai-lab-scenario-case-name healthcare-australia)
                     'healthcare-australia)
-      (let (profiles (poo-flow-scenario-case-profiles healthcare-australia))
+      (let (profiles (agentic-ai-lab-scenario-case-profiles healthcare-australia))
         (check-equal? (length profiles) 4)
         (check-equal?
          (map (lambda (profile) (.ref profile 'identity)) profiles)

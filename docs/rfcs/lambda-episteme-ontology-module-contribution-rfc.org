@@ -33,7 +33,7 @@ explicit references rather than another ontology abstraction.
 * POO Scenario Ontology semantic model
 
 This module is not an RDF vocabulary written with Scheme syntax. Scheme is the
-execution host, POO/MOP is the extension model, POO Flow CLOS owns independent
+execution host, POO/MOP is the extension model, Agentic AI Lab CLOS owns independent
 cross-dispatch, and Lean may prove laws of the same small semantic kernel.
 
 The kernel has five value domains:
@@ -42,7 +42,7 @@ The kernel has five value domains:
 |-------+---------+--------------|
 | Declaration | Concept, Relation and executable Rule objects | POO prototypes and method slots |
 | Environment | identity indexes and the closed declaration scope selected for one Case | pure Scheme composition |
-| Profile | an importable semantic contribution to an Environment | existing POO Flow Profile composition |
+| Profile | an importable semantic contribution to an Environment | existing Agentic AI Lab Profile composition |
 | Scenario | admission policy and base Profile for one vertical context | =.admit-profile?= slot dispatch |
 | Case | concrete compositions, declarative Graph, evidence and local Sources | POO Case value and typed receipt |
 
@@ -68,7 +68,7 @@ The extension disciplines are disjoint:
   and =.defgeneric=;
 - a real nominal boundary joins an existing Gerbil generic only through
   =defmethod (@method generic Type)=;
-- independently extensible Provider and domain axes use POO Flow CLOS classes,
+- independently extensible Provider and domain axes use Agentic AI Lab CLOS classes,
   specializers, method bundles and method combination;
 - Lean specifications prove kernel properties; they do not replace the Scheme
   runtime or become a second writable ontology.
@@ -101,7 +101,7 @@ kernel requirement.
 The current slice implements POO Concept, Relation and executable Rule
 declarations, Profile/Scenario/Case composition, one-pass identity indexes,
 closed parent and relation-endpoint diagnostics, and deterministic POO
-projection.  Each Case declares its domain topology by deriving the POO Flow
+projection.  Each Case declares its domain topology by deriving the Agentic AI Lab
 Graph prototype: =node-declarations= and =edge-declarations= are named POO object slots, while
 the core Graph lazily exposes the sequence required by existing algorithms.
 Provider cross-dispatch and Lean proofs remain separate milestones; symbolic
@@ -179,10 +179,10 @@ modules/ontology/
 #+end_example
 
 Nested Scheme files are implementation namespaces inside the one Ontology
-contribution module. A Scenario or Profile is not a new POO Flow module-system
+contribution module. A Scenario or Profile is not a new Agentic AI Lab module-system
 identity. =modules/ontology/interface.ss= is the sole public module entrypoint.
 
-Build and test discovery remain owned by POO Flow, =std/make=, ASP Testing and
+Build and test discovery remain owned by Agentic AI Lab, =std/make=, ASP Testing and
 =clan/testing=. The Ontology module does not scan installed directories during
 import and does not own another registry, compiler, build API or test runner.
 
@@ -198,7 +198,7 @@ Examples:
 - Privacy Profile imports classification, authorization and redaction paths;
 - Accountable Action Profile imports actor, evidence and decision paths.
 
-Ontology reuses POO Flow's existing Profile object and composition semantics.
+Ontology reuses Agentic AI Lab's existing Profile object and composition semantics.
 Ontology-specific Profile slots and validation record:
 
 - Profile identity, owner and revision;
@@ -286,7 +286,7 @@ A Case is a concrete Profile composition and acceptance surface. It answers:
 “For this workflow, which Profiles are selected and what must their composed
 ontology project?”
 
-Ontology reuses POO Flow's native =use-composition= values. A Case is the
+Ontology reuses Agentic AI Lab's native =use-composition= values. A Case is the
 user-owned assembly and acceptance boundary for those values; it does not wrap
 Profile prototypes in the feature-system Domain Case role composer. That runtime
 component abstraction has a different owner and composing the same Profile
@@ -429,7 +429,7 @@ ontology truth or a central writable registry.
 
 This is how gerbil-poo connects its =object= and =TV= types to =:wr= and connects
 POO values to =:sexp= and JSON protocols.  It is not a replacement for
-=.defgeneric= slot dispatch or POO Flow CLOS.  Current Ontology Profiles,
+=.defgeneric= slot dispatch or Agentic AI Lab CLOS.  Current Ontology Profiles,
 Scenarios and Cases are POO values, so they intentionally do not invent a
 nominal type merely to demonstrate =@method=.  A closed external transport
 value is a legitimate future candidate only when a stable Gerbil protocol
@@ -515,7 +515,7 @@ only after a concrete composition and rule authority exist.
 The completed migration sequence was:
 
 1. Implement only Ontology-specific slots, validators and projections on the
-   existing POO Flow Profile and Case owners.
+   existing Agentic AI Lab Profile and Case owners.
 2. Express shared core primitives directly through top-level Common Profiles.
 3. Migrate each L1 domain as a Scenario, one base Profile and one source-bound
    Case before adding optional Scenario Profiles.
@@ -535,7 +535,7 @@ The bounded native surface contains:
   Education Scenarios with one semantic base Profile each;
 - Healing and Medication Safety Scenario Profiles;
 - one Case per Scenario whose external evidence is inherited through selected
-  Profiles and whose topology is a concrete POO Flow Graph;
+  Profiles and whose topology is a concrete Agentic AI Lab Graph;
 - deterministic compose, remove, Graph evaluation and Case projection;
 - negative tests for scope reversal, unresolved path, missing dependency,
   cycle, conflict, incompatible term and invalid removal;
@@ -555,7 +555,7 @@ Acceptance requires:
   test runner;
 - indexes and dependency closure are constructed once per Case;
 - warm build uses official =std/make= with zero recompilation;
-- POO Flow core remains independent of concrete Ontology Scenarios.
+- Agentic AI Lab core remains independent of concrete Ontology Scenarios.
 
 * Closed decisions
 

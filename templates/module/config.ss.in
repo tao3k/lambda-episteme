@@ -1,10 +1,10 @@
 ;;; Copy all five role files; replace example and ExampleProfile.
-(import :poo-flow/src/module-system/declaration/interface
-        :poo-flow/lambda-episteme/modules/example/funs)
+(import :agentic-ai-lab/src/module-system/declaration/interface
+        :agentic-ai-lab/lambda-episteme/modules/example/funs)
 (export example-config)
 (def (example-config selection)
-  (unless (and (poo-flow-user-module-selection? selection)
-               (equal? (poo-flow-user-module-selection-key selection) '(custom . example))
-               (null? (poo-flow-user-module-selection-flags selection)))
+  (unless (and (agentic-ai-lab-user-module-selection? selection)
+               (equal? (agentic-ai-lab-user-module-selection-key selection) '(custom . example))
+               (null? (agentic-ai-lab-user-module-selection-flags selection)))
     (error "invalid example module selection"))
   example-module)

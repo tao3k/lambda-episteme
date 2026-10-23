@@ -5,17 +5,17 @@
 (import (only-in :clan/poo/object .def .o)
         (rename-in
          (only-in :core/graph/types
-                  graph poo-flow-graph-edge poo-flow-graph-node)
+                  graph agentic-ai-lab-graph-edge agentic-ai-lab-graph-node)
          (graph Graph))
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  OntologyCase)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/privacy
                  PrivacyProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/commercial-finance/profiles/base
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/commercial-finance/profiles/base
                  CommercialFinanceBaseProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/commercial-finance/scenario
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/commercial-finance/scenario
                  CommercialFinanceScenario))
 
 (export TransactionPostingCase)
@@ -32,13 +32,13 @@
    (.o (:: @ Graph)
        graph-id: 'transaction-posting
        node-declarations:
-       (.o customer-1: (poo-flow-graph-node 'customer-1 'Customer)
-           account-1: (poo-flow-graph-node 'account-1 'FinancialAccount)
+       (.o customer-1: (agentic-ai-lab-graph-node 'customer-1 'Customer)
+           account-1: (agentic-ai-lab-graph-node 'account-1 'FinancialAccount)
            transaction-1:
-           (poo-flow-graph-node 'transaction-1 'Transaction))
+           (agentic-ai-lab-graph-node 'transaction-1 'Transaction))
        edge-declarations:
        (.o customer-owns-account:
-           (poo-flow-graph-edge 'customer-1 'account-1 'ownsAccount)
+           (agentic-ai-lab-graph-edge 'customer-1 'account-1 'ownsAccount)
            account-posts-transaction:
-           (poo-flow-graph-edge
+           (agentic-ai-lab-graph-edge
             'account-1 'transaction-1 'postsTransaction)))))

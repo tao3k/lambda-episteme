@@ -9,20 +9,20 @@
         (only-in :clan/poo/mop .defmethod-bundle)
         :std/list/list
         :core/poo-clos/interface
-        (only-in :poo-flow/modules/standards/objects
-                 poo-flow-standard-conformance-receipt
-                 poo-flow-standard-failure)
-        (only-in :poo-flow/modules/standards/funs
-                 poo-flow-standard-digest)
-        (only-in :poo-flow/modules/standards/types
-                 poo-flow-standard-validation-closure?)
-        (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/objects
+        (only-in :agentic-ai-lab/modules/standards/objects
+                 agentic-ai-lab-standard-conformance-receipt
+                 agentic-ai-lab-standard-failure)
+        (only-in :agentic-ai-lab/modules/standards/funs
+                 agentic-ai-lab-standard-digest)
+        (only-in :agentic-ai-lab/modules/standards/types
+                 agentic-ai-lab-standard-validation-closure?)
+        (only-in :agentic-ai-lab/lambda-episteme/modules/healthcare/standards/objects
                  HealthcareStandardValidationProtocol
                  HealthcareStandardValidationGeneric)
         "types.ss"
         "objects.ss")
 
-(export poo-flow-fhir-validate-subject
+(export agentic-ai-lab-fhir-validate-subject
         FHIRMedicationRequestValidationMethod
         FHIRAUCorePatientValidationMethod
         FHIRStandardValidationMethods)
@@ -146,15 +146,15 @@
            subject path expected)))
         (else (values 'unsupported #f))))))
 
-(def (poo-flow-fhir-validate-subject provider-identity validation-closure subject)
-  (unless (poo-flow-standard-validation-closure? validation-closure)
+(def (agentic-ai-lab-fhir-validate-subject provider-identity validation-closure subject)
+  (unless (agentic-ai-lab-standard-validation-closure? validation-closure)
     (error "invalid FHIR validation closure" validation-closure))
   (let ((evaluated-rev '())
         (unsupported-rev '())
         (failures-rev '()))
     (for-each
      (lambda (constraint)
-       (unless (poo-flow-fhir-constraint? constraint)
+       (unless (agentic-ai-lab-fhir-constraint? constraint)
          (error "invalid FHIR constraint" constraint))
        (let (identity (.ref constraint 'identity))
          (let-values (((state passed?)
@@ -164,7 +164,7 @@
                (set! unsupported-rev (cons identity unsupported-rev))
                (set! failures-rev
                      (cons
-                      (poo-flow-standard-failure
+                      (agentic-ai-lab-standard-failure
                        'standard-constraint-unsupported identity
                        (.ref constraint 'constraint-kind)
                        (.ref constraint 'path))
@@ -174,7 +174,7 @@
                (unless passed?
                  (set! failures-rev
                        (cons
-                        (poo-flow-standard-failure
+                        (agentic-ai-lab-standard-failure
                          'standard-validation-failed identity
                          (list (cons 'constraint-kind
                                      (.ref constraint 'constraint-kind))
@@ -186,14 +186,14 @@
            (unsupported (reverse unsupported-rev))
            (failures (reverse failures-rev))
            (digest
-            (poo-flow-standard-digest
-             (list 'poo-flow.fhir-conformance.v1
+            (agentic-ai-lab-standard-digest
+             (list 'agentic-ai-lab.fhir-conformance.v1
                    provider-identity
                    (.ref validation-closure 'validation-closure-digest)
                    (.ref validation-closure 'subject-snapshot-digest)
                    evaluated unsupported
                    (map (lambda (failure) (.ref failure 'code)) failures)))))
-      (poo-flow-standard-conformance-receipt
+      (agentic-ai-lab-standard-conformance-receipt
        (null? failures) provider-identity (.ref validation-closure 'validation-closure-digest)
        (.ref validation-closure 'subject-snapshot-digest) evaluated unsupported failures
        digest))))
@@ -206,7 +206,7 @@
          (poo-clos-any-specializer)
          (poo-clos-any-specializer))
    (lambda (_frame _executor profile validation-closure subject)
-     (poo-flow-fhir-validate-subject
+     (agentic-ai-lab-fhir-validate-subject
       (.ref profile 'provider-identity) validation-closure subject))))
 
 (def FHIRAUCorePatientValidationMethod
@@ -217,7 +217,7 @@
          (poo-clos-any-specializer)
          (poo-clos-any-specializer))
    (lambda (_frame _executor profile validation-closure subject)
-     (poo-flow-fhir-validate-subject
+     (agentic-ai-lab-fhir-validate-subject
       (.ref profile 'provider-identity) validation-closure subject))))
 
 (.defmethod-bundle FHIRStandardValidationMethods

@@ -2,12 +2,12 @@
 
 * Purpose
 
-Lambda Episteme is the vertical-industry contribution field for POO Flow.  It
+Lambda Episteme is the vertical-industry contribution field for Agentic AI Lab.  It
 turns domain concepts, relations, policies, sources and concrete situations
 into native Gerbil POO values that applications can select and compose.
 
 This repository owns vertical-domain meaning, governance content and its
-qualification evidence.  POO Flow owns the Governance core contract, module
+qualification evidence.  Agentic AI Lab owns the Governance core contract, module
 system, composition engine, graph implementation, build API and runtime
 authorization handoff.  Mounting this repository does not activate a Profile,
 grant a capability or authorize a decision; the consuming application must
@@ -32,8 +32,8 @@ These are different ownership levels, not interchangeable names.  For example,
 =post-operative-healing= is a Case.
 
 Governance itself is not another Lambda top-level framework.  Lambda Profiles
-derive from POO Flow's =PooFlowGovernanceProfile.= and declare their contributor
-owner and revision explicitly.  POO Flow's Cedar bridge may project an admitted
+derive from Agentic AI Lab's =AgenticAILabGovernanceProfile.= and declare their contributor
+owner and revision explicitly.  Agentic AI Lab's Cedar bridge may project an admitted
 Profile into an identity-bound authority snapshot; only the independent
 Rust+Lean Runtime Host evaluates that snapshot.  The Provider lives under POO
 Flow's core =src/modules/authorization/providers/cedar/= module rather than the
@@ -44,7 +44,7 @@ projection and runtime authorization are three separate receipts.
 
 Vertical threat knowledge belongs beside the Scenario and Profile that gives
 it meaning.  Lambda therefore declares Healthcare, finance, manufacturing or
-other domain threats through the POO Flow Governance slots; it does not create
+other domain threats through the Agentic AI Lab Governance slots; it does not create
 a second generic Governance module.  For example, the Healthcare medication
 safety Profile declares a critical contraindication-evidence threat through
 =threat-declarations=.  That slot is projected to the core =ThreatModel= automatically,
@@ -56,12 +56,12 @@ built.
   ;; ontology declarations omitted
   (threat-declarations =>.+
    (.o contraindication-evidence-drift:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/medication/threat/contraindication-evidence-drift"
         'critical
         'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/medication/precondition/reconciliation-observed"
           #t
           "evidence:post-operative-medication-reconciliation"))
@@ -82,7 +82,7 @@ The complete assurance path has distinct owners:
 
 1. Lambda owns vertical Scenario/Profile/Case meaning and explicit Source
    provenance.
-2. POO Flow owns typed threat admission and inert handoff-readiness receipts.
+2. Agentic AI Lab owns typed threat admission and inert handoff-readiness receipts.
 3. TLA+ with official TLC checks the Governance transition system and emits a
    digest-bound model receipt.
 4. Lean proves the general enterprise obligations, including typed security
@@ -97,7 +97,7 @@ receipt and Lean receipt/proof identities in one POO
 capabilities but does not reconstruct those semantics with path environment
 variables.  GQL execution is intentionally outside this safety closure.  The
 MRR Rust library consumes gerbil-parser's native FFI and owns physical result
-admission; its pending POO Flow adapter must project that admitted result into
+admission; its pending Agentic AI Lab adapter must project that admitted result into
 the versioned Runtime v0 Query execution candidate before Scheme can bind it as
 evidence.
 
@@ -126,7 +126,7 @@ user-interface/
       cases/<case>/case.ss   one concrete declaration
 #+end_example
 
-Every contributed Module follows the POO Flow-owned five-role contract:
+Every contributed Module follows the Agentic AI Lab-owned five-role contract:
 =types.ss=, =objects.ss=, =funs.ss=, =config.ss= and =interface.ss=.  See
 [[file:MODULES.org][MODULES.org]] for the normative ownership of those files.
 
@@ -196,7 +196,7 @@ topology through the Graph prototype's =node-declarations= and =edge-declaration
        graph-id: 'transaction-posting
        node-declarations:
        (.o customer-1:
-           (poo-flow-graph-node 'customer-1 'Customer))
+           (agentic-ai-lab-graph-node 'customer-1 'Customer))
        edge-declarations: (.o))))
 #+end_src
 
@@ -217,7 +217,7 @@ Sources follow the same scope model as Profiles:
 A Source is explicit authority metadata, not an implicit file scan.  Its scope
 and ownership remain visible in the resulting composition.
 
-Checked-in external bytes use POO Flow's shared Sources Lock Feature.  The
+Checked-in external bytes use Agentic AI Lab's shared Sources Lock Feature.  The
 editable =sources.ss= declares identity, path, canonical URI, exact version and
 representation; =source.lock.ss= is generated from those declarations and the
 actual bytes.  Domain loaders consume the generated lock and attach its
@@ -264,7 +264,7 @@ applies to optional GQL, SQL and registry artifacts: they are explicit Sources
 or consumer projections, not hidden runtime owners.
 
 For accepted Scenario/Case/Profile compositions, the Ontology module can
-project the same POO objects into a POO Flow Graph.  GQL may query that
+project the same POO objects into a Agentic AI Lab Graph.  GQL may query that
 projection, while native reverse dependency analysis derives Impact receipts
 for changed Profiles, Sources, Threats or Capabilities.  Impact is never a
 parallel user-maintained registry.  Parser-qualified GQL source establishes
@@ -287,7 +287,7 @@ syntax and lossless authoring only; it does not claim query execution.
 ** Add a Module
 
 1. Start from =templates/module/= and implement the five required role files.
-2. Keep domain behavior in the contribution; do not copy POO Flow's loader,
+2. Keep domain behavior in the contribution; do not copy Agentic AI Lab's loader,
    builder, scheduler, testing framework or artifact cache.
 3. Export only through the Module's =interface.ss=.
 4. Add a runnable User Interface composition and module-owned native tests.
@@ -297,10 +297,10 @@ Detailed contribution rules are in [[file:CONTRIBUTING.org][CONTRIBUTING.org]].
 * Build and test
 
 =gerbil.pkg= declares the native package identity
-=poo-flow/lambda-episteme=.  The sole =build.ss= is a declarative package entry
+=agentic-ai-lab/lambda-episteme=.  The sole =build.ss= is a declarative package entry
 derived from ASP's library PackageSpec prototype; it does not implement a
 compiler, scheduler, scanner or cache.  Its =justfile= delegates Scheme work to
-POO Flow's official build and test adapters.
+Agentic AI Lab's official build and test adapters.
 
 The mutable User Composition in =user-interface/config.ss= is not a production
 package root.  Consumers and the atomic User Interface lane compile it on
@@ -340,7 +340,7 @@ debugging and tracing are declarative ASP Testing Profiles around the native
 gxtest lifecycle.  Every =*-test.ss= is mapped to ASP's process-isolation
 Profile, so its heap limit applies to that file rather than a multi-file batch.
 The source-admission suite additionally uses ASP's serial-resource Profile and
-runs after the parallel lane. With =GERBIL_BUILD_VERBOSE=1=, the POO Flow
+runs after the parallel lane. With =GERBIL_BUILD_VERBOSE=1=, the Agentic AI Lab
 Observability extension emits
 per-operation receipts and 5-second heartbeats for a stuck native batch.
 

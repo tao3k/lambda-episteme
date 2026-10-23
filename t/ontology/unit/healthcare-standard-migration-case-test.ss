@@ -6,17 +6,17 @@
 (import :std/test
         (only-in :clan/poo/object .ref)
         (only-in :core/graph/types
-                 poo-flow-graph-edge-kind
-                 poo-flow-graph-edges
-                 poo-flow-graph-node-id
-                 poo-flow-graph-nodes)
-        (only-in :poo-flow/modules/workflow/scenario/accessors
-                 poo-flow-scenario-case-name)
-        (only-in :poo-flow/modules/standards/interface
-                 poo-flow-standard-governance-interface?)
-        :poo-flow/lambda-episteme/modules/healthcare/standards/migration/interface
-        :poo-flow/lambda-episteme/modules/ontology/interface
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/au-legacy-interface-fhir-migration/case)
+                 agentic-ai-lab-graph-edge-kind
+                 agentic-ai-lab-graph-edges
+                 agentic-ai-lab-graph-node-id
+                 agentic-ai-lab-graph-nodes)
+        (only-in :agentic-ai-lab/modules/workflow/scenario/accessors
+                 agentic-ai-lab-scenario-case-name)
+        (only-in :agentic-ai-lab/modules/standards/interface
+                 agentic-ai-lab-standard-governance-interface?)
+        :agentic-ai-lab/lambda-episteme/modules/healthcare/standards/migration/interface
+        :agentic-ai-lab/lambda-episteme/modules/ontology/interface
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/cases/au-legacy-interface-fhir-migration/case)
 
 (export healthcare-standard-migration-case-test)
 
@@ -35,7 +35,7 @@
      (check-equal? (.ref migration-case-composition-receipt 'scenario)
                    'healthcare)
      (check-equal?
-      (map poo-flow-scenario-case-name
+      (map agentic-ai-lab-scenario-case-name
            (.ref AULegacyInterfaceFHIRMigrationCase 'compositions))
       '(common healthcare regions))
      (check-equal?
@@ -85,7 +85,7 @@
      (let* ((governance HealthcareStandardMigrationGovernanceInterface)
             (admit ((.ref governance '.validate-governance) 'admit))
             (cutover ((.ref governance '.validate-governance) 'cutover)))
-       (check-equal? (poo-flow-standard-governance-interface? governance) #t)
+       (check-equal? (agentic-ai-lab-standard-governance-interface? governance) #t)
        (check-equal?
         (.ref AULegacyInterfaceFHIRMigrationCase
               'standard-governance-interface-identity)
@@ -99,10 +99,10 @@
 
    (test-case "the Case graph exposes the complete governed migration flow"
      (let* ((graph (.ref AULegacyInterfaceFHIRMigrationCase 'graph))
-            (node-ids (map poo-flow-graph-node-id
-                           (poo-flow-graph-nodes graph)))
-            (edge-kinds (map poo-flow-graph-edge-kind
-                             (poo-flow-graph-edges graph))))
+            (node-ids (map agentic-ai-lab-graph-node-id
+                           (agentic-ai-lab-graph-nodes graph)))
+            (edge-kinds (map agentic-ai-lab-graph-edge-kind
+                             (agentic-ai-lab-graph-edges graph))))
        (check-equal?
         node-ids
         '(legacy-interface parser-receipt ai-migration-analysis

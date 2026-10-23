@@ -1,6 +1,6 @@
 {
   "resourceType": "MedicationRequest",
-  "id": "poo-flow-valid",
+  "id": "agentic-ai-lab-valid",
   "status": "active",
   "intent": "order",
   "medicationCodeableConcept": {

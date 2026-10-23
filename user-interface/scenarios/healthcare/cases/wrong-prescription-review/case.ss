@@ -5,23 +5,23 @@
 (import (only-in :clan/poo/object .def .o)
         (rename-in
          (only-in :core/graph/types
-                  graph poo-flow-graph-edge poo-flow-graph-node)
+                  graph agentic-ai-lab-graph-edge agentic-ai-lab-graph-node)
          (graph Graph))
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  OntologyCase)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/privacy
                  PrivacyProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
                  HealthcareBaseProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
                  MedicationSafetyProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/scenario
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/scenario
                  HealthcareScenario)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/temporal-causality
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/temporal-causality
                  healthcare-clinical-event)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/authorization
                  healthcare-medication-administration))
 
 (export WrongPrescriptionReviewCase)
@@ -80,22 +80,22 @@
    (.o (:: @ Graph)
        graph-id: 'wrong-prescription-review
        node-declarations:
-       (.o patient-1: (poo-flow-graph-node 'patient-1 'Patient)
-           provider-1: (poo-flow-graph-node 'provider-1 'Provider)
-           encounter-1: (poo-flow-graph-node 'encounter-1 'Encounter)
-           condition-1: (poo-flow-graph-node 'condition-1 'Condition)
+       (.o patient-1: (agentic-ai-lab-graph-node 'patient-1 'Patient)
+           provider-1: (agentic-ai-lab-graph-node 'provider-1 'Provider)
+           encounter-1: (agentic-ai-lab-graph-node 'encounter-1 'Encounter)
+           condition-1: (agentic-ai-lab-graph-node 'condition-1 'Condition)
            medication-order-1:
-           (poo-flow-graph-node 'medication-order-1 'MedicationOrder))
+           (agentic-ai-lab-graph-node 'medication-order-1 'MedicationOrder))
        edge-declarations:
        (.o encounter-patient:
-           (poo-flow-graph-edge 'encounter-1 'patient-1 'HAS_PATIENT)
+           (agentic-ai-lab-graph-edge 'encounter-1 'patient-1 'HAS_PATIENT)
            encounter-provider:
-           (poo-flow-graph-edge 'encounter-1 'provider-1 'HAS_PROVIDER)
+           (agentic-ai-lab-graph-edge 'encounter-1 'provider-1 'HAS_PROVIDER)
            encounter-condition:
-           (poo-flow-graph-edge 'encounter-1 'condition-1 'HAS_CONDITION)
+           (agentic-ai-lab-graph-edge 'encounter-1 'condition-1 'HAS_CONDITION)
            order-patient:
-           (poo-flow-graph-edge
+           (agentic-ai-lab-graph-edge
             'medication-order-1 'patient-1 'ORDER_FOR_PATIENT)
            order-provider:
-           (poo-flow-graph-edge
+           (agentic-ai-lab-graph-edge
             'medication-order-1 'provider-1 'ASSIGNED_PROVIDER)))))

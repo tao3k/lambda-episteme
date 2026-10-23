@@ -4,7 +4,7 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import :std/test
-        (only-in :poo-flow/lambda-episteme/testing-observer
+        (only-in :agentic-ai-lab/lambda-episteme/testing-observer
                  lambda-episteme-selected-test-files))
 
 (export testing-observer-test)

@@ -12,33 +12,33 @@
         (only-in :std/encoding/hex hex-encode)
         (only-in :std/encoding/json json->string)
         (only-in :core/graph/types
-                 poo-flow-graph-edge-from poo-flow-graph-edge-kind
-                 poo-flow-graph-edge-to poo-flow-graph-edges
-                 poo-flow-graph-node-id poo-flow-graph-node-payload
-                 poo-flow-graph-nodes)
-        (only-in :poo-flow/modules/authorization/types
-                 poo-flow-authorization-capability?)
-        (only-in :poo-flow/modules/authorization/contracts
-                 poo-flow-authorization-capability-contract
-                 poo-flow-authorization-capabilities-digest)
-        (only-in :poo-flow/modules/authorization/providers/cedar/interface
+                 agentic-ai-lab-graph-edge-from agentic-ai-lab-graph-edge-kind
+                 agentic-ai-lab-graph-edge-to agentic-ai-lab-graph-edges
+                 agentic-ai-lab-graph-node-id agentic-ai-lab-graph-node-payload
+                 agentic-ai-lab-graph-nodes)
+        (only-in :agentic-ai-lab/modules/authorization/types
+                 agentic-ai-lab-authorization-capability?)
+        (only-in :agentic-ai-lab/modules/authorization/contracts
+                 agentic-ai-lab-authorization-capability-contract
+                 agentic-ai-lab-authorization-capabilities-digest)
+        (only-in :agentic-ai-lab/modules/authorization/providers/cedar/interface
                  CedarAuthorizationProvider
-                 poo-flow-cedar-authorization-request
-                 poo-flow-cedar-authority-context?
-                 poo-flow-cedar-entities
-                 poo-flow-cedar-governance-snapshot
-                 poo-flow-cedar-policy
-                 poo-flow-cedar-proof-binding?
-                 poo-flow-cedar-runtime-capability
-                 poo-flow-cedar-runtime-handoff?
-                 poo-flow-cedar-schema)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/types
+                 agentic-ai-lab-cedar-authorization-request
+                 agentic-ai-lab-cedar-authority-context?
+                 agentic-ai-lab-cedar-entities
+                 agentic-ai-lab-cedar-governance-snapshot
+                 agentic-ai-lab-cedar-policy
+                 agentic-ai-lab-cedar-proof-binding?
+                 agentic-ai-lab-cedar-runtime-capability
+                 agentic-ai-lab-cedar-runtime-handoff?
+                 agentic-ai-lab-cedar-schema)
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/types
                  ontology-case-composition-receipt? ontology-source?)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/assurance
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/assurance
                  healthcare-case-assurance?
                  healthcare-case-assurance-digest
                  healthcare-case-trajectory-assessment-digest)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization-projection
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/authorization-projection
                  healthcare-cedar-governance-projection-canonical))
 
 (export healthcare-medication-administration
@@ -158,14 +158,14 @@
      (list 'lambda-episteme.healthcare.authorization-subject.v1
            (.ref receipt 'case-id)
            (map (lambda (node)
-                  (list (poo-flow-graph-node-id node)
-                        (poo-flow-graph-node-payload node)))
-                (poo-flow-graph-nodes graph))
+                  (list (agentic-ai-lab-graph-node-id node)
+                        (agentic-ai-lab-graph-node-payload node)))
+                (agentic-ai-lab-graph-nodes graph))
            (map (lambda (edge)
-                  (list (poo-flow-graph-edge-from edge)
-                        (poo-flow-graph-edge-to edge)
-                        (poo-flow-graph-edge-kind edge)))
-                (poo-flow-graph-edges graph))
+                  (list (agentic-ai-lab-graph-edge-from edge)
+                        (agentic-ai-lab-graph-edge-to edge)
+                        (agentic-ai-lab-graph-edge-kind edge)))
+                (agentic-ai-lab-graph-edges graph))
            (map (lambda (slot) (.ref authorization slot))
                 '(provider patient encounter order reconciliation-observed?
                   revoked?))
@@ -226,7 +226,7 @@
                 profiles))
          (capability
           (and profile
-               (find poo-flow-authorization-capability?
+               (find agentic-ai-lab-authorization-capability?
                      (.ref profile 'capabilities)))))
     (unless capability
       (error "Medication Safety capability is absent" +medication-profile+))
@@ -235,7 +235,7 @@
 (def (healthcare-authorization-capability-digest receipt)
   (unless (ontology-case-composition-receipt? receipt)
     (error "Healthcare capability digest requires a Case receipt" receipt))
-  (poo-flow-authorization-capabilities-digest
+  (agentic-ai-lab-authorization-capabilities-digest
    CedarAuthorizationProvider
    (list (medication-capability (.ref receipt 'profiles)))))
 
@@ -247,8 +247,8 @@
                (.ref receipt 'governance-handoff-ready?)
                (healthcare-case-assurance? assurance)
                (eq? (.ref assurance 'case-id) (.ref receipt 'case-id))
-               (poo-flow-cedar-authority-context? authority-context)
-               (poo-flow-cedar-proof-binding? proof-binding))
+               (agentic-ai-lab-cedar-authority-context? authority-context)
+               (agentic-ai-lab-cedar-proof-binding? proof-binding))
     (error "Healthcare Cedar snapshot requires an assurance-closed admitted Case"
            receipt))
   (let* ((profiles (.ref receipt 'profiles))
@@ -266,31 +266,31 @@
       (error "Healthcare assurance does not match Cedar proof binding"
              (.ref proof-binding 'independent-bundle)))
     (let (capability-contract
-          (poo-flow-authorization-capability-contract
+          (agentic-ai-lab-authorization-capability-contract
            CedarAuthorizationProvider (list capability)))
       (unless (equal? (.ref capability-contract 'contract-digest)
                       (.ref proof-binding 'capability-contract))
         (error "Healthcare capability contract does not match Cedar proof binding"
                (.ref proof-binding 'capability-contract))))
     (.cc
-     (poo-flow-cedar-governance-snapshot
+     (agentic-ai-lab-cedar-governance-snapshot
       (symbol->string (.ref receipt 'case-id))
       profiles
       (.ref receipt 'governance-assessments)
       authority-context
       proof-binding
       (list
-       (poo-flow-cedar-policy
+       (agentic-ai-lab-cedar-policy
         "healthcare-medication-permit"
         (source-text root profiles +medication-policy-source+ 'cedar))
-       (poo-flow-cedar-policy
+       (agentic-ai-lab-cedar-policy
         "healthcare-medication-revocation"
         (source-text root profiles +medication-revocation-source+ 'cedar)))
-      (poo-flow-cedar-schema
+      (agentic-ai-lab-cedar-schema
        (source-text root profiles +medication-schema-source+ 'json))
-      (poo-flow-cedar-entities (healthcare-entities authorization))
+      (agentic-ai-lab-cedar-entities (healthcare-entities authorization))
       (list
-       (poo-flow-cedar-runtime-capability
+       (agentic-ai-lab-cedar-runtime-capability
         (.ref capability 'action) (.ref capability 'event-kind))))
      'assurance assurance)))
 
@@ -300,12 +300,12 @@
                (.ref receipt 'trajectory-handoff-ready?)
                (healthcare-case-assurance? assurance)
                (eq? (.ref assurance 'case-id) (.ref receipt 'case-id))
-               (poo-flow-cedar-runtime-handoff? handoff))
+               (agentic-ai-lab-cedar-runtime-handoff? handoff))
     (error "Healthcare Cedar request requires assurance closure and handoff"))
   (let (authorization (car (.ref (.ref receipt 'case) 'authorizations)))
     (unless (healthcare-medication-administration? authorization)
       (error "Healthcare Case requires medication authorization" authorization))
-    (poo-flow-cedar-authorization-request
+    (agentic-ai-lab-cedar-authorization-request
      (string-append "Healthcare::Provider::\""
                     (.ref authorization 'provider) "\"")
      "Healthcare::Action::\"administerMedication\""

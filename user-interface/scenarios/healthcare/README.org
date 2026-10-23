@@ -160,7 +160,7 @@ portable Case.
 
 Correct handling, error handling and Impact are not conventions local to one
 Healthcare Case.  The domain-neutral Temporal Causality core owns
-=PooFlowCausalTrajectoryContract=, and =OntologyCase= exposes it through the
+=AgenticAILabCausalTrajectoryContract=, and =OntologyCase= exposes it through the
 declarative =trajectory-declarations= slot.  Every contract separates two layers:
 
 1. the operational layer declares one observed trigger, one ordered intended
@@ -195,7 +195,7 @@ observed/committed, native Case admission returns
 * Reasoning relations
 
 After a Case is admitted, =ontology-case-reasoning-graph= projects its accepted
-POO values into the ordinary POO Flow Graph.  For several Cases,
+POO values into the ordinary Agentic AI Lab Graph.  For several Cases,
 =ontology-scenario-reasoning-graph= produces one Scenario graph.  The projection
 contains these typed relations:
 
@@ -259,7 +259,7 @@ It takes property values from the original POO payloads, checks relation
 endpoints, and retains the exact content-bound GQL query object.  It does not
 mint MRR type IDs, Arrow batches, CIDs, or a result-admission receipt.  POO
 Flow's Runtime v0 boundary now validates and round-trips the typed
-=PooFlowQueryExecutionCandidate= produced after execution, but it neither runs
+=AgenticAILabQueryExecutionCandidate= produced after execution, but it neither runs
 MRR nor fabricates its receipt.  The MRR Data property worker can consume the
 query after a runtime materializes and restores a verified snapshot; its Rust
 adapter from MRR result admission to that versioned candidate remains the open
@@ -271,7 +271,7 @@ Structural dependency is only the first Impact dimension.  It answers which
 Cases depend on a changed Profile or Source, but it does not claim that a drug
 caused an observed condition, that a past administration can be rewritten, or
 that a future adverse outcome will occur.  The temporal-causal extension is
-specified in POO Flow RFC 161 as the =Temporal Causality= core.  It requires a
+specified in Agentic AI Lab RFC 161 as the =Temporal Causality= core.  It requires a
 causal event graph, immutable event cuts, causal trajectories, present exposure,
 bounded future horizons, counterfactual trajectories and an explicit unknown
 frontier.  Impact Analysis is a derived view of that core, not its name.

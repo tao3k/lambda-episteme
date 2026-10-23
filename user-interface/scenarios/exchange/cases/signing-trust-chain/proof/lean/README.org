@@ -237,5 +237,5 @@ just --justfile ../../Justfile check
 From this Case directory, =just publish= regenerates the Cedar revisions.
 =just check= compares each policy byte and revision name against a fresh Lean
 manifest, then replays all 21 requests through the official Cedar Rust
-runtime. The optional =just inspect-poo-flow integrated= parses the generated
-policy with POO Flow's CLI when =POO_FLOW_ROOT= names its checkout.
+runtime. The optional =just inspect-agentic-ai-lab integrated= parses the generated
+policy with Agentic AI Lab's CLI when =AGENTIC_AI_LAB_ROOT= names its checkout.

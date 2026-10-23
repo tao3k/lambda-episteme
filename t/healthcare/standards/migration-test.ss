@@ -5,48 +5,48 @@
 
 (import :std/test
         (only-in :clan/poo/object .all-slots .cc .ref)
-        :poo-flow/modules/standards/interface
-        (only-in :poo-flow/modules/authorization/providers/cedar/interface
-                 poo-flow-cedar-authorization-request?
-                 poo-flow-cedar-decision
-                 poo-flow-cedar-runtime-handoff)
-        :poo-flow/lambda-episteme/modules/healthcare/standards/interface)
+        :agentic-ai-lab/modules/standards/interface
+        (only-in :agentic-ai-lab/modules/authorization/providers/cedar/interface
+                 agentic-ai-lab-cedar-authorization-request?
+                 agentic-ai-lab-cedar-decision
+                 agentic-ai-lab-cedar-runtime-handoff)
+        :agentic-ai-lab/lambda-episteme/modules/healthcare/standards/interface)
 
 (export standards-healthcare-migration-test)
 
 (def migration-terminology-snapshot
-  (poo-flow-standard-digest 'au-legacy-migration-test-terminology))
+  (agentic-ai-lab-standard-digest 'au-legacy-migration-test-terminology))
 
 (def migration-test-digest
-  (poo-flow-standard-digest 'au-legacy-migration-test-evidence))
+  (agentic-ai-lab-standard-digest 'au-legacy-migration-test-evidence))
 
 (def (materialized-au-core-patient-constraints)
   (let* ((resolution
-          (poo-flow-standard-resolve
+          (agentic-ai-lab-standard-resolve
            FHIRStandardsCatalog '("hl7.fhir.au.core@1.0.0")
-           poo-flow-standard-default-budget migration-terminology-snapshot))
-         (bundle (poo-flow-standard-resolution-receipt-bundle resolution))
+           agentic-ai-lab-standard-default-budget migration-terminology-snapshot))
+         (bundle (agentic-ai-lab-standard-resolution-receipt-bundle resolution))
          (context
-          (poo-flow-standard-materialization-context
+          (agentic-ai-lab-standard-materialization-context
            "test/healthcare/migration/materialization"
            (.ref bundle 'artifacts)))
          (receipt
-          (poo-flow-standard-materialize
-           context +poo-flow-fhir-au-core-patient-artifact-identity+)))
-    (poo-flow-fhir-au-core-patient-constraints
-     (poo-flow-standard-materialization-receipt-artifact receipt))))
+          (agentic-ai-lab-standard-materialize
+           context +agentic-ai-lab-fhir-au-core-patient-artifact-identity+)))
+    (agentic-ai-lab-fhir-au-core-patient-constraints
+     (agentic-ai-lab-standard-materialization-receipt-artifact receipt))))
 
 (def (migration-validation candidate)
   (let* ((resolution
-          (poo-flow-standard-resolve
+          (agentic-ai-lab-standard-resolve
            FHIRStandardsCatalog '("hl7.fhir.au.core@1.0.0")
-           poo-flow-standard-default-budget migration-terminology-snapshot))
-         (bundle (poo-flow-standard-resolution-receipt-bundle resolution))
+           agentic-ai-lab-standard-default-budget migration-terminology-snapshot))
+         (bundle (agentic-ai-lab-standard-resolution-receipt-bundle resolution))
          (closure
-          (poo-flow-standard-make-validation-closure
+          (agentic-ai-lab-standard-make-validation-closure
            (.ref FHIRAUCorePatientStandardProfile 'identity)
-           bundle +poo-flow-fhir-provider-identity+ 'fhir-json
-           (poo-flow-standard-digest candidate)
+           bundle +agentic-ai-lab-fhir-provider-identity+ 'fhir-json
+           (agentic-ai-lab-standard-digest candidate)
            (materialized-au-core-patient-constraints)))
          (conformance
           (healthcare-standard-validate
@@ -60,7 +60,7 @@
   (let* ((base-case AULegacyHL7v2PatientMigrationCase)
          (base-proposal (.ref base-case 'proposal))
          (source-snapshot-digest
-          (poo-flow-standard-digest
+          (agentic-ai-lab-standard-digest
            (list 'test-source source-interface source-version)))
          (mapping-evidence-digest
           (.ref base-proposal 'mapping-evidence-digest))
@@ -89,21 +89,21 @@
          (review
           (healthcare-standard-migration-review
            proposal "human-reviewer/test" review-decision
-           (poo-flow-standard-digest
+           (agentic-ai-lab-standard-digest
             (list 'test-review-evidence review-decision)))))
     (healthcare-standard-migration-case
      (.ref base-case 'identity) (.ref base-case 'jurisdiction)
      source-interface source-version target-standard-edition
      source-snapshot-digest
-     (poo-flow-standard-digest (list source-interface 'parser-receipt))
-     (poo-flow-standard-digest (list source-interface 'parser-grammar))
+     (agentic-ai-lab-standard-digest (list source-interface 'parser-receipt))
+     (agentic-ai-lab-standard-digest (list source-interface 'parser-grammar))
      qualification-state
-     (poo-flow-standard-digest
+     (agentic-ai-lab-standard-digest
       (list 'gerbil-parser-hl7v2-qualification
             source-snapshot-digest
-            (poo-flow-standard-digest
+            (agentic-ai-lab-standard-digest
              (list source-interface 'parser-grammar))
-            (poo-flow-standard-digest
+            (agentic-ai-lab-standard-digest
              (list source-interface 'parser-receipt))))
      analysis proposal review)))
 
@@ -125,7 +125,7 @@
              (fixture (.ref (.ref feature 'fixtures) 'australia))
              (interfaces
               (.ref AULegacyHealthcareInterfaceLandscape 'legacy-interfaces)))
-        (check-equal? (poo-flow-standard-feature-module? feature) #t)
+        (check-equal? (agentic-ai-lab-standard-feature-module? feature) #t)
         (check-equal? (.ref feature 'feature-kind) 'migration)
         (check-equal? (.ref fixture 'landscape)
                       AULegacyHealthcareInterfaceLandscape)
@@ -200,7 +200,7 @@
         (check-equal? (.ref cutover 'invalid-status-slots)
                       (.ref interface 'required-slots))
         (check-equal? (.ref proof 'evidence-kind)
-                      'poo-flow-proof-assurance)
+                      'agentic-ai-lab-proof-assurance)
         (check-equal? (.ref (.ref proof 'payload) 'current?) #t)
         (check-equal? (.ref (.ref proof 'payload) 'admitted?) #t)
         (check-exception
@@ -229,7 +229,7 @@
                          +healthcare-standard-migration-ai-workflow-stages+)
            (check-equal? (.ref receipt 'failures) '())
            (let* ((handoff
-                   (poo-flow-cedar-runtime-handoff
+                   (agentic-ai-lab-cedar-runtime-handoff
                     1 #u8(1 2 3) migration-test-digest migration-test-digest
                     migration-test-digest migration-test-digest))
                   (request
@@ -243,7 +243,7 @@
                      'content-digest)
                     handoff)))
              (check-equal?
-              (poo-flow-cedar-authorization-request? request) #t)
+              (agentic-ai-lab-cedar-authorization-request? request) #t)
              (check-equal?
               (.ref request 'principal)
               "Healthcare::MigrationReviewer::\"human-reviewer/example-au-clinical-informatician\"")
@@ -251,7 +251,7 @@
               (.ref request 'action)
               "Healthcare::Action::\"approveStandardMigrationCutover\"")
              (let* ((decision
-                     (poo-flow-cedar-decision
+                     (agentic-ai-lab-cedar-decision
                       "migration-human-permit-1" 'permit
                       "healthcare-standard-migration-human-authorization"
                       migration-test-digest migration-test-digest
@@ -278,7 +278,7 @@
          (let* ((receipt
                  (healthcare-standard-migration-admit
                   AULegacyHL7v2PatientMigrationCase closure conformance
-                  PooFlowStandardMigrationGovernanceInterface.))
+                  AgenticAILabStandardMigrationGovernanceInterface.))
                 (codes
                  (map (lambda (failure) (.ref failure 'code))
                       (.ref receipt 'failures))))
@@ -343,7 +343,7 @@
          (let* ((tampered
                  (.cc AULegacyHL7v2PatientMigrationCase
                       'parser-receipt-digest
-                      (poo-flow-standard-digest '(tampered-parser-receipt))))
+                      (agentic-ai-lab-standard-digest '(tampered-parser-receipt))))
                 (receipt
                  (healthcare-standard-migration-admit
                   tampered closure conformance

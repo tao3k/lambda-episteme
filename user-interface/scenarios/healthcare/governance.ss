@@ -3,11 +3,11 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 ;;; Scenario-local policy helper: Profiles name required Case evidence while the
-;;; POO Flow Governance core remains the sole assessment/receipt owner.
+;;; Agentic AI Lab Governance core remains the sole assessment/receipt owner.
 (import (only-in :clan/poo/object .ref .slot?)
-        (only-in :poo-flow/modules/governance/objects
-                 poo-flow-governance-assessment-value
-                 poo-flow-governance-threat-blocking?))
+        (only-in :agentic-ai-lab/modules/governance/objects
+                 agentic-ai-lab-governance-assessment-value
+                 agentic-ai-lab-governance-threat-blocking?))
 
 (export healthcare-contextual-governance-assessment)
 
@@ -27,7 +27,7 @@
   (let* ((model (.ref profile 'threat-model))
          (static-blockers
           (map (lambda (threat) (.ref threat 'identity))
-               (filter poo-flow-governance-threat-blocking?
+               (filter agentic-ai-lab-governance-threat-blocking?
                        (.ref model 'threats))))
          (missing-evidence
           (filter values
@@ -42,5 +42,5 @@
          (unresolved
           (healthcare-unique-text
            (append static-blockers missing-evidence))))
-    (poo-flow-governance-assessment-value
+    (agentic-ai-lab-governance-assessment-value
      profile model unresolved context)))

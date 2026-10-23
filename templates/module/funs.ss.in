@@ -1,7 +1,7 @@
 ;;; Copy all five role files; replace example and ExampleProfile.
-(import :poo-flow/lambda-episteme/governance/objects
-        :poo-flow/lambda-episteme/modules/example/types
-        :poo-flow/lambda-episteme/modules/example/objects)
+(import :agentic-ai-lab/lambda-episteme/governance/objects
+        :agentic-ai-lab/lambda-episteme/modules/example/types
+        :agentic-ai-lab/lambda-episteme/modules/example/objects)
 (export example-contribution example-module)
 (def (example-contribution profile)
   (unless (example-profile? profile) (error "invalid example profile"))

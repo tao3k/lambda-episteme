@@ -6,9 +6,9 @@
 ;;; query result is a conditional model observation, never source admission.
 (import (only-in :clan/poo/object .o .ref)
         (only-in :core/utilities/functional
-                 poo-flow-all? poo-flow-map poo-flow-stable-duplicates)
-        (only-in :poo-flow/modules/query/scheme-select
-                 poo-flow-query-select-scheme-nodes)
+                 agentic-ai-lab-all? agentic-ai-lab-map agentic-ai-lab-stable-duplicates)
+        (only-in :agentic-ai-lab/modules/query/scheme-select
+                 agentic-ai-lab-query-select-scheme-nodes)
         (only-in "query.ss" ExchangeSigningSignalQuery))
 
 (export exchange-signing-signal-nodes
@@ -25,13 +25,13 @@
          (.ref ExchangeSigningSignalQuery 'selected-element-identities)))
     (unless (and (list? source-rows)
                  (<= (length source-rows) 64)
-                 (poo-flow-all?
+                 (agentic-ai-lab-all?
                   (lambda (row) (signal-row? row selected))
                   source-rows)
-                 (null? (poo-flow-stable-duplicates
-                         (poo-flow-map car source-rows))))
+                 (null? (agentic-ai-lab-stable-duplicates
+                         (agentic-ai-lab-map car source-rows))))
       (error "invalid source-labelled signing signal rows"))
-    (poo-flow-map
+    (agentic-ai-lab-map
      (lambda (row)
        (.o label: 'SigningSignal
            identity: (car row)
@@ -41,10 +41,10 @@
 
 (def (exchange-signing-run-signal-query nodes)
   (let* ((result
-          (poo-flow-query-select-scheme-nodes
+          (agentic-ai-lab-query-select-scheme-nodes
            ExchangeSigningSignalQuery nodes))
          (selected-rows (.ref result 'rows)))
-    (unless (poo-flow-all?
+    (unless (agentic-ai-lab-all?
              (lambda (row)
                (signal-row?
                 row (.ref ExchangeSigningSignalQuery

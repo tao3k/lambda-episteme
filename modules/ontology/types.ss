@@ -4,21 +4,21 @@
 
 (import (only-in :clan/poo/object .all-slots .ref .slot? object?)
         :std/list/list
-        (only-in :core/graph/types poo-flow-graph?)
-        (only-in :poo-flow/modules/authorization/types
-                 poo-flow-authorization-capability?)
-        (only-in :poo-flow/modules/temporal-causality/types
-                 poo-flow-causal-event?
-                 poo-flow-causal-trajectory-contract?
-                 poo-flow-causal-trajectory-assessment?
-                 poo-flow-structural-impact-receipt?)
-        (only-in :poo-flow/modules/governance/types
-                 poo-flow-governance-assessment?
-                 poo-flow-governance-profile?
-                 poo-flow-governance-source?
-                 poo-flow-governance-threat?)
-        (only-in :poo-flow/modules/query/types
-                 poo-flow-query?))
+        (only-in :core/graph/types agentic-ai-lab-graph?)
+        (only-in :agentic-ai-lab/modules/authorization/types
+                 agentic-ai-lab-authorization-capability?)
+        (only-in :agentic-ai-lab/modules/temporal-causality/types
+                 agentic-ai-lab-causal-event?
+                 agentic-ai-lab-causal-trajectory-contract?
+                 agentic-ai-lab-causal-trajectory-assessment?
+                 agentic-ai-lab-structural-impact-receipt?)
+        (only-in :agentic-ai-lab/modules/governance/types
+                 agentic-ai-lab-governance-assessment?
+                 agentic-ai-lab-governance-profile?
+                 agentic-ai-lab-governance-source?
+                 agentic-ai-lab-governance-threat?)
+        (only-in :agentic-ai-lab/modules/query/types
+                 agentic-ai-lab-query?))
 
 (export ontology-concept?
         ontology-relation?
@@ -67,7 +67,7 @@
        (procedure? (.ref value '.project))))
 
 (def (ontology-query? value)
-  (and (poo-flow-query? value)
+  (and (agentic-ai-lab-query? value)
        (ontology-has-slots?
         value '(kind identity version source expected-source-content-id
                      graph-kind))
@@ -96,7 +96,7 @@
        (list? (.ref value 'diagnostics))))
 
 (def (ontology-source? value)
-  (and (poo-flow-governance-source? value)
+  (and (agentic-ai-lab-governance-source? value)
        (ontology-has-slots? value '(kind source-scope scenario case-id))
        (eq? (.ref value 'kind) 'lambda-episteme.ontology-source)
        (memq (.ref value 'source-scope) '(common scenario case))
@@ -113,7 +113,7 @@
          (else #f))))
 
 (def (ontology-profile-shape? value)
-  (and (poo-flow-governance-profile? value)
+  (and (agentic-ai-lab-governance-profile? value)
        (ontology-has-slots?
         value
         '(name profile-scope scenario profile-imports concept-declarations
@@ -142,8 +142,8 @@
                (map (lambda (concept) (.ref concept 'identity))
                     (.ref (.ref value 'ontology) 'concepts)))
        (every ontology-source? (.ref value 'source-assets))
-       (every poo-flow-authorization-capability? (.ref value 'capabilities))
-       (every poo-flow-governance-threat?
+       (every agentic-ai-lab-authorization-capability? (.ref value 'capabilities))
+       (every agentic-ai-lab-governance-threat?
               (map (lambda (slot)
                      (.ref (.ref value 'threat-declarations) slot))
                    (.all-slots (.ref value 'threat-declarations))))
@@ -191,11 +191,11 @@
        (list? (.ref value 'authorizations))
        (every object? (.ref value 'authorizations))
        (list? (.ref value 'events))
-       (every poo-flow-causal-event? (.ref value 'events))
+       (every agentic-ai-lab-causal-event? (.ref value 'events))
        (list? (.ref value 'trajectories))
-       (every poo-flow-causal-trajectory-contract?
+       (every agentic-ai-lab-causal-trajectory-contract?
               (.ref value 'trajectories))
-       (poo-flow-graph? (.ref value 'graph))))
+       (agentic-ai-lab-graph? (.ref value 'graph))))
 
 (def (ontology-case-composition-receipt? value)
   (and (ontology-has-slots?
@@ -214,12 +214,12 @@
        (list? (.ref value 'profiles))
        (list? (.ref value 'sources))
        (list? (.ref value 'events))
-       (every poo-flow-causal-event? (.ref value 'events))
+       (every agentic-ai-lab-causal-event? (.ref value 'events))
        (list? (.ref value 'trajectories))
-       (every poo-flow-causal-trajectory-contract?
+       (every agentic-ai-lab-causal-trajectory-contract?
               (.ref value 'trajectories))
        (list? (.ref value 'trajectory-assessments))
-       (every poo-flow-causal-trajectory-assessment?
+       (every agentic-ai-lab-causal-trajectory-assessment?
               (.ref value 'trajectory-assessments))
        (boolean? (.ref value 'trajectory-handoff-ready?))
        (eq? (.ref value 'trajectory-handoff-ready?)
@@ -228,7 +228,7 @@
                    (.ref value 'trajectory-assessments)))
        (ontology-semantic-environment? (.ref value 'environment))
        (list? (.ref value 'governance-assessments))
-       (every poo-flow-governance-assessment?
+       (every agentic-ai-lab-governance-assessment?
               (.ref value 'governance-assessments))
        (boolean? (.ref value 'governance-handoff-ready?))
        (eq? (.ref value 'governance-handoff-ready?)
@@ -248,7 +248,7 @@
             'lambda-episteme.ontology-case-evaluation-receipt)
        (boolean? (.ref value 'accepted?))
        (ontology-case-composition-receipt? (.ref value 'composition))
-       (poo-flow-graph? (.ref value 'graph))
+       (agentic-ai-lab-graph? (.ref value 'graph))
        (list? (.ref value 'diagnostics))
        (eq? (.ref value 'runtime-executed?) #t)))
 
@@ -257,7 +257,7 @@
         value
         '(kind domain-kind target-node-id target-entity-kind
                dependency-node-ids impacted-case-ids))
-       (poo-flow-structural-impact-receipt? value)
+       (agentic-ai-lab-structural-impact-receipt? value)
        (eq? (.ref value 'domain-kind)
             'lambda-episteme.ontology-reasoning-impact)
        (string? (.ref value 'target-node-id))

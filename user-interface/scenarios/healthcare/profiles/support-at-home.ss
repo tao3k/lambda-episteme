@@ -3,22 +3,22 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .def .o)
-        (only-in :poo-flow/modules/authorization/objects
-                 poo-flow-authorization-capability)
-        (only-in :poo-flow/modules/governance/objects
-                 poo-flow-governance-precondition
-                 poo-flow-governance-threat)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/modules/authorization/objects
+                 agentic-ai-lab-authorization-capability)
+        (only-in :agentic-ai-lab/modules/governance/objects
+                 agentic-ai-lab-governance-precondition
+                 agentic-ai-lab-governance-threat)
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  ontology-concept ontology-relation)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/privacy
                  PrivacyProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/governance
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/governance
                  healthcare-contextual-governance-assessment)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/primary-care
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/primary-care
                  PrimaryCareProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
                  HealthcareBaseProfile))
 
 (export SupportAtHomeProfile)
@@ -73,38 +73,38 @@
   (rule-declarations =>.+ (.o))
   (threat-declarations =>.+
    (.o service-before-assessment:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/support-at-home/threat/assessment-bypass"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/support-at-home/precondition/approved-assessment"
           #t "evidence:notice-of-decision"))
         mitigations: '("service eligibility follows an approved assessment"))
        service-outside-support-plan:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/support-at-home/threat/unbound-support-plan"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/support-at-home/precondition/support-plan"
           #t "evidence:person-centred-support-plan"))
         mitigations: '("service type is present in the support plan"))
        stale-or-misdirected-referral:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/support-at-home/threat/invalid-referral-credential"
         'high 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/support-at-home/precondition/referral-credential"
           #t "evidence:active-referral-credential"))
         mitigations: '("only the active consumer-selected provider accepts the credential"))
        provider-choice-overridden:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/support-at-home/threat/provider-choice-overridden"
         'high 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/support-at-home/precondition/provider-choice"
           #t "evidence:consumer-provider-selection"))
         mitigations: '("provider selection remains under consumer control"))))
@@ -115,7 +115,7 @@
        provider-choice: 'consumer-controlled))
   (capability-declarations =>.+
    (.o accept-support-at-home-referral:
-       (poo-flow-authorization-capability
+       (agentic-ai-lab-authorization-capability
         "healthcare/support-at-home/capability/accept-referral"
         "Healthcare::Action::\"acceptHomeSupportReferral\""
         4302 'elevated)))

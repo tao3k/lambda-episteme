@@ -5,27 +5,27 @@
 (import (only-in :clan/poo/object .def .o)
         (rename-in
          (only-in :core/graph/types
-                  graph poo-flow-graph-edge poo-flow-graph-node)
+                  graph agentic-ai-lab-graph-edge agentic-ai-lab-graph-node)
          (graph Graph))
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  OntologyCase)
-        (only-in :poo-flow/modules/temporal-causality/interface
-                 poo-flow-causal-trajectory-contract)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
+        (only-in :agentic-ai-lab/modules/temporal-causality/interface
+                 agentic-ai-lab-causal-trajectory-contract)
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/privacy
                  PrivacyProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/primary-care
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/primary-care
                  PrimaryCareProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/support-at-home
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/support-at-home
                  SupportAtHomeProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/regions/australia
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/regions/australia
                  AustraliaHealthcareRegionProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
                  HealthcareBaseProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/scenario
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/scenario
                  HealthcareScenario)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/temporal-causality
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/temporal-causality
                  healthcare-clinical-event))
 
 (export PersonalCareCoordinationCase)
@@ -131,7 +131,7 @@
 
   (trajectory-declarations =>.+
    (.o personal-care:
-       (poo-flow-causal-trajectory-contract
+       (agentic-ai-lab-causal-trajectory-contract
         "healthcare/personal-care/continuous-care-trajectory"
         "personal-care-request-1"
         '("primary-care-triage-1"
@@ -152,59 +152,59 @@
    (.o (:: @ Graph)
        graph-id: 'personal-care-coordination
        node-declarations:
-       (.o person-1: (poo-flow-graph-node 'person-1 'Patient)
-           practice-1: (poo-flow-graph-node 'practice-1 'GeneralPractice)
-           gp-1: (poo-flow-graph-node 'gp-1 'GeneralPractitioner)
+       (.o person-1: (agentic-ai-lab-graph-node 'person-1 'Patient)
+           practice-1: (agentic-ai-lab-graph-node 'practice-1 'GeneralPractice)
+           gp-1: (agentic-ai-lab-graph-node 'gp-1 'GeneralPractitioner)
            appointment-1:
-           (poo-flow-graph-node 'appointment-1 'PrimaryCareAppointment)
+           (agentic-ai-lab-graph-node 'appointment-1 'PrimaryCareAppointment)
            registration-1:
-           (poo-flow-graph-node 'registration-1 'PrimaryCareRegistration)
+           (agentic-ai-lab-graph-node 'registration-1 'PrimaryCareRegistration)
            consent-1:
-           (poo-flow-graph-node 'consent-1 'HealthInformationConsent)
-           referral-1: (poo-flow-graph-node 'referral-1 'ClinicalReferral)
+           (agentic-ai-lab-graph-node 'consent-1 'HealthInformationConsent)
+           referral-1: (agentic-ai-lab-graph-node 'referral-1 'ClinicalReferral)
            assessment-1:
-           (poo-flow-graph-node 'assessment-1 'CareNeedsAssessment)
+           (agentic-ai-lab-graph-node 'assessment-1 'CareNeedsAssessment)
            decision-1:
-           (poo-flow-graph-node 'decision-1 'CareEligibilityDecision)
+           (agentic-ai-lab-graph-node 'decision-1 'CareEligibilityDecision)
            support-plan-1:
-           (poo-flow-graph-node 'support-plan-1 'SupportPlan)
+           (agentic-ai-lab-graph-node 'support-plan-1 'SupportPlan)
            referral-credential-1:
-           (poo-flow-graph-node
+           (agentic-ai-lab-graph-node
             'referral-credential-1 'CareReferralCredential)
            provider-1:
-           (poo-flow-graph-node 'provider-1 'HomeSupportProvider)
-           service-1: (poo-flow-graph-node 'service-1 'HomeSupportService))
+           (agentic-ai-lab-graph-node 'provider-1 'HomeSupportProvider)
+           service-1: (agentic-ai-lab-graph-node 'service-1 'HomeSupportService))
        edge-declarations:
        (.o patient-registration:
-           (poo-flow-graph-edge 'person-1 'practice-1 'REGISTERED_WITH)
+           (agentic-ai-lab-graph-edge 'person-1 'practice-1 'REGISTERED_WITH)
            patient-preferred-gp:
-           (poo-flow-graph-edge 'person-1 'gp-1 'PREFERRED_GP)
+           (agentic-ai-lab-graph-edge 'person-1 'gp-1 'PREFERRED_GP)
            practice-hosts-gp:
-           (poo-flow-graph-edge 'practice-1 'gp-1 'HOSTS_GP)
+           (agentic-ai-lab-graph-edge 'practice-1 'gp-1 'HOSTS_GP)
            appointment-patient:
-           (poo-flow-graph-edge 'appointment-1 'person-1 'APPOINTMENT_FOR)
+           (agentic-ai-lab-graph-edge 'appointment-1 'person-1 'APPOINTMENT_FOR)
            appointment-practice:
-           (poo-flow-graph-edge 'appointment-1 'practice-1 'APPOINTMENT_AT)
+           (agentic-ai-lab-graph-edge 'appointment-1 'practice-1 'APPOINTMENT_AT)
            appointment-gp:
-           (poo-flow-graph-edge 'appointment-1 'gp-1 'ATTENDED_BY_GP)
+           (agentic-ai-lab-graph-edge 'appointment-1 'gp-1 'ATTENDED_BY_GP)
            registration-evidence:
-           (poo-flow-graph-edge
+           (agentic-ai-lab-graph-edge
             'registration-1 'person-1 'REGISTRATION_EVIDENCE)
            information-consent:
-           (poo-flow-graph-edge 'consent-1 'person-1 'CONSENT_FOR)
+           (agentic-ai-lab-graph-edge 'consent-1 'person-1 'CONSENT_FOR)
            referral-assessment:
-           (poo-flow-graph-edge 'referral-1 'assessment-1 'REQUESTS_ASSESSMENT)
+           (agentic-ai-lab-graph-edge 'referral-1 'assessment-1 'REQUESTS_ASSESSMENT)
            assessment-person:
-           (poo-flow-graph-edge 'assessment-1 'person-1 'ASSESSMENT_FOR)
+           (agentic-ai-lab-graph-edge 'assessment-1 'person-1 'ASSESSMENT_FOR)
            assessment-decision:
-           (poo-flow-graph-edge 'assessment-1 'decision-1 'PRODUCES_DECISION)
+           (agentic-ai-lab-graph-edge 'assessment-1 'decision-1 'PRODUCES_DECISION)
            decision-plan:
-           (poo-flow-graph-edge 'decision-1 'support-plan-1 'ISSUES_SUPPORT_PLAN)
+           (agentic-ai-lab-graph-edge 'decision-1 'support-plan-1 'ISSUES_SUPPORT_PLAN)
            plan-service:
-           (poo-flow-graph-edge 'support-plan-1 'service-1 'AUTHORIZES_SERVICE)
+           (agentic-ai-lab-graph-edge 'support-plan-1 'service-1 'AUTHORIZES_SERVICE)
            service-provider:
-           (poo-flow-graph-edge 'service-1 'provider-1 'DELIVERED_BY)
+           (agentic-ai-lab-graph-edge 'service-1 'provider-1 'DELIVERED_BY)
            referral-credential-plan:
-           (poo-flow-graph-edge
+           (agentic-ai-lab-graph-edge
             'referral-credential-1
             'support-plan-1 'REFERRAL_CREDENTIAL_FOR)))))

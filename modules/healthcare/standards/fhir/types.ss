@@ -7,44 +7,44 @@
 (import (only-in :clan/poo/object .ref .slot? object?)
         (only-in :clan/poo/mop define-type Type. element?)
         :std/list/list
-        (only-in :poo-flow/modules/standards/types
-                 poo-flow-standard-digest?
-                 poo-flow-standard-text?))
+        (only-in :agentic-ai-lab/modules/standards/types
+                 agentic-ai-lab-standard-digest?
+                 agentic-ai-lab-standard-text?))
 
-(export +poo-flow-fhir-constraint-kind+
-        +poo-flow-fhir-capability-kind+
-        PooFlowFhirConstraint
-        PooFlowFhirCapability
-        poo-flow-fhir-capability?
-        poo-flow-fhir-constraint?)
+(export +agentic-ai-lab-fhir-constraint-kind+
+        +agentic-ai-lab-fhir-capability-kind+
+        AgenticAILabFhirConstraint
+        AgenticAILabFhirCapability
+        agentic-ai-lab-fhir-capability?
+        agentic-ai-lab-fhir-constraint?)
 
-(def +poo-flow-fhir-constraint-kind+ 'poo-flow.fhir-constraint.v1)
-(def +poo-flow-fhir-capability-kind+ 'poo-flow.fhir-capability.v1)
+(def +agentic-ai-lab-fhir-constraint-kind+ 'agentic-ai-lab.fhir-constraint.v1)
+(def +agentic-ai-lab-fhir-capability-kind+ 'agentic-ai-lab.fhir-capability.v1)
 
-(def (poo-flow-fhir-capability-shape? value)
+(def (agentic-ai-lab-fhir-capability-shape? value)
   (and (object? value)
        (.slot? value 'kind)
-       (eq? (.ref value 'kind) +poo-flow-fhir-capability-kind+)
-       (poo-flow-standard-text? (.ref value 'identity))
+       (eq? (.ref value 'kind) +agentic-ai-lab-fhir-capability-kind+)
+       (agentic-ai-lab-standard-text? (.ref value 'identity))
        (symbol? (.ref value 'capability))
        (memq (.ref value 'state)
              '(native-bounded syntax-qualified reference-qualified
                               not-evaluated))
-       (poo-flow-standard-text? (.ref value 'owner))
+       (agentic-ai-lab-standard-text? (.ref value 'owner))
        (and (list? (.ref value 'evidence-digests))
-            (every poo-flow-standard-digest?
+            (every agentic-ai-lab-standard-digest?
                    (.ref value 'evidence-digests)))
-       (poo-flow-standard-text? (.ref value 'detail))))
+       (agentic-ai-lab-standard-text? (.ref value 'detail))))
 
-(define-type (PooFlowFhirCapability @ Type.)
-  .element?: poo-flow-fhir-capability-shape?)
+(define-type (AgenticAILabFhirCapability @ Type.)
+  .element?: agentic-ai-lab-fhir-capability-shape?)
 
-(def (poo-flow-fhir-constraint-shape? value)
+(def (agentic-ai-lab-fhir-constraint-shape? value)
   (and (object? value)
        (.slot? value 'kind)
-       (eq? (.ref value 'kind) +poo-flow-fhir-constraint-kind+)
+       (eq? (.ref value 'kind) +agentic-ai-lab-fhir-constraint-kind+)
        (.slot? value 'identity)
-       (poo-flow-standard-text? (.ref value 'identity))
+       (agentic-ai-lab-standard-text? (.ref value 'identity))
        (.slot? value 'constraint-kind)
        (symbol? (.ref value 'constraint-kind))
        (.slot? value 'path)
@@ -53,11 +53,11 @@
        (.slot? value 'support-state)
        (memq (.ref value 'support-state) '(supported unsupported))))
 
-(define-type (PooFlowFhirConstraint @ Type.)
-  .element?: poo-flow-fhir-constraint-shape?)
+(define-type (AgenticAILabFhirConstraint @ Type.)
+  .element?: agentic-ai-lab-fhir-constraint-shape?)
 
-(def (poo-flow-fhir-capability? value)
-  (element? PooFlowFhirCapability value))
+(def (agentic-ai-lab-fhir-capability? value)
+  (element? AgenticAILabFhirCapability value))
 
-(def (poo-flow-fhir-constraint? value)
-  (element? PooFlowFhirConstraint value))
+(def (agentic-ai-lab-fhir-constraint? value)
+  (element? AgenticAILabFhirConstraint value))

@@ -7,17 +7,17 @@
         (only-in :clan/poo/object .o .ref)
         (only-in :std/misc/ports read-all-as-string)
         (only-in :core/graph/types
-                 poo-flow-graph poo-flow-graph-edge-kind
-                 poo-flow-graph-edges poo-flow-graph-nodes)
-        (only-in :poo-flow/modules/authorization/providers/cedar/interface
-                 poo-flow-cedar-policy?)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+                 agentic-ai-lab-graph agentic-ai-lab-graph-edge-kind
+                 agentic-ai-lab-graph-edges agentic-ai-lab-graph-nodes)
+        (only-in :agentic-ai-lab/modules/authorization/providers/cedar/interface
+                 agentic-ai-lab-cedar-policy?)
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  ontology-compose-case ontology-evaluate-case
                  ontology-evaluation-diagnostic-codes)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/vehicle/handoff
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/vehicle/handoff
                  vehicle-tara-reference-candidate
                  vehicle-cedar-treatment-candidate)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/vehicle/cases/ota-treatment-handoff/case
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/vehicle/cases/ota-treatment-handoff/case
                  VehicleOtaTreatmentHandoffCase))
 
 (export vehicle-ota-treatment-handoff-test)
@@ -67,7 +67,7 @@
                  (vehicle-cedar-treatment-candidate
                   evaluation "vehicle-ota-treatment" path))
                 (policy (.ref candidate 'cedar-policy)))
-           (check-equal? (poo-flow-cedar-policy? policy) #t)
+           (check-equal? (agentic-ai-lab-cedar-policy? policy) #t)
            (check-equal? (.ref policy 'source)
                          (call-with-input-file path read-all-as-string))
            (check-equal? (.ref candidate 'publication) #f)
@@ -76,14 +76,14 @@
    (test-case "a treatment goal without policy is rejected"
      (let* ((original (.ref VehicleOtaTreatmentHandoffCase 'graph))
             (missing-policy
-             (poo-flow-graph
+             (agentic-ai-lab-graph
               'vehicle-ota-missing-policy
-              (poo-flow-graph-nodes original)
+              (agentic-ai-lab-graph-nodes original)
               (filter
                (lambda (edge)
-                 (not (eq? (poo-flow-graph-edge-kind edge)
+                 (not (eq? (agentic-ai-lab-graph-edge-kind edge)
                            'realizedByPolicy)))
-               (poo-flow-graph-edges original))))
+               (agentic-ai-lab-graph-edges original))))
             (broken-case
              (.o (:: @ VehicleOtaTreatmentHandoffCase)
                  graph: missing-policy))

@@ -4,7 +4,7 @@ case_root := justfile_directory()
 lean_root := case_root + "/proof/lean"
 cedar_root := case_root + "/proof/cedar"
 bridge := lean_root + "/.lake/packages/CedarPooSpec/rust/Cargo.toml"
-poo_flow_root := env_var_or_default("POO_FLOW_ROOT", "")
+agentic_ai_lab_root := env_var_or_default("AGENTIC_AI_LAB_ROOT", "")
 lambda_root := case_root + "/../../../../.."
 
 # The Case owns the Lean source, the generated Cedar revisions, and replay.
@@ -48,7 +48,7 @@ check-tla:
     cd '{{ case_root }}/proof/tla' && rm -f qualification-receipts.sexp
     cd '{{ case_root }}/proof/tla' && gxi ./check-tla.ss
 
-# POO Flow reads generated Cedar artifacts; it does not compile Lean.
-inspect-poo-flow revision="integrated": check-cedar
-    test -n '{{ poo_flow_root }}'
-    just --justfile '{{ poo_flow_root }}/Justfile' inspect-cedar-file '{{ cedar_root }}/{{ revision }}.cedar'
+# Agentic AI Lab reads generated Cedar artifacts; it does not compile Lean.
+inspect-agentic-ai-lab revision="integrated": check-cedar
+    test -n '{{ agentic_ai_lab_root }}'
+    just --justfile '{{ agentic_ai_lab_root }}/Justfile' inspect-cedar-file '{{ cedar_root }}/{{ revision }}.cedar'

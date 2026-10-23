@@ -18,7 +18,7 @@
         lambda-episteme-selected-test-files)
 
 (def (emit phase test-path)
-  (display "[poo-flow-testing] phase=")
+  (display "[agentic-ai-lab-testing] phase=")
   (display phase)
   (display " test=")
   (display test-path)
@@ -26,7 +26,7 @@
   (force-output))
 
 (def (emit-selection test-path file-count)
-  (display "[poo-flow-testing] phase=selection-complete test=")
+  (display "[agentic-ai-lab-testing] phase=selection-complete test=")
   (display test-path)
   (display " fileCount=")
   (display file-count)

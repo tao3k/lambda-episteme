@@ -3,22 +3,22 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .def .o)
-        (only-in :poo-flow/modules/governance/objects
-                 poo-flow-governance-precondition
-                 poo-flow-governance-threat)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/modules/governance/objects
+                 agentic-ai-lab-governance-precondition
+                 agentic-ai-lab-governance-threat)
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  ontology-concept ontology-relation ontology-source)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/privacy
                  PrivacyProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/governance
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/governance
                  healthcare-contextual-governance-assessment)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/pharmacology-evidence
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/pharmacology-evidence
                  HealthcarePharmacologyEvidence)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
                  HealthcareBaseProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
                  MedicationSafetyProfile))
 
 (export PharmacologySafetyProfile)
@@ -70,32 +70,32 @@
   (rule-declarations =>.+ (.o))
   (threat-declarations =>.+
    (.o incomplete-medication-context:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/pharmacology/threat/incomplete-medication-context"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/pharmacology/precondition/medication-reconciliation"
           #t "evidence:active-warfarin-therapy"))
         mitigations:
         '("active medication reconciliation bound to Patient and Encounter"))
        unreviewed-warfarin-antibiotic-interaction:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/pharmacology/threat/unreviewed-warfarin-antibiotic-interaction"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/pharmacology/precondition/label-interaction-reviewed"
           #t "evidence:dailymed-warfarin-tmp-smx-interaction"))
         mitigations:
         '("interaction evidence shown before prescription commitment"
           "independent clinician review required"))
        monitoring-plan-missing:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/pharmacology/threat/monitoring-plan-missing"
         'high 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/pharmacology/precondition/monitoring-plan"
           #t "evidence:prescription-monitoring-plan"))
         mitigations:

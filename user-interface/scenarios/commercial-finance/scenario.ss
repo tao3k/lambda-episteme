@@ -3,9 +3,9 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .def)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  OntologyScenario)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/commercial-finance/profiles/base
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/commercial-finance/profiles/base
                  CommercialFinanceBaseProfile))
 
 (export CommercialFinanceScenario)

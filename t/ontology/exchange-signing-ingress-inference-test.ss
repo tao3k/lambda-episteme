@@ -4,18 +4,18 @@
 
 (import (only-in :std/test test-suite check-equal?)
         (only-in :clan/poo/object .o .ref)
-        (only-in :core/observability/testing-case poo-flow-test-case)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/ingress-inference
+        (only-in :core/observability/testing-case agentic-ai-lab-test-case)
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/ingress-inference
                  ExchangeSigningPublicIngress.
                  exchange-signing-compare-ingress)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/query
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/query
                  ExchangeSigningSignalQuery))
 
 (export exchange-signing-ingress-inference-test)
 
 (def exchange-signing-ingress-inference-test
   (test-suite "Exchange signing conditional ingress comparison"
-    (poo-flow-test-case "every model discriminator is selectable by GQL"
+    (agentic-ai-lab-test-case "every model discriminator is selectable by GQL"
       (let (selected (.ref ExchangeSigningSignalQuery
                             'selected-element-identities))
         (check-equal?
@@ -27,7 +27,7 @@
                       (.ref ExchangeSigningPublicIngress. 'evidence-questions))
               #t)
          #t)))
-    (poo-flow-test-case "reported gas shape yields conditional 2:2:1:1"
+    (agentic-ai-lab-test-case "reported gas shape yields conditional 2:2:1:1"
       (let (result (exchange-signing-compare-ingress
                     ExchangeSigningPublicIngress.))
         (check-equal? (.ref result 'leading-routes)
@@ -39,7 +39,7 @@
         (check-equal? (.ref result 'reference-use)
                       'threat-class-validation-only)
         (check-equal? (.ref result 'calibrated-probabilities?) #f)))
-    (poo-flow-test-case "remove architecture assumption and routes tie"
+    (agentic-ai-lab-test-case "remove architecture assumption and routes tie"
       (let* ((case-value
               (.o (:: @ ExchangeSigningPublicIngress.)
                   model-factors:
@@ -54,7 +54,7 @@
                         address-map-substitution))
         (check-equal? (map cadr (.ref result 'ranked-support))
                       '(1 1 1 1))))
-    (poo-flow-test-case "independent API witness reorders; duplicate source does not"
+    (agentic-ai-lab-test-case "independent API witness reorders; duplicate source does not"
       (let* ((case-value
               (.o (:: @ ExchangeSigningPublicIngress.)
                   independent-signals:
@@ -66,7 +66,7 @@
                       '((api-replay 8 12) (queue-injection 2 12)
                         (record-mutation 1 12)
                         (address-map-substitution 1 12)))))
-    (poo-flow-test-case "an exact independent challenge removes API support"
+    (agentic-ai-lab-test-case "an exact independent challenge removes API support"
       (let* ((case-value
               (.o (:: @ ExchangeSigningPublicIngress.)
                   independent-signals:

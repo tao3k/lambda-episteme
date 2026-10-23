@@ -3,10 +3,10 @@
 ;;;
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
-(import (only-in :poo-flow/modules/governance/funs
-                 poo-flow-governance-module-config)
+(import (only-in :agentic-ai-lab/modules/governance/funs
+                 agentic-ai-lab-governance-module-config)
         "funs.ss")
 (export decision-kind-config)
 (def (decision-kind-config selection)
-  (poo-flow-governance-module-config
+  (agentic-ai-lab-governance-module-config
    selection 'decision-kind decision-kind-module))

@@ -7,9 +7,9 @@
 ;;; one POO slot contract owned by the Case.
 (import (only-in :clan/poo/object .o .ref)
         :core/poo-clos/interface
-        (only-in :poo-flow/modules/temporal-causality/interface
-                 poo-flow-causal-trajectory-assessment-digest)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
+        (only-in :agentic-ai-lab/modules/temporal-causality/interface
+                 agentic-ai-lab-causal-trajectory-assessment-digest)
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
                  AIClinicalDecisionSupportProfile))
 
 (export HealthcareFormalAssuranceProvider
@@ -79,7 +79,7 @@
          profile-identity: (.ref profile 'identity)
          trajectory-contract-identity: (.ref trajectory 'contract-identity)
          trajectory-assessment-digest:
-         (poo-flow-causal-trajectory-assessment-digest trajectory)
+         (agentic-ai-lab-causal-trajectory-assessment-digest trajectory)
          evidence-source-content-id: (.ref evidence 'source-content-id)
          evidence-admitted?: (.ref evidence 'admitted?)))))
 
@@ -96,7 +96,7 @@
          profile-identity: (.ref profile 'identity)
          trajectory-contract-identity: (.ref trajectory 'contract-identity)
          trajectory-assessment-digest:
-         (poo-flow-causal-trajectory-assessment-digest trajectory)
+         (agentic-ai-lab-causal-trajectory-assessment-digest trajectory)
          evidence-source-content-id: (.ref evidence 'source-content-id)
          evidence-certifications: (.ref evidence 'certifications)
          evidence-admitted?: (.ref evidence 'admitted?)))))

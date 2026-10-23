@@ -8,16 +8,16 @@
         (only-in :clan/poo/io json-string<-)
         (only-in :std/encoding/json string->json make-JSONReadOptions)
         :std/list/list
-        :poo-flow/modules/governance/interface
-        :poo-flow/modules/temporal-causality/interface
-        :poo-flow/modules/authorization/providers/cedar/interface
-        :poo-flow/lambda-episteme/modules/ontology/interface
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/authorization-projection
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/pharmacology-evidence
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
+        :agentic-ai-lab/modules/governance/interface
+        :agentic-ai-lab/modules/temporal-causality/interface
+        :agentic-ai-lab/modules/authorization/providers/cedar/interface
+        :agentic-ai-lab/lambda-episteme/modules/ontology/interface
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/authorization
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/authorization-projection
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/pharmacology-evidence
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
                  MedicationSafetyProfile)
-        :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/cases/ai-assisted-antibiotic-prescription/case)
+        :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/cases/ai-assisted-antibiotic-prescription/case)
 
 (export prescription-governance-test)
 
@@ -38,16 +38,16 @@
 (def (case-proof receipt independent-digest)
   (let* ((profiles (.ref receipt 'profiles))
          (authorization (car (.ref (.ref receipt 'case) 'authorizations))))
-    (poo-flow-cedar-proof-binding
+    (agentic-ai-lab-cedar-proof-binding
      (symbol->string (.ref receipt 'case-id))
      (map (lambda (profile) (.ref profile 'identity)) profiles)
      qualification-digest qualification-digest independent-digest
      (healthcare-authorization-capability-digest receipt)
-     (poo-flow-governance-assessments-digest
+     (agentic-ai-lab-governance-assessments-digest
       (.ref receipt 'governance-assessments))
      (healthcare-authorization-subject-digest receipt authorization)
-     '("PooFlowProof.Enterprise.GovernanceThreatAssuranceClosure"
-       "PooFlowProof.PooC3.CedarDualEngineArbitration"))))
+     '("AgenticAILabProof.Enterprise.GovernanceThreatAssuranceClosure"
+       "AgenticAILabProof.PooC3.CedarDualEngineArbitration"))))
 
 (def prescription-governance-test
   (test-suite
@@ -124,11 +124,11 @@
    (test-case "causal cut separates observed future counterfactual and hypothesis"
      (let* ((receipt admitted-receipt)
             (event-graph
-             (poo-flow-causal-event-graph
+             (agentic-ai-lab-causal-event-graph
               "patient-1" (.ref receipt 'events)))
-            (cut (poo-flow-causal-cut event-graph 6))
+            (cut (agentic-ai-lab-causal-cut event-graph 6))
             (classification
-             (poo-flow-temporal-causal-classify
+             (agentic-ai-lab-temporal-causal-classify
               event-graph cut "ai-tmp-smx-recommendation-1" 9)))
        (check (map (lambda (event) (.ref event 'identity))
                    (.ref cut 'events))
@@ -268,11 +268,11 @@
             (root (if (file-exists? "modules/ontology/interface.ss")
                     "." "lambda-episteme"))
             (context
-             (poo-flow-cedar-authority-context
+             (agentic-ai-lab-cedar-authority-context
               "healthcare-authority" "prescription-runtime" 1
               qualification-digest 1 1 0))
             (handoff
-             (poo-flow-cedar-runtime-handoff
+             (agentic-ai-lab-cedar-runtime-handoff
               1 #u8(1 2 3) qualification-digest qualification-digest
               qualification-digest qualification-digest)))
        (check (healthcare-cedar-governance-projection-canonical receipt)

@@ -5,8 +5,8 @@
 
 (import (only-in :clan/poo/object .all-slots .o .ref)
         (only-in :clan/poo/mop validate)
-        (only-in :poo-flow/modules/standards/funs
-                 poo-flow-standard-digest)
+        (only-in :agentic-ai-lab/modules/standards/funs
+                 agentic-ai-lab-standard-digest)
         "types.ss")
 
 (export healthcare-standard-migration-field-mapping
@@ -21,7 +21,7 @@
       source-path-value target-path-value transformation-value
       clinical-rationale-value)
   (let (mapping-digest-value
-        (poo-flow-standard-digest
+        (agentic-ai-lab-standard-digest
          (list 'lambda-episteme.healthcare-standard-migration-field-mapping.v1
                source-path-value target-path-value transformation-value
                clinical-rationale-value)))
@@ -42,12 +42,12 @@
       unmapped-required-field-values risk-code-values cutover-strategy-value
       proposed-by-value ai-role-value)
   (let* ((mapping-evidence-digest-value
-          (poo-flow-standard-digest
+          (agentic-ai-lab-standard-digest
            (map (lambda (slot)
                   (.ref (.ref field-mappings-value slot) 'mapping-digest))
                 (.all-slots field-mappings-value))))
          (analysis-digest-value
-          (poo-flow-standard-digest
+          (agentic-ai-lab-standard-digest
            (list 'lambda-episteme.healthcare-standard-migration-ai-analysis.v1
                  identity-value source-interface-value source-version-value
                  source-snapshot-digest-value target-standard-edition-value
@@ -81,7 +81,7 @@
       candidate-digest-value mapping-evidence-digest-value
       ai-analysis-digest-value proposed-by-value ai-role-value)
   (let* ((proposal-digest-value
-          (poo-flow-standard-digest
+          (agentic-ai-lab-standard-digest
            (list 'lambda-episteme.healthcare-standard-migration-proposal.v1
                  identity-value source-interface-value target-profile-value
                  candidate-digest-value mapping-evidence-digest-value
@@ -104,7 +104,7 @@
       proposal-value reviewer-identity-value decision-value
       review-evidence-digest-value)
   (let* ((review-digest-value
-          (poo-flow-standard-digest
+          (agentic-ai-lab-standard-digest
            (list 'lambda-episteme.healthcare-standard-migration-review.v1
                  (.ref proposal-value 'identity)
                  (.ref proposal-value 'proposal-digest)

@@ -6,9 +6,9 @@
 ;;; A proposal does not collect evidence, grant tool access, or establish
 ;;; historical attribution. The Host binds a tool and admits its output.
 (import (only-in :clan/poo/object .o .ref)
-        (only-in :poo-flow/modules/reverse-inference/interface
-                 poo-flow-inference-hypothesis-result
-                 poo-flow-reverse-inference-explore)
+        (only-in :agentic-ai-lab/modules/reverse-inference/interface
+                 agentic-ai-lab-inference-hypothesis-result
+                 agentic-ai-lab-reverse-inference-explore)
         (only-in "bybit-inference.ss"
                  ExchangeSigningBybitEvidence.
                  exchange-signing-reverse-infer-bybit))
@@ -122,7 +122,7 @@
          (witness-tasks
           (map unresolved-witness-task witnesses))
          (interface-result
-          (poo-flow-inference-hypothesis-result
+          (agentic-ai-lab-inference-hypothesis-result
            receipt 'interface-substitution)))
     (.o kind: 'lambda-episteme.exchange.investigation-brief
         case: 'bybit-reference-signing-chain
@@ -146,4 +146,4 @@
 ;;; this Case neither selects one branch nor treats it as an observation.
 (def (exchange-signing-bybit-explore branch-values
                                     (case-value ExchangeSigningBybitEvidence.))
-  (poo-flow-reverse-inference-explore case-value branch-values))
+  (agentic-ai-lab-reverse-inference-explore case-value branch-values))

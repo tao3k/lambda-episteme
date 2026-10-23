@@ -3,26 +3,26 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .def .o)
-        (only-in :poo-flow/modules/governance/objects
-                 poo-flow-governance-precondition
-                 poo-flow-governance-threat)
-        (only-in :poo-flow/modules/authorization/objects
-                 poo-flow-authorization-capability)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/modules/governance/objects
+                 agentic-ai-lab-governance-precondition
+                 agentic-ai-lab-governance-threat)
+        (only-in :agentic-ai-lab/modules/authorization/objects
+                 agentic-ai-lab-authorization-capability)
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  ontology-concept ontology-relation ontology-source)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/evidence
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/profiles/ontology/privacy
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/privacy
                  PrivacyProfile)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/governance
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/governance
                  healthcare-contextual-governance-assessment)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/reasoning
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/reasoning
                  CaseProfileRelationsSource ProfileImpactSource
                  PrescriptionCausalTrajectorySource
                  HealthcareCaseProfileRelationsQuery
                  HealthcareProfileImpactQuery
                  HealthcarePrescriptionCausalTrajectoryQuery)
-        (only-in :poo-flow/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
+        (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/base
                  HealthcareBaseProfile))
 
 (export AIClinicalDecisionSupportProfile)
@@ -76,31 +76,31 @@
   (rule-declarations =>.+ (.o))
   (threat-declarations =>.+
    (.o autonomous-prescription:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/ai-cds/threat/autonomous-prescription"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/ai-cds/precondition/advisory-role"
           #t "evidence:ai-role-advisory-only"))
         mitigations:
         '("AI may recommend but cannot prescribe or administer"))
        unreviewable-recommendation:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/ai-cds/threat/unreviewable-recommendation"
         'critical 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/ai-cds/precondition/reviewable-basis"
           #t "evidence:patient-specific-decision-basis"))
         mitigations:
         '("recommendation binds inputs, label evidence and known unknowns"))
        automation-bias:
-       (poo-flow-governance-threat
+       (agentic-ai-lab-governance-threat
         "healthcare/ai-cds/threat/automation-bias"
         'high 'mitigated
         (list
-         (poo-flow-governance-precondition
+         (agentic-ai-lab-governance-precondition
           "healthcare/ai-cds/precondition/independent-clinician-review"
           #t "evidence:independent-clinician-review"))
         mitigations:
@@ -112,7 +112,7 @@
        authority: 'none))
   (capability-declarations =>.+
    (.o recommend-medication:
-       (poo-flow-authorization-capability
+       (agentic-ai-lab-authorization-capability
         "healthcare/ai-cds/capability/recommend-medication"
         "Healthcare::Action::\"recommendMedication\""
         4201

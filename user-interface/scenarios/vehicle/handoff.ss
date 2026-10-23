@@ -3,9 +3,9 @@
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
 (import (only-in :clan/poo/object .o .ref)
-        (only-in :poo-flow/modules/authorization/providers/cedar/interface
-                 poo-flow-cedar-policy-file)
-        (only-in :poo-flow/lambda-episteme/modules/ontology/interface
+        (only-in :agentic-ai-lab/modules/authorization/providers/cedar/interface
+                 agentic-ai-lab-cedar-policy-file)
+        (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface
                  ontology-case-evaluation-receipt?))
 
 (export vehicle-tara-reference-candidate
@@ -36,13 +36,13 @@
           external-approval-verified?: #f
           publication: #f))))
 
-;; Read one Lean-POO/Rust exported Cedar file through the existing POO Flow
+;; Read one Lean-POO/Rust exported Cedar file through the existing Agentic AI Lab
 ;; Provider value. This constructs a candidate; the native Cedar authority
 ;; and the application host own parsing, approval, publication and effects.
 (def (vehicle-cedar-treatment-candidate evaluation identity path)
   (let (tara (vehicle-tara-reference-candidate evaluation))
     (let (policy
-          (poo-flow-cedar-policy-file identity path))
+          (agentic-ai-lab-cedar-policy-file identity path))
       (.o kind: 'lambda-episteme.vehicle-cedar-treatment-candidate
           tara: tara
           cedar-policy: policy
