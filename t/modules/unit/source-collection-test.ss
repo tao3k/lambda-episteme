@@ -4,18 +4,18 @@
 (import (only-in :std/test check-equal? check-exception test-case test-suite)
         (only-in :std/error Error?)
         (only-in :agentic-ai-lab/modules/workflow/control-plane/failure execution-failure?)
-        (only-in :core/module-system/selection/syntax
+        (only-in :yuanxu/module-system/selection/syntax
                  agentic-ai-lab-modules!)
-        (only-in :core/module-system/selection/objects
+        (only-in :yuanxu/module-system/selection/objects
                  agentic-ai-lab-user-module-selection
                  agentic-ai-lab-user-module-selection-entrypoint
                  agentic-ai-lab-user-module-selection-source-ref
                  agentic-ai-lab-user-module-bundles->modules)
-        (only-in :core/module-system/source/objects
+        (only-in :yuanxu/module-system/source/objects
                  agentic-ai-lab-module-source-ref-kind
                  agentic-ai-lab-module-source-ref-metadata
                  agentic-ai-lab-module-source-ref-value)
-        (only-in :core/module-system/source/collection make-agentic-ai-lab-module-source-collection make-agentic-ai-lab-module-load-path make-agentic-ai-lab-contribution-module-source make-agentic-ai-lab-user-interface-module-source make-agentic-ai-lab-user-interface-module-load-path extend-agentic-ai-lab-module-load-path agentic-ai-lab-module-source-collection-identity agentic-ai-lab-module-source-collection-owner agentic-ai-lab-module-source-collection-modules-root agentic-ai-lab-module-source-collection-interfaces agentic-ai-lab-module-load-path-collections)
+        (only-in :yuanxu/module-system/source/collection make-agentic-ai-lab-module-source-collection make-agentic-ai-lab-module-load-path make-agentic-ai-lab-contribution-module-source make-agentic-ai-lab-user-interface-module-source make-agentic-ai-lab-user-interface-module-load-path extend-agentic-ai-lab-module-load-path agentic-ai-lab-module-source-collection-identity agentic-ai-lab-module-source-collection-owner agentic-ai-lab-module-source-collection-modules-root agentic-ai-lab-module-source-collection-interfaces agentic-ai-lab-module-load-path-collections)
         (only-in :agentic-ai-lab/modules/module-authoring/module-source-collection make-agentic-ai-lab-contribution-module-load-path)
         (only-in :agentic-ai-lab/modules/workflow/scenario/configuration/module-source-selection
                  agentic-ai-lab-module-selection-source-refs)

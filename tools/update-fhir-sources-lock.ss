@@ -7,7 +7,7 @@
 (import (only-in :clan/poo/object .ref)
         (only-in :gerbil/core path-expand)
         (only-in :std/misc/ports read-file-u8vector)
-        (only-in :core/feature-system/source-lock-feature
+        (only-in :yuanxu/feature-system/source-lock-feature
                  sources-lock-freeze
                  write-sources-lock-module)
         :agentic-ai-lab/lambda-episteme/modules/healthcare/standards/fhir/sources)

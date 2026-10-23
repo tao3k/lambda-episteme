@@ -5,7 +5,7 @@
 (import :std/test
         (only-in :clan/poo/object .ref)
         :std/list/list
-        (only-in :core/graph/types
+        (only-in :yuanxu/graph/types
                  agentic-ai-lab-graph-edge-kind agentic-ai-lab-graph-edges)
         :agentic-ai-lab/modules/temporal-causality/interface
         :agentic-ai-lab/lambda-episteme/modules/ontology/interface

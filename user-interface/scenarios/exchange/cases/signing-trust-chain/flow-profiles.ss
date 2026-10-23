@@ -6,9 +6,9 @@
 ;;; Funflow step topology is inherited; each attack specializes only its
 ;;; identity and temporal model selection.
 (import (only-in :clan/poo/object .o)
-        (only-in :core/module-system/schema/relations agentic-ai-lab-semantic-identity)
-        (only-in :core/module-system/authoring/roles agentic-ai-lab-semantic-module)
-        (only-in :core/profile-composition/profile-bundle
+        (only-in :yuanxu/module-system/schema/relations agentic-ai-lab-semantic-identity)
+        (only-in :yuanxu/module-system/authoring/roles agentic-ai-lab-semantic-module)
+        (only-in :yuanxu/profile-composition/profile-bundle
                  agentic-ai-lab-module-profiles agentic-ai-lab-profile-export)
         (only-in "simulation.ss"
                  ExchangeSigningCandidateTransfer.

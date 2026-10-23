@@ -5,7 +5,7 @@
 
 (import (only-in :clan/poo/object .o)
         (only-in :clan/poo/mop validate)
-        :core/poo-clos/interface
+        :yuanxu/poo-clos/interface
         (only-in :agentic-ai-lab/modules/standards/objects
                  agentic-ai-lab-standard-constraint-profile)
         (only-in :agentic-ai-lab/lambda-episteme/modules/healthcare/standards/objects

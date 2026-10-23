@@ -4,7 +4,7 @@
 
 (import (only-in :clan/poo/object .all-slots .ref .slot? object?)
         :std/list/list
-        (only-in :core/graph/types agentic-ai-lab-graph?)
+        (only-in :yuanxu/graph/types agentic-ai-lab-graph?)
         (only-in :agentic-ai-lab/modules/authorization/types
                  agentic-ai-lab-authorization-capability?)
         (only-in :agentic-ai-lab/modules/temporal-causality/types

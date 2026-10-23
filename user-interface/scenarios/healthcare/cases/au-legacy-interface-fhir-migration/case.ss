@@ -5,7 +5,7 @@
 
 (import (only-in :clan/poo/object .def .o .ref)
         (rename-in
-         (only-in :core/graph/types
+         (only-in :yuanxu/graph/types
                   graph agentic-ai-lab-graph-edge agentic-ai-lab-graph-node)
          (graph Graph))
         (only-in :agentic-ai-lab/lambda-episteme/modules/ontology/interface

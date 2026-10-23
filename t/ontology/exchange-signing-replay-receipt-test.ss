@@ -6,7 +6,7 @@
 ;;; parser qualification and all required TLC checks have succeeded.
 (import (only-in :std/test test-suite check-equal?)
         (only-in :clan/poo/object .ref)
-        (only-in :core/observability/testing-case agentic-ai-lab-test-case)
+        (only-in :yuanxu/observability/testing-case agentic-ai-lab-test-case)
         (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/signal-result
                  exchange-signing-signal-nodes)
         (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/exchange/cases/signing-trust-chain/replay-observability

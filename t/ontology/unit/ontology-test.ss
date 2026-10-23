@@ -6,14 +6,14 @@
         (only-in :clan/poo/object
                  .all-slots .cc .def .o .ref .set! .slot? object?)
         :std/list/list
-        (only-in :core/graph/types
+        (only-in :yuanxu/graph/types
                  agentic-ai-lab-graph agentic-ai-lab-graph-edge agentic-ai-lab-graph-node
                  agentic-ai-lab-graph-edge-kind agentic-ai-lab-graph-edges
                  agentic-ai-lab-graph-node-metadata agentic-ai-lab-graph-nodes
                  agentic-ai-lab-graph-node-id
                  agentic-ai-lab-graph?)
-        :core/contribution/objects
-        :core/profile-composition/profile-bundle
+        :yuanxu/contribution/objects
+        :yuanxu/profile-composition/profile-bundle
         :agentic-ai-lab/modules/workflow/scenario/case
         :agentic-ai-lab/modules/workflow/scenario/accessors
         :agentic-ai-lab/modules/workflow/scenario/composition-syntax

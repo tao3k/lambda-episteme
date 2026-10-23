@@ -11,7 +11,7 @@
         :std/list/list
         (only-in :std/encoding/hex hex-encode)
         (only-in :std/encoding/json json->string)
-        (only-in :core/graph/types
+        (only-in :yuanxu/graph/types
                  agentic-ai-lab-graph-edge-from agentic-ai-lab-graph-edge-kind
                  agentic-ai-lab-graph-edge-to agentic-ai-lab-graph-edges
                  agentic-ai-lab-graph-node-id agentic-ai-lab-graph-node-payload

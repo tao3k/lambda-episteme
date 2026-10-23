@@ -5,7 +5,7 @@
 ;;; Source-labelled POO nodes feed the bounded Scheme GQL selector. A local
 ;;; query result is a conditional model observation, never source admission.
 (import (only-in :clan/poo/object .o .ref)
-        (only-in :core/utilities/functional
+        (only-in :yuanxu/utilities/functional
                  agentic-ai-lab-all? agentic-ai-lab-map agentic-ai-lab-stable-duplicates)
         (only-in :agentic-ai-lab/modules/query/scheme-select
                  agentic-ai-lab-query-select-scheme-nodes)

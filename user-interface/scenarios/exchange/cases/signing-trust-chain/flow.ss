@@ -5,9 +5,9 @@
 ;;; The current public binding is `user-composition`, followed by a native
 ;;; `(compose profiles ...)` expression with module-local aliases. Attack
 ;;; variants inherit their POO Profile from flow-profiles.ss.
-(import (only-in :core/profile-composition/profile-bundle
+(import (only-in :yuanxu/profile-composition/profile-bundle
                  profiles compose)
-        :core/profile-composition/selection-syntax
+        :yuanxu/profile-composition/selection-syntax
         :agentic-ai-lab/modules/workflow/scenario/composition-syntax
         (only-in :agentic-ai-lab/modules/funflow/profile-library
                  FunflowProfileModule)

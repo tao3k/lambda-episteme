@@ -6,7 +6,7 @@
 (import :std/test
         (only-in :clan/poo/object .o .ref)
         (only-in :std/misc/ports read-all-as-string)
-        (only-in :core/graph/types
+        (only-in :yuanxu/graph/types
                  agentic-ai-lab-graph agentic-ai-lab-graph-edge-kind
                  agentic-ai-lab-graph-edges agentic-ai-lab-graph-nodes)
         (only-in :agentic-ai-lab/modules/authorization/providers/cedar/interface

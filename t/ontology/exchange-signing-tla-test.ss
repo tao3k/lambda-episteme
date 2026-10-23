@@ -5,7 +5,7 @@
 (import (only-in :std/test test-suite check-equal?)
         (only-in :std/misc/ports read-all-as-string)
         (only-in :clan/poo/object .ref)
-        (only-in :core/observability/testing-case agentic-ai-lab-test-case)
+        (only-in :yuanxu/observability/testing-case agentic-ai-lab-test-case)
         (only-in :gerbil-parser/src/runtime/artifact sha256-text)
         (only-in :gerbil-parser/src/runtime/cst
                  syntax-node? syntax-node-kind)

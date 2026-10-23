@@ -6,9 +6,9 @@
         (only-in :clan/poo/mop .defgeneric)
         (only-in :gerbil/core hash-get hash-put!)
         :std/list/list
-        (only-in :core/graph/algorithms
+        (only-in :yuanxu/graph/algorithms
                  agentic-ai-lab-graph-cycle-path)
-        (only-in :core/graph/types
+        (only-in :yuanxu/graph/types
                  agentic-ai-lab-graph agentic-ai-lab-graph-edge-from
                  agentic-ai-lab-graph-edge-kind agentic-ai-lab-graph-edge-to
                  agentic-ai-lab-graph-edges agentic-ai-lab-graph-node-id
@@ -22,7 +22,7 @@
                  agentic-ai-lab-governance-source
                  agentic-ai-lab-governance-threat-model)
         (only-in :agentic-ai-lab/modules/query/objects AgenticAILabQuery.)
-        (only-in :core/utilities/functional
+        (only-in :yuanxu/utilities/functional
                  agentic-ai-lab-filter-map)
         (only-in "types.ss"
                  ontology-concept? ontology-profile? ontology-relation?

@@ -5,7 +5,7 @@
 
 ;;; Final User Composition. The root imports exactly the POO values it composes;
 ;;; no filesystem scanner or implicit re-export widens this boundary.
-(import (only-in :core/profile-composition/profile-bundle compose profiles)
+(import (only-in :yuanxu/profile-composition/profile-bundle compose profiles)
         (only-in :agentic-ai-lab/modules/workflow/scenario/composition-syntax user-composition)
         (only-in :agentic-ai-lab/lambda-episteme/user-interface/profiles/ontology/evidence
                  EvidenceProfile)

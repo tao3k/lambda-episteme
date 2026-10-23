@@ -10,7 +10,7 @@
                  benchmark-fixture-contract-pass?
                  benchmark-receipt-pass?
                  benchmark-run)
-        (only-in :core/graph/types
+        (only-in :yuanxu/graph/types
                  agentic-ai-lab-graph agentic-ai-lab-graph-edge agentic-ai-lab-graph-edge-from
                  agentic-ai-lab-graph-edge-kind agentic-ai-lab-graph-node
                  agentic-ai-lab-graph-node-id agentic-ai-lab-graph-node-payload)

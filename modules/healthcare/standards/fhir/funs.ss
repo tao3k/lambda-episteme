@@ -8,7 +8,7 @@
 (import (only-in :clan/poo/object .ref)
         (only-in :clan/poo/mop .defmethod-bundle)
         :std/list/list
-        :core/poo-clos/interface
+        :yuanxu/poo-clos/interface
         (only-in :agentic-ai-lab/modules/standards/objects
                  agentic-ai-lab-standard-conformance-receipt
                  agentic-ai-lab-standard-failure)

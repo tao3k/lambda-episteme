@@ -5,7 +5,7 @@
 
 ;;; Boundary: fail-closed base method for unsupported Provider/Profile crosses.
 (import (only-in :clan/poo/mop .defmethod-bundle)
-        :core/poo-clos/interface
+        :yuanxu/poo-clos/interface
         "objects.ss")
 
 (export HealthcareStandardDefaultValidationMethod

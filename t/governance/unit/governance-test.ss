@@ -1,10 +1,10 @@
 (import :std/test
         (only-in :clan/poo/object .o .ref)
-        :core/contribution/objects
-        (only-in :core/profile-composition/profile-bundle compose profiles)
+        :yuanxu/contribution/objects
+        (only-in :yuanxu/profile-composition/profile-bundle compose profiles)
         (only-in :agentic-ai-lab/modules/workflow/scenario/accessors
                  agentic-ai-lab-scenario-case-profiles)
-        (only-in :core/module-system/selection/objects
+        (only-in :yuanxu/module-system/selection/objects
                  agentic-ai-lab-user-module-selection)
         (only-in :agentic-ai-lab/modules/workflow/scenario/composition-syntax user-composition)
         :agentic-ai-lab/modules/governance/interface

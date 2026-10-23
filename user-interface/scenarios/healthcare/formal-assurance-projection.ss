@@ -6,7 +6,7 @@
 ;;; axes. Their crossing is CLOS multi-dispatch; the trajectory itself remains
 ;;; one POO slot contract owned by the Case.
 (import (only-in :clan/poo/object .o .ref)
-        :core/poo-clos/interface
+        :yuanxu/poo-clos/interface
         (only-in :agentic-ai-lab/modules/temporal-causality/interface
                  agentic-ai-lab-causal-trajectory-assessment-digest)
         (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support

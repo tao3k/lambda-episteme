@@ -4,7 +4,7 @@
 
 (import (only-in :std/test test-suite check-equal? check-exception)
         (only-in :clan/poo/object .o .ref .slot?)
-        (only-in :core/observability/testing-case agentic-ai-lab-test-case)
+        (only-in :yuanxu/observability/testing-case agentic-ai-lab-test-case)
         (only-in :agentic-ai-lab/modules/reverse-inference/interface
                  agentic-ai-lab-inference-claim
                  agentic-ai-lab-inference-branch

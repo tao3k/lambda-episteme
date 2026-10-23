@@ -4,7 +4,7 @@
 
 (import (only-in :std/test test-suite check-equal?)
         (only-in :clan/poo/object .o .ref)
-        (only-in :core/observability/testing-case agentic-ai-lab-test-case)
+        (only-in :yuanxu/observability/testing-case agentic-ai-lab-test-case)
         (only-in :gerbil-parser/languages/gql/iso-39075-2024/query-syntax
                  gql-query-program?)
         (only-in :agentic-ai-lab/modules/query/gql agentic-ai-lab-query->gql)

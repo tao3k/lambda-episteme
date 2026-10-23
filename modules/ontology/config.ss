@@ -2,7 +2,7 @@
 ;;;
 ;;; SPDX-License-Identifier: Apache-2.0 AND LGPL-2.1-or-later
 
-(import (only-in :core/module-system/selection/objects
+(import (only-in :yuanxu/module-system/selection/objects
                  agentic-ai-lab-user-module-selection?
                  agentic-ai-lab-user-module-selection-flags
                  agentic-ai-lab-user-module-selection-key)

@@ -7,7 +7,7 @@
         (only-in :std/error Error?)
         :std/list/list
         (only-in :clan/poo/object .o .ref .slot?)
-        (only-in :core/feature-system/source-lock-feature
+        (only-in :yuanxu/feature-system/source-lock-feature
                  require-source-lock-payload)
         :agentic-ai-lab/modules/standards/interface
         (only-in :agentic-ai-lab/lambda-episteme/modules/healthcare/standards/fhir/reference

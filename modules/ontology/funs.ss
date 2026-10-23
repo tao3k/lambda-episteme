@@ -4,7 +4,7 @@
 
 (import (only-in :clan/poo/object .alist/sort .cc .o .ref object?)
         :std/list/list
-        (only-in :core/graph/types
+        (only-in :yuanxu/graph/types
                  agentic-ai-lab-graph agentic-ai-lab-graph-edge
                  agentic-ai-lab-graph-edge-from agentic-ai-lab-graph-edge-kind
                  agentic-ai-lab-graph-edge-to agentic-ai-lab-graph-edges

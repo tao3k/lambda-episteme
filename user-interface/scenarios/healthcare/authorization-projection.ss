@@ -7,7 +7,7 @@
 ;;; ordinary `.assess-governance` slot generic.
 (import (only-in :clan/poo/object .o .ref .slot?)
         :std/list/list
-        :core/poo-clos/interface
+        :yuanxu/poo-clos/interface
         (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/ai-clinical-decision-support
                  AIClinicalDecisionSupportProfile)
         (only-in :agentic-ai-lab/lambda-episteme/user-interface/scenarios/healthcare/profiles/medication-safety
