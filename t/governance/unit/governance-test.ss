@@ -1,10 +1,12 @@
 (import :std/test
-        :poo-flow/src/module-system/contribution/interface
-        (only-in :poo-flow/src/module-system/profile-composition/interface
-                 compose profiles
+        (only-in :clan/poo/object .o .ref)
+        :core/contribution/objects
+        (only-in :core/profile-composition/profile-bundle compose profiles)
+        (only-in :poo-flow/modules/workflow/scenario/accessors
                  poo-flow-scenario-case-profiles)
-        (only-in :poo-flow/src/module-system/declaration/interface
+        (only-in :core/module-system/selection/objects
                  poo-flow-user-module-selection)
+        (only-in :poo-flow/modules/workflow/scenario/composition-syntax user-composition)
         :poo-flow/modules/governance/interface
         :poo-flow/lambda-episteme/modules/diataxis/interface
         :poo-flow/lambda-episteme/modules/decision-kind/interface)

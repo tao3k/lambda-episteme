@@ -11,7 +11,7 @@
         :std/list/list
         (only-in :std/encoding/hex hex-encode)
         (only-in :std/encoding/json json->string)
-        (only-in :poo-flow/src/graph/types
+        (only-in :core/graph/types
                  poo-flow-graph-edge-from poo-flow-graph-edge-kind
                  poo-flow-graph-edge-to poo-flow-graph-edges
                  poo-flow-graph-node-id poo-flow-graph-node-payload

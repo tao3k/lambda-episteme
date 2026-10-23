@@ -3,30 +3,21 @@
 
 (import (only-in :std/test check-equal? check-exception test-case test-suite)
         (only-in :std/error Error?)
-        (only-in :poo-flow/src/core/failure execution-failure?)
-        (only-in :poo-flow/src/module-system/load poo-flow-modules!)
-        (only-in :poo-flow/src/module-system/declaration/interface
+        (only-in :poo-flow/modules/workflow/control-plane/failure execution-failure?)
+        (only-in :core/module-system/selection/syntax
+                 poo-flow-modules!)
+        (only-in :core/module-system/selection/objects
                  poo-flow-user-module-selection
                  poo-flow-user-module-selection-entrypoint
                  poo-flow-user-module-selection-source-ref
                  poo-flow-user-module-bundles->modules)
-        (only-in :poo-flow/src/module-system/loader/source
+        (only-in :core/module-system/source/objects
                  poo-flow-module-source-ref-kind
                  poo-flow-module-source-ref-metadata
                  poo-flow-module-source-ref-value)
-        (only-in :poo-flow/src/module-system/loader/module-source-interface
-                 make-poo-flow-module-source-collection
-                 make-poo-flow-module-load-path
-                 make-poo-flow-contribution-module-source
-                 make-poo-flow-contribution-module-load-path
-                 make-poo-flow-user-interface-module-source
-                 make-poo-flow-user-interface-module-load-path
-                 extend-poo-flow-module-load-path
-                 poo-flow-module-source-collection-identity
-                 poo-flow-module-source-collection-owner
-                 poo-flow-module-source-collection-modules-root
-                 poo-flow-load-modules
-                 poo-flow-module-load-path-collections
+        (only-in :core/module-system/source/collection make-poo-flow-module-source-collection make-poo-flow-module-load-path make-poo-flow-contribution-module-source make-poo-flow-user-interface-module-source make-poo-flow-user-interface-module-load-path extend-poo-flow-module-load-path poo-flow-module-source-collection-identity poo-flow-module-source-collection-owner poo-flow-module-source-collection-modules-root poo-flow-module-source-collection-interfaces poo-flow-module-load-path-collections)
+        (only-in :poo-flow/modules/module-authoring/module-source-collection make-poo-flow-contribution-module-load-path)
+        (only-in :poo-flow/modules/workflow/scenario/configuration/module-source-selection
                  poo-flow-module-selection-source-refs)
         (rename-in :poo-flow/lambda-episteme/user-interface/init
                    (poo-flow-user-module-bundles
@@ -66,9 +57,9 @@
 
 (def lambda-episteme-source-collection-test
   (test-suite "Lambda module source collection and unified POO load path"
-    (composition-root-test-case "poo-flow-load-modules discovers public module interfaces"
+    (composition-root-test-case "poo-flow-module-source-collection-interfaces discovers public module interfaces"
       (let (sources
-            (poo-flow-load-modules lambda-episteme-module-source))
+            (poo-flow-module-source-collection-interfaces lambda-episteme-module-source))
         (check-equal?
          (map poo-flow-module-source-ref-value sources)
          '("modules/decision-kind/interface.ss"
@@ -146,7 +137,7 @@
        (map poo-flow-module-source-collection-identity
             (poo-flow-module-load-path-collections
              lambda-episteme-user-module-load-path))
-       '(lambda-episteme-user poo-flow-maintained lambda-episteme))
+       '(lambda-episteme-user lambda-episteme poo-flow-maintained))
       (check-equal?
        (poo-flow-module-source-collection-owner
         lambda-episteme-user-module-source)

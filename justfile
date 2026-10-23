@@ -68,3 +68,7 @@ qualify-healthcare-fhir-reference-validator:
 [group('maintenance')]
 update-fhir-sources-lock:
     cd '{{ self_root }}' && GERBIL_BUILD_VERBOSE=1 GERBIL_LOADPATH="$PWD${GERBIL_LOADPATH:+:$GERBIL_LOADPATH}" timeout --foreground --signal=TERM --kill-after=3s 30s gerbil interactive tools/update-fhir-sources-lock.ss .
+
+[group('test')]
+test-exchange-signing-proof:
+    just --justfile '{{ self_root }}/user-interface/scenarios/exchange/cases/signing-trust-chain/Justfile' check

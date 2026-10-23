@@ -7,7 +7,7 @@
         (only-in :std/error Error?)
         :std/list/list
         (only-in :clan/poo/object .o .ref .slot?)
-        (only-in :poo-flow/src/feature-system/source-lock-feature
+        (only-in :core/feature-system/source-lock-feature
                  require-source-lock-payload)
         :poo-flow/modules/standards/interface
         (only-in :poo-flow/lambda-episteme/modules/healthcare/standards/fhir/reference

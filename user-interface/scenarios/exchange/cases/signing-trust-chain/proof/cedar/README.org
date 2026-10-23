@@ -1,0 +1,20 @@
+#+TITLE: Exchange Signing Cedar Policies
+
+These eight =.cedar= files are generated from this Case's [[file:../lean/README.org][Lean-POO source]]. They are the published policy revisions for this
+Lambda-Episteme Case, beside [[file:../tla/SigningIntentBoundary.tla][the TLA+ threat model]]. They are not a
+reconstruction of either exchange's production policy.
+
+| Revision | Role in this Case |
+|----------+-------------------|
+| =backend.cedar= | Deliberately weak backend-only baseline. |
+| =intent.cedar=, =risk.cedar=, =ledger.cedar=, =signer.cedar= | Owner-local controls composed by Lean-POO. |
+| =integrated.cedar= | C4-composed policy set. |
+| =incident.cedar= | Affected-wallet freeze revision. |
+| =recovered.cedar= | Illustrative removal of that freeze, with a documented risk of premature recovery. |
+
+From this Case directory, =just publish= regenerates these files, and
+=just check= compares policy bytes and revision names against a fresh Lean
+export and checks 21 requests with the official Cedar Rust runtime. A deployment selects one
+admitted revision and binds authenticated request facts before any signing
+effect; these files alone provide neither witness provenance nor effect
+enforcement.

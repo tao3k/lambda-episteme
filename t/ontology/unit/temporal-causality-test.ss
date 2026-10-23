@@ -5,7 +5,7 @@
 (import :std/test
         (only-in :clan/poo/object .ref)
         :std/list/list
-        (only-in :poo-flow/src/graph/types
+        (only-in :core/graph/types
                  poo-flow-graph-edge-kind poo-flow-graph-edges)
         :poo-flow/modules/temporal-causality/interface
         :poo-flow/lambda-episteme/modules/ontology/interface

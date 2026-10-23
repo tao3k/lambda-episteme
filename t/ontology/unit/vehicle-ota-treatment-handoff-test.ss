@@ -6,7 +6,7 @@
 (import :std/test
         (only-in :clan/poo/object .o .ref)
         (only-in :std/misc/ports read-all-as-string)
-        (only-in :poo-flow/src/graph/types
+        (only-in :core/graph/types
                  poo-flow-graph poo-flow-graph-edge-kind
                  poo-flow-graph-edges poo-flow-graph-nodes)
         (only-in :poo-flow/modules/authorization/providers/cedar/interface

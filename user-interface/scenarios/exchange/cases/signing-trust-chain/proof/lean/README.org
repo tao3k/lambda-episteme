@@ -1,0 +1,241 @@
+#+TITLE: Exchange Transaction Signing Boundary
+#+OPTIONS: toc:nil
+
+* Case layout
+
+The Lean source and replay live in this Case directory.
+=SigningBoundary.lean= owns the POO revisions and
+=SigningBoundaryExport.lean= exports them. The generated policy set is
+published in this Case at [[file:../cedar/README.org][proof/cedar/]], beside its
+[[file:../tla/README.org][proof/tla/]] threat model. The generic Lean and Rust
+components are pinned through this local Lake package.
+
+* Source and claim boundary
+
+[[https://www.bitget.com/support/articles/12560603896024][Bitget's September 24, 2026 notice]]
+reports unauthorized transfers from some exchange hot and warm wallets and
+says cold wallets were unaffected. Its [[https://www.bitget.com/zh-CN/support/articles/12560603896108][September 25 update]] raises the traced
+amount from about $351.6 million to $387.5 million after including Zcash and
+TRON; it explicitly says this is fuller accounting, not another transfer
+wave. [[https://www.coindesk.com/markets/2026/09/25/bitget-s-usd351-million-hack-happened-via-spoofed-transfers-not-private-keys-ceo-gray-chen-says][Gracy Chen's preliminary account, reported by CoinDesk]] says a wallet
+backend was compromised, transaction data was spoofed, and the exchange's
+authorization process was triggered without private-key compromise. Bitget
+has not published the detailed penetration path in these sources.
+
+[[https://www.bybit.com/en/press/post/bybit-confirms-security-integrity-amid-safe-wallet-incident-no-compromise-in-infrastructure-blt9986889e919da8d2][Bybit's February 2025 forensic update]] instead identifies compromised Safe
+developer credentials and a signing interface that deceived signers about a
+malicious transaction. The cases differ in their known entry point. They
+share the question this example isolates: did the signer approve the exact
+transaction bytes the legitimate authority intended?
+
+No policy, wallet, address, digest, loss estimate, or access path below is a
+reconstruction of either production system. The possible withdrawal-record,
+API, queue, mapping-table, and interface substitutions are investigation
+hypotheses, not findings about Bitget.
+
+* The missing authority boundary
+
+A valid cryptographic signature proves use of a signing key. It does not prove
+that the transaction was intended by a user, admitted by an independent risk
+owner, reserved by the ledger, or displayed honestly to a human signer.
+[[https://docs.cedarpolicy.com/auth/authorization.html][Cedar]] can decide over these facts, but the application must supply and
+authenticate them. In particular, five matching digest strings copied from
+one compromised backend are one claim, not five independent witnesses.
+
+The proposed signing Host therefore takes the chain-specific transaction
+bytes as its primary input. It decodes and canonicalizes them, derives their
+digest itself, obtains separately authenticated withdrawal intent, risk and
+ledger-reservation witnesses, checks a signer-controlled display/confirmation
+channel where one exists, and presents the resulting immutable request to
+Cedar. The Host atomically binds one-use approval, nonce, wallet epoch, and
+the exact bytes submitted to MPC/HSM. A later byte substitution must cause
+a fresh authorization request. Cedar =Allow= alone must never instruct a
+signing device to sign arbitrary bytes.
+
+#+begin_src mermaid
+flowchart LR
+  U[User intent service] --> I[Intent witness]
+  R[Independent risk owner] --> W[Risk witness]
+  L[Ledger reservation owner] --> V[Ledger witness]
+  B[Untrusted transaction builder] --> T[Candidate bytes]
+  T --> H[Signer-side decode and digest]
+  I --> C[Cedar decision]
+  W --> C
+  V --> C
+  H --> C
+  C -->|Allow plus error-free receipt| S[Atomic one-use signing gate]
+  H --> S
+#+end_src
+
+The independence requirement concerns authority and failure domains, not the
+number of services. Copies of one backend database cannot satisfy it. The
+current Lean model represents already admitted witness values; it does not
+verify signatures, implement a chain decoder, reserve funds, or make the
+authorization-to-sign transition atomic.
+
+* Lean-POO composition and Cedar replay
+
+[[file:SigningTrustChain/SigningBoundary.lean][SigningBoundary.lean]] gives each control an owner. The =Backend= root is
+deliberately weak: it trusts a backend-approved Boolean. =Intent= overlays
+that permit with a candidate-to-intent digest comparison. =Risk=, =Ledger=,
+and =Signer= independently add vetoes for their own witnesses. =Integrated=
+uses C4 to compose the four branches; =Incident= adds one affected-wallet
+freeze; =Recovered= removes precisely that veto. The latter revision is a
+policy-model recovery, not a claim that a compromised wallet is safe again.
+
+| Root | Backend forgery | Display/bytes substitution | Valid transfer | Affected-wallet incident | Other wallet |
+|------+-----------------+----------------------------+----------------+--------------------------+--------------|
+| =Backend= | Allow | Allow | Allow | Allow | Allow |
+| =Intent= | Deny | Allow | Allow | Allow | Allow |
+| =Risk= | Deny | Allow | Allow | Allow | Allow |
+| =Ledger= | Deny | Allow | Allow | Allow | Allow |
+| =Signer= | Deny | Deny | Allow | Allow | Allow |
+| =Integrated= | Deny | Deny | Allow | Allow | Allow |
+| =Incident= | Deny | Deny | Allow for unaffected wallet only | Deny | Allow |
+
+The table describes the illustrative facts encoded in the Lean cases. The
+common-source case deliberately makes *all* claim digests match an attacker
+transaction and observes =Allow= at =Integrated=. That counterexample is the
+central limit: agreement without independent provenance cannot establish
+intent. Missing or malformed inputs and a Cedar policy error must fail at
+the Host boundary; [[https://docs.cedarpolicy.com/auth/authorization.html][Cedar's skip-on-error rule]] does not itself guarantee this.
+
+The example proves all eighteen named decisions, validation of all eight
+POO roots, the one-policy freeze footprint, and exact policy restoration
+after removal. [[file:SigningTrustChain/SigningBoundaryExport.lean][The exporter]] supplies the same cases and policies to the
+official Rust Cedar authorizer. The schema-bound manifest also validates
+every request and entity before replay and requires empty policy-error lists.
+The paired Lambda Case's =proof/cedar/= contains the generated standalone
+Cedar revisions; a signer would deploy only an admitted revision,
+not all eight simultaneously. These are executable decision and composition
+claims, not evidence that a real transaction was blocked.
+
+* Synthetic attack-chain replay
+
+[[file:SigningTrustChain/SigningAttackReplay.lean][The Lean replay]] orders the decisions for one synthetic candidate transfer.
+It reuses the same POO roots and facts exported to official Cedar Rust replay;
+the order is a model of control transitions, not a reconstructed Bitget log.
+
+| Phase | Active POO root | Supplied claim state | Cedar decision |
+|-------+-----------------+----------------------+----------------|
+| Legitimate transfer | =Integrated= | Independent witnesses agree | Allow |
+| Backend-only substitution | =Backend= | Candidate bytes replaced | Allow: legacy weakness |
+| Independent controls | =Integrated= | Candidate differs from intent, risk and ledger | Deny |
+| Interface substitution | =Integrated= | Intent, risk and ledger match but signer display differs | Deny |
+| Shared-source contamination | =Integrated= | All digest claims copied from the attacker candidate | Allow: provenance weakness |
+| Incident freeze | =Incident= | Same contaminated claims, affected wallet | Deny |
+| Premature recovery | =Recovered= | Same contaminated claims, freeze removed | Allow again |
+
+The final row is a warning about removing a veto before witness provenance
+has been restored. It is not a recommendation to recover that wallet. The
+model cannot verify source independence by comparing string digests; a Host
+must authenticate the witness producers and enforce the one-use signing
+transition before any real effect. The [[file:../../README.org][Exchange Case]] separately
+models backend and interface entry routes with bounded Ascent. Both are
+candidate explanations until their intermediate links have independent
+evidence.
+
+[[file:SigningTrustChain/SignerEffectReplay.lean][The abstract signer-effect replay]] closes the modeled path from Cedar
+decision to signed bytes. With all four claim values copied from the
+backend, =Integrated= returns =Allow= and a weak Host would sign the attacker
+bytes despite the test oracle recording different user intent. A Host that
+requires authenticated witnesses from separate intent, risk, ledger, and
+signer-display owners refuses that same request. The model also checks that
+the freeze prevents a weak signing effect, premature recovery reopens it,
+and a valid request consumes its nonce once. Merely labeling four attacker
+claims as independent owners does not pass the modeled Host if their
+authentication checks fail. A signer-local freeze also stops a request while
+the older =Integrated= policy root still returns =Allow=, representing a
+circuit breaker independent of policy publication latency.
+The Host additionally binds the operation type in every authenticated
+witness. One synthetic request carries identical digest labels but changes
+the Cedar operation from the intent owner's =transfer= to =admin-change=;
+the weak Host signs it and the bound Host refuses it. This checks a second
+form of claim substitution that byte labels alone cannot expose.
+=SignedInstruction= is a symbolic
+effect record; this is not a cryptographic signature, live broadcast, or a
+proof of the actual Bitget signer architecture. Witness authentication and
+an atomic signer effect remain deployment obligations.
+
+[[file:SigningTrustChain/IncidentReplay.lean][IncidentReplay.lean]] adds two finite synthetic effect paths. Four candidate
+direct ingress routes can produce the same public outflow after a weak Host
+signs a contaminated transfer; the bound Host blocks before signing. A
+separate interface path signs an =admin-change= operation, changes wallet
+control, and permits a later drain. Freezing the signer after that control
+change does not revoke the already granted control, while freezing before
+the administrative signature blocks it. A distinct backend-admin candidate
+can produce the same public outflow; that observation alone cannot identify
+which ingress occurred. USD 75,000 and USD 120,000 are synthetic fixture
+values, not incident loss estimates.
+
+The [[file:../tla/README.org][TLA+ threat model]] expresses the same kinds of temporal boundary. Its
+=NoUnboundSign=, =NoUnauthorizedEffect=, and =SignedNonceConsumed= predicates
+are related to finite Lean Host checks, but no formal refinement is claimed.
+The Case's [[file:../tla/README.org][TLA+ qualification]] combines Gerbil's native parser with official
+TLC checks over six finite configurations. No formal TLA+/Lean refinement is
+claimed, and neither finite model establishes a deployed wallet's behavior.
+
+| Root | Live Cedar bodies | New or changed source body against its parent |
+|------+-------------------+-----------------------------------------------|
+| =Backend= | 1 | 1 base permit |
+| =Intent= | 1 | 1 overlay |
+| =Risk= / =Ledger= / =Signer= | 2 each | 1 independent veto each |
+| =Integrated= | 4 | 0; C4 composition |
+| =Incident= | 5 | 1 affected-wallet veto |
+| =Recovered= | 4 | 0; remove that veto |
+
+The eight standalone exports contain 21 materialized policy occurrences;
+the Lean source declares six distinct bodies. This is a revision-structure
+count for this example, not a claim that direct Cedar needs 21 handwritten
+bodies or that POO makes the signer faster. Cedar templates and generators
+are plausible alternative source-maintenance baselines.
+
+* Attack-chain reasoning handoff
+
+[[https://github.com/tao3k/gerbil-ascent/tree/feature/ascent-scheme-syntax][Gerbil Ascent's Scheme syntax branch]] provides POO-composable relations,
+rules, bounded evaluation, and incremental source replacement. A downstream
+Lambda-Episteme case can ingest observation edges without assigning them
+signing authority: =observed transfer=, =backend record mutation=, =risk
+decision=, =ledger reservation=, =signer digest=, =broadcast=, and =freeze
+event=. Rules can derive *candidate explanations* such as record insertion,
+address-map substitution, API replay, queue injection, or a display/byte
+mismatch. The output should include supporting observations and contradicted
+predictions for each candidate path. Absence of an observation is not proof
+that an event did not occur.
+
+| Layer | Owns | Cannot infer from its own output |
+|-------+------+----------------------------------|
+| Ascent/GQL | Bounded joins, reachability, hypothesis candidates, and contradictory evidence | Authenticity of an input fact or actual Bitget penetration path |
+| Lean-POO | Revision topology, owner-local override/remove, validation and proof reuse | Correctness of a witness producer or a deployed signer |
+| Cedar | Request-specific permit/forbid decision over admitted facts | Whether a digest really came from an independent owner |
+| Signing Host | Provenance verification, exact-byte binding, nonce/epoch state, atomic enforcement and audit | A real-world incident cause from a finite policy table |
+
+The first Lambda input should be an observation envelope with source identity,
+capture time, evidence digest, transaction ID, chain ID, and confidence or
+admission status. Ascent may rank or prune hypotheses after new observations;
+only separately admitted witness values may enter the Cedar request. A
+candidate causal path must never be converted into an =approved= Boolean.
+
+| Candidate path, not a Bitget finding | Observation that would support it | Observation that would challenge it |
+|--------------------------------------+-----------------------------------+-------------------------------------|
+| Withdrawal-record insertion | A withdrawal row exists without the corresponding independently authenticated user intent. | An authenticated intent matches the same transaction bytes and was recorded before the row. |
+| Backend API replay | The same admitted request ID or nonce appears in multiple signer submissions. | A one-use request ledger shows a distinct authenticated intent for every submission. |
+| Queue injection | A signing message exists without an upstream admission receipt or has an unexpected producer identity. | The message is bound to a valid independently verified admission and producer receipt. |
+| Destination mapping substitution | The user's intended destination differs from the signer-decoded transaction destination. | The independently captured intent and decoded bytes name the same destination. |
+| Signing-display substitution | Human-visible details differ from a trusted rendering of the bytes actually signed. | Independently rendered details match the exact signed bytes. |
+
+These observations are discriminators, not claims that any log is complete or
+that an absent row proves nonoccurrence. A single compromised log producer
+can forge an apparently complete path. The candidate graph should retain
+source identity and contradictions rather than collapse them into one
+unqualified verdict.
+
+#+begin_src sh
+just --justfile ../../Justfile check
+#+end_src
+
+From this Case directory, =just publish= regenerates the Cedar revisions.
+=just check= compares each policy byte and revision name against a fresh Lean
+manifest, then replays all 21 requests through the official Cedar Rust
+runtime. The optional =just inspect-poo-flow integrated= parses the generated
+policy with POO Flow's CLI when =POO_FLOW_ROOT= names its checkout.

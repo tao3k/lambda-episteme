@@ -11,7 +11,7 @@
         (only-in :std/misc/ports read-all-as-string)
         :std/list/list
         (only-in :std/encoding/hex hex-encode)
-        (only-in :poo-flow/src/graph/types
+        (only-in :core/graph/types
                  poo-flow-graph? poo-flow-graph-id
                  poo-flow-graph-nodes poo-flow-graph-edges
                  poo-flow-graph-node-id poo-flow-graph-node-metadata

@@ -1,0 +1,11 @@
+name = "LambdaExchangeSigning"
+version = "0.1.0"
+defaultTargets = ["SigningTrustChain"]
+
+[[require]]
+name = "CedarPooSpec"
+git = "https://github.com/tao3k/cedar-poo-spec.git"
+rev = "dfa18b8a2f306ce17b8ae7e523e7029ebe2dff01"
+
+[[lean_lib]]
+name = "SigningTrustChain"

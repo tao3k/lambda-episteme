@@ -1,7 +1,7 @@
 ;;; -*- Gerbil -*-
 ;;; Doom-like Lambda entry: enable Modules and flags only.
 
-(import :poo-flow/src/user-interface/init-declaration-syntax)
+(import :core/module-system/selection/init-syntax)
 
 (poo-flow!
  :custom

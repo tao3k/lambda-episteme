@@ -6,14 +6,17 @@
         (only-in :clan/poo/object
                  .all-slots .cc .def .o .ref .set! .slot? object?)
         :std/list/list
-        (only-in :poo-flow/src/graph/types
+        (only-in :core/graph/types
                  poo-flow-graph poo-flow-graph-edge poo-flow-graph-node
                  poo-flow-graph-edge-kind poo-flow-graph-edges
                  poo-flow-graph-node-metadata poo-flow-graph-nodes
                  poo-flow-graph-node-id
                  poo-flow-graph?)
-        :poo-flow/src/module-system/contribution/interface
-        :poo-flow/src/module-system/profile-composition/interface
+        :core/contribution/objects
+        :core/profile-composition/profile-bundle
+        :poo-flow/modules/workflow/scenario/case
+        :poo-flow/modules/workflow/scenario/accessors
+        :poo-flow/modules/workflow/scenario/composition-syntax
         :poo-flow/modules/governance/interface
         :poo-flow/modules/authorization/providers/cedar/interface
         :poo-flow/lambda-episteme/modules/ontology/interface

@@ -1,0 +1,11 @@
+#+TITLE: Exchange Scenario
+
+* Cases
+
+| Case | Focus |
+|------+-------|
+| [[file:cases/signing-trust-chain/README.org][Signing trust chain]] | Candidate routes, evidence discriminators, and the signer authorization boundary. |
+
+The Exchange Scenario owns incident-specific evidence and assumptions. Generic
+bounded route evaluation belongs to POO Flow; authorization policy composition
+belongs to Lean-POO and Cedar, with the signer Host retaining effect authority.
