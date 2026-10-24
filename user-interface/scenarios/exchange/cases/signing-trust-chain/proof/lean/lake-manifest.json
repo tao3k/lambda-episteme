@@ -1,7 +1,7 @@
 {"version": "1.2.0",
  "packagesDir": ".lake/packages",
  "packages":
- [{"url": "https://github.com/tao3k/cedar-poo-spec.git",
+ [{"url": "https://github.com/hardenedlinux/cedar-poo-spec.git",
    "type": "git",
    "subDir": null,
    "scope": "",
